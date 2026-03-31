@@ -14,10 +14,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    "apps.users.apps.UsersConfig",
-    "apps.movies.apps.MoviesConfig",
-    "apps.interactions.apps.InteractionsConfig",
 ]
 
 MIDDLEWARE = [
@@ -75,8 +71,5 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
