@@ -1,0 +1,1 @@
+Bu papkada recommendation modellarini alohida sinash uchun scriptlar saqlanadi.
