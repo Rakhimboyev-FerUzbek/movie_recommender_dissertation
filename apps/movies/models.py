@@ -1,0 +1,51 @@
+from django.db import models
+from django.utils.text import slugify
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Movie(models.Model):
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=300, unique=True, blank=True)
+    overview = models.TextField(blank=True)
+    genres = models.ManyToManyField(Genre, related_name="movies", blank=True)
+    release_year = models.PositiveIntegerField(null=True, blank=True)
+    duration_minutes = models.PositiveIntegerField(null=True, blank=True)
+    poster_url = models.URLField(blank=True)
+    imdb_id = models.CharField(max_length=50, blank=True)
+    tmdb_id = models.CharField(max_length=50, blank=True)
+    avg_rating = models.FloatField(default=0.0)
+    popularity_score = models.FloatField(default=0.0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self):
+        if self.release_year:
+            return f"{self.title} ({self.release_year})"
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title) if self.title else "movie"
+            slug = base_slug
+            counter = 1
+
+            while Movie.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                counter += 1
+                slug = f"{base_slug}-{counter}"
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
