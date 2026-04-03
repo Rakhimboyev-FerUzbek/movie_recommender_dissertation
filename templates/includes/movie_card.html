@@ -1,0 +1,34 @@
+<div class="movie-card">
+    <a href="{% url 'movie_detail' movie.slug %}" class="movie-card-link">
+        <div class="movie-poster-wrap">
+            {% if movie.poster_url %}
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
+            {% else %}
+                <div class="movie-poster placeholder-poster">
+                    <span>{{ movie.title|slice:":1" }}</span>
+                </div>
+            {% endif %}
+
+            <div class="movie-overlay">
+                <div class="movie-overlay-inner">
+                    <span class="movie-badge">{{ t.details }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-card-body">
+            <h5 class="movie-title">{{ movie.title }}</h5>
+            <div class="movie-meta">
+                {% if movie.release_year %}
+                    <span>{{ movie.release_year }}</span>
+                {% endif %}
+                <span>★ {{ movie.avg_rating|floatformat:1 }}</span>
+            </div>
+            <div class="movie-genre-chips">
+                {% for genre in movie.genres.all|slice:":2" %}
+                    <span class="genre-chip">{{ genre.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </a>
+</div>

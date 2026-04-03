@@ -1,0 +1,56 @@
+:root {
+    --bg: #0b1020;
+    --bg-soft: #121a2f;
+    --surface: rgba(20, 26, 45, 0.78);
+    --surface-2: rgba(32, 40, 65, 0.72);
+    --text: #f5f7fb;
+    --text-muted: #a8b0c7;
+    --border: rgba(255, 255, 255, 0.08);
+    --primary: #7c5cff;
+    --primary-2: #4cc9f0;
+    --danger: #ff5d73;
+    --success: #38d39f;
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+}
+
+body[data-theme="light"] {
+    --bg: #f4f7fb;
+    --bg-soft: #ffffff;
+    --surface: rgba(255, 255, 255, 0.88);
+    --surface-2: rgba(245, 247, 251, 0.92);
+    --text: #162033;
+    --text-muted: #5e6b85;
+    --border: rgba(22, 32, 51, 0.08);
+    --primary: #5b4bff;
+    --primary-2: #12b5e5;
+    --danger: #ef476f;
+    --success: #10b981;
+    --shadow: 0 20px 50px rgba(43, 63, 99, 0.14);
+}
+
+html, body {
+    min-height: 100%;
+    background:
+        radial-gradient(circle at top right, rgba(124,92,255,0.16), transparent 24%),
+        radial-gradient(circle at left bottom, rgba(76,201,240,0.12), transparent 20%),
+        var(--bg);
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}

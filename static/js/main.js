@@ -1,1 +1,1 @@
-console.log("Movie Recommender loaded.");
+console.log("Movie Recommender UI initialized.");

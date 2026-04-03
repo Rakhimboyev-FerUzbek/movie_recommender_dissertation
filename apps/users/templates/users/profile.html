@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.profile }}{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+    <div class="container">
+        <div class="page-heading fade-up">
+            <h1>{{ t.profile }}</h1>
+            <p>{{ t.welcome }}, {{ request.user.username }}</p>
+        </div>
+
+        <div class="profile-grid">
+            <aside class="profile-sidebar fade-up">
+                <div class="glass-card profile-user-card">
+                    <div class="avatar-circle">{{ request.user.username|slice:":1"|upper }}</div>
+                    <h4>{{ request.user.username }}</h4>
+                    <p class="text-muted mb-1">{{ request.user.email }}</p>
+                    <small class="text-muted">{{ t.joined }} {{ request.user.date_joined|date:"Y-m-d" }}</small>
+                </div>
+
+                <div class="glass-card mt-4">
+                    <h5>{{ t.favorite_genres }}</h5>
+                    <div class="genre-chip-wrap">
+                        {% for genre in profile.preferred_genres %}
+                            <span class="genre-chip">{{ genre }}</span>
+                        {% empty %}
+                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+
+            <div class="profile-main fade-up">
+                <div class="glass-card mb-4">
+                    <h4 class="mb-3">{{ t.account_information }}</h4>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ t.first_name }}</label>
+                                {{ user_form.first_name }}
+                                <div class="text-danger small">{{ user_form.first_name.errors }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ t.last_name }}</label>
+                                {{ user_form.last_name }}
+                                <div class="text-danger small">{{ user_form.last_name.errors }}</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">{{ t.email }}</label>
+                            {{ user_form.email }}
+                            <div class="text-danger small">{{ user_form.email.errors }}</div>
+                        </div>
+
+                        <h4 class="mb-3">{{ t.additional_information }}</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ t.bio }}</label>
+                            {{ profile_form.bio }}
+                            <div class="text-danger small">{{ profile_form.bio.errors }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ t.birth_year }}</label>
+                            {{ profile_form.birth_year }}
+                            <div class="text-danger small">{{ profile_form.birth_year.errors }}</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">{{ t.preferred_genres }}</label>
+                            {{ profile_form.preferred_genres_text }}
+                            <div class="form-text">{{ profile_form.preferred_genres_text.help_text }}</div>
+                            <div class="text-danger small">{{ profile_form.preferred_genres_text.errors }}</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-gradient">{{ t.save }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

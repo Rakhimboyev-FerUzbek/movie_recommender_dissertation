@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.movie_catalog }}{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <div class="container">
+        <div class="catalog-hero fade-up">
+            <h1>{{ t.movie_catalog }}</h1>
+            <p>{{ t.cinematic_experience }}</p>
+        </div>
+
+        <div class="catalog-layout">
+            <aside class="catalog-sidebar fade-up">
+                <div class="glass-card">
+                    <h4 class="mb-3">{{ t.filters }}</h4>
+
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">{{ t.search }}</label>
+                            {{ form.q }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ t.genre }}</label>
+                            {{ form.genre }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ t.year }}</label>
+                            {{ form.year }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">{{ t.sort }}</label>
+                            {{ form.sort }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-gradient w-100">{{ t.explore_now }}</button>
+                    </form>
+                </div>
+            </aside>
+
+            <div class="catalog-content fade-up">
+                <div class="movie-grid">
+                    {% for movie in movies %}
+                        {% include "includes/movie_card.html" with movie=movie %}
+                    {% empty %}
+                        <div class="empty-state-card">
+                            <h4>{{ t.no_movies_found }}</h4>
+                            <p>{{ t.try_another_search }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

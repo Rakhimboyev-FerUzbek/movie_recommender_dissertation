@@ -1,0 +1,25 @@
+<section class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="hero-copy fade-up">
+            <span class="hero-kicker">{{ t.cinematic_experience }}</span>
+            <h1>{{ t.hero_title }}</h1>
+            <p>{{ t.hero_subtitle }}</p>
+
+            <div class="hero-actions">
+                <a href="{% url 'movie_list' %}" class="btn btn-primary-gradient btn-lg">
+                    {{ t.browse_movies }}
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="btn btn-outline-light btn-lg">
+                        {{ t.profile }}
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">
+                        {{ t.get_started }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
