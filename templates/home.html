@@ -1,19 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Home | Movie Recommender{% endblock %}
+{% block title %}{{ t.site_name }}{% endblock %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-4">
-        <h1 class="display-5 fw-bold">Online Movie Recommendation Platform</h1>
-        <p class="col-md-8 fs-5">
-            Ushbu loyiha bakalavr dissertatsiyasi uchun ishlab chiqilayotgan
-            Django asosidagi online kino platforma va recommendation tizimidir.
-        </p>
-        <hr>
-        <p class="mb-0">
-            1-bosqich muvaffaqiyatli tayyorlandi: project structure, settings, base template va local run.
-        </p>
+{% include "includes/hero_banner.html" %}
+
+<section class="content-section">
+    <div class="container">
+        {% include "includes/section_header.html" with title=t.featured subtitle=t.explore_now %}
+        <div class="movie-row">
+            {% for movie in featured_movies %}
+                {% include "includes/movie_card.html" with movie=movie %}
+            {% empty %}
+                <div class="empty-state-card">{{ t.no_featured_movies }}</div>
+            {% endfor %}
+        </div>
     </div>
-</div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% include "includes/section_header.html" with title=t.top_rated subtitle=t.cinematic_experience %}
+        <div class="movie-row">
+            {% for movie in top_rated_movies %}
+                {% include "includes/movie_card.html" with movie=movie %}
+            {% empty %}
+                <div class="empty-state-card">{{ t.no_top_rated_movies }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

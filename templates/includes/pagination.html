@@ -1,0 +1,19 @@
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination-wrap reveal">
+    {% if page_obj.has_previous %}
+        <a class="pagination-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}{% if selected_year %}year={{ selected_year }}&{% endif %}{% if selected_sort %}sort={{ selected_sort }}&{% endif %}page={{ page_obj.previous_page_number }}">
+            ←
+        </a>
+    {% endif %}
+
+    <span class="pagination-info">
+        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a class="pagination-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}{% if selected_year %}year={{ selected_year }}&{% endif %}{% if selected_sort %}sort={{ selected_sort }}&{% endif %}page={{ page_obj.next_page_number }}">
+            →
+        </a>
+    {% endif %}
+</div>
+{% endif %}

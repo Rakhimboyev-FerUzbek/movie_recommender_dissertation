@@ -6,3 +6,15 @@ body {
     font-weight: 700;
     letter-spacing: 0.5px;
 }
+
+input, textarea, select {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+
+textarea {
+    min-height: 120px;
+}

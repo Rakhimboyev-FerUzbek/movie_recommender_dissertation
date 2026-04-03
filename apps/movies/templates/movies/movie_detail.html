@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<section class="movie-detail-page">
+    <div class="container">
+        <a href="{% url 'movie_list' %}" class="back-link mb-4 d-inline-block">
+            ← {{ t.back_to_movies }}
+        </a>
+
+        <div class="detail-hero fade-up">
+            <div class="detail-poster">
+                {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                {% else %}
+                    <div class="movie-poster detail-placeholder">
+                        <span>{{ movie.title|slice:":1" }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="detail-content">
+                <span class="hero-kicker">{{ t.movies }}</span>
+                <h1>{{ movie.title }}</h1>
+
+                <div class="detail-meta">
+                    {% if movie.release_year %}
+                        <span>{{ t.release_year }}: {{ movie.release_year }}</span>
+                    {% endif %}
+                    {% if movie.duration_minutes %}
+                        <span>{{ t.duration }}: {{ movie.duration_minutes }} min</span>
+                    {% endif %}
+                    <span>★ {{ movie.avg_rating|floatformat:1 }}</span>
+                </div>
+
+                <div class="genre-chip-wrap mb-4">
+                    {% for genre in movie.genres.all %}
+                        <span class="genre-chip">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="glass-card">
+                    <h4>{{ t.overview }}</h4>
+                    <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
+                </div>
+
+                <div class="glass-card mt-4">
+                    <h4>{{ t.why_recommended }}</h4>
+                    <p class="mb-0">{{ t.recommendation_pending }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="similar-section mt-5 fade-up">
+            {% include "includes/section_header.html" with title=t.similar_movies subtitle=t.featured %}
+            <div class="movie-row">
+                {% for movie in similar_movies %}
+                    {% include "includes/movie_card.html" with movie=movie %}
+                {% empty %}
+                    <div class="empty-state-card">{{ t.no_similar_movies }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
