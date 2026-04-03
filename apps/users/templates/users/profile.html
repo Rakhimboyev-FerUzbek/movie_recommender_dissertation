@@ -5,35 +5,53 @@
 {% block content %}
 <section class="profile-page">
     <div class="container">
-        <div class="page-heading fade-up">
-            <h1>{{ t.profile }}</h1>
-            <p>{{ t.welcome }}, {{ request.user.username }}</p>
+        <div class="page-heading fade-up profile-heading-modern">
+            <div>
+                <span class="hero-kicker">{{ t.profile }}</span>
+                <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
+                <p>{{ t.welcome }}, {{ request.user.username }}</p>
+            </div>
         </div>
 
         <div class="profile-grid">
             <aside class="profile-sidebar fade-up">
-                <div class="glass-card profile-user-card">
+                <div class="glass-card profile-user-card profile-user-card-modern">
                     <div class="avatar-circle">{{ request.user.username|slice:":1"|upper }}</div>
-                    <h4>{{ request.user.username }}</h4>
-                    <p class="text-muted mb-1">{{ request.user.email }}</p>
-                    <small class="text-muted">{{ t.joined }} {{ request.user.date_joined|date:"Y-m-d" }}</small>
+                    <h4 class="mb-1">{{ request.user.get_full_name|default:request.user.username }}</h4>
+                    <p class="text-muted mb-2">{{ request.user.email }}</p>
+                    <small class="text-muted">{{ t.logged_out|cut:"You have been "|cut:"Siz tizimdan "|cut:"Вы " }}{{ request.user.date_joined|date:"Y-m-d" }}</small>
+
+                    <div class="profile-meta-list mt-4">
+                        <div class="profile-mini-meta">
+                            <span class="profile-mini-label">{{ t.first_name }}</span>
+                            <strong>{{ request.user.first_name|default:"—" }}</strong>
+                        </div>
+                        <div class="profile-mini-meta">
+                            <span class="profile-mini-label">{{ t.last_name }}</span>
+                            <strong>{{ request.user.last_name|default:"—" }}</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="glass-card mt-4">
-                    <h5>{{ t.favorite_genres }}</h5>
+                <div class="glass-card mt-4 profile-side-panel">
+                    <h5 class="mb-3">{{ t.favorite_genres }}</h5>
                     <div class="genre-chip-wrap">
-                        {% for genre in profile.preferred_genres %}
+                        {% for genre in request.user.profile.preferred_genres %}
                             <span class="genre-chip">{{ genre }}</span>
                         {% empty %}
-                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                            <span class="text-muted">No preferred genres yet.</span>
                         {% endfor %}
                     </div>
                 </div>
             </aside>
 
             <div class="profile-main fade-up">
-                <div class="glass-card mb-4">
-                    <h4 class="mb-3">{{ t.account_information }}</h4>
+                <div class="glass-card profile-form-card">
+                    <div class="profile-section-head">
+                        <h4>{{ t.account_information }}</h4>
+                        <p class="text-muted mb-0">{{ t.additional_information }}</p>
+                    </div>
+
                     <form method="post" novalidate>
                         {% csrf_token %}
 
@@ -56,7 +74,7 @@
                             <div class="text-danger small">{{ user_form.email.errors }}</div>
                         </div>
 
-                        <h4 class="mb-3">{{ t.additional_information }}</h4>
+                        <div class="profile-divider"></div>
 
                         <div class="mb-3">
                             <label class="form-label">{{ t.bio }}</label>
@@ -77,7 +95,7 @@
                             <div class="text-danger small">{{ profile_form.preferred_genres_text.errors }}</div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary-gradient">{{ t.save }}</button>
+                        <button type="submit" class="btn btn-primary-gradient px-4">{{ t.save }}</button>
                     </form>
                 </div>
             </div>

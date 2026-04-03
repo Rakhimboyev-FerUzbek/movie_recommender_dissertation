@@ -6,28 +6,32 @@
 
     if (!body) return;
 
-    function updateToggleLabel(theme) {
+    function updateThemeIcons(theme) {
         if (!toggle) return;
 
-        const label = toggle.querySelector(".theme-toggle-label");
+        const moonIcon = toggle.querySelector(".theme-icon-moon");
+        const sunIcon = toggle.querySelector(".theme-icon-sun");
         const darkLabel = toggle.dataset.labelDark || "Dark Mode";
         const lightLabel = toggle.dataset.labelLight || "Light Mode";
 
-        const nextLabel = theme === "dark" ? lightLabel : darkLabel;
-
-        if (label) {
-            label.textContent = nextLabel;
+        if (theme === "dark") {
+            if (moonIcon) moonIcon.classList.add("d-none");
+            if (sunIcon) sunIcon.classList.remove("d-none");
+            toggle.setAttribute("title", lightLabel);
+            toggle.setAttribute("aria-label", lightLabel);
+        } else {
+            if (sunIcon) sunIcon.classList.add("d-none");
+            if (moonIcon) moonIcon.classList.remove("d-none");
+            toggle.setAttribute("title", darkLabel);
+            toggle.setAttribute("aria-label", darkLabel);
         }
-
-        toggle.setAttribute("aria-label", nextLabel);
-        toggle.setAttribute("title", nextLabel);
     }
 
     function applyTheme(theme) {
         const normalizedTheme = theme === "light" ? "light" : "dark";
         body.setAttribute("data-theme", normalizedTheme);
         localStorage.setItem(storageKey, normalizedTheme);
-        updateToggleLabel(normalizedTheme);
+        updateThemeIcons(normalizedTheme);
     }
 
     const savedTheme = localStorage.getItem(storageKey) || defaultTheme;

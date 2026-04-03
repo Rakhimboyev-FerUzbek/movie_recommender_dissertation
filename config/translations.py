@@ -12,7 +12,7 @@ TRANSLATIONS = {
         "password": "Parol",
         "confirm_password": "Parolni tasdiqlash",
         "joined": "Qo‘shilgan sana",
-        "no_preferred_genres": "Hali sevimli janrlar kiritilmagan.",
+        "no_preferred_genres": "Hali sevimli janrlar yo‘q.",
         "no_featured_movies": "Hozircha tavsiya etilgan filmlar yo‘q.",
         "no_top_rated_movies": "Hozircha top reyting filmlar yo‘q.",
         "no_movies_found": "Hech qanday film topilmadi.",

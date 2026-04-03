@@ -6,13 +6,13 @@
     overflow: hidden;
     background:
         linear-gradient(90deg, rgba(8,12,24,0.96), rgba(8,12,24,0.52)),
-        url("/static/images/backgrounds/hero-cinema.svg") center/cover no-repeat;
+        url("/static/images/background/hero_cinema.svg") center/cover no-repeat;
 }
 
 body[data-theme="light"] .hero-banner {
     background:
         linear-gradient(90deg, rgba(244,247,251,0.95), rgba(244,247,251,0.56)),
-        url("/static/images/backgrounds/hero-cinema.svg") center/cover no-repeat;
+        url("/static/images/background/hero_cinema.svg") center/cover no-repeat;
 }
 
 .hero-content {
@@ -29,11 +29,12 @@ body[data-theme="light"] .hero-banner {
     line-height: 1.05;
     font-weight: 900;
     margin-bottom: 18px;
+    color: var(--text) !important;
 }
 
 .hero-copy p {
     font-size: 1.08rem;
-    color: var(--text-muted);
+    color: var(--text-muted) !important;
     max-width: 640px;
     margin-bottom: 26px;
 }
@@ -53,17 +54,28 @@ body[data-theme="light"] .hero-banner {
 
 .auth-brand-panel h1,
 .catalog-hero h1,
-.page-heading h1 {
+.page-heading h1,
+.detail-content h1 {
     font-size: clamp(2rem, 4vw, 3.4rem);
     font-weight: 900;
     margin-bottom: 16px;
+    color: var(--text) !important;
 }
 
 .auth-brand-panel p,
 .catalog-hero p,
 .page-heading p {
-    color: var(--text-muted);
+    color: var(--text-muted) !important;
     font-size: 1.04rem;
+}
+
+.form-label,
+.glass-card h4,
+.glass-card h5,
+.auth-card h2,
+.auth-card h3,
+.detail-content h4 {
+    color: var(--text) !important;
 }
 
 .form-control,
@@ -106,12 +118,6 @@ body[data-theme="light"] .form-textarea {
     object-fit: cover;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
-}
-
-.detail-content h1 {
-    font-size: clamp(2rem, 4vw, 3.4rem);
-    font-weight: 900;
-    margin-bottom: 16px;
 }
 
 .detail-meta {
