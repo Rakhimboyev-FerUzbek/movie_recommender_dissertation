@@ -6,25 +6,20 @@ from apps.movies.forms import MovieFilterForm, SORT_CHOICES
 from apps.movies.models import Genre, Movie
 
 
-def build_page_sequence(current_page: int, total_pages: int, window: int = 2):
-    if total_pages <= 10:
+def build_page_sequence(current_page: int, total_pages: int):
+    if total_pages <= 11:
         return list(range(1, total_pages + 1))
 
-    sequence = [1]
+    if current_page <= 10:
+        return list(range(1, 11)) + ["..."] + [total_pages]
 
-    start = max(current_page - window, 2)
-    end = min(current_page + window, total_pages - 1)
+    if current_page >= total_pages - 9:
+        return [1, "..."] + list(range(total_pages - 9, total_pages + 1))
 
-    if start > 2:
-        sequence.append("...")
+    start = max(current_page - 4, 2)
+    end = min(current_page + 4, total_pages - 1)
 
-    sequence.extend(range(start, end + 1))
-
-    if end < total_pages - 1:
-        sequence.append("...")
-
-    sequence.append(total_pages)
-    return sequence
+    return [1, "..."] + list(range(start, end + 1)) + ["..."] + [total_pages]
 
 
 def home_view(request):
