@@ -146,3 +146,117 @@ body[data-theme="light"] .form-textarea {
         transform: translateY(0);
     }
 }
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-radio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-list-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.filter-option {
+    position: relative;
+    margin: 0;
+}
+
+.filter-option-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.filter-option-label {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1.2;
+}
+
+.filter-option-label:hover {
+    border-color: rgba(124, 92, 255, 0.35);
+    background: rgba(124, 92, 255, 0.08);
+}
+
+.filter-option-input:checked + .filter-option-label {
+    border-color: rgba(124, 92, 255, 0.55);
+    background: rgba(124, 92, 255, 0.18);
+    color: var(--text);
+    box-shadow: 0 0 0 1px rgba(124, 92, 255, 0.18);
+}
+
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pagination-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.pagination-link {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.pagination-link:hover {
+    color: var(--text);
+    border-color: rgba(124, 92, 255, 0.35);
+    background: rgba(124, 92, 255, 0.08);
+}
+
+.pagination-link.is-active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: #fff;
+    border-color: transparent;
+}
+
+.pagination-link.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.catalog-sidebar .glass-card {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.catalog-sidebar .glass-card::-webkit-scrollbar,
+.filter-list-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.catalog-sidebar .glass-card::-webkit-scrollbar-thumb,
+.filter-list-scroll::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.28);
+    border-radius: 999px;
+}

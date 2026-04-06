@@ -60,3 +60,17 @@
         grid-template-columns: 1fr;
     }
 }
+.movie-grid {
+    display: grid;
+    gap: 24px;
+}
+
+.movie-grid-two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 991px) {
+    .movie-grid-two-col {
+        grid-template-columns: 1fr;
+    }
+}

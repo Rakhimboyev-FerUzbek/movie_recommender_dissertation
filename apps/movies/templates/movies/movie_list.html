@@ -16,33 +16,73 @@
                     <h4 class="mb-3">{{ t.filters }}</h4>
 
                     <form method="get">
-                        <div class="mb-3">
+                        <div class="filter-group">
                             <label class="form-label">{{ t.search }}</label>
                             {{ form.q }}
                         </div>
 
-                        <div class="mb-3">
+                        <div class="filter-group">
                             <label class="form-label">{{ t.genre }}</label>
-                            {{ form.genre }}
+                            <div class="filter-radio-list filter-list-scroll">
+                                <label class="filter-option">
+                                    <input
+                                        class="filter-option-input"
+                                        type="radio"
+                                        name="genre"
+                                        value=""
+                                        {% if not selected_genre_id %}checked{% endif %}
+                                    >
+                                    <span class="filter-option-label">Barcha janrlar</span>
+                                </label>
+
+                                {% for genre in genres %}
+                                    <label class="filter-option">
+                                        <input
+                                            class="filter-option-input"
+                                            type="radio"
+                                            name="genre"
+                                            value="{{ genre.id }}"
+                                            {% if selected_genre_id == genre.id|stringformat:"s" %}checked{% endif %}
+                                        >
+                                        <span class="filter-option-label">{{ genre.name }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="filter-group">
                             <label class="form-label">{{ t.year }}</label>
                             {{ form.year }}
                         </div>
 
-                        <div class="mb-4">
+                        <div class="filter-group">
                             <label class="form-label">{{ t.sort }}</label>
-                            {{ form.sort }}
+                            <div class="filter-radio-list">
+                                {% for value, label in sort_options %}
+                                    <label class="filter-option">
+                                        <input
+                                            class="filter-option-input"
+                                            type="radio"
+                                            name="sort"
+                                            value="{{ value }}"
+                                            {% if selected_sort == value %}checked{% endif %}
+                                        >
+                                        <span class="filter-option-label">{{ label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary-gradient w-100">{{ t.explore_now }}</button>
+                        <div class="filter-actions">
+                            <button type="submit" class="btn btn-primary-gradient w-100">Qo‘llash</button>
+                            <a href="{% url 'movie_list' %}" class="btn btn-outline-soft w-100">Tozalash</a>
+                        </div>
                     </form>
                 </div>
             </aside>
 
             <div class="catalog-content fade-up">
-                <div class="movie-grid">
+                <div class="movie-grid movie-grid-two-col">
                     {% for movie in movies %}
                         {% include "includes/movie_card.html" with movie=movie %}
                     {% empty %}
@@ -52,6 +92,8 @@
                         </div>
                     {% endfor %}
                 </div>
+
+                {% include "includes/pagination.html" with page_obj=page_obj page_numbers=page_numbers pagination_query=pagination_query %}
             </div>
         </div>
     </div>

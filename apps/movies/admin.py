@@ -11,8 +11,24 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "release_year", "avg_rating", "is_active")
-    list_filter = ("is_active", "release_year", "genres")
-    search_fields = ("title", "overview", "imdb_id", "tmdb_id")
+    list_display = (
+        "id",
+        "title",
+        "release_year",
+        "avg_rating",
+        "rating_count",
+        "popularity_score",
+        "source",
+        "source_movie_id",
+        "is_active",
+    )
+    list_filter = ("is_active", "release_year", "genres", "source")
+    search_fields = ("title", "overview", "imdb_id", "imdb_url", "tmdb_id")
     filter_horizontal = ("genres",)
-    readonly_fields = ("avg_rating", "created_at", "updated_at")
+    readonly_fields = (
+        "avg_rating",
+        "rating_count",
+        "popularity_score",
+        "created_at",
+        "updated_at",
+    )
