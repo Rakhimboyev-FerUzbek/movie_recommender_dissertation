@@ -14,13 +14,12 @@ SORT_CHOICES = [
 
 class MovieFilterForm(forms.Form):
     q = forms.CharField(required=False, label="Qidiruv")
-    genre = forms.ModelChoiceField(
+    genre = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.none(),
         required=False,
-        empty_label="Barcha janrlar",
     )
     year = forms.IntegerField(required=False, label="Yil")
-    sort = forms.ChoiceField(required=False, choices=SORT_CHOICES)
+    sort = forms.ChoiceField(required=False, choices=SORT_CHOICES, label="Saralash")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,4 +34,6 @@ class MovieFilterForm(forms.Form):
         self.fields["year"].widget.attrs.update({
             "class": "form-control",
             "placeholder": "Masalan: 1997",
+            "min": "1900",
+            "max": "2100",
         })

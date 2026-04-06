@@ -1,29 +1,33 @@
 {% if page_obj.paginator.num_pages > 1 %}
-<nav class="pagination-wrap" aria-label="Pagination">
-    {% if page_obj.has_previous %}
-        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">
-            ←
-        </a>
-    {% else %}
-        <span class="pagination-link is-disabled">←</span>
-    {% endif %}
-
-    {% for number in page_numbers %}
-        {% if number == page_obj.number %}
-            <span class="pagination-link is-active">{{ number }}</span>
-        {% else %}
-            <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ number }}">
-                {{ number }}
+<nav class="pagination-shell" aria-label="Pagination navigation">
+    <div class="pagination-modern">
+        {% if page_obj.has_previous %}
+            <a class="pagination-modern-link pagination-modern-arrow" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                ‹
             </a>
+        {% else %}
+            <span class="pagination-modern-link pagination-modern-arrow is-disabled">‹</span>
         {% endif %}
-    {% endfor %}
 
-    {% if page_obj.has_next %}
-        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}">
-            →
-        </a>
-    {% else %}
-        <span class="pagination-link is-disabled">→</span>
-    {% endif %}
+        {% for item in page_sequence %}
+            {% if item == "..." %}
+                <span class="pagination-modern-link pagination-modern-dots">…</span>
+            {% elif item == page_obj.number %}
+                <span class="pagination-modern-link is-active">{{ item }}</span>
+            {% else %}
+                <a class="pagination-modern-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ item }}">
+                    {{ item }}
+                </a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="pagination-modern-link pagination-modern-arrow" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}">
+                ›
+            </a>
+        {% else %}
+            <span class="pagination-modern-link pagination-modern-arrow is-disabled">›</span>
+        {% endif %}
+    </div>
 </nav>
 {% endif %}

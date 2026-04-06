@@ -12,62 +12,67 @@
 
         <div class="catalog-layout">
             <aside class="catalog-sidebar fade-up">
-                <div class="glass-card">
-                    <h4 class="mb-3">{{ t.filters }}</h4>
+                <div class="glass-card catalog-filter-card">
+                    <div class="catalog-filter-head">
+                        <h4>{{ t.filters }}</h4>
+                        <p class="mb-0">Qidiruv, janr, yil va saralash bo‘yicha filmlarni toping.</p>
+                    </div>
 
-                    <form method="get">
-                        <div class="filter-group">
-                            <label class="form-label">{{ t.search }}</label>
+                    <form method="get" class="catalog-filter-form">
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Qidiruv</div>
                             {{ form.q }}
                         </div>
 
-                        <div class="filter-group">
-                            <label class="form-label">{{ t.genre }}</label>
-                            <div class="filter-radio-list filter-list-scroll">
-                                <label class="filter-option">
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Janrlar</div>
+                            <div class="filter-chip-grid filter-chip-grid-scroll">
+                                <label class="filter-chip">
                                     <input
-                                        class="filter-option-input"
-                                        type="radio"
+                                        type="checkbox"
                                         name="genre"
                                         value=""
-                                        {% if not selected_genre_id %}checked{% endif %}
+                                        class="filter-chip-input filter-chip-input-reset"
+                                        {% if not selected_genre_ids %}checked{% endif %}
+                                        onclick="if(this.checked){document.querySelectorAll('.filter-chip-input-genre').forEach(el => el.checked = false);}"
                                     >
-                                    <span class="filter-option-label">Barcha janrlar</span>
+                                    <span class="filter-chip-label">Barcha janrlar</span>
                                 </label>
 
                                 {% for genre in genres %}
-                                    <label class="filter-option">
+                                    <label class="filter-chip">
                                         <input
-                                            class="filter-option-input"
-                                            type="radio"
+                                            type="checkbox"
                                             name="genre"
                                             value="{{ genre.id }}"
-                                            {% if selected_genre_id == genre.id|stringformat:"s" %}checked{% endif %}
+                                            class="filter-chip-input filter-chip-input-genre"
+                                            {% if genre.id|stringformat:"s" in selected_genre_ids %}checked{% endif %}
+                                            onclick="document.querySelectorAll('.filter-chip-input-reset').forEach(el => el.checked = false);"
                                         >
-                                        <span class="filter-option-label">{{ genre.name }}</span>
+                                        <span class="filter-chip-label">{{ genre.name }}</span>
                                     </label>
                                 {% endfor %}
                             </div>
                         </div>
 
-                        <div class="filter-group">
-                            <label class="form-label">{{ t.year }}</label>
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Yil</div>
                             {{ form.year }}
                         </div>
 
-                        <div class="filter-group">
-                            <label class="form-label">{{ t.sort }}</label>
-                            <div class="filter-radio-list">
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Saralash</div>
+                            <div class="filter-chip-grid">
                                 {% for value, label in sort_options %}
-                                    <label class="filter-option">
+                                    <label class="filter-chip filter-chip-radio">
                                         <input
-                                            class="filter-option-input"
                                             type="radio"
                                             name="sort"
                                             value="{{ value }}"
+                                            class="filter-chip-input"
                                             {% if selected_sort == value %}checked{% endif %}
                                         >
-                                        <span class="filter-option-label">{{ label }}</span>
+                                        <span class="filter-chip-label">{{ label }}</span>
                                     </label>
                                 {% endfor %}
                             </div>
@@ -82,7 +87,7 @@
             </aside>
 
             <div class="catalog-content fade-up">
-                <div class="movie-grid movie-grid-two-col">
+                <div class="movie-grid movie-grid-four-col">
                     {% for movie in movies %}
                         {% include "includes/movie_card.html" with movie=movie %}
                     {% empty %}
@@ -93,7 +98,7 @@
                     {% endfor %}
                 </div>
 
-                {% include "includes/pagination.html" with page_obj=page_obj page_numbers=page_numbers pagination_query=pagination_query %}
+                {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
             </div>
         </div>
     </div>
