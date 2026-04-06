@@ -1,5 +1,5 @@
 <div class="movie-card">
-    <a href="{% url 'movie_detail' movie.slug %}" class="movie-card-link">
+    <a href="{% url 'movie_detail' movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
         <div class="movie-poster-wrap">
             {% if movie.poster_url %}
                 <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">

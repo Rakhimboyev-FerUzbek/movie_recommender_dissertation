@@ -1,8 +1,28 @@
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 
-from apps.movies.forms import MovieFilterForm
+from apps.movies.forms import MovieFilterForm, SORT_CHOICES
 from apps.movies.models import Genre, Movie
+
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+
+
+def build_page_sequence(current_page: int, total_pages: int):
+    if total_pages <= 11:
+        return list(range(1, total_pages + 1))
+
+    if current_page <= 10:
+        return list(range(1, 11)) + ["..."] + [total_pages]
+
+    if current_page >= total_pages - 9:
+        return [1, "..."] + list(range(total_pages - 9, total_pages + 1))
+
+    start = max(current_page - 4, 2)
+    end = min(current_page + 4, total_pages - 1)
+
+    return [1, "..."] + list(range(start, end + 1)) + ["..."] + [total_pages]
 
 
 def home_view(request):
@@ -18,14 +38,18 @@ def home_view(request):
 
 def movie_list_view(request):
     qs = Movie.objects.filter(is_active=True).prefetch_related("genres").all()
-    lang = request.session.get("site_language", "uz")
-    form = MovieFilterForm(request.GET or None, lang=lang)
+    form = MovieFilterForm(request.GET or None)
+
+    selected_query = request.GET.get("q", "").strip()
+    selected_year = request.GET.get("year", "").strip()
+    selected_sort = request.GET.get("sort", "").strip()
+    selected_genre_ids = request.GET.getlist("genre")
 
     if form.is_valid():
         q = form.cleaned_data.get("q")
-        genre = form.cleaned_data.get("genre")
+        selected_genres = form.cleaned_data.get("genre")
         year = form.cleaned_data.get("year")
-        sort = form.cleaned_data.get("sort")
+        sort = form.cleaned_data.get("sort") or ""
 
         if q:
             qs = qs.filter(
@@ -34,11 +58,14 @@ def movie_list_view(request):
                 Q(genres__name__icontains=q)
             ).distinct()
 
-        if genre:
-            qs = qs.filter(genres=genre)
+        if selected_genres:
+            qs = qs.filter(genres__in=selected_genres).distinct()
+            selected_genre_ids = [str(g.id) for g in selected_genres]
 
         if year:
             qs = qs.filter(release_year=year)
+
+        selected_sort = sort
 
         if sort == "title_asc":
             qs = qs.order_by("title")
@@ -53,10 +80,28 @@ def movie_list_view(request):
     else:
         qs = qs.order_by("-popularity_score", "-avg_rating", "title")
 
+    paginator = Paginator(qs, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    current_params = request.GET.copy()
+    current_params.pop("page", None)
+    pagination_query = current_params.urlencode()
+
+    page_sequence = build_page_sequence(page_obj.number, paginator.num_pages)
+
     context = {
         "form": form,
-        "movies": qs,
-        "genres": Genre.objects.all(),
+        "movies": page_obj.object_list,
+        "page_obj": page_obj,
+        "page_sequence": page_sequence,
+        "pagination_query": pagination_query,
+        "genres": Genre.objects.order_by("name"),
+        "sort_options": SORT_CHOICES,
+        "selected_genre_ids": selected_genre_ids,
+        "selected_sort": selected_sort,
+        "selected_query": selected_query,
+        "selected_year": selected_year,
     }
     return render(request, "movies/movie_list.html", context)
 
@@ -65,17 +110,31 @@ def movie_detail_view(request, slug):
     movie = get_object_or_404(
         Movie.objects.prefetch_related("genres"),
         slug=slug,
-        is_active=True
+        is_active=True,
     )
 
     primary_genres = movie.genres.all()
-    similar_movies = Movie.objects.filter(
-        is_active=True,
-        genres__in=primary_genres
-    ).exclude(id=movie.id).distinct().order_by("-avg_rating", "-popularity_score")[:8]
+    similar_movies = (
+        Movie.objects.filter(is_active=True, genres__in=primary_genres)
+        .exclude(id=movie.id)
+        .distinct()
+        .order_by("-avg_rating", "-popularity_score")[:8]
+    )
+
+    next_url = request.GET.get("next", "").strip()
+
+    if next_url and not url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = ""
+
+    back_url = next_url or reverse("movie_list")
 
     context = {
         "movie": movie,
         "similar_movies": similar_movies,
+        "back_url": back_url,
     }
     return render(request, "movies/movie_detail.html", context)

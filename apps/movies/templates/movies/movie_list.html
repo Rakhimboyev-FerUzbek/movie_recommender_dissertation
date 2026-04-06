@@ -6,43 +6,87 @@
 <section class="catalog-page">
     <div class="container">
         <div class="catalog-hero fade-up">
-            <h1>{{ t.movie_catalog }}</h1>
+            <h4>{{ t.movie_catalog }}</h4>
             <p>{{ t.cinematic_experience }}</p>
         </div>
 
         <div class="catalog-layout">
             <aside class="catalog-sidebar fade-up">
-                <div class="glass-card">
-                    <h4 class="mb-3">{{ t.filters }}</h4>
+                <div class="glass-card catalog-filter-card">
+                    <div class="catalog-filter-head">
+                        <h4>{{ t.filters }}</h4>
+                    </div>
 
-                    <form method="get">
-                        <div class="mb-3">
-                            <label class="form-label">{{ t.search }}</label>
+                    <form method="get" class="catalog-filter-form">
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Qidiruv</div>
                             {{ form.q }}
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ t.genre }}</label>
-                            {{ form.genre }}
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Janrlar</div>
+                            <div class="filter-chip-grid filter-chip-grid-scroll">
+                                <label class="filter-chip">
+                                    <input
+                                        type="checkbox"
+                                        name="genre"
+                                        value=""
+                                        class="filter-chip-input filter-chip-input-reset"
+                                        {% if not selected_genre_ids %}checked{% endif %}
+                                        onclick="if(this.checked){document.querySelectorAll('.filter-chip-input-genre').forEach(el => el.checked = false);}"
+                                    >
+                                    <span class="filter-chip-label">Barcha janrlar</span>
+                                </label>
+
+                                {% for genre in genres %}
+                                    <label class="filter-chip">
+                                        <input
+                                            type="checkbox"
+                                            name="genre"
+                                            value="{{ genre.id }}"
+                                            class="filter-chip-input filter-chip-input-genre"
+                                            {% if genre.id|stringformat:"s" in selected_genre_ids %}checked{% endif %}
+                                            onclick="document.querySelectorAll('.filter-chip-input-reset').forEach(el => el.checked = false);"
+                                        >
+                                        <span class="filter-chip-label">{{ genre.name }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ t.year }}</label>
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Yil</div>
                             {{ form.year }}
                         </div>
 
-                        <div class="mb-4">
-                            <label class="form-label">{{ t.sort }}</label>
-                            {{ form.sort }}
+                        <div class="filter-section-card">
+                            <div class="filter-section-title">Saralash</div>
+                            <div class="filter-chip-grid">
+                                {% for value, label in sort_options %}
+                                    <label class="filter-chip filter-chip-radio">
+                                        <input
+                                            type="radio"
+                                            name="sort"
+                                            value="{{ value }}"
+                                            class="filter-chip-input"
+                                            {% if selected_sort == value %}checked{% endif %}
+                                        >
+                                        <span class="filter-chip-label">{{ label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary-gradient w-100">{{ t.explore_now }}</button>
+                        <div class="filter-actions">
+                            <button type="submit" class="btn btn-primary-gradient w-100">Qo‘llash</button>
+                            <a href="{% url 'movie_list' %}" class="btn btn-outline-soft w-100">Tozalash</a>
+                        </div>
                     </form>
                 </div>
             </aside>
 
             <div class="catalog-content fade-up">
-                <div class="movie-grid">
+                <div class="movie-grid movie-grid-four-col">
                     {% for movie in movies %}
                         {% include "includes/movie_card.html" with movie=movie %}
                     {% empty %}
@@ -52,6 +96,8 @@
                         </div>
                     {% endfor %}
                 </div>
+
+                {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
             </div>
         </div>
     </div>
