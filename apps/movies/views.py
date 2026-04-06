@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404, render
 from apps.movies.forms import MovieFilterForm, SORT_CHOICES
 from apps.movies.models import Genre, Movie
 
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -118,8 +121,20 @@ def movie_detail_view(request, slug):
         .order_by("-avg_rating", "-popularity_score")[:8]
     )
 
+    next_url = request.GET.get("next", "").strip()
+
+    if next_url and not url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = ""
+
+    back_url = next_url or reverse("movie_list")
+
     context = {
         "movie": movie,
         "similar_movies": similar_movies,
+        "back_url": back_url,
     }
     return render(request, "movies/movie_detail.html", context)
