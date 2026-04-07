@@ -8,6 +8,14 @@ from apps.movies.models import Genre, Movie
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from django.db.models import Count
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+
+from apps.interactions.forms import CommentForm, RatingForm
+from apps.interactions.models import Comment, CommentLike, Rating
+from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
+
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -113,6 +121,8 @@ def movie_detail_view(request, slug):
         is_active=True,
     )
 
+    ensure_movie_trailer(movie)
+
     primary_genres = movie.genres.all()
     similar_movies = (
         Movie.objects.filter(is_active=True, genres__in=primary_genres)
@@ -122,7 +132,6 @@ def movie_detail_view(request, slug):
     )
 
     next_url = request.GET.get("next", "").strip()
-
     if next_url and not url_has_allowed_host_and_scheme(
         url=next_url,
         allowed_hosts={request.get_host()},
@@ -132,9 +141,47 @@ def movie_detail_view(request, slug):
 
     back_url = next_url or reverse("movie_list")
 
+    existing_rating = None
+    if request.user.is_authenticated:
+        existing_rating = Rating.objects.filter(user=request.user, movie=movie).first()
+
+    rating_initial = {}
+    if existing_rating:
+        rating_initial = {
+            "rating": existing_rating.rating,
+            "review": existing_rating.review,
+        }
+
+    rating_form = RatingForm(initial=rating_initial)
+    comment_form = CommentForm()
+
+    comments = list(
+        Comment.objects.filter(movie=movie)
+        .select_related("user")
+        .annotate(like_count=Count("likes"))
+        .order_by("-created_at")
+    )
+
+    liked_ids = set()
+    if request.user.is_authenticated:
+        liked_ids = set(
+            CommentLike.objects.filter(
+                user=request.user,
+                comment__movie=movie,
+            ).values_list("comment_id", flat=True)
+        )
+
+    for comment in comments:
+        comment.is_liked = comment.id in liked_ids
+
     context = {
         "movie": movie,
         "similar_movies": similar_movies,
         "back_url": back_url,
+        "rating_form": rating_form,
+        "comment_form": comment_form,
+        "user_rating": existing_rating,
+        "comments": comments,
+        "full_video_mode": detect_full_video_mode(movie),
     }
     return render(request, "movies/movie_detail.html", context)

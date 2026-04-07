@@ -17,4 +17,4 @@ from django.contrib.auth.models import User
 Movie.objects.count()
 Genre.objects.count()
 Rating.objects.count()
-User.objects.filter(username__startswith="ml100k_user_").count()
+User.objects.filter(username__startswith="ml100k_user_").count()    
