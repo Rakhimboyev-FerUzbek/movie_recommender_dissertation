@@ -28,6 +28,11 @@ class Movie(models.Model):
     imdb_url = models.URLField(blank=True)
     tmdb_id = models.CharField(max_length=50, blank=True)
 
+    trailer_url = models.URLField(blank=True)
+    trailer_site = models.CharField(max_length=32, blank=True)
+    full_video_file = models.FileField(upload_to="movies/full/", blank=True, null=True)
+    full_video_url = models.URLField(blank=True)
+
     avg_rating = models.FloatField(default=0.0)
     rating_count = models.PositiveIntegerField(default=0)
     popularity_score = models.FloatField(default=0.0)
