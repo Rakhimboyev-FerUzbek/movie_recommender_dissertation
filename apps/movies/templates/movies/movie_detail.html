@@ -53,19 +53,19 @@
                 <div class="glass-card mt-4 media-block-card">
                     <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="true">
-                                ONLINE KO‘RISH
+                            <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
+                                TREYLER
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="false">
-                                TREYLER
+                            <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
+                                ONLINE KO‘RISH
                             </button>
                         </li>
                     </ul>
 
                     <div class="tab-content media-tab-content mt-3">
-                        <div class="tab-pane fade show active" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
+                        <div class="tab-pane fade" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
                             {% if full_video_mode == "file" %}
                                 <div class="media-player-frame">
                                     <video controls preload="metadata" class="movie-video-player">
@@ -97,7 +97,7 @@
                             {% endif %}
                         </div>
 
-                        <div class="tab-pane fade" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
+                        <div class="tab-pane fade show active" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
                             {% if movie.trailer_url %}
                                 <div class="media-player-frame ratio ratio-16x9">
                                     <iframe
