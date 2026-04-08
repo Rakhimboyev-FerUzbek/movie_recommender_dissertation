@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     preferred_genres = models.JSONField(default=list, blank=True)
     bio = models.TextField(blank=True)
     birth_year = models.PositiveIntegerField(null=True, blank=True)
+    profile_photo = models.ImageField(upload_to="profiles/photos/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
