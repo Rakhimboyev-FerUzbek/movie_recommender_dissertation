@@ -5,6 +5,7 @@ from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
+from apps.interactions.models import Rating
 from apps.users.forms import RegisterForm, UserProfileForm, UserUpdateForm
 from apps.users.models import UserProfile
 from config.translations import get_translation
@@ -60,6 +61,11 @@ def profile_view(request):
         else list(profile.preferred_genres or [])
     )
     genre_choices = list(profile_form.fields["preferred_genres"].choices)
+    rated_movies = (
+        Rating.objects.filter(user=request.user)
+        .select_related("movie")
+        .order_by("-updated_at")[:12]
+    )
 
     context = {
         "user_form": user_form,
@@ -68,6 +74,7 @@ def profile_view(request):
         "is_edit_mode": is_edit_mode,
         "genre_choices": genre_choices,
         "selected_profile_genres": selected_profile_genres,
+        "rated_movies": rated_movies,
     }
     return render(request, "users/profile.html", context)
 
