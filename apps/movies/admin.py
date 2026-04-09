@@ -15,15 +15,26 @@ class MovieAdmin(admin.ModelAdmin):
         "id",
         "title",
         "release_year",
+        "language",
+        "country",
+        "director",
         "avg_rating",
         "rating_count",
-        "popularity_score",
         "source",
         "source_movie_id",
         "is_active",
     )
-    list_filter = ("is_active", "release_year", "genres", "source")
-    search_fields = ("title", "overview", "imdb_id", "imdb_url", "tmdb_id")
+    list_filter = ("is_active", "release_year", "genres", "source", "language", "country")
+    search_fields = (
+        "title",
+        "overview",
+        "imdb_id",
+        "imdb_url",
+        "tmdb_id",
+        "language",
+        "country",
+        "director",
+    )
     filter_horizontal = ("genres",)
     readonly_fields = (
         "avg_rating",

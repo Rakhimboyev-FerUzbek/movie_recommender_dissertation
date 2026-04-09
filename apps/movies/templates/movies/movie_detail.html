@@ -45,6 +45,38 @@
                     <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
                 </div>
 
+                <div class="glass-card mt-4 movie-info-card">
+                    <h4>{{ t.movie_information }}</h4>
+
+                    <div class="movie-info-grid">
+                        <div class="movie-info-item">
+                            <span>{{ t.language_label }}</span>
+                            <strong>{{ movie.language|default:t.not_available }}</strong>
+                        </div>
+
+                        <div class="movie-info-item">
+                            <span>{{ t.country_label }}</span>
+                            <strong>{{ movie.country|default:t.not_available }}</strong>
+                        </div>
+
+                        <div class="movie-info-item full">
+                            <span>{{ t.director_label }}</span>
+                            <strong>{{ movie.director|default:t.not_available }}</strong>
+                        </div>
+
+                        <div class="movie-info-item full">
+                            <span>{{ t.cast_label }}</span>
+                            <div class="genre-chip-wrap mt-2">
+                                {% for actor in movie.cast_names %}
+                                    <span class="genre-chip">{{ actor }}</span>
+                                {% empty %}
+                                    <span class="text-muted">{{ t.not_available }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="glass-card mt-4">
                     <h4>{{ t.why_recommended }}</h4>
                     <p class="mb-0">{{ t.recommendation_pending }}</p>
