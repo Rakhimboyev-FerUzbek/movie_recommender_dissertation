@@ -54,3 +54,10 @@ DELETE FROM public.auth_user
 WHERE id IN (947, 948, 949, 1, 2, 3);
 
 COMMIT;
+
+
+python manage.py create_admin admin1 --password test12345 --email admin1@example.com --activate
+
+python manage.py create_admin moderator1 --password test12345 --email moderator1@example.com --staff-only --activate
+
+python manage.py create_admin admin1 --password NewStrongPass123
