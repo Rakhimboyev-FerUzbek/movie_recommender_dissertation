@@ -11,27 +11,33 @@
         </a>
 
         <div class="detail-hero detail-hero-compact fade-up">
-            <div class="detail-poster detail-poster-compact">
-                {% if movie.poster_url %}
-                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
-                {% else %}
-                    <div class="movie-poster detail-placeholder">
-                        <span>{{ movie.title|slice:":1" }}</span>
-                    </div>
-                {% endif %}
+            <div class="detail-left-rail">
+                <div class="detail-poster detail-poster-compact">
+                    {% if movie.poster_url %}
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                    {% else %}
+                        <div class="movie-poster detail-placeholder">
+                            <span>{{ movie.title|slice:":1" }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="glass-card compact-info-card detail-explain-card">
+                    <h4>{{ t.why_recommended }}</h4>
+                    <p class="mb-0">{{ t.recommendation_pending }}</p>
+                </div>
             </div>
 
             <div class="detail-content detail-content-compact">
-                <span class="hero-kicker">{{ t.movies }}</span>
                 <h1>{{ movie.title }}</h1>
 
                 <div class="detail-meta detail-meta-pills">
                     {% if movie.release_year %}
                         <span class="detail-stat-pill">{{ movie.release_year }}</span>
                     {% endif %}
-                {% if movie.duration_minutes %}
-                  <span class="detail-stat-pill">{{ movie.duration_minutes|format_runtime }}</span>
-                {% endif %}
+                    {% if movie.duration_minutes %}
+                        <span class="detail-stat-pill">{{ movie.duration_minutes|format_runtime }}</span>
+                    {% endif %}
                     <span class="detail-stat-pill rating-pill">
                         ★ {{ movie.avg_rating|floatformat:1 }}
                     </span>
@@ -44,7 +50,7 @@
                 </div>
 
                 <div class="detail-story-grid">
-                    <div class="glass-card compact-info-card">
+                    <div class="glass-card compact-info-card overview-card">
                         <h4>{{ t.overview }}</h4>
                         <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
                     </div>
@@ -80,11 +86,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="glass-card mt-3 compact-info-card">
-                    <h4>{{ t.why_recommended }}</h4>
-                    <p class="mb-0">{{ t.recommendation_pending }}</p>
                 </div>
             </div>
         </div>

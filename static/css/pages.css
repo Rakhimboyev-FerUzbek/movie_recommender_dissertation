@@ -1011,3 +1011,149 @@ body[data-theme="light"] .movie-info-item {
 .compact-info-card p.mb-0 {
     margin-bottom: 0;
 }
+
+.detail-hero-compact {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.detail-left-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-self: start;
+}
+
+.detail-poster-compact img,
+.detail-poster-compact .detail-placeholder {
+    width: 100%;
+    min-height: 520px;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.detail-content-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.detail-content-compact h1 {
+    margin-bottom: 6px !important;
+    font-size: clamp(2rem, 3.4vw, 2.9rem) !important;
+    line-height: 1.08;
+}
+
+.detail-meta-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.detail-content-compact .genre-chip-wrap {
+    margin-bottom: 2px !important;
+}
+
+.detail-story-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 12px;
+    align-items: start;
+}
+
+.overview-card,
+.movie-info-card,
+.detail-explain-card {
+    padding: 14px;
+}
+
+.overview-card h4,
+.movie-info-card h4,
+.detail-explain-card h4 {
+    margin-bottom: 8px;
+    font-size: 0.98rem;
+}
+
+.overview-card p.mb-0,
+.detail-explain-card p.mb-0 {
+    font-size: 0.92rem;
+    line-height: 1.58;
+}
+
+.movie-info-grid.compact {
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.movie-info-grid.compact .movie-info-item {
+    padding: 12px;
+    border-radius: 14px;
+}
+
+.movie-info-grid.compact .movie-info-item span {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.movie-info-grid.compact .movie-info-item strong {
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.movie-info-card .genre-chip-wrap {
+    gap: 6px;
+}
+
+.movie-info-card .genre-chip {
+    padding: 5px 9px;
+    font-size: 0.76rem;
+}
+
+.detail-explain-card {
+    margin-top: 0;
+}
+
+@media (max-width: 1280px) {
+    .detail-hero-compact {
+        grid-template-columns: 300px minmax(0, 1fr);
+    }
+
+    .detail-poster-compact img,
+    .detail-poster-compact .detail-placeholder {
+        min-height: 460px;
+        max-height: 460px;
+    }
+
+    .detail-story-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 991px) {
+    .detail-hero-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-poster-compact img,
+    .detail-poster-compact .detail-placeholder {
+        min-height: 360px;
+        max-height: 360px;
+    }
+}
+
+@media (max-width: 576px) {
+    .detail-content-compact h1 {
+        font-size: 1.7rem !important;
+    }
+
+    .detail-poster-compact img,
+    .detail-poster-compact .detail-placeholder {
+        min-height: 300px;
+        max-height: 300px;
+    }
+}
