@@ -28,6 +28,11 @@ class Movie(models.Model):
     imdb_url = models.URLField(blank=True)
     tmdb_id = models.CharField(max_length=50, blank=True)
 
+    language = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=255, blank=True)
+    director = models.CharField(max_length=255, blank=True)
+    cast_names = models.JSONField(default=list, blank=True)
+    
     trailer_url = models.URLField(blank=True)
     trailer_site = models.CharField(max_length=32, blank=True)
     full_video_file = models.FileField(upload_to="movies/full/", blank=True, null=True)
