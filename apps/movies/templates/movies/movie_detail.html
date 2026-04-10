@@ -4,32 +4,32 @@
 {% block title %}{{ movie.title }}{% endblock %}
 
 {% block content %}
-<section class="movie-detail-page detail-v3-page">
+<section class="movie-detail-page detail-v4-page">
     <div class="container">
         <a href="{{ back_url }}" class="back-link mb-3 d-inline-block">
             ← Filmga qaytish
         </a>
 
-        <div class="detail-v3-layout fade-up">
-            <div class="detail-v3-poster-col">
-                <div class="detail-v3-poster-card">
+        <div class="detail-v4-top-area fade-up">
+            <div class="detail-v4-poster-col">
+                <div class="detail-v4-poster-card">
                     {% if movie.poster_url %}
-                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="detail-v3-poster-img">
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
                     {% else %}
-                        <div class="detail-v3-poster-placeholder">
+                        <div class="detail-v4-poster-placeholder">
                             <span>{{ movie.title|slice:":1" }}</span>
                         </div>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="detail-v3-main-col">
-                <div class="glass-card detail-v3-header-card">
-                    <h1 class="detail-v3-title">{{ movie.title }}</h1>
+            <div class="detail-v4-top-main">
+                <div class="glass-card detail-v4-header-card">
+                    <h1 class="detail-v4-title">{{ movie.title }}</h1>
 
-                    <div class="detail-v3-header-bar">
-                        <div class="detail-v3-meta-side">
-                            <div class="detail-v3-meta-row">
+                    <div class="detail-v4-header-bar">
+                        <div class="detail-v4-meta-side">
+                            <div class="detail-v4-meta-row">
                                 {% if movie.release_year %}
                                     <span class="detail-stat-pill">{{ movie.release_year }}</span>
                                 {% endif %}
@@ -46,72 +46,71 @@
                             </div>
                         </div>
 
-                        <div class="detail-v3-inline-rating">
-                            <div class="detail-v3-inline-rating-head">Reyting berish</div>
-
+                        <div class="detail-v4-inline-rating">
                             {% if user.is_authenticated %}
-                                <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-v3-inline-rating-form" id="inlineRatingForm">
+                                <div class="detail-v4-inline-rating-head">Reyting berish</div>
+
+                                <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-v4-inline-rating-form" id="inlineRatingForm">
                                     {% csrf_token %}
                                     <input type="hidden" name="next" value="{{ back_url }}">
                                     <input type="hidden" id="ratingValueInput" name="rating" value="{{ selected_rating_str|default:'0' }}">
 
-                                    <div class="detail-v3-stars-row">
-                                        <div class="detail-v3-stars" id="starRatingWidget">
-                                            <button type="button" class="detail-v3-star-btn" data-star="1" aria-label="1 star">★</button>
-                                            <button type="button" class="detail-v3-star-btn" data-star="2" aria-label="2 stars">★</button>
-                                            <button type="button" class="detail-v3-star-btn" data-star="3" aria-label="3 stars">★</button>
-                                            <button type="button" class="detail-v3-star-btn" data-star="4" aria-label="4 stars">★</button>
-                                            <button type="button" class="detail-v3-star-btn" data-star="5" aria-label="5 stars">★</button>
+                                    <div class="detail-v4-stars-row">
+                                        <div class="detail-v4-stars" id="starRatingWidget">
+                                            <button type="button" class="detail-v4-star-btn" data-star="1" aria-label="1 star">★</button>
+                                            <button type="button" class="detail-v4-star-btn" data-star="2" aria-label="2 stars">★</button>
+                                            <button type="button" class="detail-v4-star-btn" data-star="3" aria-label="3 stars">★</button>
+                                            <button type="button" class="detail-v4-star-btn" data-star="4" aria-label="4 stars">★</button>
+                                            <button type="button" class="detail-v4-star-btn" data-star="5" aria-label="5 stars">★</button>
                                         </div>
 
-                                        <span class="detail-v3-rating-value" id="selectedRatingValue">
+                                        <span class="detail-v4-rating-value" id="selectedRatingValue">
                                             {% if selected_rating_str != "0" %}{{ selected_rating_str }}{% endif %}
                                         </span>
                                     </div>
 
                                     <div
-                                        class="detail-v3-review-inline {% if user_rating and user_rating.review %}is-hidden{% elif selected_rating_str == '0' %}is-hidden{% endif %}"
+                                        class="detail-v4-review-inline {% if user_rating and user_rating.review %}is-hidden{% elif selected_rating_str == '0' %}is-hidden{% endif %}"
                                         id="reviewEditorWrap"
                                     >
-                                        <div class="detail-v3-review-row">
+                                        <div class="detail-v4-review-row">
                                             {{ rating_form.review }}
                                             <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
                                         </div>
-                                        <small id="reviewCounter" class="detail-v3-review-counter">0 / 50</small>
+                                        <small id="reviewCounter" class="detail-v4-review-counter">0 / 50</small>
                                         <div class="text-danger small">{{ rating_form.rating.errors }}</div>
                                         <div class="text-danger small">{{ rating_form.review.errors }}</div>
                                     </div>
 
                                     <div
-                                        class="detail-v3-review-display {% if user_rating and user_rating.review %}{% else %}is-hidden{% endif %}"
+                                        class="detail-v4-review-display {% if user_rating and user_rating.review %}{% else %}is-hidden{% endif %}"
                                         id="reviewDisplayWrap"
                                     >
-                                        <span id="reviewDisplayText">
-                                            {{ user_rating.review|default:"" }}
-                                        </span>
-                                        <button type="button" class="detail-v3-edit-review-btn" id="editReviewBtn" aria-label="Tahrirlash">✎</button>
+                                        <span id="reviewDisplayText">{{ user_rating.review|default:"" }}</span>
+                                        <button type="button" class="detail-v4-edit-review-btn" id="editReviewBtn" aria-label="Tahrirlash">✎</button>
                                     </div>
                                 </form>
                             {% else %}
-                                <div class="login-required-box compact-box">
-                                    <p class="mb-2">Reyting berish uchun tizimga kiring.</p>
-                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
+                                <div class="detail-v4-login-inline">
+                                    <span class="detail-v4-inline-rating-head">Reyting berish</span>
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-primary-gradient btn-smish">
                                         Kirish
                                     </a>
                                 </div>
+                                <p class="detail-v4-login-help">Reyting berish uchun tizimga kiring.</p>
                             {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <div class="detail-v3-content-grid">
-                    <div class="glass-card detail-v3-overview-card">
+                <div class="detail-v4-content-grid">
+                    <div class="glass-card detail-v4-overview-card">
                         <h4>Tavsif</h4>
                         <p class="mb-0">{{ movie.overview|default:"Hozircha tavsif mavjud emas." }}</p>
                     </div>
 
-                    <div class="detail-v3-info-cast-grid">
-                        <div class="glass-card detail-v3-info-card detail-v3-equal-card">
+                    <div class="detail-v4-info-cast-grid">
+                        <div class="glass-card detail-v4-info-card detail-v4-equal-card">
                             <h4>Film ma'lumotlari</h4>
 
                             <div class="movie-info-grid compact mt-3">
@@ -132,10 +131,10 @@
                             </div>
                         </div>
 
-                        <div class="glass-card detail-v3-cast-card detail-v3-equal-card">
+                        <div class="glass-card detail-v4-cast-card detail-v4-equal-card">
                             <h4>Aktyorlar tarkibi</h4>
 
-                            <div class="genre-chip-wrap mt-3 detail-v3-cast-wrap">
+                            <div class="genre-chip-wrap mt-3 detail-v4-cast-wrap">
                                 {% for actor in movie.cast_names %}
                                     <span class="genre-chip">{{ actor }}</span>
                                 {% empty %}
@@ -145,159 +144,159 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="glass-card detail-v3-reason-card">
-                    <div class="detail-v3-reason-head">Nega tavsiya qilindi?</div>
-                    <div class="detail-v3-reason-body">
-                        Hozircha bu sahifa katalog ko‘rinishida ishlamoqda. Keyingi bosqichda bu blok real tavsiya mexanizmi bilan bog‘lanadi.
-                    </div>
-                </div>
+        <div class="glass-card detail-v4-reason-card mt-4">
+            <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
+            <div class="detail-v4-reason-body">
+                Hozircha bu sahifa katalog ko‘rinishida ishlamoqda. Keyingi bosqichda bu blok real tavsiya mexanizmi bilan bog‘lanadi.
+            </div>
+        </div>
 
-                <div class="detail-v3-engagement-grid">
-                    <div class="glass-card detail-v3-media-card">
-                        <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
-                                    TREYLER
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
-                                    ONLINE KO'RISH
-                                </button>
-                            </li>
-                        </ul>
+        <div class="detail-v4-engagement-grid mt-4">
+            <div class="glass-card detail-v4-media-card">
+                <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
+                            TREYLER
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
+                            ONLINE KO'RISH
+                        </button>
+                    </li>
+                </ul>
 
-                        <div class="tab-content media-tab-content mt-3 detail-v3-media-content">
-                            <div class="tab-pane fade" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
-                                {% if full_video_mode == "file" %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-frame">
-                                            <video controls preload="metadata" class="movie-video-player">
-                                                <source src="{{ movie.full_video_file.url }}">
-                                                Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
-                                            </video>
-                                        </div>
-                                    </div>
-                                {% elif full_video_mode == "direct" %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-frame">
-                                            <video controls preload="metadata" class="movie-video-player">
-                                                <source src="{{ movie.full_video_url }}">
-                                                Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
-                                            </video>
-                                        </div>
-                                    </div>
-                                {% elif full_video_mode == "iframe" %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-frame ratio ratio-16x9">
-                                            <iframe
-                                                src="{{ movie.full_video_url }}"
-                                                title="{{ movie.title }} full movie"
-                                                allowfullscreen
-                                                loading="lazy">
-                                            </iframe>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-empty">
-                                            <h5>No Video</h5>
-                                            <p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="tab-pane fade show active" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
-                                {% if movie.trailer_url %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-frame ratio ratio-16x9">
-                                            <iframe
-                                                src="{{ movie.trailer_url }}"
-                                                title="{{ movie.title }} trailer"
-                                                allowfullscreen
-                                                loading="lazy"
-                                                referrerpolicy="strict-origin-when-cross-origin">
-                                            </iframe>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="detail-v3-media-center">
-                                        <div class="detail-v3-media-empty">
-                                            <h5>No Video</h5>
-                                            <p>Hozircha treyler topilmadi.</p>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass-card detail-v3-comments-card">
-                        <div class="detail-v3-comments-head">
-                            <h4>Kommentariyalar</h4>
-                            <p>Film haqidagi fikringizni yozib qoldiring.</p>
-                        </div>
-
-                        {% if user.is_authenticated %}
-                            <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-form-stack mb-3">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ back_url }}">
-
-                                <div class="mb-3">
-                                    {{ comment_form.body }}
-                                    <div class="text-danger small">{{ comment_form.body.errors }}</div>
+                <div class="tab-content media-tab-content mt-3 detail-v4-media-content">
+                    <div class="tab-pane fade" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
+                        {% if full_video_mode == "file" %}
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-frame">
+                                    <video controls preload="metadata" class="movie-video-player">
+                                        <source src="{{ movie.full_video_file.url }}">
+                                        Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                    </video>
                                 </div>
-
-                                <button type="submit" class="btn btn-primary-gradient btn-smish">Yuborish</button>
-                            </form>
+                            </div>
+                        {% elif full_video_mode == "direct" %}
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-frame">
+                                    <video controls preload="metadata" class="movie-video-player">
+                                        <source src="{{ movie.full_video_url }}">
+                                        Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                    </video>
+                                </div>
+                            </div>
+                        {% elif full_video_mode == "iframe" %}
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-frame ratio ratio-16x9">
+                                    <iframe
+                                        src="{{ movie.full_video_url }}"
+                                        title="{{ movie.title }} full movie"
+                                        allowfullscreen
+                                        loading="lazy">
+                                    </iframe>
+                                </div>
+                            </div>
                         {% else %}
-                            <div class="login-required-box compact-box mb-3">
-                                <p class="mb-2">Kommentariya yozish uchun tizimga kiring.</p>
-                                <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
-                                    Kirish
-                                </a>
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-empty">
+                                    <h5>No Video</h5>
+                                    <p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
+                                </div>
                             </div>
                         {% endif %}
-
-                        <div class="detail-v3-comments-scroll">
-                            {% for comment in comments %}
-                                <article class="detail-v3-comment-card">
-                                    <div class="detail-v3-comment-top">
-                                        <span class="detail-v3-comment-author">{{ comment.user.get_full_name|default:comment.user.username }}</span>
-
-                                        {% if user.is_authenticated %}
-                                            <form method="post" action="{% url 'comment_like' comment.id %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="next" value="{{ back_url }}">
-                                                <button type="submit" class="comment-like-btn {% if comment.is_liked %}is-active{% endif %}">
-                                                    ♥ {{ comment.like_count }}
-                                                </button>
-                                            </form>
-                                        {% else %}
-                                            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="comment-like-btn">
-                                                ♥ {{ comment.like_count }}
-                                            </a>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="detail-v3-comment-body">
-                                        {{ comment.body|linebreaksbr }}
-                                    </div>
-
-                                    <div class="detail-v3-comment-time">
-                                        {{ comment.created_at|date:"Y-m-d H:i" }}
-                                    </div>
-                                </article>
-                            {% empty %}
-                                <div class="media-empty-state compact">
-                                    <h5>Hozircha kommentariya yo‘q</h5>
-                                    <p>Birinchi bo‘lib fikr qoldiring.</p>
-                                </div>
-                            {% endfor %}
-                        </div>
                     </div>
+
+                    <div class="tab-pane fade show active" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
+                        {% if movie.trailer_url %}
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-frame ratio ratio-16x9">
+                                    <iframe
+                                        src="{{ movie.trailer_url }}"
+                                        title="{{ movie.title }} trailer"
+                                        allowfullscreen
+                                        loading="lazy"
+                                        referrerpolicy="strict-origin-when-cross-origin">
+                                    </iframe>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="detail-v4-media-center">
+                                <div class="detail-v4-media-empty">
+                                    <h5>No Video</h5>
+                                    <p>Hozircha treyler topilmadi.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card detail-v4-comments-card">
+                <div class="detail-v4-comments-head">
+                    <h4>Kommentariyalar</h4>
+                    <p>Film haqidagi fikringizni yozib qoldiring.</p>
+                </div>
+
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-form-stack mb-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ back_url }}">
+
+                        <div class="mb-3">
+                            {{ comment_form.body }}
+                            <div class="text-danger small">{{ comment_form.body.errors }}</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-gradient btn-smish">Yuborish</button>
+                    </form>
+                {% else %}
+                    <div class="login-required-box compact-box mb-3">
+                        <p class="mb-2">Kommentariya yozish uchun tizimga kiring.</p>
+                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
+                            Kirish
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="detail-v4-comments-scroll">
+                    {% for comment in comments %}
+                        <article class="detail-v4-comment-card">
+                            <div class="detail-v4-comment-top">
+                                <span class="detail-v4-comment-author">{{ comment.user.get_full_name|default:comment.user.username }}</span>
+
+                                {% if user.is_authenticated %}
+                                    <form method="post" action="{% url 'comment_like' comment.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ back_url }}">
+                                        <button type="submit" class="comment-like-btn {% if comment.is_liked %}is-active{% endif %}">
+                                            ♥ {{ comment.like_count }}
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="comment-like-btn">
+                                        ♥ {{ comment.like_count }}
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <div class="detail-v4-comment-body">
+                                {{ comment.body|linebreaksbr }}
+                            </div>
+
+                            <div class="detail-v4-comment-time">
+                                {{ comment.created_at|date:"Y-m-d H:i" }}
+                            </div>
+                        </article>
+                    {% empty %}
+                        <div class="media-empty-state compact">
+                            <h5>Hozircha kommentariya yo‘q</h5>
+                            <p>Birinchi bo‘lib fikr qoldiring.</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -319,7 +318,7 @@
 (function () {
     const ratingInput = document.getElementById("ratingValueInput");
     const ratingValue = document.getElementById("selectedRatingValue");
-    const starButtons = Array.from(document.querySelectorAll(".detail-v3-star-btn"));
+    const starButtons = Array.from(document.querySelectorAll(".detail-v4-star-btn"));
     const reviewInput = document.getElementById("id_review");
     const reviewCounter = document.getElementById("reviewCounter");
     const reviewEditorWrap = document.getElementById("reviewEditorWrap");
@@ -356,8 +355,8 @@
         const starNumber = parseInt(button.dataset.star, 10);
         const rect = button.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
-        const half = offsetX <= rect.width / 2;
-        return half ? (starNumber - 0.5) : starNumber;
+        const isHalf = offsetX <= rect.width / 2;
+        return isHalf ? (starNumber - 0.5) : starNumber;
     }
 
     function openReviewEditor() {
