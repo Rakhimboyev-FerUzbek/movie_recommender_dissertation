@@ -1438,3 +1438,138 @@ body[data-theme="light"] .movie-info-item {
         align-items: flex-start;
     }
 }
+.detail-main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.92fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.detail-primary-column,
+.detail-secondary-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.fixed-side-card {
+    width: 100%;
+    min-height: 280px;
+}
+
+.comments-side-card {
+    min-height: 560px;
+}
+
+.fixed-comments-scroll {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.fixed-comments-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.fixed-comments-scroll::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.24);
+    border-radius: 999px;
+}
+
+.media-block-card-compact {
+    min-height: 560px;
+}
+
+.media-player-shell {
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fixed-media-frame {
+    width: 100%;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.fixed-media-frame iframe,
+.fixed-media-frame video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.fixed-media-empty {
+    width: 100%;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.detail-media-tabs .nav-link {
+    min-width: 160px;
+    border-radius: 12px;
+}
+
+.detail-story-grid {
+    display: block;
+}
+
+.overview-card,
+.movie-info-card {
+    width: 100%;
+}
+
+.movie-info-card {
+    margin-top: 0;
+}
+
+@media (max-width: 1199px) {
+    .detail-main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .comments-side-card {
+        min-height: 420px;
+    }
+
+    .media-block-card-compact {
+        min-height: 460px;
+    }
+
+    .media-player-shell,
+    .fixed-media-frame,
+    .fixed-media-empty {
+        min-height: 360px;
+    }
+}
+
+@media (max-width: 767px) {
+    .media-block-card-compact {
+        min-height: 360px;
+    }
+
+    .media-player-shell,
+    .fixed-media-frame,
+    .fixed-media-empty {
+        min-height: 260px;
+    }
+
+    .comments-side-card {
+        min-height: 360px;
+    }
+
+    .fixed-comments-scroll {
+        max-height: 260px;
+    }
+}

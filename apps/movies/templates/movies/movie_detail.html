@@ -49,224 +49,236 @@
                     {% endfor %}
                 </div>
 
-                <div class="detail-story-grid">
-                    <div class="glass-card compact-info-card overview-card">
-                        <h4>{{ t.overview }}</h4>
-                        <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
-                    </div>
+                <div class="detail-main-layout">
+                    <div class="detail-primary-column">
+                        <div class="glass-card compact-info-card overview-card">
+                            <h4>{{ t.overview }}</h4>
+                            <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
+                        </div>
 
-                    <div class="glass-card compact-info-card movie-info-card">
-                        <h4>{{ t.movie_information|default:"Film ma'lumotlari" }}</h4>
+                        <div class="glass-card compact-info-card movie-info-card">
+                            <h4>{{ t.movie_information|default:"Film ma'lumotlari" }}</h4>
 
-                        <div class="movie-info-grid compact">
-                            <div class="movie-info-item">
-                                <span>{{ t.language_label|default:"Til" }}</span>
-                                <strong>{{ movie.language|default:t.not_available|default:"Mavjud emas" }}</strong>
-                            </div>
-
-                            <div class="movie-info-item">
-                                <span>{{ t.country_label|default:"Mamlakat" }}</span>
-                                <strong>{{ movie.country|default:t.not_available|default:"Mavjud emas" }}</strong>
-                            </div>
-
-                            <div class="movie-info-item full">
-                                <span>{{ t.director_label|default:"Rejissyor" }}</span>
-                                <strong>{{ movie.director|default:t.not_available|default:"Mavjud emas" }}</strong>
-                            </div>
-
-                            <div class="movie-info-item full">
-                                <span>{{ t.cast_label|default:"Aktyorlar tarkibi" }}</span>
-                                <div class="genre-chip-wrap mt-2">
-                                    {% for actor in movie.cast_names %}
-                                        <span class="genre-chip">{{ actor }}</span>
-                                    {% empty %}
-                                        <span class="text-muted">{{ t.not_available|default:"Mavjud emas" }}</span>
-                                    {% endfor %}
+                            <div class="movie-info-grid compact">
+                                <div class="movie-info-item">
+                                    <span>{{ t.language_label|default:"Til" }}</span>
+                                    <strong>{{ movie.language|default:t.not_available|default:"Mavjud emas" }}</strong>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="detail-lower-grid mt-4 fade-up">
-            <div class="glass-card media-block-card media-block-card-compact">
-               <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
-                            TREYLER
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
-                            ONLINE KO‘RISH
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="tab-content media-tab-content mt-3">
-                    <div class="tab-pane fade" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
-                        {% if full_video_mode == "file" %}
-                            <div class="media-player-frame">
-                                <video controls preload="metadata" class="movie-video-player">
-                                    <source src="{{ movie.full_video_file.url }}">
-                                    Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
-                                </video>
-                            </div>
-                        {% elif full_video_mode == "direct" %}
-                            <div class="media-player-frame">
-                                <video controls preload="metadata" class="movie-video-player">
-                                    <source src="{{ movie.full_video_url }}">
-                                    Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
-                                </video>
-                            </div>
-                        {% elif full_video_mode == "iframe" %}
-                            <div class="media-player-frame ratio ratio-16x9">
-                                <iframe
-                                    src="{{ movie.full_video_url }}"
-                                    title="{{ movie.title }} full movie"
-                                    allowfullscreen
-                                    loading="lazy">
-                                </iframe>
-                            </div>
-                        {% else %}
-                            <div class="media-empty-state">
-                                <h5>No Video</h5>
-                                <p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="tab-pane fade show active" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
-                        {% if movie.trailer_url %}
-                            <div class="media-player-frame ratio ratio-16x9">
-                                <iframe
-                                    src="{{ movie.trailer_url }}"
-                                    title="{{ movie.title }} trailer"
-                                    allowfullscreen
-                                    loading="lazy"
-                                    referrerpolicy="strict-origin-when-cross-origin">
-                                </iframe>
-                            </div>
-                        {% else %}
-                            <div class="media-empty-state">
-                                <h5>No Video</h5>
-                                <p>Hozircha treyler topilmadi yoki TMDB token sozlanmagan.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-side-stack">
-                <div id="rating-section" class="glass-card compact-side-card">
-                    <div class="detail-section-head compact">
-                        <div>
-                            <h4>Reyting berish</h4>
-                            <p class="mb-0">Filmga baho bering va qisqa fikr yozishingiz mumkin.</p>
-                        </div>
-                    </div>
-
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-form-stack">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{{ back_url }}">
-
-                            <div class="mb-3">
-                                <label class="form-label">Reyting</label>
-                                {{ rating_form.rating }}
-                                <div class="text-danger small">{{ rating_form.rating.errors }}</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Fikr</label>
-                                {{ rating_form.review }}
-                                <div class="text-danger small">{{ rating_form.review.errors }}</div>
-                            </div>
-
-                            {% if user_rating %}
-                                <div class="inline-info-chip mb-3">
-                                    Sizning reytingingiz: <strong>{{ user_rating.rating|floatformat:1 }}</strong>
+                                <div class="movie-info-item">
+                                    <span>{{ t.country_label|default:"Mamlakat" }}</span>
+                                    <strong>{{ movie.country|default:t.not_available|default:"Mavjud emas" }}</strong>
                                 </div>
-                            {% endif %}
 
-                            <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
-                        </form>
-                    {% else %}
-                        <div class="login-required-box compact-box">
-                            <p class="mb-2">Reyting berish uchun tizimga kiring.</p>
-                            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
-                                Kirish
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
+                                <div class="movie-info-item full">
+                                    <span>{{ t.director_label|default:"Rejissyor" }}</span>
+                                    <strong>{{ movie.director|default:t.not_available|default:"Mavjud emas" }}</strong>
+                                </div>
 
-                <div id="comments-section" class="glass-card compact-side-card">
-                    <div class="detail-section-head compact">
-                        <div>
-                            <h4>Kommentariyalar</h4>
-                            <p class="mb-0">Film haqidagi fikrlaringizni yozib qoldiring.</p>
-                        </div>
-                    </div>
-
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-form-stack mb-3">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{{ back_url }}">
-
-                            <div class="mb-3">
-                                {{ comment_form.body }}
-                                <div class="text-danger small">{{ comment_form.body.errors }}</div>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary-gradient btn-smish">Yuborish</button>
-                        </form>
-                    {% else %}
-                        <div class="login-required-box compact-box mb-3">
-                            <p class="mb-2">Kommentariya yozish uchun tizimga kiring.</p>
-                            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
-                                Kirish
-                            </a>
-                        </div>
-                    {% endif %}
-
-                    <div class="comment-list compact-scroll">
-                        {% for comment in comments %}
-                            <article class="comment-card compact">
-                                <div class="comment-card-head">
-                                    <div>
-                                        <h6 class="mb-1">{{ comment.user.get_full_name|default:comment.user.username }}</h6>
-                                        <small class="text-muted">{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+                                <div class="movie-info-item full">
+                                    <span>{{ t.cast_label|default:"Aktyorlar tarkibi" }}</span>
+                                    <div class="genre-chip-wrap mt-2">
+                                        {% for actor in movie.cast_names %}
+                                            <span class="genre-chip">{{ actor }}</span>
+                                        {% empty %}
+                                            <span class="text-muted">{{ t.not_available|default:"Mavjud emas" }}</span>
+                                        {% endfor %}
                                     </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    {% if user.is_authenticated %}
-                                        <form method="post" action="{% url 'comment_like' comment.id %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="next" value="{{ back_url }}">
-                                            <button type="submit" class="comment-like-btn {% if comment.is_liked %}is-active{% endif %}">
-                                                ♥ {{ comment.like_count }}
-                                            </button>
-                                        </form>
+                        <div class="glass-card media-block-card media-block-card-compact">
+                            <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
+                                        TREYLER
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
+                                        ONLINE KO‘RISH
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content media-tab-content mt-3">
+                                <div class="tab-pane fade" id="watch-pane" role="tabpanel" aria-labelledby="watch-tab">
+                                    {% if full_video_mode == "file" %}
+                                        <div class="media-player-shell">
+                                            <div class="media-player-frame fixed-media-frame">
+                                                <video controls preload="metadata" class="movie-video-player">
+                                                    <source src="{{ movie.full_video_file.url }}">
+                                                    Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                                </video>
+                                            </div>
+                                        </div>
+                                    {% elif full_video_mode == "direct" %}
+                                        <div class="media-player-shell">
+                                            <div class="media-player-frame fixed-media-frame">
+                                                <video controls preload="metadata" class="movie-video-player">
+                                                    <source src="{{ movie.full_video_url }}">
+                                                    Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                                </video>
+                                            </div>
+                                        </div>
+                                    {% elif full_video_mode == "iframe" %}
+                                        <div class="media-player-shell">
+                                            <div class="media-player-frame fixed-media-frame ratio ratio-16x9">
+                                                <iframe
+                                                    src="{{ movie.full_video_url }}"
+                                                    title="{{ movie.title }} full movie"
+                                                    allowfullscreen
+                                                    loading="lazy">
+                                                </iframe>
+                                            </div>
+                                        </div>
                                     {% else %}
-                                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="comment-like-btn">
-                                            ♥ {{ comment.like_count }}
-                                        </a>
+                                        <div class="media-player-shell">
+                                            <div class="media-empty-state fixed-media-empty">
+                                                <h5>No Video</h5>
+                                                <p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 </div>
 
-                                <div class="comment-body">
-                                    {{ comment.body|linebreaksbr }}
+                                <div class="tab-pane fade show active" id="trailer-pane" role="tabpanel" aria-labelledby="trailer-tab">
+                                    {% if movie.trailer_url %}
+                                        <div class="media-player-shell">
+                                            <div class="media-player-frame fixed-media-frame ratio ratio-16x9">
+                                                <iframe
+                                                    src="{{ movie.trailer_url }}"
+                                                    title="{{ movie.title }} trailer"
+                                                    allowfullscreen
+                                                    loading="lazy"
+                                                    referrerpolicy="strict-origin-when-cross-origin">
+                                                </iframe>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="media-player-shell">
+                                            <div class="media-empty-state fixed-media-empty">
+                                                <h5>No Video</h5>
+                                                <p>Hozircha treyler topilmadi yoki TMDB token sozlanmagan.</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            </article>
-                        {% empty %}
-                            <div class="media-empty-state compact">
-                                <h5>Hozircha kommentariya yo‘q</h5>
-                                <p>Birinchi bo‘lib fikr qoldiring.</p>
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
+
+                    <aside class="detail-secondary-column">
+                        <div id="rating-section" class="glass-card compact-side-card fixed-side-card">
+                            <div class="detail-section-head compact">
+                                <div>
+                                    <h4>Reyting berish</h4>
+                                    <p class="mb-0">Filmga baho bering va qisqa fikr yozishingiz mumkin.</p>
+                                </div>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-form-stack">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ back_url }}">
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Reyting</label>
+                                        {{ rating_form.rating }}
+                                        <div class="text-danger small">{{ rating_form.rating.errors }}</div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Fikr</label>
+                                        {{ rating_form.review }}
+                                        <div class="text-danger small">{{ rating_form.review.errors }}</div>
+                                    </div>
+
+                                    {% if user_rating %}
+                                        <div class="inline-info-chip mb-3">
+                                            Sizning reytingingiz: <strong>{{ user_rating.rating|floatformat:1 }}</strong>
+                                        </div>
+                                    {% endif %}
+
+                                    <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                                </form>
+                            {% else %}
+                                <div class="login-required-box compact-box">
+                                    <p class="mb-2">Reyting berish uchun tizimga kiring.</p>
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
+                                        Kirish
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div id="comments-section" class="glass-card compact-side-card fixed-side-card comments-side-card">
+                            <div class="detail-section-head compact">
+                                <div>
+                                    <h4>Kommentariyalar</h4>
+                                    <p class="mb-0">Film haqidagi fikrlaringizni yozib qoldiring.</p>
+                                </div>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-form-stack mb-3">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ back_url }}">
+
+                                    <div class="mb-3">
+                                        {{ comment_form.body }}
+                                        <div class="text-danger small">{{ comment_form.body.errors }}</div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary-gradient btn-smish">Yuborish</button>
+                                </form>
+                            {% else %}
+                                <div class="login-required-box compact-box mb-3">
+                                    <p class="mb-2">Kommentariya yozish uchun tizimga kiring.</p>
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
+                                        Kirish
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            <div class="comment-list compact-scroll fixed-comments-scroll">
+                                {% for comment in comments %}
+                                    <article class="comment-card compact">
+                                        <div class="comment-card-head">
+                                            <div>
+                                                <h6 class="mb-1">{{ comment.user.get_full_name|default:comment.user.username }}</h6>
+                                                <small class="text-muted">{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+                                            </div>
+
+                                            {% if user.is_authenticated %}
+                                                <form method="post" action="{% url 'comment_like' comment.id %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="next" value="{{ back_url }}">
+                                                    <button type="submit" class="comment-like-btn {% if comment.is_liked %}is-active{% endif %}">
+                                                        ♥ {{ comment.like_count }}
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="comment-like-btn">
+                                                    ♥ {{ comment.like_count }}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="comment-body">
+                                            {{ comment.body|linebreaksbr }}
+                                        </div>
+                                    </article>
+                                {% empty %}
+                                    <div class="media-empty-state compact">
+                                        <h5>Hozircha kommentariya yo‘q</h5>
+                                        <p>Birinchi bo‘lib fikr qoldiring.</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>

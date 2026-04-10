@@ -42,7 +42,6 @@
                 <div class="recommendation-toolbar-item">
                     <label for="recommendationSort" class="form-label">Saralash</label>
                     <select id="recommendationSort" class="form-select">
-                        <option value="score_desc">Moslik bo‘yicha</option>
                         <option value="rating_desc">Reyting bo‘yicha</option>
                         <option value="year_desc">Yil bo‘yicha</option>
                         <option value="title_asc">Nom A-Z</option>
@@ -95,7 +94,10 @@
                                         <span class="rating-value">{{ item.avg_rating|floatformat:1 }}</span>
                                     </span>
 
-                                    <span class="rec-rating-count">{{ item.rating_count }} ta baho</span>
+                                    <span class="engagement-pill">
+                                        <span class="engagement-label">Baho</span>
+                                        <strong>{{ item.rating_count }}</strong>
+                                    </span>
                                 </div>
 
                                 <div class="movie-genre-chips">
@@ -162,10 +164,6 @@
 
     let selectedGenres = new Set();
 
-    function getSelectedGenres() {
-        return Array.from(selectedGenres);
-    }
-
     function syncGenreButtons() {
         genreButtons.forEach(btn => {
             const genre = btn.dataset.genre;
@@ -184,9 +182,6 @@
             if (mode === "title_asc") {
                 return a.dataset.title.localeCompare(b.dataset.title);
             }
-            if (mode === "rating_desc") {
-                return parseFloat(b.dataset.rating || "0") - parseFloat(a.dataset.rating || "0");
-            }
             if (mode === "year_desc") {
                 return parseInt(b.dataset.year || "0", 10) - parseInt(a.dataset.year || "0", 10);
             }
@@ -196,7 +191,7 @@
 
     function applyFilters() {
         const query = (searchInput.value || "").trim().toLowerCase();
-        const selected = getSelectedGenres();
+        const selected = Array.from(selectedGenres);
 
         let filtered = cards.filter(card => {
             const title = card.dataset.title || "";
