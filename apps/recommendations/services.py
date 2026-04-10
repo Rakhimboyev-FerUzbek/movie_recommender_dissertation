@@ -258,16 +258,27 @@ class RecommendationService:
         self,
         user: User,
         model_key: str = MODEL_AUTO,
-        top_k: int = 10,
+        top_k: int | None = None,
         scenario: str = SCENARIO_NORMAL,
     ) -> dict[str, Any]:
-        top_k = max(3, min(int(top_k), 30))
+        if top_k in ("", 0):
+            top_k = None
+
+        if top_k is None and model_key == MODEL_AUTO:
+            top_k = self._determine_auto_limit(user=user, scenario=scenario)
+        elif top_k is not None:
+            top_k = max(6, int(top_k))
+
         resolved_model = self._resolve_model(
             user=user, requested_model=model_key, scenario=scenario
         )
         recommendations = self._generate_by_model(
-            user=user, model_key=resolved_model, top_k=top_k, scenario=scenario
+            user=user,
+            model_key=resolved_model,
+            top_k=top_k,
+            scenario=scenario,
         )
+
         return {
             "requested_model": model_key,
             "resolved_model": resolved_model,
@@ -284,6 +295,27 @@ class RecommendationService:
             "recommendations": recommendations,
         }
 
+    def _determine_auto_limit(self, user: User, scenario: str) -> int:
+        if scenario == SCENARIO_NEW_USER:
+            return 36
+
+        rating_count = self._get_user_rating_count(user.id)
+
+        if rating_count == 0:
+            return 32
+        if rating_count < 5:
+            return 40
+        if rating_count < 15:
+            return 56
+        if rating_count < 30:
+            return 72
+        return 96
+
+    def _apply_limit(self, ranked_df: pd.DataFrame, top_k: int | None) -> pd.DataFrame:
+        if top_k is None:
+            return ranked_df.reset_index(drop=True)
+        return ranked_df.head(top_k).reset_index(drop=True)
+
     def _resolve_model(self, user: User, requested_model: str, scenario: str) -> str:
         if requested_model != MODEL_AUTO:
             return requested_model
@@ -298,7 +330,7 @@ class RecommendationService:
         return MODEL_HYBRID
 
     def _generate_by_model(
-        self, user: User, model_key: str, top_k: int, scenario: str
+        self, user: User, model_key: str, top_k: int | None, scenario: str
     ) -> list[dict[str, Any]]:
         popularity_df = self._popularity_scores(user.id, top_k=None)
         content_df = self._content_scores(user, scenario=scenario)
@@ -306,34 +338,46 @@ class RecommendationService:
         svd_df = self._svd_scores(user, scenario=scenario)
 
         if model_key == MODEL_POPULARITY:
-            ranked = popularity_df.head(top_k)
+            ranked = self._apply_limit(popularity_df, top_k)
             return self._materialize_items(
                 ranked, model_key=MODEL_POPULARITY, user=user, scenario=scenario
             )
+
         if model_key == MODEL_CONTENT:
-            ranked = self._merge_with_fallback(content_df, popularity_df).head(top_k)
+            ranked = self._apply_limit(
+                self._merge_with_fallback(content_df, popularity_df), top_k
+            )
             return self._materialize_items(
                 ranked, model_key=MODEL_CONTENT, user=user, scenario=scenario
             )
+
         if model_key == MODEL_ITEM:
-            ranked = self._merge_with_fallback(item_df, popularity_df).head(top_k)
+            ranked = self._apply_limit(
+                self._merge_with_fallback(item_df, popularity_df), top_k
+            )
             return self._materialize_items(
                 ranked, model_key=MODEL_ITEM, user=user, scenario=scenario
             )
+
         if model_key == MODEL_SVD:
-            ranked = self._merge_with_fallback(svd_df, popularity_df).head(top_k)
+            ranked = self._apply_limit(
+                self._merge_with_fallback(svd_df, popularity_df), top_k
+            )
             return self._materialize_items(
                 ranked, model_key=MODEL_SVD, user=user, scenario=scenario
             )
 
-        ranked = self._hybrid_scores(
-            user=user,
-            scenario=scenario,
-            popularity_df=popularity_df,
-            content_df=content_df,
-            item_df=item_df,
-            svd_df=svd_df,
-        ).head(top_k)
+        ranked = self._apply_limit(
+            self._hybrid_scores(
+                user=user,
+                scenario=scenario,
+                popularity_df=popularity_df,
+                content_df=content_df,
+                item_df=item_df,
+                svd_df=svd_df,
+            ),
+            top_k,
+        )
         return self._materialize_items(
             ranked, model_key=MODEL_HYBRID, user=user, scenario=scenario
         )
@@ -422,7 +466,6 @@ class RecommendationService:
         ranked["final_score"] = ranked["popularity_norm"]
         return ranked
 
-
     def _content_scores(self, user: User, scenario: str) -> pd.DataFrame:
         candidates = self._base_candidate_df(user, scenario)
         if candidates.empty:
@@ -457,7 +500,9 @@ class RecommendationService:
                 profile_vector = np.asarray(matrix.multiply(weights).sum(axis=0))
 
         if profile_vector is None and preferred_genres:
-            profile_vector = self.runtime.vectorizer.transform([" ".join(preferred_genres)])
+            profile_vector = self.runtime.vectorizer.transform(
+                [" ".join(preferred_genres)]
+            )
 
         if profile_vector is None:
             candidates["content_score"] = 0.0
@@ -649,31 +694,26 @@ class RecommendationService:
     ) -> str:
         movie_data = self.runtime.movie_lookup.get(movie_id, {})
         title = movie_data.get("title", "Ushbu film")
+
         if model_key == MODEL_POPULARITY:
-            return (
-                f"{title} ommaboplik modeli orqali tavsiya qilindi: o'rtacha reytingi "
-                f"{movie_data.get('avg_rating', 0):.1f} va baholar soni {movie_data.get('rating_count', 0)} ta."
-            )
+            return f"{title} ommabopligi yuqori bo‘lgani uchun tavsiya qilindi."
+
         if model_key == MODEL_CONTENT:
             return self._content_explanation(
                 user=user, movie_id=movie_id, scenario=scenario
             )
+
         if model_key == MODEL_ITEM:
             return self._item_explanation(
                 user=user, movie_id=movie_id, scenario=scenario
             )
+
         if model_key == MODEL_SVD:
             return self._svd_explanation(
                 user=user, movie_id=movie_id, scenario=scenario
             )
 
-        weights = self._get_hybrid_weights(user.id, scenario=scenario)
-        return (
-            f"{title} gibrid model orqali tavsiya qilindi. Og'irliklar: "
-            f"content={weights['content']:.2f}, item={weights['item']:.2f}, "
-            f"svd={weights['svd']:.2f}, popularity={weights['popularity']:.2f}. "
-            f"{self._content_explanation(user=user, movie_id=movie_id, scenario=scenario)}"
-        )
+        return "Bu film sizning baholaringiz, profil janrlaringiz va o‘xshash filmlar signallari asosida tavsiya qilindi."
 
     def _content_explanation(self, user: User, movie_id: int, scenario: str) -> str:
         movie_genres = self.runtime.genre_map.get(movie_id, set())

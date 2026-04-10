@@ -17,7 +17,7 @@
                         <h4>{{ t.filters }}</h4>
                     </div>
 
-                    <form method="get" class="catalog-filter-form">
+                    <form method="get" class="catalog-filter-form" id="catalogFilterForm">
                         <div class="filter-section-card">
                             <div class="filter-section-title">Qidiruv</div>
                             {{ form.q }}
@@ -102,4 +102,27 @@
         </div>
     </div>
 </section>
+<script>
+(function () {
+    const form = document.getElementById("catalogFilterForm");
+    if (!form) return;
+
+    const searchInput = form.querySelector('input[name="q"]');
+    const cards = Array.from(document.querySelectorAll(".movie-card"));
+
+    if (!searchInput || !cards.length) return;
+
+    function applyMovieCardFilter() {
+        const query = (searchInput.value || "").trim().toLowerCase();
+
+        cards.forEach(card => {
+            const title = card.dataset.title || "";
+            const visible = !query || title.includes(query);
+            card.hidden = !visible;
+        });
+    }
+
+    searchInput.addEventListener("input", applyMovieCardFilter);
+})();
+</script>
 {% endblock %}

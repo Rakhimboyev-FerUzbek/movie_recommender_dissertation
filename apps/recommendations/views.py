@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
-from apps.interactions.models import Rating
 from apps.recommendations.forms import RecommendationLabForm
 from apps.recommendations.services import RecommendationService
 
@@ -17,19 +17,30 @@ def auto_recommendation_view(request):
     result = service.recommend_for_user(
         user=request.user,
         model_key="auto",
-        top_k=12,
+        top_k=None,
         scenario="normal",
     )
 
-    recent_ratings = (
-        Rating.objects.filter(user=request.user)
-        .select_related("movie")
-        .order_by("-updated_at")[:5]
+    all_recommendations = result["recommendations"]
+
+    genre_filters = sorted(
+        {
+            genre.name
+            for item in all_recommendations
+            for genre in item["movie"].genres.all()
+        }
     )
+
+    paginator = Paginator(all_recommendations, 24)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
 
     context = {
         "result": result,
-        "recent_ratings": recent_ratings,
+        "genre_filters": genre_filters,
+        "total_recommendations": len(all_recommendations),
+        "page_obj": page_obj,
+        "recommendations_page": page_obj.object_list,
     }
     return render(request, "recommendations/for_you.html", context)
 
@@ -46,6 +57,7 @@ def recommendation_lab_view(request):
     if form.is_valid():
         target_user_id = form.cleaned_data.get("user_id") or request.user.id
         selected_user = User.objects.get(pk=target_user_id)
+
         service = RecommendationService()
         result = service.recommend_for_user(
             user=selected_user,
