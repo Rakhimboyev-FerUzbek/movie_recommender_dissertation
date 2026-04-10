@@ -11,14 +11,6 @@
                 <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
                 <p>{{ t.welcome }}, {{ request.user.username }}</p>
             </div>
-
-            <div class="profile-header-actions">
-                {% if is_edit_mode %}
-                    <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
-                {% else %}
-                    <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
-                {% endif %}
-            </div>
         </div>
 
         <div class="profile-grid">
@@ -152,8 +144,9 @@
                                     </div>
 
                                     <div class="profile-photo-fields">
+                                        <label class="form-label mb-2">{{ t.profile_photo }}</label>
                                         {{ profile_form.profile_photo }}
-                                        <div class="text-danger small">{{ profile_form.profile_photo.errors }}</div>
+                                        <div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>
 
                                         <div class="form-check mt-3">
                                             {{ profile_form.remove_profile_photo }}
@@ -242,6 +235,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="profile-header-actions mt-4">
+                            <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
                         </div>
                     </div>
                 {% endif %}

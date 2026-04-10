@@ -27,6 +27,16 @@
                 <li class="nav-item">
                     <a class="nav-link nav-link-clean" href="{% url 'movie_list' %}">{{ t.movies }}</a>
                 </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">Auto Recommendation</a>
+                    </li>
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">Recommendation Lab</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
             </ul>
 
             <div class="d-flex align-items-center gap-2 nav-actions flex-wrap">

@@ -11,6 +11,7 @@ urlpatterns = [
     path("", home_view, name="home"),
     path("accounts/", include("apps.users.urls")),
     path("movies/", include("apps.movies.urls")),
+    path("recommendations/", include("apps.recommendations.urls")),
     path("set-language/<str:lang_code>/", set_language_view, name="set_language"),
 ]
 

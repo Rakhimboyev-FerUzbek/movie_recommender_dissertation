@@ -83,8 +83,6 @@ def delete_account_view(request):
 
     with transaction.atomic():
         if profile:
-            if profile.profile_photo:
-                profile.profile_photo.delete(save=False)
             profile.bio = ""
             profile.birth_year = None
             profile.preferred_genres = []

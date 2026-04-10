@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "apps.users.apps.UsersConfig",
     "apps.movies.apps.MoviesConfig",
     "apps.interactions.apps.InteractionsConfig",
+    "apps.recommendations.apps.RecommendationsConfig",    
 ]
 
 MIDDLEWARE = [

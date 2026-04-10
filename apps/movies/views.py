@@ -16,6 +16,7 @@ from apps.interactions.forms import CommentForm, RatingForm
 from apps.interactions.models import Comment, CommentLike, Rating
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 
+from apps.recommendations.services import RecommendationService
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -37,9 +38,18 @@ def home_view(request):
     featured_movies = Movie.objects.filter(is_active=True).order_by("-popularity_score", "-avg_rating")[:8]
     top_rated_movies = Movie.objects.filter(is_active=True).order_by("-avg_rating", "title")[:8]
 
+    personalized_recommendations = []
+    auto_summary = None
+    if request.user.is_authenticated:
+        service = RecommendationService()
+        auto_summary = service.recommend_for_user(request.user, model_key="auto", top_k=8, scenario="normal")
+        personalized_recommendations = auto_summary["recommendations"]
+
     context = {
         "featured_movies": featured_movies,
         "top_rated_movies": top_rated_movies,
+        "personalized_recommendations": personalized_recommendations,
+        "auto_summary": auto_summary,
     }
     return render(request, "home.html", context)
 
