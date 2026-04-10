@@ -1,53 +1,53 @@
+from decimal import Decimal
+
 from django import forms
 
-from apps.interactions.models import Comment
+from apps.interactions.models import Comment, Rating
 
 
-class RatingForm(forms.Form):
+class RatingForm(forms.ModelForm):
     rating = forms.DecimalField(
-        min_value=0.5,
-        max_value=5.0,
+        min_value=Decimal("0.5"),
+        max_value=Decimal("5.0"),
         decimal_places=1,
         max_digits=2,
-        widget=forms.NumberInput(
-            attrs={
-                "class": "form-control",
-                "min": "0.5",
-                "max": "5.0",
-                "step": "0.5",
-                "placeholder": "Masalan: 4.5",
-            }
-        ),
+        required=True,
     )
     review = forms.CharField(
         required=False,
-        widget=forms.Textarea(
+        max_length=50,
+        widget=forms.TextInput(
             attrs={
-                "class": "form-control form-textarea",
-                "rows": 4,
-                "placeholder": "Qisqa fikr qoldiring (ixtiyoriy)...",
+                "class": "form-control",
+                "maxlength": "50",
+                "placeholder": "Masalan: Juda zo'r film",
             }
         ),
     )
 
+    class Meta:
+        model = Rating
+        fields = ("rating", "review")
+
     def clean_rating(self):
-        value = float(self.cleaned_data["rating"])
-        doubled = value * 2
-        if doubled != round(doubled):
-            raise forms.ValidationError("Reyting 0.5 qadam bilan kiritilishi kerak.")
-        return value
+        rating = self.cleaned_data["rating"]
+        doubled = float(rating) * 2
+        if abs(doubled - round(doubled)) > 1e-9:
+            raise forms.ValidationError("Reyting 0.5 qadam bilan bo‘lishi kerak.")
+        return rating
 
 
 class CommentForm(forms.ModelForm):
+    body = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Fikringizni yozing...",
+            }
+        )
+    )
+
     class Meta:
         model = Comment
-        fields = ["body"]
-        widgets = {
-            "body": forms.Textarea(
-                attrs={
-                    "class": "form-control form-textarea",
-                    "rows": 4,
-                    "placeholder": "Fikringizni yozing...",
-                }
-            )
-        }
+        fields = ("body",)

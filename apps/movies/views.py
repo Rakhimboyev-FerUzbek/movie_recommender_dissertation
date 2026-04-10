@@ -1,22 +1,16 @@
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
-
-from apps.movies.forms import MovieFilterForm, SORT_CHOICES
-from apps.movies.models import Genre, Movie
-
-from django.urls import reverse
-from django.utils.http import url_has_allowed_host_and_scheme
-
-from django.db.models import Count
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from apps.interactions.forms import CommentForm, RatingForm
 from apps.interactions.models import Comment, CommentLike, Rating
+from apps.movies.forms import MovieFilterForm, SORT_CHOICES
+from apps.movies.models import Genre, Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
-
 from apps.recommendations.services import RecommendationService
+
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -42,7 +36,12 @@ def home_view(request):
     auto_summary = None
     if request.user.is_authenticated:
         service = RecommendationService()
-        auto_summary = service.recommend_for_user(request.user, model_key="auto", top_k=8, scenario="normal")
+        auto_summary = service.recommend_for_user(
+            request.user,
+            model_key="auto",
+            top_k=8,
+            scenario="normal",
+        )
         personalized_recommendations = auto_summary["recommendations"]
 
     context = {
@@ -71,9 +70,9 @@ def movie_list_view(request):
 
         if q:
             qs = qs.filter(
-                Q(title__icontains=q) |
-                Q(overview__icontains=q) |
-                Q(genres__name__icontains=q)
+                Q(title__icontains=q)
+                | Q(overview__icontains=q)
+                | Q(genres__name__icontains=q)
             ).distinct()
 
         if selected_genres:
@@ -165,6 +164,12 @@ def movie_detail_view(request, slug):
     rating_form = RatingForm(initial=rating_initial)
     comment_form = CommentForm()
 
+    selected_rating_str = "0"
+    if request.method == "POST":
+        selected_rating_str = request.POST.get("rating", "0").strip() or "0"
+    elif existing_rating and existing_rating.rating is not None:
+        selected_rating_str = str(existing_rating.rating).rstrip("0").rstrip(".")
+
     comments = list(
         Comment.objects.filter(movie=movie)
         .select_related("user")
@@ -191,6 +196,7 @@ def movie_detail_view(request, slug):
         "rating_form": rating_form,
         "comment_form": comment_form,
         "user_rating": existing_rating,
+        "selected_rating_str": selected_rating_str,
         "comments": comments,
         "full_video_mode": detect_full_video_mode(movie),
     }
