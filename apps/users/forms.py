@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from django.core.files.storage import default_storage
 
 from apps.movies.models import Genre
 from apps.users.models import UserProfile
@@ -32,8 +31,6 @@ class StyledFormMixin:
 
             if isinstance(widget, forms.Textarea):
                 css_class = "form-control form-textarea"
-            elif isinstance(widget, forms.ClearableFileInput):
-                css_class = "form-control"
             elif isinstance(widget, forms.CheckboxInput):
                 css_class = "form-check-input"
             elif isinstance(widget, forms.CheckboxSelectMultiple):
@@ -45,7 +42,7 @@ class StyledFormMixin:
             if css_class:
                 widget.attrs["class"] = f"{existing_class} {css_class}".strip()
 
-            if not isinstance(widget, (forms.CheckboxInput, forms.CheckboxSelectMultiple, forms.ClearableFileInput)):
+            if not isinstance(widget, (forms.CheckboxInput, forms.CheckboxSelectMultiple)):
                 widget.attrs.setdefault("placeholder", field.label or field_name.replace("_", " ").title())
 
         if "password" in self.fields:
@@ -164,6 +161,14 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         if self.instance and self.instance.preferred_genres:
             self.fields["preferred_genres"].initial = self.instance.preferred_genres
 
+        self.fields["profile_photo"].widget = forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "accept": "image/*",
+            }
+        )
+        self.fields["remove_profile_photo"].widget.attrs["class"] = "form-check-input"
+
     def clean_birth_year(self):
         birth_year = self.cleaned_data.get("birth_year")
         if birth_year is not None and (birth_year < 1900 or birth_year > 2100):
@@ -171,29 +176,13 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         return birth_year
 
     def save(self, commit=True):
-        old_photo_name = ""
-        if self.instance.pk and self.instance.profile_photo:
-            old_photo_name = self.instance.profile_photo.name
-
         profile = super().save(commit=False)
         profile.preferred_genres = self.cleaned_data.get("preferred_genres", [])
 
         if self.cleaned_data.get("remove_profile_photo"):
-            if profile.profile_photo:
-                profile.profile_photo.delete(save=False)
             profile.profile_photo = None
 
         if commit:
             profile.save()
-
-            new_photo = self.cleaned_data.get("profile_photo")
-            if (
-                old_photo_name
-                and new_photo
-                and profile.profile_photo
-                and old_photo_name != profile.profile_photo.name
-                and default_storage.exists(old_photo_name)
-            ):
-                default_storage.delete(old_photo_name)
 
         return profile

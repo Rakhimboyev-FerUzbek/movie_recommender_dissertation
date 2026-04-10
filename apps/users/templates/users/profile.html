@@ -11,14 +11,6 @@
                 <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
                 <p>{{ t.welcome }}, {{ request.user.username }}</p>
             </div>
-
-            <div class="profile-header-actions">
-                {% if is_edit_mode %}
-                    <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
-                {% else %}
-                    <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
-                {% endif %}
-            </div>
         </div>
 
         <div class="profile-grid">
@@ -94,46 +86,6 @@
                             <h4>{{ t.edit_information }}</h4>
                             <p class="text-muted mb-0">{{ t.additional_information }}</p>
                         </div>
-                        <div class="glass-card profile-info-card mt-4">
-                            <div class="profile-card-head d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">Baholangan filmlar</h4>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    <a href="{% url 'recommend_for_you' %}" class="btn btn-outline-soft btn-sm">Tavsiyalarni ko'rish</a>
-                                    {% if request.user.is_staff %}
-                                        <a href="{% url 'recommendation_lab' %}" class="btn btn-primary-gradient btn-sm">Recommendation Lab</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            {% if rated_movies %}
-                                <div class="table-responsive mt-3">
-                                    <table class="table table-dark table-borderless align-middle mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Film</th>
-                                                <th>Reyting</th>
-                                                <th>Yangilangan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for rating in rated_movies %}
-                                                <tr>
-                                                    <td>
-                                                        <a href="{% url 'movie_detail' rating.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="text-decoration-none text-light">
-                                                            {{ rating.movie.title }}
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ rating.rating|floatformat:1 }}</td>
-                                                    <td>{{ rating.updated_at|date:"Y-m-d H:i" }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% else %}
-                                <p class="text-muted mt-3 mb-0">Hali film baholamagansiz. Kamida bir nechta filmga baho berishingiz Auto Recommendation sifatini oshiradi.</p>
-                            {% endif %}
-                        </div>
 
                         <form method="post" enctype="multipart/form-data" novalidate>
                             {% csrf_token %}
@@ -192,8 +144,9 @@
                                     </div>
 
                                     <div class="profile-photo-fields">
+                                        <label class="form-label mb-2">{{ t.profile_photo }}</label>
                                         {{ profile_form.profile_photo }}
-                                        <div class="text-danger small">{{ profile_form.profile_photo.errors }}</div>
+                                        <div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>
 
                                         <div class="form-check mt-3">
                                             {{ profile_form.remove_profile_photo }}
@@ -282,6 +235,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="profile-header-actions mt-4">
+                            <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
                         </div>
                     </div>
                 {% endif %}
