@@ -96,3 +96,36 @@ py manage.py runserver
 
 pg_dump -U postgres -d sizning_db_nomingiz > database.sql   
 psql -U postgres -d yangi_db_nomi < database.sql
+
+
+BEGIN;
+
+CREATE TEMP TABLE target_movie AS
+SELECT id
+FROM public.movies_movie
+WHERE title = '1-900';
+
+CREATE TEMP TABLE target_comments AS
+SELECT id
+FROM public.interactions_comment
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_commentlike
+WHERE comment_id IN (SELECT id FROM target_comments);
+
+DELETE FROM public.interactions_comment
+WHERE id IN (SELECT id FROM target_comments);
+
+DELETE FROM public.movies_movie_genres
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_rating
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_watchhistory
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.movies_movie
+WHERE id IN (SELECT id FROM target_movie);
+
+COMMIT;
