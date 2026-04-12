@@ -1,6 +1,12 @@
-<div class="movie-card">
+<div
+    class="movie-card standard-movie-card"
+    data-title="{{ movie.title|lower|escape }}"
+    data-genres="{% for genre in movie.genres.all %}{{ genre.name|lower }} {% endfor %}"
+    data-year="{{ movie.release_year|default:0 }}"
+    data-rating="{{ movie.avg_rating }}"
+>
     <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="movie-card-link">
-        <div class="movie-poster-wrap">
+        <div class="movie-poster-wrap standard-poster-wrap">
             {% if movie.poster_url %}
                 <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
             {% else %}
@@ -16,16 +22,31 @@
             </div>
         </div>
 
-        <div class="movie-card-body">
+        <div class="movie-card-body standard-card-body">
             <h5 class="movie-title">{{ movie.title }}</h5>
-            <div class="movie-meta">
-                {% if movie.release_year %}
-                    <span>{{ movie.release_year }}</span>
-                {% endif %}
-                <span>★ {{ movie.avg_rating|floatformat:1 }}</span>
+
+            <div class="rec-sub-meta">
+                <span class="rec-year-country">
+                    {% if movie.release_year %}{{ movie.release_year }}{% endif %}
+                    {% if movie.release_year and movie.country %} · {% endif %}
+                    {{ movie.country|default:"Noma'lum davlat" }}
+                </span>
             </div>
+
+            <div class="rec-rating-row">
+                <span class="rating-pill">
+                    <span class="rating-star">★</span>
+                    <span class="rating-value">{{ movie.avg_rating|floatformat:1 }}</span>
+                </span>
+
+                <span class="engagement-pill">
+                    <span class="engagement-label">Baho</span>
+                    <strong>{{ movie.rating_count }}</strong>
+                </span>
+            </div>
+
             <div class="movie-genre-chips">
-                {% for genre in movie.genres.all|slice:":2" %}
+                {% for genre in movie.genres.all|slice:":3" %}
                     <span class="genre-chip">{{ genre.name }}</span>
                 {% endfor %}
             </div>

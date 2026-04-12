@@ -29,11 +29,11 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">Auto Recommendation</a>
+                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">Shaxsiy tavsiyalar</a>
                     </li>
                     {% if user.is_staff %}
                         <li class="nav-item">
-                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">Recommendation Lab</a>
+                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">Model Lab</a>
                         </li>
                     {% endif %}
                 {% endif %}

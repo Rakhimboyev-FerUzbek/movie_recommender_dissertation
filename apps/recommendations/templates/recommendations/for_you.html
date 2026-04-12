@@ -1,115 +1,246 @@
 {% extends "base.html" %}
 
-{% block title %}Auto Recommendation{% endblock %}
+{% block title %}Shaxsiy tavsiyalar{% endblock %}
 
 {% block content %}
-<section class="content-section">
+<section class="content-section recommendation-dashboard">
     <div class="container">
-        <div class="glass-card mb-4">
-            <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
-                <div>
-                    <span class="hero-kicker">Auto Recommendation</span>
-                    <h1 class="mb-2">Siz uchun tavsiyalar</h1>
-                    <p class="text-muted mb-0">
-                        Tizim sizning baholaringiz, profil janrlaringiz va umumiy katalog signallari asosida
-                        avtomatik ravishda eng mos modelni tanladi.
-                    </p>
+        <div class="glass-card recommendation-hero-card mb-4">
+            <div class="recommendation-hero-copy">
+                <span class="hero-kicker">Personalized Picks</span>
+                <h1 class="mb-2">Shaxsiy tavsiyalar</h1>
+                <p class="text-muted mb-0">
+                    Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.
+                    Qidiruv, janr va saralash orqali ro‘yxatni real vaqtda boshqaring.
+                </p>
+            </div>
+        </div>
+
+        <div class="glass-card recommendation-toolbar-card mb-4">
+            <div class="recommendation-toolbar">
+                <div class="recommendation-toolbar-item recommendation-search-wrap">
+                    <label for="recommendationSearch" class="form-label">Qidiruv</label>
+                    <input
+                        type="text"
+                        id="recommendationSearch"
+                        class="form-control"
+                        placeholder="Film nomi bo‘yicha qidiring..."
+                        autocomplete="off"
+                    >
                 </div>
-                <div class="text-lg-end">
-                    <div class="inline-info-chip mb-2">Tanlangan model: <strong>{{ result.resolved_model_label }}</strong></div>
-                    <div class="inline-info-chip">Baholaringiz soni: <strong>{{ result.user_rating_count }}</strong></div>
+
+                <div class="recommendation-toolbar-item recommendation-toolbar-wide">
+                    <label class="form-label mb-2">Janrlar</label>
+                    <div class="genre-filter-group" id="genreFilterGroup">
+                        <button type="button" class="genre-filter-chip active" data-genre="__all__">Barcha janrlar</button>
+                        {% for genre_name in genre_filters %}
+                            <button type="button" class="genre-filter-chip" data-genre="{{ genre_name|lower }}">{{ genre_name }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="recommendation-toolbar-item">
+                    <label for="recommendationSort" class="form-label">Saralash</label>
+                    <select id="recommendationSort" class="form-select">
+                        <option value="rating_desc">Reyting bo‘yicha</option>
+                        <option value="year_desc">Yil bo‘yicha</option>
+                        <option value="title_asc">Nom A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="recommendation-toolbar-foot">
+                <div class="recommendation-results-info">
+                    Jami tavsiyalar: <strong id="recommendationVisibleCount">{{ total_recommendations }}</strong>
                 </div>
             </div>
         </div>
 
-        {% if result.preferred_genres %}
-            <div class="glass-card mb-4">
-                <div class="profile-card-head">
-                    <h5 class="mb-0">Cold start uchun foydali profil janrlari</h5>
+        {% if recommendations_page %}
+            <div id="recommendationGrid" class="rec-grid">
+                {% for item in recommendations_page %}
+                    <article
+                        class="movie-card rec-card"
+                        data-title="{{ item.movie.title|lower|escape }}"
+                        data-genres="{% for genre in item.movie.genres.all %}{{ genre.name|lower }} {% endfor %}"
+                        data-year="{{ item.movie.release_year|default:0 }}"
+                        data-rating="{{ item.avg_rating }}"
+                    >
+                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
+                            <div class="movie-poster-wrap rec-poster-wrap">
+                                {% if item.movie.poster_url %}
+                                    <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="movie-poster">
+                                {% else %}
+                                    <div class="movie-poster placeholder-poster">
+                                        <span>{{ item.movie.title|slice:":1" }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="movie-card-body rec-card-body">
+                                <h5 class="movie-title rec-title">{{ item.movie.title }}</h5>
+
+                                <div class="rec-sub-meta">
+                                    <span class="rec-year-country">
+                                        {% if item.movie.release_year %}{{ item.movie.release_year }}{% endif %}
+                                        {% if item.movie.release_year and item.movie.country %} · {% endif %}
+                                        {{ item.movie.country|default:"Noma'lum davlat" }}
+                                    </span>
+                                </div>
+
+                                <div class="rec-rating-row">
+                                    <span class="rating-pill">
+                                        <span class="rating-star">★</span>
+                                        <span class="rating-value">{{ item.avg_rating|floatformat:1 }}</span>
+                                    </span>
+
+                                    <span class="engagement-pill">
+                                        <span class="engagement-label">Baho</span>
+                                        <strong>{{ item.rating_count }}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="movie-genre-chips">
+                                    {% for genre in item.movie.genres.all|slice:":3" %}
+                                        <span class="genre-chip">{{ genre.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+
+            {% if page_obj.paginator.num_pages > 1 %}
+                <div class="pagination-wrap mt-4">
+                    <nav aria-label="Recommendation pagination">
+                        <ul class="pagination custom-pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Oldingi</a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num == page_obj.number %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Keyingi</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 </div>
-                <div class="genre-chip-wrap mt-3">
-                    {% for genre in result.preferred_genres %}
-                        <span class="genre-chip">{{ genre }}</span>
-                    {% endfor %}
-                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state-card">
+                <h4 class="mb-2">Hozircha tavsiya shakllantirilmadi</h4>
+                <p class="mb-0">Bir nechta filmga baho bering yoki profil janrlarini belgilang.</p>
             </div>
         {% endif %}
-
-        <div class="glass-card mb-4">
-            <div class="profile-card-head">
-                <h4 class="mb-0">Auto tavsiyalar ro'yxati</h4>
-            </div>
-            {% if result.recommendations %}
-                <div class="movie-row mt-4">
-                    {% for item in result.recommendations %}
-                        <div class="movie-card">
-                            <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
-                                <div class="movie-poster-wrap">
-                                    {% if item.movie.poster_url %}
-                                        <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="movie-poster">
-                                    {% else %}
-                                        <div class="movie-poster placeholder-poster">
-                                            <span>{{ item.movie.title|slice:":1" }}</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="movie-card-body">
-                                    <h5 class="movie-title">{{ item.movie.title }}</h5>
-                                    <div class="movie-meta">
-                                        {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
-                                        <span>★ {{ item.avg_rating|floatformat:1 }}</span>
-                                        <span>Score {{ item.score|floatformat:3 }}</span>
-                                    </div>
-                                    <div class="movie-genre-chips">
-                                        {% for genre in item.movie.genres.all|slice:":2" %}
-                                            <span class="genre-chip">{{ genre.name }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="glass-card mt-2 p-3">
-                                <small class="text-muted d-block mb-1">Explainability</small>
-                                <p class="mb-0 small">{{ item.explanation }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state-card mt-4">
-                    Tavsiya shakllantirish uchun hozircha ma'lumot yetarli emas. Profilingizda janr tanlang yoki bir nechta filmga baho bering.
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="glass-card">
-            <div class="profile-card-head">
-                <h5 class="mb-0">Sizning so'nggi baholaringiz</h5>
-            </div>
-            {% if recent_ratings %}
-                <div class="table-responsive mt-3">
-                    <table class="table table-dark table-borderless align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Film</th>
-                                <th>Reyting</th>
-                                <th>Yangilangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for rating in recent_ratings %}
-                                <tr>
-                                    <td>{{ rating.movie.title }}</td>
-                                    <td>{{ rating.rating|floatformat:1 }}</td>
-                                    <td>{{ rating.updated_at|date:"Y-m-d H:i" }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <p class="text-muted mt-3 mb-0">Hali birorta filmga baho bermagansiz. Baho berganingiz sari tavsiyalar aniqroq bo'ladi.</p>
-            {% endif %}
-        </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const grid = document.getElementById("recommendationGrid");
+    if (!grid) return;
+
+    const searchInput = document.getElementById("recommendationSearch");
+    const sortSelect = document.getElementById("recommendationSort");
+    const visibleCount = document.getElementById("recommendationVisibleCount");
+    const genreButtons = Array.from(document.querySelectorAll(".genre-filter-chip"));
+    const cards = Array.from(grid.querySelectorAll(".rec-card"));
+
+    let selectedGenres = new Set();
+
+    function syncGenreButtons() {
+        genreButtons.forEach(btn => {
+            const genre = btn.dataset.genre;
+            if (genre === "__all__") {
+                btn.classList.toggle("active", selectedGenres.size === 0);
+            } else {
+                btn.classList.toggle("active", selectedGenres.has(genre));
+            }
+        });
+    }
+
+    function sortCards(filteredCards) {
+        const mode = sortSelect.value;
+
+        return [...filteredCards].sort((a, b) => {
+            if (mode === "title_asc") {
+                return a.dataset.title.localeCompare(b.dataset.title);
+            }
+            if (mode === "year_desc") {
+                return parseInt(b.dataset.year || "0", 10) - parseInt(a.dataset.year || "0", 10);
+            }
+            return parseFloat(b.dataset.rating || "0") - parseFloat(a.dataset.rating || "0");
+        });
+    }
+
+    function applyFilters() {
+        const query = (searchInput.value || "").trim().toLowerCase();
+        const selected = Array.from(selectedGenres);
+
+        let filtered = cards.filter(card => {
+            const title = card.dataset.title || "";
+            const genres = (card.dataset.genres || "").trim().split(/\s+/).filter(Boolean);
+
+            const titleMatch = !query || title.includes(query);
+            const genreMatch = selected.length === 0 || selected.every(g => genres.includes(g));
+
+            return titleMatch && genreMatch;
+        });
+
+        filtered = sortCards(filtered);
+
+        cards.forEach(card => {
+            card.hidden = true;
+        });
+
+        filtered.forEach(card => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+
+        visibleCount.textContent = filtered.length;
+    }
+
+    genreButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const genre = this.dataset.genre;
+
+            if (genre === "__all__") {
+                selectedGenres.clear();
+            } else {
+                if (selectedGenres.has(genre)) {
+                    selectedGenres.delete(genre);
+                } else {
+                    selectedGenres.add(genre);
+                }
+            }
+
+            syncGenreButtons();
+            applyFilters();
+        });
+    });
+
+    searchInput.addEventListener("input", applyFilters);
+    sortSelect.addEventListener("change", applyFilters);
+
+    syncGenreButtons();
+    applyFilters();
+})();
+</script>
 {% endblock %}
