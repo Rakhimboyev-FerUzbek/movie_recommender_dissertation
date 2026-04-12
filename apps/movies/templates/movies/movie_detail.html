@@ -52,7 +52,7 @@
 
                                 <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-v4-inline-rating-form" id="inlineRatingForm">
                                     {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ back_url }}">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                     <input type="hidden" id="ratingValueInput" name="rating" value="{{ selected_rating_str|default:'0' }}">
 
                                     <div class="detail-v4-stars-row">
@@ -244,9 +244,9 @@
                 </div>
 
                 {% if user.is_authenticated %}
-                <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-v4-comment-form compact-comment-form mb-3">
+                <form method="post" action="{% url 'movie_comment' movie.slug %}" class="detail-v4-comment-form compact-comment-form mb-3" id="commentCreateForm">
                     {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ back_url }}">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
 
                     <div class="comment-composer">
                         {{ comment_form.body }}
@@ -257,7 +257,7 @@
                         </button>
                     </div>
 
-                    <div class="text-danger small mt-2">{{ comment_form.body.errors }}</div>
+                    <div class="text-danger small mt-2" id="commentCreateErrors">{{ comment_form.body.errors }}</div>
                 </form>
                 {% else %}
                     <div class="login-required-box compact-box mb-3">
@@ -268,7 +268,7 @@
                     </div>
                 {% endif %}
 
-                <div class="detail-v4-comments-scroll compact-comments-scroll">
+                <div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
                     {% for comment in comments %}
                     <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% endif %}">
                         <div class="detail-v4-comment-top {% if comment.is_own %}is-own{% endif %}">
@@ -276,7 +276,7 @@
                                 <div class="detail-v4-own-left-actions">
                                     <form method="post" action="{% url 'comment_like' comment.id %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ back_url }}">
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                         <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}">
                                             ♥ {{ comment.like_count }}
                                         </button>
@@ -294,7 +294,7 @@
                                 <div class="detail-v4-right-actions">
                                     <form method="post" action="{% url 'comment_like' comment.id %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ back_url }}">
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                         <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}">
                                             ♥ {{ comment.like_count }}
                                         </button>
@@ -310,7 +310,7 @@
                         {% if comment.is_own %}
                             <form method="post" action="{% url 'comment_edit' comment.id %}" class="comment-edit-form is-hidden" id="edit-form-{{ comment.id }}">
                                 {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ back_url }}">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                 <textarea name="body" class="form-control" rows="3" maxlength="1000">{{ comment.body }}</textarea>
                                 <div class="comment-edit-form-actions">
                                     <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
@@ -352,6 +352,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="similar-section mt-4 fade-up">
+            {% include "includes/section_header.html" with title=t.similar_movies subtitle=t.featured %}
+            <div class="movie-row">
+                {% for movie in similar_movies %}
+                    {% include "includes/movie_card.html" with movie=movie next_url=request.get_full_path %}
+                {% empty %}
+                    <div class="empty-state-card">{{ t.no_similar_movies }}</div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </section>
 
@@ -366,6 +377,11 @@
     const reviewDisplayWrap = document.getElementById("reviewDisplayWrap");
     const reviewDisplayText = document.getElementById("reviewDisplayText");
     const editReviewBtn = document.getElementById("editReviewBtn");
+
+    const ratingForm = document.getElementById("inlineRatingForm");
+    const commentForm = document.getElementById("commentCreateForm");
+    const commentsList = document.getElementById("commentsList");
+    const commentErrors = document.getElementById("commentCreateErrors");
 
     function renderStars(value) {
         const current = parseFloat(value || "0");
@@ -396,8 +412,7 @@
         const starNumber = parseInt(button.dataset.star, 10);
         const rect = button.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
-        const isHalf = offsetX <= rect.width / 2;
-        return isHalf ? (starNumber - 0.5) : starNumber;
+        return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
     }
 
     function openReviewEditor() {
@@ -411,11 +426,88 @@
         reviewCounter.textContent = `${reviewInput.value.length} / 50`;
     }
 
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function getCsrfToken(form) {
+        const input = form.querySelector('input[name="csrfmiddlewaretoken"]');
+        return input ? input.value : "";
+    }
+
+    function buildOwnCommentCard(comment) {
+        return `
+            <article class="detail-v4-comment-card is-own">
+                <div class="detail-v4-comment-top is-own">
+                    <div class="detail-v4-own-left-actions">
+                        <form method="post" action="/interactions/comments/${comment.id}/like/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${escapeHtml(comment.csrf_token)}">
+                            <input type="hidden" name="next" value="${escapeHtml(window.location.pathname + window.location.search)}">
+                            <button type="button" class="comment-like-btn compact-like-btn">
+                                ♥ ${comment.like_count}
+                            </button>
+                        </form>
+                    </div>
+
+                    <span class="detail-v4-comment-author own-author">${escapeHtml(comment.author)}</span>
+                </div>
+
+                <div class="detail-v4-comment-body is-own" id="display-body-${comment.id}">
+                    ${escapeHtml(comment.body)}
+                </div>
+
+                <form method="post" action="/interactions/comments/${comment.id}/edit/" class="comment-edit-form is-hidden" id="edit-form-${comment.id}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${escapeHtml(comment.csrf_token)}">
+                    <input type="hidden" name="next" value="${escapeHtml(window.location.pathname + window.location.search)}">
+                    <textarea name="body" class="form-control" rows="3" maxlength="1000">${escapeHtml(comment.body)}</textarea>
+                    <div class="comment-edit-form-actions">
+                        <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-soft btn-smish comment-edit-cancel-btn"
+                            data-edit-target="edit-form-${comment.id}"
+                            data-display-target="display-body-${comment.id}"
+                        >
+                            Bekor qilish
+                        </button>
+                    </div>
+                </form>
+
+                <div class="detail-v4-comment-footer is-own">
+                    <div class="detail-v4-comment-time is-own">${escapeHtml(comment.created_at)}</div>
+                    <button
+                        type="button"
+                        class="comment-edit-btn bottom-edit-btn"
+                        data-edit-target="edit-form-${comment.id}"
+                        data-display-target="display-body-${comment.id}"
+                    >
+                        ✎
+                    </button>
+                </div>
+            </article>
+        `;
+    }
+
+    async function postFormAjax(form) {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+        return { response, data };
+    }
+
     if (ratingInput && starButtons.length) {
         starButtons.forEach((btn) => {
             btn.addEventListener("mousemove", function (event) {
-                const previewValue = getHalfValue(this, event);
-                renderStars(previewValue);
+                renderStars(getHalfValue(this, event));
             });
 
             btn.addEventListener("mouseleave", function () {
@@ -447,36 +539,92 @@
             openReviewEditor();
         });
     }
-})();
 
-(function () {
-    const editButtons = document.querySelectorAll(".comment-edit-btn");
-    const cancelButtons = document.querySelectorAll(".comment-edit-cancel-btn");
+    if (ratingForm) {
+        ratingForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-    editButtons.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            const editId = this.dataset.editTarget;
-            const displayId = this.dataset.displayTarget;
+            try {
+                const { response, data } = await postFormAjax(ratingForm);
+                if (!response.ok || !data.ok) return;
+
+                if (data.rating) {
+                    ratingInput.value = data.rating;
+                    renderStars(data.rating);
+                }
+
+                if (reviewDisplayText) {
+                    reviewDisplayText.textContent = data.review || "";
+                }
+
+                if (data.review) {
+                    reviewEditorWrap?.classList.add("is-hidden");
+                    reviewDisplayWrap?.classList.remove("is-hidden");
+                } else {
+                    reviewEditorWrap?.classList.remove("is-hidden");
+                    reviewDisplayWrap?.classList.add("is-hidden");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    if (commentForm && commentsList) {
+        commentForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            try {
+                const { response, data } = await postFormAjax(commentForm);
+                if (!response.ok || !data.ok) {
+                    if (commentErrors && data.errors && data.errors.body) {
+                        commentErrors.textContent = data.errors.body.join(" ");
+                    }
+                    return;
+                }
+
+                if (commentErrors) {
+                    commentErrors.textContent = "";
+                }
+
+                const textarea = commentForm.querySelector("textarea");
+                if (textarea) {
+                    textarea.value = "";
+                }
+
+                data.comment.csrf_token = getCsrfToken(commentForm);
+                commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment));
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    document.addEventListener("click", function (event) {
+        const editBtn = event.target.closest(".comment-edit-btn");
+        const cancelBtn = event.target.closest(".comment-edit-cancel-btn");
+
+        if (editBtn) {
+            const editId = editBtn.dataset.editTarget;
+            const displayId = editBtn.dataset.displayTarget;
 
             const editForm = document.getElementById(editId);
             const displayBody = document.getElementById(displayId);
 
             if (editForm) editForm.classList.remove("is-hidden");
             if (displayBody) displayBody.classList.add("is-hidden");
-        });
-    });
+        }
 
-    cancelButtons.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            const editId = this.dataset.editTarget;
-            const displayId = this.dataset.displayTarget;
+        if (cancelBtn) {
+            const editId = cancelBtn.dataset.editTarget;
+            const displayId = cancelBtn.dataset.displayTarget;
 
             const editForm = document.getElementById(editId);
             const displayBody = document.getElementById(displayId);
 
             if (editForm) editForm.classList.add("is-hidden");
             if (displayBody) displayBody.classList.remove("is-hidden");
-        });
+        }
     });
 })();
 </script>

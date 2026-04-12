@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -21,6 +21,10 @@ def _safe_next(request, fallback_url: str) -> str:
     return fallback_url
 
 
+def _is_ajax(request) -> bool:
+    return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
 @login_required
 @require_POST
 def movie_rate_view(request, slug):
@@ -32,10 +36,31 @@ def movie_rate_view(request, slug):
     form = RatingForm(request.POST, instance=existing)
 
     if form.is_valid():
-        rating = form.save(commit=False)
-        rating.user = request.user
-        rating.movie = movie
-        rating.save()
+        rating_obj = form.save(commit=False)
+        rating_obj.user = request.user
+        rating_obj.movie = movie
+        rating_obj.save()
+
+        if _is_ajax(request):
+            rating_value = str(rating_obj.rating).rstrip("0").rstrip(".")
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "rating": rating_value,
+                    "review": rating_obj.review or "",
+                }
+            )
+
+        return redirect(redirect_url)
+
+    if _is_ajax(request):
+        return JsonResponse(
+            {
+                "ok": False,
+                "errors": form.errors,
+            },
+            status=400,
+        )
 
     return redirect(redirect_url)
 
@@ -48,11 +73,37 @@ def movie_comment_view(request, slug):
     redirect_url = _safe_next(request, fallback_url)
 
     body = request.POST.get("body", "").strip()
-    if body:
-        Comment.objects.create(
-            user=request.user,
-            movie=movie,
-            body=body,
+    if not body:
+        if _is_ajax(request):
+            return JsonResponse(
+                {
+                    "ok": False,
+                    "errors": {"body": ["Kommentariya bo'sh bo'lishi mumkin emas."]},
+                },
+                status=400,
+            )
+        return redirect(redirect_url)
+
+    comment = Comment.objects.create(
+        user=request.user,
+        movie=movie,
+        body=body,
+    )
+
+    if _is_ajax(request):
+        author_name = request.user.get_full_name().strip() or request.user.username
+        return JsonResponse(
+            {
+                "ok": True,
+                "comment": {
+                    "id": comment.id,
+                    "body": comment.body,
+                    "author": author_name,
+                    "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M"),
+                    "like_count": 0,
+                    "is_own": True,
+                },
+            }
         )
 
     return redirect(redirect_url)
@@ -73,6 +124,26 @@ def comment_edit_view(request, comment_id):
         comment.body = body
         comment.save(update_fields=["body", "updated_at"])
 
+        if _is_ajax(request):
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "comment": {
+                        "id": comment.id,
+                        "body": comment.body,
+                    },
+                }
+            )
+
+    if _is_ajax(request):
+        return JsonResponse(
+            {
+                "ok": False,
+                "errors": {"body": ["Matn bo'sh bo'lishi mumkin emas."]},
+            },
+            status=400,
+        )
+
     return redirect(redirect_url)
 
 
@@ -89,5 +160,16 @@ def comment_like_view(request, comment_id):
     )
     if not created:
         like.delete()
+
+    if _is_ajax(request):
+        like_count = comment.likes.count()
+        is_liked = CommentLike.objects.filter(user=request.user, comment=comment).exists()
+        return JsonResponse(
+            {
+                "ok": True,
+                "like_count": like_count,
+                "is_liked": is_liked,
+            }
+        )
 
     return redirect(redirect_url)
