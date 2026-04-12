@@ -12,223 +12,229 @@
             </div>
         </div>
 
-        <div class="profile-grid">
-            <aside class="profile-sidebar fade-up">
-                <div class="glass-card profile-showcase-card">
-                    <div class="profile-photo-shell">
-                        {% if profile.profile_photo %}
-                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview">
-                        {% else %}
-                            <div class="avatar-circle profile-avatar-large">
-                                {{ request.user.username|slice:":1"|upper }}
+        <div class="glass-card profile-top-shell-card fade-up">
+            <div class="profile-grid profile-grid--inside-shell">
+                <aside class="profile-sidebar">
+                    <div class="glass-card profile-showcase-card profile-inner-card">
+                        <div class="profile-photo-shell">
+                            {% if profile.profile_photo %}
+                                <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview">
+                            {% else %}
+                                <div class="avatar-circle profile-avatar-large">
+                                    {{ request.user.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <h3 class="profile-display-name">
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </h3>
+
+                        <p class="profile-email-line">
+                            {{ request.user.email|default:t.no_email }}
+                        </p>
+
+                        <div class="profile-side-stats">
+                            <div class="profile-stat-card">
+                                <span>{{ t.member_since }}</span>
+                                <strong>{{ request.user.date_joined|date:"Y-m-d" }}</strong>
                             </div>
-                        {% endif %}
-                    </div>
-
-                    <h3 class="profile-display-name">
-                        {{ request.user.get_full_name|default:request.user.username }}
-                    </h3>
-
-                    <p class="profile-email-line">
-                        {{ request.user.email|default:t.no_email }}
-                    </p>
-
-                    <div class="profile-side-stats">
-                        <div class="profile-stat-card">
-                            <span>{{ t.member_since }}</span>
-                            <strong>{{ request.user.date_joined|date:"Y-m-d" }}</strong>
-                        </div>
-                        <div class="profile-stat-card">
-                            <span>{{ t.username }}</span>
-                            <strong>{{ request.user.username }}</strong>
+                            <div class="profile-stat-card">
+                                <span>{{ t.username }}</span>
+                                <strong>{{ request.user.username }}</strong>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="glass-card mt-4 profile-danger-zone profile-danger-zone-compact">
-                    <div class="profile-card-head">
-                        <h5>{{ t.danger_zone }}</h5>
-                    </div>
-                    <p class="text-muted mb-3">{{ t.delete_account_help }}</p>
-
-                    <button type="button" class="profile-danger-btn">
-                        Profilni o‘chirish
-                    </button>
-                </div>
-            </aside>
-
-            <div class="profile-main fade-up">
-                {% if is_edit_mode %}
-                    <div class="glass-card profile-edit-card">
+                    <div class="glass-card profile-danger-zone profile-danger-zone-compact profile-inner-card mt-4">
                         <div class="profile-card-head">
-                            <h4>{{ t.edit_information }}</h4>
-                            <p class="text-muted mb-0">{{ t.additional_information }}</p>
+                            <h5>{{ t.danger_zone }}</h5>
                         </div>
+                        <p class="text-muted mb-3">{{ t.delete_account_help }}</p>
 
-                        <form method="post" enctype="multipart/form-data" novalidate>
+                        <button type="button" class="profile-danger-btn">
+                            Profilni o‘chirish
+                        </button>
+                    </div>
+                </aside>
+
+                <div class="profile-main">
+                    {% if is_edit_mode %}
+                        <form method="post" enctype="multipart/form-data" novalidate class="profile-main-edit-form">
                             {% csrf_token %}
 
-                            <div class="profile-form-section">
-                                <h5>{{ t.account_information }}</h5>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">{{ t.first_name }}</label>
-                                        {{ user_form.first_name }}
-                                        <div class="text-danger small">{{ user_form.first_name.errors }}</div>
+                            <div class="profile-overview-stack">
+                                <div class="glass-card profile-info-card">
+                                    <div class="profile-card-head">
+                                        <h4>{{ t.account_information }}</h4>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">{{ t.last_name }}</label>
-                                        {{ user_form.last_name }}
-                                        <div class="text-danger small">{{ user_form.last_name.errors }}</div>
+
+                                    <div class="profile-info-grid profile-info-grid--two">
+                                        <div class="profile-info-item">
+                                            <span>{{ t.first_name }}</span>
+                                            {{ user_form.first_name }}
+                                            <div class="text-danger small mt-2">{{ user_form.first_name.errors }}</div>
+                                        </div>
+
+                                        <div class="profile-info-item">
+                                            <span>{{ t.last_name }}</span>
+                                            {{ user_form.last_name }}
+                                            <div class="text-danger small mt-2">{{ user_form.last_name.errors }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-grid profile-info-grid--email-birth mt-3">
+                                        <div class="profile-info-item">
+                                            <span>{{ t.email }}</span>
+                                            {{ user_form.email }}
+                                            <div class="text-danger small mt-2">{{ user_form.email.errors }}</div>
+                                        </div>
+
+                                        <div class="profile-info-item">
+                                            <span>{{ t.birth_year }}</span>
+                                            {{ profile_form.birth_year }}
+                                            <div class="text-danger small mt-2">{{ profile_form.birth_year.errors }}</div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-8 mb-3">
-                                        <label class="form-label">{{ t.email }}</label>
-                                        {{ user_form.email }}
-                                        <div class="text-danger small">{{ user_form.email.errors }}</div>
+                                <div class="glass-card profile-info-card mt-4">
+                                    <div class="profile-card-head">
+                                        <h4>{{ t.additional_information }}</h4>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">{{ t.birth_year }}</label>
-                                        {{ profile_form.birth_year }}
-                                        <div class="text-danger small">{{ profile_form.birth_year.errors }}</div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="profile-form-section">
-                                <h5>{{ t.additional_information }}</h5>
+                                    <div class="profile-readonly-block">
+                                        <div class="profile-info-item full">
+                                            <span>{{ t.bio }}</span>
+                                            {{ profile_form.bio }}
+                                            <div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>
+                                        </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">{{ t.bio }}</label>
-                                    {{ profile_form.bio }}
-                                    <div class="text-danger small">{{ profile_form.bio.errors }}</div>
-                                </div>
-                            </div>
+                                        <div class="profile-info-item full mt-3">
+                                            <span>{{ t.favorite_genres }}</span>
 
-                            <div class="profile-form-section">
-                                <h5>{{ t.profile_photo }}</h5>
-
-                                <div class="profile-photo-edit-row">
-                                    <div class="profile-photo-mini-preview">
-                                        {% if profile.profile_photo %}
-                                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview small">
-                                        {% else %}
-                                            <div class="avatar-circle profile-avatar-small">
-                                                {{ request.user.username|slice:":1"|upper }}
+                                            <div class="profile-genre-grid mt-2">
+                                                {% for value, label in genre_choices %}
+                                                    <label class="profile-genre-option">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="preferred_genres"
+                                                            value="{{ value }}"
+                                                            {% if value in selected_profile_genres %}checked{% endif %}
+                                                        >
+                                                        <span>{{ label }}</span>
+                                                    </label>
+                                                {% endfor %}
                                             </div>
-                                        {% endif %}
+
+                                            <div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card profile-info-card mt-4">
+                                    <div class="profile-card-head">
+                                        <h4>{{ t.profile_photo }}</h4>
                                     </div>
 
-                                    <div class="profile-photo-fields">
-                                        <label class="form-label mb-2">{{ t.profile_photo }}</label>
-                                        {{ profile_form.profile_photo }}
-                                        <div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>
+                                    <div class="profile-photo-edit-row">
+                                        <div class="profile-photo-mini-preview">
+                                            {% if profile.profile_photo %}
+                                                <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview small">
+                                            {% else %}
+                                                <div class="avatar-circle profile-avatar-small">
+                                                    {{ request.user.username|slice:":1"|upper }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
 
-                                        <div class="form-check mt-3">
-                                            {{ profile_form.remove_profile_photo }}
-                                            <label class="form-check-label" for="{{ profile_form.remove_profile_photo.id_for_label }}">
-                                                {{ t.remove_profile_photo }}
-                                            </label>
+                                        <div class="profile-photo-fields">
+                                            <label class="form-label mb-2">{{ t.profile_photo }}</label>
+                                            {{ profile_form.profile_photo }}
+                                            <div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>
+
+                                            <div class="form-check mt-3">
+                                                {{ profile_form.remove_profile_photo }}
+                                                <label class="form-check-label" for="{{ profile_form.remove_profile_photo.id_for_label }}">
+                                                    {{ t.remove_profile_photo }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="profile-header-actions profile-header-actions--bottom-right mt-4">
+                                    <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
+                                    <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="profile-overview-stack">
+                            <div class="glass-card profile-info-card">
+                                <div class="profile-card-head">
+                                    <h4>{{ t.account_information }}</h4>
+                                </div>
+
+                                <div class="profile-info-grid profile-info-grid--two">
+                                    <div class="profile-info-item">
+                                        <span>{{ t.first_name }}</span>
+                                        <strong>{{ request.user.first_name|default:"—" }}</strong>
+                                    </div>
+                                    <div class="profile-info-item">
+                                        <span>{{ t.last_name }}</span>
+                                        <strong>{{ request.user.last_name|default:"—" }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-grid profile-info-grid--email-birth mt-3">
+                                    <div class="profile-info-item">
+                                        <span>{{ t.email }}</span>
+                                        <strong>{{ request.user.email|default:t.no_email }}</strong>
+                                    </div>
+                                    <div class="profile-info-item">
+                                        <span>{{ t.birth_year }}</span>
+                                        <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card profile-info-card mt-4">
+                                <div class="profile-card-head">
+                                    <h4>{{ t.additional_information }}</h4>
+                                </div>
+
+                                <div class="profile-readonly-block">
+                                    <div class="profile-info-item full">
+                                        <span>{{ t.bio }}</span>
+                                        <p>{{ profile.bio|default:t.no_bio }}</p>
+                                    </div>
+
+                                    <div class="profile-info-item full mt-3">
+                                        <span>{{ t.favorite_genres }}</span>
+                                        <div class="genre-chip-wrap mt-2">
+                                            {% for genre in profile.preferred_genres %}
+                                                <span class="genre-chip">{{ genre }}</span>
+                                            {% empty %}
+                                                <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="profile-form-section">
-                                <h5>{{ t.favorite_genres }}</h5>
-
-                                <div class="profile-genre-grid">
-                                    {% for value, label in genre_choices %}
-                                        <label class="profile-genre-option">
-                                            <input
-                                                type="checkbox"
-                                                name="preferred_genres"
-                                                value="{{ value }}"
-                                                {% if value in selected_profile_genres %}checked{% endif %}
-                                            >
-                                            <span>{{ label }}</span>
-                                        </label>
-                                    {% endfor %}
-                                </div>
-
-                                <div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>
-                            </div>
-
-                            <div class="profile-edit-actions">
-                                <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
-                                <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
-                            </div>
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="profile-overview-stack">
-                        <div class="glass-card profile-info-card">
-                            <div class="profile-card-head">
-                                <h4>{{ t.account_information }}</h4>
-                            </div>
-
-                            <div class="profile-info-grid profile-info-grid--two">
-                                <div class="profile-info-item">
-                                    <span>{{ t.first_name }}</span>
-                                    <strong>{{ request.user.first_name|default:"—" }}</strong>
-                                </div>
-                                <div class="profile-info-item">
-                                    <span>{{ t.last_name }}</span>
-                                    <strong>{{ request.user.last_name|default:"—" }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="profile-info-grid profile-info-grid--email-birth mt-3">
-                                <div class="profile-info-item">
-                                    <span>{{ t.email }}</span>
-                                    <strong>{{ request.user.email|default:t.no_email }}</strong>
-                                </div>
-                                <div class="profile-info-item">
-                                    <span>{{ t.birth_year }}</span>
-                                    <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
-                                </div>
+                            <div class="profile-header-actions profile-header-actions--bottom-right mt-4">
+                                <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
                             </div>
                         </div>
-
-                        <div class="glass-card profile-info-card mt-4">
-                            <div class="profile-card-head">
-                                <h4>{{ t.additional_information }}</h4>
-                            </div>
-
-                            <div class="profile-readonly-block">
-                                <div class="profile-info-item full">
-                                    <span>{{ t.bio }}</span>
-                                    <p>{{ profile.bio|default:t.no_bio }}</p>
-                                </div>
-
-                                <div class="profile-info-item full mt-3">
-                                    <span>{{ t.favorite_genres }}</span>
-                                    <div class="genre-chip-wrap mt-2">
-                                        {% for genre in profile.preferred_genres %}
-                                            <span class="genre-chip">{{ genre }}</span>
-                                        {% empty %}
-                                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="profile-header-actions mt-4">
-                            <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile }}</a>
-                        </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
 
         <div class="glass-card profile-activity-section fade-up mt-4">
             <div class="profile-activity-head">
                 <div>
-                    <span class="hero-kicker">My Activity</span>
                     <h3>Foydalanuvchi faoliyati</h3>
                     <p>Saqlangan filmlar, berilgan reytinglar va ko‘rilgan filmlar tarixi.</p>
                 </div>
@@ -243,16 +249,6 @@
                             <strong class="profile-activity-count">{{ favorites_count }}</strong>
                         </div>
                         <p>Saqlab qo‘yilgan sevimli filmlar ro‘yxati.</p>
-
-                        {% if recent_favorites %}
-                            <ul class="profile-activity-mini-list">
-                                {% for item in recent_favorites %}
-                                    <li>{{ item.movie.title }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <span class="profile-activity-empty">Hozircha favorites bo‘sh</span>
-                        {% endif %}
                     </div>
                 </a>
 
@@ -264,37 +260,17 @@
                             <strong class="profile-activity-count">{{ ratings_count }}</strong>
                         </div>
                         <p>Berilgan reytinglar va qisqa tavsiflar ro‘yxati.</p>
-
-                        {% if recent_ratings %}
-                            <ul class="profile-activity-mini-list">
-                                {% for item in recent_ratings %}
-                                    <li>{{ item.movie.title }} — {{ item.rating|floatformat:1 }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <span class="profile-activity-empty">Hozircha reytinglar yo‘q</span>
-                        {% endif %}
                     </div>
                 </a>
 
                 <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
                     <div class="profile-activity-icon">▶</div>
-                    <div class="profile-activity-content">
+                    <div class="profile-activity-content">  
                         <div class="profile-activity-topline">
                             <span class="profile-activity-label">Watch History</span>
                             <strong class="profile-activity-count">{{ watch_history_count }}</strong>
                         </div>
                         <p>Ko‘rilgan filmlar va oxirgi ko‘rish tarixi.</p>
-
-                        {% if recent_watch_history %}
-                            <ul class="profile-activity-mini-list">
-                                {% for item in recent_watch_history %}
-                                    <li>{{ item.movie.title }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <span class="profile-activity-empty">Hozircha history bo‘sh</span>
-                        {% endif %}
                     </div>
                 </a>
             </div>
