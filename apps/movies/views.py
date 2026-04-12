@@ -150,6 +150,15 @@ def movie_detail_view(request, slug):
 
     back_url = next_url or reverse("movie_list")
 
+    is_from_recommendations = False
+
+    if next_url:
+        recommendation_prefixes = (
+            reverse("recommend_for_you"),
+            reverse("recommendation_lab"),
+        )
+        is_from_recommendations = next_url.startswith(recommendation_prefixes)
+
     existing_rating = None
     if request.user.is_authenticated:
         existing_rating = Rating.objects.filter(user=request.user, movie=movie).first()
@@ -188,6 +197,7 @@ def movie_detail_view(request, slug):
 
     for comment in comments:
         comment.is_liked = comment.id in liked_ids
+        comment.is_own = request.user.is_authenticated and comment.user_id == request.user.id
 
     context = {
         "movie": movie,
@@ -199,5 +209,6 @@ def movie_detail_view(request, slug):
         "selected_rating_str": selected_rating_str,
         "comments": comments,
         "full_video_mode": detect_full_video_mode(movie),
+        "show_recommendation_reason": is_from_recommendations,
     }
     return render(request, "movies/movie_detail.html", context)
