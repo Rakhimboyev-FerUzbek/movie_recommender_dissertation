@@ -3602,3 +3602,274 @@ body[data-theme="light"] .movie-info-item {
         height: 40px;
     }
 }
+/* =========================
+   STAR RATING ONLY
+   detail-v4 rating block
+   ========================= */
+
+.detail-v4-inline-rating {
+    color: var(--text);
+}
+
+.detail-v4-inline-rating-head,
+.detail-v4-rating-value,
+.detail-v4-review-display,
+.detail-v4-review-display span,
+.detail-v4-login-help,
+.detail-v4-review-counter {
+    color: var(--text);
+}
+
+.detail-v4-stars-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.detail-v4-stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.detail-v4-star-btn {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.18); /* dark mode empty star */
+    transition: transform 0.15s ease;
+}
+
+.detail-v4-star-btn:hover {
+    transform: scale(1.05);
+}
+
+.detail-v4-star-btn::before {
+    content: "★";
+    position: absolute;
+    inset: 0;
+    width: 0;
+    overflow: hidden;
+    color: #f5b301; /* filled star */
+}
+
+.detail-v4-star-btn.full::before {
+    width: 100%;
+}
+
+.detail-v4-star-btn.half::before {
+    width: 50%;
+}
+
+.detail-v4-star-btn.empty::before {
+    width: 0;
+}
+
+.detail-v4-rating-value {
+    min-width: 34px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #f5b301;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Review input */
+.detail-v4-review-row input,
+.detail-v4-review-row textarea,
+.detail-v4-review-row .form-control {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.detail-v4-review-row input::placeholder,
+.detail-v4-review-row textarea::placeholder,
+.detail-v4-review-row .form-control::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== LIGHT MODE FIX ===== */
+body[data-theme="light"] .detail-v4-inline-rating,
+body[data-theme="light"] .detail-v4-inline-rating-head,
+body[data-theme="light"] .detail-v4-review-display,
+body[data-theme="light"] .detail-v4-review-display span,
+body[data-theme="light"] .detail-v4-login-help,
+body[data-theme="light"] .detail-v4-review-counter {
+    color: var(--text) !important;
+}
+
+body[data-theme="light"] .detail-v4-star-btn {
+    color: rgba(15, 23, 42, 0.24) !important; /* light mode empty star visible */
+}
+
+body[data-theme="light"] .detail-v4-star-btn::before {
+    color: #f5b301 !important;
+}
+
+body[data-theme="light"] .detail-v4-rating-value {
+    color: #d69e00 !important;
+}
+
+body[data-theme="light"] .detail-v4-review-row input,
+body[data-theme="light"] .detail-v4-review-row textarea,
+body[data-theme="light"] .detail-v4-review-row .form-control {
+    background: rgba(15, 23, 42, 0.04) !important;
+    color: var(--text) !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+body[data-theme="light"] .detail-v4-review-row input::placeholder,
+body[data-theme="light"] .detail-v4-review-row textarea::placeholder,
+body[data-theme="light"] .detail-v4-review-row .form-control::placeholder {
+    color: var(--text-muted) !important;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-star-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.7rem;
+    }
+}
+
+
+/* =========================
+   FILMS FILTER: YEAR + SORT UI ONLY
+   ========================= */
+
+.catalog-filter-card {
+    --catalog-select-bg: rgba(255, 255, 255, 0.04);
+    --catalog-select-bg-hover: rgba(255, 255, 255, 0.06);
+    --catalog-select-border: var(--border);
+    --catalog-select-text: var(--text);
+    --catalog-select-menu-bg: rgba(15, 23, 42, 0.98);
+    --catalog-select-option-hover: rgba(255, 255, 255, 0.06);
+    --catalog-select-option-active: rgba(124, 92, 255, 0.18);
+    --catalog-select-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+
+body[data-theme="light"] .catalog-filter-card {
+    --catalog-select-bg: rgba(15, 23, 42, 0.04);
+    --catalog-select-bg-hover: rgba(15, 23, 42, 0.06);
+    --catalog-select-border: rgba(15, 23, 42, 0.12);
+    --catalog-select-text: var(--text);
+    --catalog-select-menu-bg: rgba(255, 255, 255, 0.98);
+    --catalog-select-option-hover: rgba(15, 23, 42, 0.06);
+    --catalog-select-option-active: rgba(124, 92, 255, 0.12);
+    --catalog-select-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+}
+
+.catalog-ui-select {
+    position: relative;
+    width: 100%;
+}
+
+.catalog-ui-select__trigger {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid var(--catalog-select-border);
+    background: var(--catalog-select-bg);
+    color: var(--catalog-select-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.catalog-ui-select__trigger:hover {
+    background: var(--catalog-select-bg-hover);
+}
+
+.catalog-ui-select__trigger:focus {
+    outline: none;
+    border-color: rgba(124, 92, 255, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(124, 92, 255, 0.15);
+}
+
+.catalog-ui-select__chevron {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 auto;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    margin-top: -4px;
+    opacity: 0.85;
+    transition: transform 0.18s ease, margin-top 0.18s ease;
+}
+
+.catalog-ui-select.is-open .catalog-ui-select__chevron {
+    transform: rotate(-135deg);
+    margin-top: 2px;
+}
+
+.catalog-ui-select__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--catalog-select-border);
+    background: var(--catalog-select-menu-bg);
+    box-shadow: var(--catalog-select-shadow);
+    backdrop-filter: blur(10px);
+}
+
+.catalog-ui-select.is-open .catalog-ui-select__menu {
+    display: block;
+}
+
+.catalog-ui-select__menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.catalog-ui-select__menu::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.28);
+    border-radius: 999px;
+}
+
+.catalog-ui-select__option {
+    width: 100%;
+    display: block;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--catalog-select-text);
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.catalog-ui-select__option:hover {
+    background: var(--catalog-select-option-hover);
+}
+
+.catalog-ui-select__option.is-active {
+    background: var(--catalog-select-option-active);
+}
+
+body[data-theme="light"] .catalog-ui-select__menu::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.18);
+}

@@ -6,26 +6,10 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from apps.interactions.forms import CommentForm, RatingForm
 from apps.interactions.models import Comment, CommentLike, Rating
-from apps.movies.forms import MovieFilterForm, SORT_CHOICES
-from apps.movies.models import Genre, Movie
+from apps.movies.forms import MovieFilterForm
+from apps.movies.models import Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 from apps.recommendations.services import RecommendationService
-
-
-def build_page_sequence(current_page: int, total_pages: int):
-    if total_pages <= 11:
-        return list(range(1, total_pages + 1))
-
-    if current_page <= 10:
-        return list(range(1, 11)) + ["..."] + [total_pages]
-
-    if current_page >= total_pages - 9:
-        return [1, "..."] + list(range(total_pages - 9, total_pages + 1))
-
-    start = max(current_page - 4, 2)
-    end = min(current_page + 4, total_pages - 1)
-
-    return [1, "..."] + list(range(start, end + 1)) + ["..."] + [total_pages]
 
 
 def home_view(request):
@@ -53,51 +37,70 @@ def home_view(request):
     return render(request, "home.html", context)
 
 
+def build_page_sequence(current_page: int, total_pages: int):
+    if total_pages <= 11:
+        return list(range(1, total_pages + 1))
+
+    if current_page <= 6:
+        return list(range(1, 8)) + ["..."] + [total_pages]
+
+    if current_page >= total_pages - 5:
+        return [1, "..."] + list(range(total_pages - 6, total_pages + 1))
+
+    return [1, "..."] + list(range(current_page - 2, current_page + 3)) + ["..."] + [total_pages]
+
+
+def apply_genre_and_filter(queryset, genre_ids):
+    if not genre_ids:
+        return queryset
+
+    # AND semantics: tanlangan barcha janrlar filmda bo‘lishi kerak
+    for genre_id in genre_ids:
+        queryset = queryset.filter(genres__id=genre_id)
+
+    return queryset.distinct()
+
+
+def build_ordering(sort_key: str):
+    mapping = {
+        "": ["title"],
+        "rating_desc": ["-avg_rating", "title"],
+        "year_desc": ["-release_year", "title"],
+        "year_asc": ["release_year", "title"],
+        "title_asc": ["title"],
+        "title_desc": ["-title"],
+    }
+    return mapping.get(sort_key, ["title"])
+
+
 def movie_list_view(request):
-    qs = Movie.objects.filter(is_active=True).prefetch_related("genres").all()
-    form = MovieFilterForm(request.GET or None)
+    queryset = Movie.objects.filter(is_active=True).prefetch_related("genres")
+
+    form = MovieFilterForm()
 
     selected_query = request.GET.get("q", "").strip()
     selected_year = request.GET.get("year", "").strip()
     selected_sort = request.GET.get("sort", "").strip()
-    selected_genre_ids = request.GET.getlist("genre")
+    selected_genre_ids = [value for value in request.GET.getlist("genre") if value.isdigit()]
 
-    if form.is_valid():
-        q = form.cleaned_data.get("q")
-        selected_genres = form.cleaned_data.get("genre")
-        year = form.cleaned_data.get("year")
-        sort = form.cleaned_data.get("sort") or ""
+    if selected_query:
+        queryset = queryset.filter(
+            Q(title__icontains=selected_query)
+            | Q(overview__icontains=selected_query)
+            | Q(country__icontains=selected_query)
+            | Q(director__icontains=selected_query)
+            | Q(genres__name__icontains=selected_query)
+        ).distinct()
 
-        if q:
-            qs = qs.filter(
-                Q(title__icontains=q)
-                | Q(overview__icontains=q)
-                | Q(genres__name__icontains=q)
-            ).distinct()
+    if selected_year:
+        queryset = queryset.filter(release_year=selected_year)
 
-        if selected_genres:
-            qs = qs.filter(genres__in=selected_genres).distinct()
-            selected_genre_ids = [str(g.id) for g in selected_genres]
+    if selected_genre_ids:
+        queryset = apply_genre_and_filter(queryset, [int(v) for v in selected_genre_ids])
 
-        if year:
-            qs = qs.filter(release_year=year)
+    queryset = queryset.order_by(*build_ordering(selected_sort))
 
-        selected_sort = sort
-
-        if sort == "title_asc":
-            qs = qs.order_by("title")
-        elif sort == "title_desc":
-            qs = qs.order_by("-title")
-        elif sort == "rating_desc":
-            qs = qs.order_by("-avg_rating", "title")
-        elif sort == "year_desc":
-            qs = qs.order_by("-release_year", "title")
-        else:
-            qs = qs.order_by("-popularity_score", "-avg_rating", "title")
-    else:
-        qs = qs.order_by("-popularity_score", "-avg_rating", "title")
-
-    paginator = Paginator(qs, 12)
+    paginator = Paginator(queryset, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -105,20 +108,16 @@ def movie_list_view(request):
     current_params.pop("page", None)
     pagination_query = current_params.urlencode()
 
-    page_sequence = build_page_sequence(page_obj.number, paginator.num_pages)
-
     context = {
         "form": form,
         "movies": page_obj.object_list,
         "page_obj": page_obj,
-        "page_sequence": page_sequence,
+        "page_sequence": build_page_sequence(page_obj.number, paginator.num_pages),
         "pagination_query": pagination_query,
-        "genres": Genre.objects.order_by("name"),
-        "sort_options": SORT_CHOICES,
-        "selected_genre_ids": selected_genre_ids,
-        "selected_sort": selected_sort,
         "selected_query": selected_query,
         "selected_year": selected_year,
+        "selected_sort": selected_sort,
+        "selected_genre_ids": selected_genre_ids,
     }
     return render(request, "movies/movie_list.html", context)
 
@@ -151,7 +150,6 @@ def movie_detail_view(request, slug):
     back_url = next_url or reverse("movie_list")
 
     is_from_recommendations = False
-
     if next_url:
         recommendation_prefixes = (
             reverse("recommend_for_you"),

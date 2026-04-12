@@ -383,7 +383,7 @@
     const commentsList = document.getElementById("commentsList");
     const commentErrors = document.getElementById("commentCreateErrors");
 
-    function renderStars(value) {
+       function renderStars(value) {
         const current = parseFloat(value || "0");
 
         starButtons.forEach((btn) => {
@@ -400,11 +400,9 @@
         });
 
         if (ratingValue) {
-            if (current > 0) {
-                ratingValue.textContent = current.toFixed(1).replace(".0", "");
-            } else {
-                ratingValue.textContent = "";
-            }
+            ratingValue.textContent = current > 0
+                ? current.toFixed(1).replace(".0", "")
+                : "";
         }
     }
 
@@ -413,6 +411,26 @@
         const rect = button.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
         return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
+    }
+
+    if (ratingInput && starButtons.length) {
+        starButtons.forEach((btn) => {
+            btn.addEventListener("mousemove", function (event) {
+                renderStars(getHalfValue(this, event));
+            });
+
+            btn.addEventListener("mouseleave", function () {
+                renderStars(ratingInput.value);
+            });
+
+            btn.addEventListener("click", function (event) {
+                const selected = getHalfValue(this, event);
+                ratingInput.value = selected.toFixed(1);
+                renderStars(ratingInput.value);
+            });
+        });
+
+        renderStars(ratingInput.value);
     }
 
     function openReviewEditor() {
