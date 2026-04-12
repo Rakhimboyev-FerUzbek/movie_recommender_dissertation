@@ -87,3 +87,12 @@ for i, p in enumerate(data.get("posters", []), 1):
     full_url = f"https://image.tmdb.org/t/p/w500{file_path}"
     print(i, full_url, "vote_avg=", p.get("vote_average"), "vote_count=", p.get("vote_count"))
 
+
+pip install -r requirements.txt
+py manage.py migrate
+py manage.py loaddata data.json
+py manage.py runserver  
+
+
+pg_dump -U postgres -d sizning_db_nomingiz > database.sql   
+psql -U postgres -d yangi_db_nomi < database.sql

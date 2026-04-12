@@ -7,9 +7,8 @@
     <div class="container">
         <div class="profile-header-shell fade-up">
             <div>
-                <span class="hero-kicker">{{ t.profile }}</span>
-                <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
-                <p>{{ t.welcome }}, {{ request.user.username }}</p>
+                <h1 class="profile-hero-title">{{ user.get_full_name|default:request.user.username }}</h1>
+                <p class="profile-hero-subtitle">{{ t.welcome }}, {{ request.user.username }}</p>
             </div>
         </div>
 
@@ -46,36 +45,15 @@
                     </div>
                 </div>
 
-                <div class="glass-card mt-4">
-                    <div class="profile-card-head">
-                        <h5>{{ t.favorite_genres }}</h5>
-                    </div>
-
-                    <div class="genre-chip-wrap">
-                        {% for genre in profile.preferred_genres %}
-                            <span class="genre-chip">{{ genre }}</span>
-                        {% empty %}
-                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="glass-card mt-4 profile-danger-zone">
+                <div class="glass-card mt-4 profile-danger-zone profile-danger-zone-compact">
                     <div class="profile-card-head">
                         <h5>{{ t.danger_zone }}</h5>
                     </div>
                     <p class="text-muted mb-3">{{ t.delete_account_help }}</p>
 
-                    <form method="post" action="{% url 'delete_account' %}">
-                        {% csrf_token %}
-                        <button
-                            type="submit"
-                            class="btn btn-danger-soft w-100"
-                            onclick="return confirm('{{ t.delete_account_confirm }}');"
-                        >
-                            {{ t.delete_account }}
-                        </button>
-                    </form>
+                    <button type="button" class="profile-danger-btn">
+                        Profilni o‘chirish
+                    </button>
                 </div>
             </aside>
 
@@ -106,10 +84,17 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">{{ t.email }}</label>
-                                    {{ user_form.email }}
-                                    <div class="text-danger small">{{ user_form.email.errors }}</div>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">{{ t.email }}</label>
+                                        {{ user_form.email }}
+                                        <div class="text-danger small">{{ user_form.email.errors }}</div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">{{ t.birth_year }}</label>
+                                        {{ profile_form.birth_year }}
+                                        <div class="text-danger small">{{ profile_form.birth_year.errors }}</div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -120,12 +105,6 @@
                                     <label class="form-label">{{ t.bio }}</label>
                                     {{ profile_form.bio }}
                                     <div class="text-danger small">{{ profile_form.bio.errors }}</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">{{ t.birth_year }}</label>
-                                    {{ profile_form.birth_year }}
-                                    <div class="text-danger small">{{ profile_form.birth_year.errors }}</div>
                                 </div>
                             </div>
 
@@ -191,7 +170,7 @@
                                 <h4>{{ t.account_information }}</h4>
                             </div>
 
-                            <div class="profile-info-grid">
+                            <div class="profile-info-grid profile-info-grid--two">
                                 <div class="profile-info-item">
                                     <span>{{ t.first_name }}</span>
                                     <strong>{{ request.user.first_name|default:"—" }}</strong>
@@ -200,9 +179,16 @@
                                     <span>{{ t.last_name }}</span>
                                     <strong>{{ request.user.last_name|default:"—" }}</strong>
                                 </div>
-                                <div class="profile-info-item full">
+                            </div>
+
+                            <div class="profile-info-grid profile-info-grid--email-birth mt-3">
+                                <div class="profile-info-item">
                                     <span>{{ t.email }}</span>
                                     <strong>{{ request.user.email|default:t.no_email }}</strong>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span>{{ t.birth_year }}</span>
+                                    <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -218,20 +204,14 @@
                                     <p>{{ profile.bio|default:t.no_bio }}</p>
                                 </div>
 
-                                <div class="profile-info-grid mt-3">
-                                    <div class="profile-info-item">
-                                        <span>{{ t.birth_year }}</span>
-                                        <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
-                                    </div>
-                                    <div class="profile-info-item">
-                                        <span>{{ t.favorite_genres }}</span>
-                                        <div class="genre-chip-wrap mt-2">
-                                            {% for genre in profile.preferred_genres %}
-                                                <span class="genre-chip">{{ genre }}</span>
-                                            {% empty %}
-                                                <span class="text-muted">{{ t.no_preferred_genres }}</span>
-                                            {% endfor %}
-                                        </div>
+                                <div class="profile-info-item full mt-3">
+                                    <span>{{ t.favorite_genres }}</span>
+                                    <div class="genre-chip-wrap mt-2">
+                                        {% for genre in profile.preferred_genres %}
+                                            <span class="genre-chip">{{ genre }}</span>
+                                        {% empty %}
+                                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -242,6 +222,81 @@
                         </div>
                     </div>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="glass-card profile-activity-section fade-up mt-4">
+            <div class="profile-activity-head">
+                <div>
+                    <span class="hero-kicker">My Activity</span>
+                    <h3>Foydalanuvchi faoliyati</h3>
+                    <p>Saqlangan filmlar, berilgan reytinglar va ko‘rilgan filmlar tarixi.</p>
+                </div>
+            </div>
+
+            <div class="profile-activity-grid">
+                <a href="{% url 'favorites_list' %}" class="profile-activity-card">
+                    <div class="profile-activity-icon">♥</div>
+                    <div class="profile-activity-content">
+                        <div class="profile-activity-topline">
+                            <span class="profile-activity-label">Favorites</span>
+                            <strong class="profile-activity-count">{{ favorites_count }}</strong>
+                        </div>
+                        <p>Saqlab qo‘yilgan sevimli filmlar ro‘yxati.</p>
+
+                        {% if recent_favorites %}
+                            <ul class="profile-activity-mini-list">
+                                {% for item in recent_favorites %}
+                                    <li>{{ item.movie.title }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="profile-activity-empty">Hozircha favorites bo‘sh</span>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <a href="{% url 'ratings_list' %}" class="profile-activity-card">
+                    <div class="profile-activity-icon">★</div>
+                    <div class="profile-activity-content">
+                        <div class="profile-activity-topline">
+                            <span class="profile-activity-label">Ratings</span>
+                            <strong class="profile-activity-count">{{ ratings_count }}</strong>
+                        </div>
+                        <p>Berilgan reytinglar va qisqa tavsiflar ro‘yxati.</p>
+
+                        {% if recent_ratings %}
+                            <ul class="profile-activity-mini-list">
+                                {% for item in recent_ratings %}
+                                    <li>{{ item.movie.title }} — {{ item.rating|floatformat:1 }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="profile-activity-empty">Hozircha reytinglar yo‘q</span>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
+                    <div class="profile-activity-icon">▶</div>
+                    <div class="profile-activity-content">
+                        <div class="profile-activity-topline">
+                            <span class="profile-activity-label">Watch History</span>
+                            <strong class="profile-activity-count">{{ watch_history_count }}</strong>
+                        </div>
+                        <p>Ko‘rilgan filmlar va oxirgi ko‘rish tarixi.</p>
+
+                        {% if recent_watch_history %}
+                            <ul class="profile-activity-mini-list">
+                                {% for item in recent_watch_history %}
+                                    <li>{{ item.movie.title }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="profile-activity-empty">Hozircha history bo‘sh</span>
+                        {% endif %}
+                    </div>
+                </a>
             </div>
         </div>
     </div>

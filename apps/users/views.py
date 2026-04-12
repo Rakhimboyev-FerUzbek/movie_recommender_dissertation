@@ -9,6 +9,7 @@ from apps.users.forms import RegisterForm, UserProfileForm, UserUpdateForm
 from apps.users.models import UserProfile
 from config.translations import get_translation
 
+from apps.interactions.models import Favorite, Rating, WatchHistory
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -60,6 +61,28 @@ def profile_view(request):
         else list(profile.preferred_genres or [])
     )
     genre_choices = list(profile_form.fields["preferred_genres"].choices)
+    
+    favorites_count = Favorite.objects.filter(user=request.user).count()
+    ratings_count = Rating.objects.filter(user=request.user).count()
+    watch_history_count = WatchHistory.objects.filter(user=request.user).count()
+
+    recent_favorites = (
+        Favorite.objects.filter(user=request.user)
+        .select_related("movie")
+        .order_by("-created_at")[:3]
+    )
+
+    recent_ratings = (
+        Rating.objects.filter(user=request.user)
+        .select_related("movie")
+        .order_by("-updated_at")[:3]
+    )
+
+    recent_watch_history = (
+        WatchHistory.objects.filter(user=request.user)
+        .select_related("movie")
+        .order_by("-watched_at")[:3]
+    )
 
     context = {
         "user_form": user_form,
@@ -68,6 +91,12 @@ def profile_view(request):
         "is_edit_mode": is_edit_mode,
         "genre_choices": genre_choices,
         "selected_profile_genres": selected_profile_genres,
+        "favorites_count": favorites_count,
+        "ratings_count": ratings_count,
+        "watch_history_count": watch_history_count,
+        "recent_favorites": recent_favorites,
+        "recent_ratings": recent_ratings,
+        "recent_watch_history": recent_watch_history,
     }
     return render(request, "users/profile.html", context)
 
