@@ -4042,3 +4042,152 @@ body[data-theme="light"] .catalog-ui-select__menu::-webkit-scrollbar-thumb {
         max-width: 88% !important;
     }
 }
+
+/* =========================
+   COMMENTS UI SMALL TWEAKS
+   1) composer height 50% smaller
+   2) time always bottom-left
+   ========================= */
+
+/* 1. Fikringizni yozing kartasi balandligini kamaytirish */
+.comment-composer textarea,
+.comment-composer .form-control,
+#commentCreateForm textarea,
+#commentCreateForm .form-control {
+    min-height: 92px !important;
+    height: 92px !important;
+    max-height: 92px !important;
+    padding-bottom: 52px !important; /* send button uchun joy */
+    resize: none;
+}
+
+/* 2. Hamma comment kartalarda vaqt chap pastda bo'lsin */
+.detail-v4-comment-footer {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between !important;
+}
+
+.detail-v4-comment-time,
+#commentsList .detail-v4-comment-time {
+    order: 1;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    text-align: left !important;
+}
+
+.bottom-edit-btn,
+.comment-edit-btn.bottom-edit-btn {
+    order: 2;
+    margin-left: auto !important;
+}
+
+/* owner va other commentlarda footer bir xil ishlasin */
+.detail-v4-comment-card.is-own .detail-v4-comment-footer,
+.detail-v4-comment-card.is-other .detail-v4-comment-footer {
+    justify-content: space-between !important;
+}
+
+/* Agar edit button yo'q bo'lsa ham vaqt chapda qolsin */
+.detail-v4-comment-card .detail-v4-comment-footer:has(.detail-v4-comment-time):not(:has(.bottom-edit-btn)) {
+    justify-content: flex-start !important;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .comment-composer textarea,
+    .comment-composer .form-control,
+    #commentCreateForm textarea,
+    #commentCreateForm .form-control {
+        min-height: 84px !important;
+        height: 84px !important;
+        max-height: 84px !important;
+    }
+}
+/* Own comment -> time left */
+.detail-v4-comment-card.is-own .detail-v4-comment-footer {
+    justify-content: space-between !important;
+}
+
+.detail-v4-comment-card.is-own .detail-v4-comment-time {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    text-align: left !important;
+}
+
+/* Other comment -> time right */
+.detail-v4-comment-card.is-other .detail-v4-comment-footer {
+    justify-content: flex-end !important;
+}
+
+.detail-v4-comment-card.is-other .detail-v4-comment-time {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: right !important;
+}
+/* Own comment -> time left */
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-footer {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-time {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    text-align: left !important;
+}
+
+/* Other comment -> time right */
+#commentsList .detail-v4-comment-card:not(.is-own) .detail-v4-comment-footer {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end !important;
+}
+
+#commentsList .detail-v4-comment-card:not(.is-own) .detail-v4-comment-time {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: right !important;
+}
+
+/* Agar owner commentda edit button bo'lsa, u o'ngda qolsin */
+#commentsList .detail-v4-comment-card.is-own .bottom-edit-btn,
+#commentsList .detail-v4-comment-card.is-own .comment-edit-btn.bottom-edit-btn {
+    margin-left: auto !important;
+}
+/* Comment edit form full width bo'lsin */
+.comment-edit-form,
+.detail-v4-comment-card .comment-edit-form {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.comment-edit-form textarea,
+.detail-v4-comment-card .comment-edit-form textarea,
+.detail-v4-comment-card .comment-edit-form .form-control {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 110px !important;
+    text-align: left !important;
+    resize: vertical;
+}
+
+.comment-edit-form-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.detail-v4-comment-card.is-own .comment-edit-form,
+.detail-v4-comment-card.is-other .comment-edit-form {
+    align-self: stretch !important;
+}

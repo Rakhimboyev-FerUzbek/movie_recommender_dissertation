@@ -269,7 +269,7 @@
 
                 <div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
                     {% for comment in comments %}
-                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% else %}is-other{% endif %}" id="comment-card-{{ comment.id }}">
+                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% else %}is-other{% endif %}">
                         <div class="detail-v4-comment-top">
                             <div class="detail-v4-comment-user">
                                 <span class="detail-v4-comment-author">
@@ -318,9 +318,9 @@
                         {% endif %}
 
                         <div class="detail-v4-comment-footer">
-                            <div class="detail-v4-comment-time" id="comment-time-{{ comment.id }}">
-                                {{ comment.created_at|date:"Y-m-d H:i:s" }}
-                            </div>
+                         <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% else %}is-other{% endif %}">
+                            {{ comment.created_at|date:"Y-m-d H:i:s" }}
+                        </div>
 
                             {% if user.is_authenticated and comment.is_own %}
                                 <button
