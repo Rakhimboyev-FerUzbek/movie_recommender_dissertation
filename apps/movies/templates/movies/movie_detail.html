@@ -269,28 +269,16 @@
 
                 <div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
                     {% for comment in comments %}
-                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% endif %}" id="comment-card-{{ comment.id }}">
-                        <div class="detail-v4-comment-top {% if comment.is_own %}is-own{% endif %}">
-                            {% if comment.is_own %}
-                                <div class="detail-v4-own-left-actions">
-                                    <form method="post" action="{% url 'comment_like' comment.id %}" class="comment-like-form" data-comment-id="{{ comment.id }}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}" id="comment-like-btn-{{ comment.id }}">
-                                            ♥ <span class="comment-like-count" id="comment-like-count-{{ comment.id }}">{{ comment.like_count }}</span>
-                                        </button>
-                                    </form>
-                                </div>
-
-                                <span class="detail-v4-comment-author own-author">
-                                    {{ comment.user.get_full_name|default:comment.user.username }}
-                                </span>
-                            {% else %}
+                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% else %}is-other{% endif %}" id="comment-card-{{ comment.id }}">
+                        <div class="detail-v4-comment-top">
+                            <div class="detail-v4-comment-user">
                                 <span class="detail-v4-comment-author">
                                     {{ comment.user.get_full_name|default:comment.user.username }}
                                 </span>
+                            </div>
 
-                                <div class="detail-v4-right-actions">
+                            <div class="detail-v4-comment-actions">
+                                {% if user.is_authenticated %}
                                     <form method="post" action="{% url 'comment_like' comment.id %}" class="comment-like-form" data-comment-id="{{ comment.id }}">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -298,11 +286,15 @@
                                             ♥ <span class="comment-like-count" id="comment-like-count-{{ comment.id }}">{{ comment.like_count }}</span>
                                         </button>
                                     </form>
-                                </div>
-                            {% endif %}
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="comment-like-btn compact-like-btn">
+                                        ♥ <span>{{ comment.like_count }}</span>
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
 
-                        <div class="detail-v4-comment-body {% if comment.is_own %}is-own{% endif %}" id="display-body-{{ comment.id }}">
+                        <div class="detail-v4-comment-body" id="display-body-{{ comment.id }}">
                             {{ comment.body|linebreaksbr }}
                         </div>
 
@@ -325,8 +317,8 @@
                             </form>
                         {% endif %}
 
-                        <div class="detail-v4-comment-footer {% if comment.is_own %}is-own{% endif %}">
-                            <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% endif %}" id="comment-time-{{ comment.id }}">
+                        <div class="detail-v4-comment-footer">
+                            <div class="detail-v4-comment-time" id="comment-time-{{ comment.id }}">
                                 {{ comment.created_at|date:"Y-m-d H:i:s" }}
                             </div>
 
@@ -343,10 +335,10 @@
                         </div>
                     </article>
                     {% empty %}
-                        <div class="media-empty-state compact" id="commentsEmptyState">
-                            <h5>Hozircha kommentariya yo‘q</h5>
-                            <p>Birinchi bo‘lib fikr qoldiring.</p>
-                        </div>
+                    <div class="media-empty-state compact" id="commentsEmptyState">
+                        <h5>Hozircha kommentariya yo‘q</h5>
+                        <p>Birinchi bo‘lib fikr qoldiring.</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -448,8 +440,12 @@
 
         return `
             <article class="detail-v4-comment-card is-own" id="comment-card-${comment.id}">
-                <div class="detail-v4-comment-top is-own">
-                    <div class="detail-v4-own-left-actions">
+                <div class="detail-v4-comment-top">
+                    <div class="detail-v4-comment-user">
+                        <span class="detail-v4-comment-author">${escapeHtml(comment.author)}</span>
+                    </div>
+
+                    <div class="detail-v4-comment-actions">
                         <form method="post" action="/movies/comments/${comment.id}/like/" class="comment-like-form" data-comment-id="${comment.id}">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                             <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
@@ -458,11 +454,9 @@
                             </button>
                         </form>
                     </div>
-
-                    <span class="detail-v4-comment-author own-author">${escapeHtml(comment.author)}</span>
                 </div>
 
-                <div class="detail-v4-comment-body is-own" id="display-body-${comment.id}">
+                <div class="detail-v4-comment-body" id="display-body-${comment.id}">
                     ${safeBody}
                 </div>
 
@@ -483,8 +477,8 @@
                     </div>
                 </form>
 
-                <div class="detail-v4-comment-footer is-own">
-                    <div class="detail-v4-comment-time is-own" id="comment-time-${comment.id}">${escapeHtml(comment.created_at)}</div>
+                <div class="detail-v4-comment-footer">
+                    <div class="detail-v4-comment-time" id="comment-time-${comment.id}">${escapeHtml(comment.created_at)}</div>
                     <button
                         type="button"
                         class="comment-edit-btn bottom-edit-btn"

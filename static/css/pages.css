@@ -3938,3 +3938,107 @@ body[data-theme="light"] .catalog-ui-select__menu::-webkit-scrollbar-thumb {
 .detail-v4-comment-card.is-own .detail-v4-comment-author {
     text-align: right;
 }
+
+/* =========================
+   COMMENT CARD WIDTH + TEXT ALIGN FIX
+   ========================= */
+
+.detail-v4-comment-card {
+    width: 80%;
+    max-width: 80%;
+    min-width: 0;
+}
+
+.detail-v4-comment-card.is-own {
+    align-self: flex-start;
+    margin-left: 14px;
+    margin-right: auto;
+}
+
+.detail-v4-comment-card.is-other {
+    align-self: flex-end;
+    margin-right: 14px;
+    margin-left: auto;
+}
+
+.detail-v4-comment-body {
+    width: 100%;
+    max-width: 100%;
+    text-align: left !important;
+    direction: ltr;
+    unicode-bidi: plaintext;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.55;
+}
+
+/* tail ham width o'zgarganda joyida tursin */
+.detail-v4-comment-card.is-own::after {
+    left: -8px;
+}
+
+.detail-v4-comment-card.is-other::after {
+    right: -8px;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-comment-card {
+        width: calc(100% - 18px);
+        max-width: calc(100% - 18px);
+    }
+}
+
+/* OWNER va OTHER comment ichidagi matnni majburan chapga tekislash */
+.detail-v4-comment-card .detail-v4-comment-body,
+.detail-v4-comment-card.is-own .detail-v4-comment-body,
+.detail-v4-comment-card.is-other .detail-v4-comment-body,
+#commentsList .detail-v4-comment-body,
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-body,
+#commentsList .detail-v4-comment-card.is-other .detail-v4-comment-body {
+    text-align: left !important;
+    direction: ltr !important;
+    unicode-bidi: plaintext !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    justify-content: flex-start !important;
+    align-self: stretch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Comment body ichidagi p va br bilan kelgan linebreaksbr matni ham chapga tursin */
+.detail-v4-comment-body p,
+.detail-v4-comment-body span,
+.detail-v4-comment-body div {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+/* Karta eni 90% bo'lsin */
+.detail-v4-comment-card,
+#commentsList .detail-v4-comment-card {
+    width: 80% !important;
+    max-width: 80% !important;
+    min-width: 0 !important;
+}
+
+/* Own chapda, other o'ngda */
+.detail-v4-comment-card.is-own {
+    align-self: flex-start !important;
+    margin-left: 14px !important;
+    margin-right: auto !important;
+}
+
+.detail-v4-comment-card.is-other {
+    align-self: flex-end !important;
+    margin-right: 14px !important;
+    margin-left: auto !important;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-comment-card,
+    #commentsList .detail-v4-comment-card {
+        width: 88% !important;
+        max-width: 88% !important;
+    }
+}
