@@ -1,0 +1,103 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg app-navbar">
+    <div class="container">
+        <a class="navbar-brand brand-mark" href="{% url 'home' %}">
+            <span class="brand-dot"></span>
+            {{ t.site_name }}
+        </a>
+
+        <button
+            class="navbar-toggler nav-toggler-clean"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-clean" href="{% url 'home' %}">{{ t.home }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-clean" href="{% url 'movie_list' %}">{{ t.movies }}</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">Shaxsiy tavsiyalar</a>
+                    </li>
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">Model Lab</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+
+            <div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+                <div class="dropdown">
+                    <button
+                        class="btn lang-pill-btn dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <img
+                            src="{% static ui_lang_meta.flag %}"
+                            alt="{{ ui_lang_meta.label }}"
+                            class="lang-flag-img"
+                        >
+                        <span class="lang-pill-text">{{ ui_lang_meta.label }}</span>
+                    </button>
+
+                    <ul class="dropdown-menu lang-menu shadow-sm border-0">
+                        {% for code, meta in available_languages %}
+                            <li>
+                                <a
+                                    class="dropdown-item lang-menu-item"
+                                    href="{% url 'set_language' code %}?next={{ request.get_full_path|urlencode }}"
+                                >
+                                    <img
+                                        src="{% static meta.flag %}"
+                                        alt="{{ meta.label }}"
+                                        class="lang-flag-img"
+                                    >
+                                    <span class="lang-item-label">{{ meta.label }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <button
+                    id="themeToggle"
+                    class="btn theme-icon-btn"
+                    type="button"
+                    aria-label="{{ t.dark_mode }}"
+                    title="{{ t.dark_mode }}"
+                    data-label-dark="{{ t.dark_mode }}"
+                    data-label-light="{{ t.light_mode }}"
+                >
+                    <span class="theme-icon theme-icon-moon">🌙</span>
+                    <span class="theme-icon theme-icon-sun d-none">☀️</span>
+                </button>
+
+                {% if user.is_authenticated %}
+                    <a class="btn btn-profile-soft" href="{% url 'profile' %}">{{ t.profile }}</a>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary-gradient">{{ t.logout }}</button>
+                    </form>
+                {% else %}
+                    <a class="btn btn-outline-soft" href="{% url 'login' %}">{{ t.login }}</a>
+                    <a class="btn btn-primary-gradient" href="{% url 'register' %}">{{ t.register }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

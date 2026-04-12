@@ -1,0 +1,1 @@
+Bu papkada import, seed va yordamchi scriptlar bo'ladi.

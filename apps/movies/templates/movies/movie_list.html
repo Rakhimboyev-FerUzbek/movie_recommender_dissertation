@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.movie_catalog }}{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <div class="container">
+        <div class="catalog-hero fade-up">
+            <h4>{{ t.movie_catalog }}</h4>
+            <p>{{ t.cinematic_experience }}</p>
+        </div>
+
+        <div class="catalog-layout">
+            <aside class="catalog-sidebar fade-up">
+                <div class="glass-card catalog-filter-card">
+                    <div class="catalog-filter-head">
+                        <h4>{{ t.filters }}</h4>
+                    </div>
+
+                    <form method="get" class="catalog-filter-form" id="catalogFilterForm">
+                        <div class="mb-3">
+                            <label class="form-label" for="id_q">Qidiruv</label>
+                            <input
+                                type="text"
+                                name="q"
+                                id="id_q"
+                                class="form-control"
+                                placeholder="Film nomi bo'yicha qidiring..."
+                                value="{{ selected_query }}"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Yil</label>
+
+                            <div class="catalog-ui-select" data-ui-select="year">
+                                <input type="hidden" name="year" id="id_year" value="{{ selected_year }}">
+
+                                <button type="button" class="catalog-ui-select__trigger" data-ui-trigger>
+                                    <span data-ui-label>
+                                        {% if selected_year %}
+                                            {{ selected_year }}
+                                        {% else %}
+                                            Barcha yillar
+                                        {% endif %}
+                                    </span>
+                                    <span class="catalog-ui-select__chevron"></span>
+                                </button>
+
+                                <div class="catalog-ui-select__menu" data-ui-menu>
+                                    {% for value, label in form.year.field.choices %}
+                                        <button
+                                            type="button"
+                                            class="catalog-ui-select__option {% if selected_year == value %}is-active{% endif %}"
+                                            data-ui-value="{{ value }}"
+                                            data-ui-text="{{ label }}"
+                                        >
+                                            {{ label }}
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Saralash</label>
+
+                            <div class="catalog-ui-select" data-ui-select="sort">
+                                <input type="hidden" name="sort" id="id_sort" value="{{ selected_sort }}">
+
+                                <button type="button" class="catalog-ui-select__trigger" data-ui-trigger>
+                                    <span data-ui-label>
+                                        {% for value, label in form.fields.sort.choices %}
+                                            {% if selected_sort == value %}
+                                                {{ label }}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if not selected_sort %}Standart{% endif %}
+                                    </span>
+                                    <span class="catalog-ui-select__chevron"></span>
+                                </button>
+
+                                <div class="catalog-ui-select__menu" data-ui-menu>
+                                    {% for value, label in form.fields.sort.choices %}
+                                        <button
+                                            type="button"
+                                            class="catalog-ui-select__option {% if selected_sort == value %}is-active{% endif %}"
+                                            data-ui-value="{{ value }}"
+                                            data-ui-text="{{ label }}"
+                                        >
+                                            {{ label }}
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Janrlar</label>
+                            <div class="filter-check-grid">
+                                {% for genre in form.fields.genre.queryset %}
+                                    <label class="filter-check-item">
+                                        <input
+                                            type="checkbox"
+                                            name="genre"
+                                            value="{{ genre.id }}"
+                                            {% if genre.id|stringformat:"s" in selected_genre_ids %}checked{% endif %}
+                                        >
+                                        <span>{{ genre.name }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
+                            <a href="{% url 'movie_list' %}" class="btn btn-outline-soft">Tozalash</a>
+                        </div>
+                    </form>
+                </div>
+            </aside>
+
+            <div class="catalog-content fade-up">
+                <div id="catalogResultsContainer">
+                    <div class="movie-grid movie-grid-four-col">
+                        {% for movie in movies %}
+                            {% include "includes/movie_card.html" with movie=movie %}
+                        {% empty %}
+                            <div class="empty-state-card">
+                                <h4>{{ t.no_movies_found }}</h4>
+                                <p>{{ t.try_another_search }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    const form = document.getElementById("catalogFilterForm");
+    const searchInput = document.getElementById("id_q");
+    const resultsContainer = document.getElementById("catalogResultsContainer");
+
+    if (!form || !searchInput || !resultsContainer) return;
+
+    let timer = null;
+    let controller = null;
+
+    function buildQueryString() {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            if (key === "page") continue;
+            if (value !== "") {
+                params.append(key, value);
+            }
+        }
+
+        return params.toString();
+    }
+
+    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false) {
+        const activeElement = document.activeElement;
+        const isSearchFocused = preserveCaret && activeElement === searchInput;
+        const start = searchInput.selectionStart;
+        const end = searchInput.selectionEnd;
+
+        const query = buildQueryString();
+        const targetUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                signal: controller.signal,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextResults = doc.getElementById("catalogResultsContainer");
+
+            if (!nextResults) return;
+
+            resultsContainer.innerHTML = nextResults.innerHTML;
+
+            if (pushUrl) {
+                window.history.replaceState({}, "", targetUrl);
+            }
+
+            if (isSearchFocused) {
+                searchInput.focus();
+                if (typeof start === "number" && typeof end === "number") {
+                    searchInput.setSelectionRange(start, end);
+                }
+            }
+        } catch (error) {
+            if (error.name !== "AbortError") {
+                console.error(error);
+            }
+        }
+    }
+
+    function setupCustomSelect(rootName, hiddenInputId, triggerId, menuId, labelId) {
+        const root = document.querySelector(`[data-select-root="${rootName}"]`);
+        const hiddenInput = document.getElementById(hiddenInputId);
+        const trigger = document.getElementById(triggerId);
+        const menu = document.getElementById(menuId);
+        const label = document.getElementById(labelId);
+
+        if (!root || !hiddenInput || !trigger || !menu || !label) return;
+
+        trigger.addEventListener("click", function () {
+            const willOpen = !root.classList.contains("is-open");
+
+            document.querySelectorAll(".custom-filter-select.is-open").forEach(el => {
+                el.classList.remove("is-open");
+                const btn = el.querySelector(".custom-filter-trigger");
+                if (btn) btn.setAttribute("aria-expanded", "false");
+            });
+
+            if (willOpen) {
+                root.classList.add("is-open");
+                trigger.setAttribute("aria-expanded", "true");
+            }
+        });
+
+        menu.querySelectorAll(".custom-filter-option").forEach(option => {
+            option.addEventListener("click", function () {
+                const value = this.dataset.selectValue ?? "";
+                const text = this.dataset.selectLabel ?? this.textContent.trim();
+
+                hiddenInput.value = value;
+                label.textContent = text;
+
+                menu.querySelectorAll(".custom-filter-option").forEach(btn => btn.classList.remove("is-active"));
+                this.classList.add("is-active");
+
+                root.classList.remove("is-open");
+                trigger.setAttribute("aria-expanded", "false");
+
+                fetchAndReplaceResults(true, false);
+            });
+        });
+    }
+
+    setupCustomSelect("year", "id_year", "yearTrigger", "yearMenu", "yearTriggerLabel");
+    setupCustomSelect("sort", "id_sort", "sortTrigger", "sortMenu", "sortTriggerLabel");
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".custom-filter-select")) {
+            document.querySelectorAll(".custom-filter-select.is-open").forEach(el => {
+                el.classList.remove("is-open");
+                const btn = el.querySelector(".custom-filter-trigger");
+                if (btn) btn.setAttribute("aria-expanded", "false");
+            });
+        }
+    });
+
+    searchInput.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fetchAndReplaceResults(true, true);
+        }, 350);
+    });
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        fetchAndReplaceResults(true, false);
+    });
+
+    form.addEventListener("change", function (event) {
+        const target = event.target;
+        if (!target) return;
+
+        if (target.name === "genre") {
+            fetchAndReplaceResults(true, false);
+        }
+    });
+
+    document.addEventListener("click", function (event) {
+        const link = event.target.closest("#catalogResultsContainer .pagination a");
+        if (!link) return;
+
+        event.preventDefault();
+
+        const href = link.getAttribute("href");
+        if (!href) return;
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        fetch(href, {
+            method: "GET",
+            signal: controller.signal,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => {
+            if (!response.ok) return null;
+            return response.text();
+        })
+        .then(html => {
+            if (!html) return;
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextResults = doc.getElementById("catalogResultsContainer");
+            if (!nextResults) return;
+
+            resultsContainer.innerHTML = nextResults.innerHTML;
+            window.history.replaceState({}, "", href);
+        })
+        .catch(error => {
+            if (error.name !== "AbortError") {
+                console.error(error);
+            }
+        });
+    });
+})();
+</script>
+<script>
+(function () {
+    const selects = document.querySelectorAll(".catalog-ui-select");
+
+    function closeAll(except = null) {
+        selects.forEach((root) => {
+            if (root !== except) {
+                root.classList.remove("is-open");
+            }
+        });
+    }
+
+    selects.forEach((root) => {
+        const hiddenInput = root.querySelector('input[type="hidden"]');
+        const trigger = root.querySelector("[data-ui-trigger]");
+        const label = root.querySelector("[data-ui-label]");
+        const menu = root.querySelector("[data-ui-menu]");
+        const options = root.querySelectorAll("[data-ui-value]");
+
+        if (!hiddenInput || !trigger || !label || !menu) return;
+
+        trigger.addEventListener("click", function () {
+            const willOpen = !root.classList.contains("is-open");
+            closeAll(root);
+            root.classList.toggle("is-open", willOpen);
+        });
+
+        options.forEach((option) => {
+            option.addEventListener("click", function () {
+                const value = this.dataset.uiValue ?? "";
+                const text = this.dataset.uiText ?? this.textContent.trim();
+
+                hiddenInput.value = value;
+                label.textContent = text;
+
+                options.forEach((btn) => btn.classList.remove("is-active"));
+                this.classList.add("is-active");
+
+                root.classList.remove("is-open");
+            });
+        });
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".catalog-ui-select")) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeAll();
+        }
+    });
+})();
+</script>
+{% endblock %}

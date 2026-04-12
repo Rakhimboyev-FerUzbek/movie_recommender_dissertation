@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.login }}{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="container">
+        <div class="auth-shell">
+            <div class="auth-brand-panel fade-up">
+                <span class="hero-kicker">{{ t.site_name }}</span>
+                <h1>{{ t.hero_title }}</h1>
+                <p>{{ t.hero_subtitle }}</p>
+            </div>
+
+            <div class="auth-form-panel fade-up">
+                <div class="auth-card">
+                    <h2>{{ t.login }}</h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.username.label }}</label>
+                            {{ form.username }}
+                            <div class="text-danger small">{{ form.username.errors }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.password.label }}</label>
+                            {{ form.password }}
+                            <div class="text-danger small">{{ form.password.errors }}</div>
+                        </div>
+
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}">
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary-gradient w-100 mb-3">{{ t.login }}</button>
+                        <a href="{% url 'register' %}" class="btn btn-outline-light w-100">{{ t.register }}</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

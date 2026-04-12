@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendation Lab{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="glass-card mb-4">
+            <span class="hero-kicker">Selectable Recommendation</span>
+            <h1 class="mb-2">Recommendation Lab</h1>
+            <p class="text-muted mb-0">
+                Bu sahifa BMI himoyasi va eksperimental namoyish uchun mo'ljallangan.
+                Har bir so'rovda model alohida tanlanadi, shuning uchun bir nechta user bir vaqtning o'zida turli modellar bilan ishlasa ham global conflict chiqmaydi.
+            </p>
+        </div>
+
+        <div class="glass-card mb-4">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Target user ID</label>
+                    {{ form.user_id }}
+                    <div class="text-danger small">{{ form.user_id.errors }}</div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Model</label>
+                    {{ form.model }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Scenario</label>
+                    {{ form.scenario }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Top-K</label>
+                    {{ form.top_k }}
+                </div>
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary-gradient">Run</button>
+                </div>
+            </form>
+        </div>
+
+        {% if result %}
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="glass-card h-100">
+                        <div class="profile-card-head">
+                            <h5 class="mb-0">Experiment summary</h5>
+                        </div>
+                        <ul class="list-unstyled mt-3 mb-0 small">
+                            <li class="mb-2"><strong>User:</strong> {{ selected_user.username }} (ID={{ selected_user.id }})</li>
+                            <li class="mb-2"><strong>Requested model:</strong> {{ form.cleaned_data.model }}</li>
+                            <li class="mb-2"><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
+                            <li class="mb-2"><strong>Scenario:</strong> {{ result.scenario_label }}</li>
+                            <li class="mb-2"><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
+                            <li class="mb-2"><strong>Preferred genres:</strong>
+                                {% if result.preferred_genres %}
+                                    {{ result.preferred_genres|join:", " }}
+                                {% else %}
+                                    kiritilmagan
+                                {% endif %}
+                            </li>
+                            {% if result.weights %}
+                                <li class="mb-2"><strong>Hybrid weights:</strong>
+                                    content={{ result.weights.content|floatformat:2 }},
+                                    item={{ result.weights.item|floatformat:2 }},
+                                    svd={{ result.weights.svd|floatformat:2 }},
+                                    popularity={{ result.weights.popularity|floatformat:2 }}
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="glass-card h-100">
+                        <div class="profile-card-head">
+                            <h5 class="mb-0">Natija va metodologik izoh</h5>
+                        </div>
+                        <div class="mt-3 small text-muted">
+                            <p class="mb-2">Selectable mode production default rejim emas. Bu sahifa alohida request bo'yicha modelni tanlaydi, shu sabab tizimning Auto Recommendation oqimi buzilmaydi.</p>
+                            <p class="mb-0">Cold start stsenariysida tizim tarixiy reytinglardan foydalanishni cheklab, profil janrlari va popularity signalini kuchaytiradi. Explainability esa har bir tavsiya kartasida ko'rsatiladi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if result.recommendations %}
+                <div class="movie-row">
+                    {% for item in result.recommendations %}
+                        <div class="movie-card">
+                            <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
+                                <div class="movie-poster-wrap">
+                                    {% if item.movie.poster_url %}
+                                        <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="movie-poster">
+                                    {% else %}
+                                        <div class="movie-poster placeholder-poster">
+                                            <span>{{ item.movie.title|slice:":1" }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="movie-card-body">
+                                    <h5 class="movie-title">{{ item.movie.title }}</h5>
+                                    <div class="movie-meta">
+                                        {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
+                                        <span>★ {{ item.avg_rating|floatformat:1 }}</span>
+                                        <span>Score {{ item.score|floatformat:3 }}</span>
+                                    </div>
+                                    <div class="movie-genre-chips">
+                                        {% for genre in item.movie.genres.all|slice:":2" %}
+                                            <span class="genre-chip">{{ genre.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="glass-card mt-2 p-3">
+                                <small class="text-muted d-block mb-1">Explainability</small>
+                                <p class="mb-0 small">{{ item.explanation }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state-card">Tanlangan konfiguratsiya bo'yicha tavsiya qaytmadi.</div>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
