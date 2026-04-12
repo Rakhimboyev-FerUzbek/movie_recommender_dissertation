@@ -10,6 +10,10 @@ from apps.movies.forms import MovieFilterForm
 from apps.movies.models import Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 from apps.recommendations.services import RecommendationService
+from django.db.models import Count, F, Q
+from django.utils import timezone
+
+from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
 
 
 def home_view(request):
@@ -158,8 +162,22 @@ def movie_detail_view(request, slug):
         is_from_recommendations = next_url.startswith(recommendation_prefixes)
 
     existing_rating = None
+    is_favorite = False
+
     if request.user.is_authenticated:
         existing_rating = Rating.objects.filter(user=request.user, movie=movie).first()
+        is_favorite = Favorite.objects.filter(user=request.user, movie=movie).exists()
+
+        history, created = WatchHistory.objects.get_or_create(
+            user=request.user,
+            movie=movie,
+            defaults={"watch_count": 1},
+        )
+        if not created:
+            WatchHistory.objects.filter(pk=history.pk).update(
+                watch_count=F("watch_count") + 1,
+                watched_at=timezone.now(),
+            )
 
     rating_initial = {}
     if existing_rating:
@@ -208,5 +226,6 @@ def movie_detail_view(request, slug):
         "comments": comments,
         "full_video_mode": detect_full_video_mode(movie),
         "show_recommendation_reason": is_from_recommendations,
+        "is_favorite": is_favorite,
     }
     return render(request, "movies/movie_detail.html", context)
