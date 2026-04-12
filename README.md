@@ -61,3 +61,29 @@ python manage.py create_admin admin1 --password test12345 --email admin1@example
 python manage.py create_admin moderator1 --password test12345 --email moderator1@example.com --staff-only --activate
 
 python manage.py create_admin admin1 --password NewStrongPass123
+
+
+
+curl "https://api.themoviedb.org/3/movie/101230/images?api_key=YOUR_TMDB_API_KEY&include_image_language=en,null"
+https://image.tmdb.org/t/p/w500/abc123xyz.jpg
+
+import requests
+
+api_key = "YOUR_TMDB_API_KEY"
+movie_id = 101230
+
+url = f"https://api.themoviedb.org/3/movie/{movie_id}/images"
+params = {
+    "api_key": api_key,
+    "include_image_language": "en,null"
+}
+
+resp = requests.get(url, params=params, timeout=30)
+resp.raise_for_status()
+data = resp.json()
+
+for i, p in enumerate(data.get("posters", []), 1):
+    file_path = p["file_path"]
+    full_url = f"https://image.tmdb.org/t/p/w500{file_path}"
+    print(i, full_url, "vote_avg=", p.get("vote_average"), "vote_count=", p.get("vote_count"))
+

@@ -44,6 +44,20 @@
                                     <span class="genre-chip">{{ genre.name }}</span>
                                 {% endfor %}
                             </div>
+
+                            {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-form ms-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="detail-favorite-btn {% if is_favorite %}is-active{% endif %}" id="favoriteToggleButton" title="Favorites">
+                                        <span class="favorite-heart-icon">♥</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="detail-favorite-btn ms-2" title="Favorites">
+                                    <span class="favorite-heart-icon">♥</span>
+                                </a>
+                            {% endif %}
                         </div>
 
                         <div class="detail-v4-inline-rating" id="rating-section">
@@ -683,6 +697,37 @@
             }
 
             editForm.classList.add("is-hidden");
+        } catch (error) {
+            console.error(error);
+        }
+    });
+})();
+
+(function () {
+    const favoriteForm = document.getElementById("favoriteToggleForm");
+    const favoriteButton = document.getElementById("favoriteToggleButton");
+    if (!favoriteForm || !favoriteButton) return;
+
+    favoriteForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(favoriteForm.action, {
+                method: "POST",
+                body: new FormData(favoriteForm),
+                headers: {"X-Requested-With": "XMLHttpRequest"}
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.ok) return;
+
+            favoriteButton.classList.toggle("is-active", data.is_favorite);
+
+            if (data.action === "added") {
+                alert(`"${data.movie_title}" favorites ga qo'shildi.`);
+            } else {
+                alert(`"${data.movie_title}" favorites dan olib tashlandi.`);
+            }
         } catch (error) {
             console.error(error);
         }
