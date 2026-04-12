@@ -31,7 +31,7 @@
                             >
                         </div>
 
-                       <div class="mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Yil</label>
 
                             <div class="catalog-ui-select" data-ui-select="year">
@@ -64,23 +64,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Janrlar</label>
-                            <div class="filter-check-grid">
-                                {% for genre in form.fields.genre.queryset %}
-                                    <label class="filter-check-item">
-                                        <input
-                                            type="checkbox"
-                                            name="genre"
-                                            value="{{ genre.id }}"
-                                            {% if genre.id|stringformat:"s" in selected_genre_ids %}checked{% endif %}
-                                        >
-                                        <span>{{ genre.name }}</span>
-                                    </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                       <div class="mb-3">
                             <label class="form-label">Saralash</label>
 
                             <div class="catalog-ui-select" data-ui-select="sort">
@@ -110,6 +93,23 @@
                                         </button>
                                     {% endfor %}
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Janrlar</label>
+                            <div class="filter-check-grid">
+                                {% for genre in form.fields.genre.queryset %}
+                                    <label class="filter-check-item">
+                                        <input
+                                            type="checkbox"
+                                            name="genre"
+                                            value="{{ genre.id }}"
+                                            {% if genre.id|stringformat:"s" in selected_genre_ids %}checked{% endif %}
+                                        >
+                                        <span>{{ genre.name }}</span>
+                                    </label>
+                                {% endfor %}
                             </div>
                         </div>
 

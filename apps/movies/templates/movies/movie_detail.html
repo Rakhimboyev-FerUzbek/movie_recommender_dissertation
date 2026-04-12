@@ -46,7 +46,7 @@
                             </div>
                         </div>
 
-                        <div class="detail-v4-inline-rating">
+                        <div class="detail-v4-inline-rating" id="rating-section">
                             {% if user.is_authenticated %}
                                 <div class="detail-v4-inline-rating-head">Reyting berish</div>
 
@@ -78,8 +78,7 @@
                                             <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
                                         </div>
                                         <small id="reviewCounter" class="detail-v4-review-counter">0 / 50</small>
-                                        <div class="text-danger small">{{ rating_form.rating.errors }}</div>
-                                        <div class="text-danger small">{{ rating_form.review.errors }}</div>
+                                        <div class="text-danger small" id="ratingErrors"></div>
                                     </div>
 
                                     <div
@@ -237,7 +236,7 @@
                 </div>
             </div>
 
-            <div class="glass-card detail-v4-comments-card compact-comments-card">
+            <div class="glass-card detail-v4-comments-card compact-comments-card" id="comments-section">
                 <div class="detail-v4-comments-head compact-head">
                     <h4>Kommentariyalar</h4>
                     <p>Film haqidagi fikringizni yozib qoldiring.</p>
@@ -257,7 +256,7 @@
                         </button>
                     </div>
 
-                    <div class="text-danger small mt-2" id="commentCreateErrors">{{ comment_form.body.errors }}</div>
+                    <div class="text-danger small mt-2" id="commentCreateErrors"></div>
                 </form>
                 {% else %}
                     <div class="login-required-box compact-box mb-3">
@@ -270,15 +269,15 @@
 
                 <div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
                     {% for comment in comments %}
-                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% endif %}">
+                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% endif %}" id="comment-card-{{ comment.id }}">
                         <div class="detail-v4-comment-top {% if comment.is_own %}is-own{% endif %}">
                             {% if comment.is_own %}
                                 <div class="detail-v4-own-left-actions">
-                                    <form method="post" action="{% url 'comment_like' comment.id %}">
+                                    <form method="post" action="{% url 'comment_like' comment.id %}" class="comment-like-form" data-comment-id="{{ comment.id }}">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}">
-                                            ♥ {{ comment.like_count }}
+                                        <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}" id="comment-like-btn-{{ comment.id }}">
+                                            ♥ <span class="comment-like-count" id="comment-like-count-{{ comment.id }}">{{ comment.like_count }}</span>
                                         </button>
                                     </form>
                                 </div>
@@ -292,11 +291,11 @@
                                 </span>
 
                                 <div class="detail-v4-right-actions">
-                                    <form method="post" action="{% url 'comment_like' comment.id %}">
+                                    <form method="post" action="{% url 'comment_like' comment.id %}" class="comment-like-form" data-comment-id="{{ comment.id }}">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}">
-                                            ♥ {{ comment.like_count }}
+                                        <button type="submit" class="comment-like-btn compact-like-btn {% if comment.is_liked %}is-active{% endif %}" id="comment-like-btn-{{ comment.id }}">
+                                            ♥ <span class="comment-like-count" id="comment-like-count-{{ comment.id }}">{{ comment.like_count }}</span>
                                         </button>
                                     </form>
                                 </div>
@@ -307,8 +306,8 @@
                             {{ comment.body|linebreaksbr }}
                         </div>
 
-                        {% if comment.is_own %}
-                            <form method="post" action="{% url 'comment_edit' comment.id %}" class="comment-edit-form is-hidden" id="edit-form-{{ comment.id }}">
+                        {% if user.is_authenticated and comment.is_own %}
+                            <form method="post" action="{% url 'comment_edit' comment.id %}" class="comment-edit-form is-hidden" id="edit-form-{{ comment.id }}" data-comment-id="{{ comment.id }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                 <textarea name="body" class="form-control" rows="3" maxlength="1000">{{ comment.body }}</textarea>
@@ -327,11 +326,11 @@
                         {% endif %}
 
                         <div class="detail-v4-comment-footer {% if comment.is_own %}is-own{% endif %}">
-                            <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% endif %}">
-                                {{ comment.created_at|date:"Y-m-d H:i" }}
+                            <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% endif %}" id="comment-time-{{ comment.id }}">
+                                {{ comment.created_at|date:"Y-m-d H:i:s" }}
                             </div>
 
-                            {% if comment.is_own %}
+                            {% if user.is_authenticated and comment.is_own %}
                                 <button
                                     type="button"
                                     class="comment-edit-btn bottom-edit-btn"
@@ -344,7 +343,7 @@
                         </div>
                     </article>
                     {% empty %}
-                        <div class="media-empty-state compact">
+                        <div class="media-empty-state compact" id="commentsEmptyState">
                             <h5>Hozircha kommentariya yo‘q</h5>
                             <p>Birinchi bo‘lib fikr qoldiring.</p>
                         </div>
@@ -377,13 +376,33 @@
     const reviewDisplayWrap = document.getElementById("reviewDisplayWrap");
     const reviewDisplayText = document.getElementById("reviewDisplayText");
     const editReviewBtn = document.getElementById("editReviewBtn");
-
     const ratingForm = document.getElementById("inlineRatingForm");
+    const ratingErrors = document.getElementById("ratingErrors");
+
     const commentForm = document.getElementById("commentCreateForm");
     const commentsList = document.getElementById("commentsList");
     const commentErrors = document.getElementById("commentCreateErrors");
 
-       function renderStars(value) {
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    async function postFormAjax(form) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+        return { response, data };
+    }
+
+    function renderStars(value) {
         const current = parseFloat(value || "0");
 
         starButtons.forEach((btn) => {
@@ -413,26 +432,6 @@
         return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
     }
 
-    if (ratingInput && starButtons.length) {
-        starButtons.forEach((btn) => {
-            btn.addEventListener("mousemove", function (event) {
-                renderStars(getHalfValue(this, event));
-            });
-
-            btn.addEventListener("mouseleave", function () {
-                renderStars(ratingInput.value);
-            });
-
-            btn.addEventListener("click", function (event) {
-                const selected = getHalfValue(this, event);
-                ratingInput.value = selected.toFixed(1);
-                renderStars(ratingInput.value);
-            });
-        });
-
-        renderStars(ratingInput.value);
-    }
-
     function openReviewEditor() {
         if (reviewEditorWrap) reviewEditorWrap.classList.remove("is-hidden");
         if (reviewDisplayWrap) reviewDisplayWrap.classList.add("is-hidden");
@@ -444,27 +443,18 @@
         reviewCounter.textContent = `${reviewInput.value.length} / 50`;
     }
 
-    function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text || "";
-        return div.innerHTML;
-    }
+    function buildOwnCommentCard(comment, csrfToken) {
+        const safeBody = escapeHtml(comment.body).replace(/\n/g, "<br>");
 
-    function getCsrfToken(form) {
-        const input = form.querySelector('input[name="csrfmiddlewaretoken"]');
-        return input ? input.value : "";
-    }
-
-    function buildOwnCommentCard(comment) {
         return `
-            <article class="detail-v4-comment-card is-own">
+            <article class="detail-v4-comment-card is-own" id="comment-card-${comment.id}">
                 <div class="detail-v4-comment-top is-own">
                     <div class="detail-v4-own-left-actions">
-                        <form method="post" action="/interactions/comments/${comment.id}/like/">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${escapeHtml(comment.csrf_token)}">
-                            <input type="hidden" name="next" value="${escapeHtml(window.location.pathname + window.location.search)}">
-                            <button type="button" class="comment-like-btn compact-like-btn">
-                                ♥ ${comment.like_count}
+                        <form method="post" action="/movies/comments/${comment.id}/like/" class="comment-like-form" data-comment-id="${comment.id}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                            <button type="submit" class="comment-like-btn compact-like-btn" id="comment-like-btn-${comment.id}">
+                                ♥ <span class="comment-like-count" id="comment-like-count-${comment.id}">${comment.like_count}</span>
                             </button>
                         </form>
                     </div>
@@ -473,12 +463,12 @@
                 </div>
 
                 <div class="detail-v4-comment-body is-own" id="display-body-${comment.id}">
-                    ${escapeHtml(comment.body)}
+                    ${safeBody}
                 </div>
 
-                <form method="post" action="/interactions/comments/${comment.id}/edit/" class="comment-edit-form is-hidden" id="edit-form-${comment.id}">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${escapeHtml(comment.csrf_token)}">
-                    <input type="hidden" name="next" value="${escapeHtml(window.location.pathname + window.location.search)}">
+                <form method="post" action="/movies/comments/${comment.id}/edit/" class="comment-edit-form is-hidden" id="edit-form-${comment.id}" data-comment-id="${comment.id}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                    <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
                     <textarea name="body" class="form-control" rows="3" maxlength="1000">${escapeHtml(comment.body)}</textarea>
                     <div class="comment-edit-form-actions">
                         <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
@@ -494,7 +484,7 @@
                 </form>
 
                 <div class="detail-v4-comment-footer is-own">
-                    <div class="detail-v4-comment-time is-own">${escapeHtml(comment.created_at)}</div>
+                    <div class="detail-v4-comment-time is-own" id="comment-time-${comment.id}">${escapeHtml(comment.created_at)}</div>
                     <button
                         type="button"
                         class="comment-edit-btn bottom-edit-btn"
@@ -506,20 +496,6 @@
                 </div>
             </article>
         `;
-    }
-
-    async function postFormAjax(form) {
-        const formData = new FormData(form);
-        const response = await fetch(form.action, {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
-            }
-        });
-
-        const data = await response.json();
-        return { response, data };
     }
 
     if (ratingInput && starButtons.length) {
@@ -564,7 +540,17 @@
 
             try {
                 const { response, data } = await postFormAjax(ratingForm);
-                if (!response.ok || !data.ok) return;
+
+                if (!response.ok || !data.ok) {
+                    if (ratingErrors && data.errors) {
+                        ratingErrors.textContent = Object.values(data.errors).flat().join(" ");
+                    }
+                    return;
+                }
+
+                if (ratingErrors) {
+                    ratingErrors.textContent = "";
+                }
 
                 if (data.rating) {
                     ratingInput.value = data.rating;
@@ -594,6 +580,7 @@
 
             try {
                 const { response, data } = await postFormAjax(commentForm);
+
                 if (!response.ok || !data.ok) {
                     if (commentErrors && data.errors && data.errors.body) {
                         commentErrors.textContent = data.errors.body.join(" ");
@@ -606,17 +593,50 @@
                 }
 
                 const textarea = commentForm.querySelector("textarea");
+                const csrfInput = commentForm.querySelector('input[name="csrfmiddlewaretoken"]');
+                const csrfToken = csrfInput ? csrfInput.value : "";
+
                 if (textarea) {
                     textarea.value = "";
                 }
 
-                data.comment.csrf_token = getCsrfToken(commentForm);
-                commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment));
+                const emptyState = document.getElementById("commentsEmptyState");
+                if (emptyState) {
+                    emptyState.remove();
+                }
+
+                commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment, csrfToken));
             } catch (error) {
                 console.error(error);
             }
         });
     }
+
+    document.addEventListener("submit", async function (event) {
+        const likeForm = event.target.closest(".comment-like-form");
+        if (!likeForm) return;
+
+        event.preventDefault();
+
+        try {
+            const { response, data } = await postFormAjax(likeForm);
+            if (!response.ok || !data.ok) return;
+
+            const commentId = data.comment_id;
+            const countEl = document.getElementById(`comment-like-count-${commentId}`);
+            const btnEl = document.getElementById(`comment-like-btn-${commentId}`);
+
+            if (countEl) {
+                countEl.textContent = data.like_count;
+            }
+
+            if (btnEl) {
+                btnEl.classList.toggle("is-active", data.is_liked);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
     document.addEventListener("click", function (event) {
         const editBtn = event.target.closest(".comment-edit-btn");
@@ -642,6 +662,35 @@
 
             if (editForm) editForm.classList.add("is-hidden");
             if (displayBody) displayBody.classList.remove("is-hidden");
+        }
+    });
+
+    document.addEventListener("submit", async function (event) {
+        const editForm = event.target.closest(".comment-edit-form");
+        if (!editForm) return;
+
+        event.preventDefault();
+
+        try {
+            const { response, data } = await postFormAjax(editForm);
+            if (!response.ok || !data.ok) return;
+
+            const commentId = editForm.dataset.commentId;
+            const bodyEl = document.getElementById(`display-body-${commentId}`);
+            const timeEl = document.getElementById(`comment-time-${commentId}`);
+
+            if (bodyEl) {
+                bodyEl.innerHTML = escapeHtml(data.comment.body).replace(/\n/g, "<br>");
+                bodyEl.classList.remove("is-hidden", "d-none");
+            }
+
+            if (timeEl && data.comment.updated_at) {
+                timeEl.textContent = data.comment.updated_at;
+            }
+
+            editForm.classList.add("is-hidden");
+        } catch (error) {
+            console.error(error);
         }
     });
 })();
