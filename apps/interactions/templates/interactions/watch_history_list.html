@@ -5,65 +5,73 @@
 {% block content %}
 <section class="interaction-page">
     <div class="container">
-        <div class="interaction-page-head fade-up">
-            <div>
-                <h1>Watch History</h1>
-                <p>Ko'rilgan filmlar va ko'rish chastotasi.</p>
+        <div class="interaction-page-top fade-up">
+            <div class="interaction-page-top-main">
+                <div class="interaction-page-head interaction-page-head--compact">
+                    <div>
+                        <h1>Watch History</h1>
+                        <p>Ko'rilgan filmlar va ko'rish chastotasi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card interaction-filter-card interaction-filter-card--top">
+                <form method="get" class="interaction-filter-form">
+                    <div class="interaction-filter-grid">
+                        <div>
+                            <label class="form-label">Qidiruv</label>
+                            <input type="text" name="q" class="form-control" value="{{ selected_query }}" placeholder="Film nomi bo'yicha qidiring...">
+                        </div>
+                        <div>
+                            <label class="form-label">Saralash</label>
+                            {{ form.sort }}
+                        </div>
+                        <div class="interaction-filter-actions">
+                            <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
+                            <a href="{% url 'watch_history_list' %}" class="btn btn-outline-soft">Tozalash</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <div class="glass-card interaction-filter-card fade-up mb-4">
-            <form method="get" class="interaction-filter-form">
-                <div class="interaction-filter-grid">
-                    <div>
-                        <label class="form-label">Qidiruv</label>
-                        <input type="text" name="q" class="form-control" value="{{ selected_query }}" placeholder="Film nomi bo'yicha qidiring...">
-                    </div>
-                    <div>
-                        <label class="form-label">Saralash</label>
-                        {{ form.sort }}
-                    </div>
-                    <div class="interaction-filter-actions">
-                        <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
-                        <a href="{% url 'watch_history_list' %}" class="btn btn-outline-soft">Tozalash</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="interaction-two-col-grid fade-up">
-            {% for item in history_items %}
-                <article class="glass-card favorite-row-card">
-                    <div class="favorite-card-media">
-                        <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
-                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="favorite-poster-link">
-                            {% if item.movie.poster_url %}
-                                <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="favorite-poster-img">
-                            {% else %}
-                                <div class="favorite-poster-placeholder">{{ item.movie.title|slice:":1" }}</div>
-                            {% endif %}
-                        </a>
-                    </div>
-                    <div class="favorite-card-content">
-                        <div class="favorite-card-head">
-                            <div>
-                                <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="interaction-title-link">{{ item.movie.title }}</a>
-                                <div class="interaction-meta-line">
-                                    {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
-                                    <span class="interaction-chip">Ko'rishlar: {{ item.watch_count }}</span>
-                                </div>
-                            </div>
-                            <span class="interaction-chip">Oxirgi: {{ item.watched_at|date:"Y-m-d H:i" }}</span>
+        <div id="interactionResults">
+            <div class="interaction-two-col-grid fade-up">
+                {% for item in history_items %}
+                    <article class="glass-card favorite-row-card">
+                        <div class="favorite-card-media">
+                            <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
+                            <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="favorite-poster-link">
+                                {% if item.movie.poster_url %}
+                                    <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="favorite-poster-img">
+                                {% else %}
+                                    <div class="favorite-poster-placeholder">{{ item.movie.title|slice:":1" }}</div>
+                                {% endif %}
+                            </a>
                         </div>
-                        <p class="interaction-overview">{{ item.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
+                        <div class="favorite-card-content">
+                            <div class="favorite-card-head">
+                                <div>
+                                    <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="interaction-title-link">{{ item.movie.title }}</a>
+                                    <div class="interaction-meta-line">
+                                        {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
+                                        <span class="interaction-chip">Ko'rishlar: {{ item.watch_count }}</span>
+                                    </div>
+                                </div>
+                                <span class="interaction-chip">Oxirgi: {{ item.watched_at|date:"Y-m-d H:i" }}</span>
+                            </div>
+                            <p class="interaction-overview">{{ item.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="glass-card empty-state-card full-span-card">
+                        <h4>Watch history bo'sh</h4>
+                        <p>Movie detail sahifalarini ko'rganingiz sari ushbu bo'lim to'lib boradi.</p>
                     </div>
-                </article>
-            {% empty %}
-                <div class="glass-card empty-state-card full-span-card">
-                    <h4>Watch history bo'sh</h4>
-                    <p>Movie detail sahifalarini ko'rganingiz sari ushbu bo'lim to'lib boradi.</p>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+
+            {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
         </div>
 
         {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}

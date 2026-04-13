@@ -14,7 +14,7 @@
     --radius-xl: 28px;
     --radius-lg: 20px;
     --radius-md: 14px;
-    --radius-sm: 10px;
+    --radius-sm: 10px
 }
 
 body[data-theme="light"] {
@@ -29,28 +29,26 @@ body[data-theme="light"] {
     --primary-2: #12b5e5;
     --danger: #ef476f;
     --success: #10b981;
-    --shadow: 0 20px 50px rgba(43, 63, 99, 0.14);
+    --shadow: 0 20px 50px rgba(43, 63, 99, 0.14)
 }
 
-html, body {
+html,
+body {
     min-height: 100%;
-    background:
-        radial-gradient(circle at top right, rgba(124,92,255,0.16), transparent 24%),
-        radial-gradient(circle at left bottom, rgba(76,201,240,0.12), transparent 20%),
-        var(--bg);
+    background: radial-gradient(circle at top right, rgba(124, 92, 255, 0.16), transparent 24%), radial-gradient(circle at left bottom, rgba(76, 201, 240, 0.12), transparent 20%), var(--bg);
     color: var(--text);
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease
 }
 
 body {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
 }
 
 a {
     color: inherit;
-    text-decoration: none;
+    text-decoration: none
 }
 
 .text-muted {
-    color: var(--text-muted) !important;
+    color: var(--text-muted) !important
 }

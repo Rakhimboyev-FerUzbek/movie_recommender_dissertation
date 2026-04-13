@@ -87,3 +87,100 @@ for i, p in enumerate(data.get("posters", []), 1):
     full_url = f"https://image.tmdb.org/t/p/w500{file_path}"
     print(i, full_url, "vote_avg=", p.get("vote_average"), "vote_count=", p.get("vote_count"))
 
+
+pip install -r requirements.txt
+py manage.py migrate
+py manage.py loaddata data.json
+py manage.py runserver  
+
+--------------------------------------------------------------------------------------------------------------------------------
+pg_dump -U postgres -d sizning_db_nomingiz > database.sql   
+psql -U postgres -d yangi_db_nomi < database.sql
+
+--------------------------------------------------------------------------------------------------------------------------------
+BEGIN;
+
+CREATE TEMP TABLE target_movie AS
+SELECT id
+FROM public.movies_movie
+WHERE title = '1-900';
+
+CREATE TEMP TABLE target_comments AS
+SELECT id
+FROM public.interactions_comment
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_commentlike
+WHERE comment_id IN (SELECT id FROM target_comments);
+
+DELETE FROM public.interactions_comment
+WHERE id IN (SELECT id FROM target_comments);
+
+DELETE FROM public.movies_movie_genres
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_rating
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.interactions_watchhistory
+WHERE movie_id IN (SELECT id FROM target_movie);
+
+DELETE FROM public.movies_movie
+WHERE id IN (SELECT id FROM target_movie);
+
+COMMIT;
+
+--------------------------------------------------------------------------------------------------------------------------------
+py manage.py shell
+py manage.py fetch_all_trailer_urls 
+py manage.py fetch_all_trailer_urls --limit=20
+py manage.py fetch_all_trailer_urls --overwrite
+
+--------------------------------------------------------------------------------------------------------------------------------
+from apps.movies.models import Movie
+for m in Movie.objects.exclude(trailer_url="").exclude(trailer_url__isnull=True).values("title", "trailer_url"):
+    print(m["title"], "->", m["trailer_url"])
+
+--------------------------------------------------------------------------------------------------------------------------------
+from apps.movies.models import Movie
+print(Movie.objects.exclude(trailer_url="").exclude(trailer_url__isnull=True).count())
+
+--------------------------------------------------------------------------------------------------------------------------------
+import csv
+from apps.movies.models import Movie
+
+qs = Movie.objects.exclude(trailer_url="").exclude(trailer_url__isnull=True).order_by("title")
+
+with open("all_trailer_urls.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["title", "trailer_url", "trailer_site", "tmdb_id"])
+    for m in qs:
+        writer.writerow([m.title, m.trailer_url, m.trailer_site, m.tmdb_id])
+
+print(f"Tayyor: {qs.count()} ta trailer yozildi")
+--------------------------------------------------------------------------------------------------------------------------------
+import csv
+from apps.movies.models import Movie
+
+rows = [
+    [m.title, m.trailer_url, m.trailer_site, m.tmdb_id]
+    for m in Movie.objects.all().order_by("title")
+]
+
+with open("all_trailer_urls.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["title", "trailer_url", "trailer_site", "tmdb_id"])
+    writer.writerows(rows)
+
+print("Tayyor: all_trailer_urls.csv")
+--------------------------------------------------------------------------------------------------------------------------------
+py manage.py seed_rating_reviews    
+py manage.py seed_rating_reviews --limit=20
+py manage.py seed_rating_reviews --overwrite
+
+--------------------------------------------------------------------------------------------------------------------------------
+from apps.interactions.models import Rating
+
+for r in Rating.objects.exclude(review="").order_by("id")[:20]:
+    print(r.id, r.review, len(r.review))
+--------------------------------------------------------------------------------------------------------------------------------
