@@ -1,26 +1,26 @@
 .recommendation-dashboard {
-    padding: 12px 0 24px;
+    padding: 12px 0 24px
 }
 
 .recommendation-hero-card {
-    padding: 28px;
+    padding: 28px
 }
 
 .recommendation-hero-copy h1 {
     font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 900;
-    margin-bottom: 12px;
+    margin-bottom: 12px
 }
 
 .recommendation-toolbar-card {
-    padding: 22px;
+    padding: 22px
 }
 
 .recommendation-toolbar {
     display: grid;
     grid-template-columns: 1.4fr 0.9fr 0.9fr;
     gap: 14px;
-    align-items: end;
+    align-items: end
 }
 
 .recommendation-toolbar-foot {
@@ -29,31 +29,31 @@
     align-items: center;
     gap: 16px;
     margin-top: 16px;
-    flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .recommendation-results-info {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.95rem
 }
 
 .rec-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
     gap: 22px;
-    align-items: stretch;
+    align-items: stretch
 }
 
 .rec-card {
-    height: 100%;
+    height: 100%
 }
 
 .rec-poster-wrap {
-    height: 340px;
+    height: 340px
 }
 
 .rec-card-body {
-    min-height: 220px;
+    min-height: 220px
 }
 
 .rec-topline {
@@ -61,13 +61,13 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .rec-year {
     color: var(--text-muted);
     font-size: 0.92rem;
-    font-weight: 600;
+    font-weight: 600
 }
 
 .rec-score-badge {
@@ -79,15 +79,15 @@
     font-weight: 700;
     background: rgba(124, 92, 255, 0.14);
     border: 1px solid rgba(124, 92, 255, 0.24);
-    color: var(--text);
+    color: var(--text)
 }
 
 .rec-title {
-    min-height: 3.1em;
+    min-height: 3.1em
 }
 
 .rec-meta {
-    margin-bottom: 0;
+    margin-bottom: 0
 }
 
 .rec-explanation {
@@ -98,78 +98,79 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: hidden
 }
 
-@media (max-width: 991px) {
+@media (max-width:991px) {
     .recommendation-toolbar {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width:767px) {
     .rec-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 16px;
+        gap: 16px
     }
 
     .rec-poster-wrap {
-        height: 280px;
+        height: 280px
     }
 
     .recommendation-hero-card,
     .recommendation-toolbar-card {
-        padding: 18px;
+        padding: 18px
     }
 }
+
 .recommendation-dashboard {
-    padding: 12px 0 24px;
+    padding: 12px 0 24px
 }
 
 .recommendation-hero-card {
-    padding: 28px;
+    padding: 28px
 }
 
 .recommendation-hero-copy h1 {
     font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 900;
-    margin-bottom: 12px;
+    margin-bottom: 12px
 }
 
 .recommendation-toolbar-card {
-    padding: 22px;
+    padding: 22px
 }
 
 .recommendation-toolbar {
     display: grid;
     grid-template-columns: 1.2fr 1.6fr 0.8fr;
     gap: 16px;
-    align-items: start;
+    align-items: start
 }
 
 .recommendation-toolbar-wide {
-    min-width: 0;
+    min-width: 0
 }
 
 .genre-filter-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 10px
 }
 
 .genre-filter-chip {
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
     color: var(--text);
     padding: 10px 16px;
     border-radius: 999px;
     font-size: 0.95rem;
-    transition: 0.2s ease;
+    transition: 0.2s ease
 }
 
 .genre-filter-chip.active {
-    background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(93,170,255,0.35));
-    border-color: rgba(124,92,255,0.45);
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.35), rgba(93, 170, 255, 0.35));
+    border-color: rgba(124, 92, 255, 0.45)
 }
 
 .recommendation-toolbar-foot {
@@ -178,47 +179,47 @@
     align-items: center;
     gap: 16px;
     margin-top: 18px;
-    flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .recommendation-results-info {
     color: var(--text-muted);
-    font-size: 0.96rem;
+    font-size: 0.96rem
 }
 
 .rec-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
     gap: 22px;
-    align-items: stretch;
+    align-items: stretch
 }
 
 .rec-card {
-    height: 100%;
+    height: 100%
 }
 
 .rec-poster-wrap {
-    height: 350px;
+    height: 350px
 }
 
 .rec-card-body {
     min-height: 160px;
-    padding: 18px;
+    padding: 18px
 }
 
 .rec-title {
     min-height: 2.9em;
-    margin-bottom: 8px;
+    margin-bottom: 8px
 }
 
 .rec-sub-meta {
     margin-bottom: 12px;
     color: var(--text-muted);
-    font-size: 0.92rem;
+    font-size: 0.92rem
 }
 
 .rec-year-country {
-    display: inline-block;
+    display: inline-block
 }
 
 .rec-rating-row {
@@ -226,56 +227,56 @@
     justify-content: space-between;
     align-items: center;
     gap: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 14px
 }
 
 .rec-rating-count {
     color: var(--text-muted);
     font-size: 0.94rem;
-    white-space: nowrap;
+    white-space: nowrap
 }
 
 .pagination-wrap {
-    padding-top: 8px;
+    padding-top: 8px
 }
 
 .custom-pagination .page-link {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text);
     margin: 0 4px;
-    border-radius: 12px;
+    border-radius: 12px
 }
 
 .custom-pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, rgba(124,92,255,0.6), rgba(93,170,255,0.5));
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.6), rgba(93, 170, 255, 0.5));
     border-color: transparent;
-    color: #fff;
+    color: #fff
 }
 
-@media (max-width: 991px) {
+@media (max-width:991px) {
     .recommendation-toolbar {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width:767px) {
     .rec-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 16px;
+        gap: 16px
     }
 
     .rec-poster-wrap {
-        height: 280px;
+        height: 280px
     }
 
     .recommendation-hero-card,
     .recommendation-toolbar-card {
-        padding: 18px;
+        padding: 18px
     }
 
     .rec-rating-row {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-start
     }
 }

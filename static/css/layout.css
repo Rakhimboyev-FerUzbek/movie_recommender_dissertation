@@ -1,38 +1,38 @@
 .site-shell {
-    min-height: calc(100vh - 180px);
+    min-height: calc(100vh - 180px)
 }
 
 .content-section {
-    padding: 28px 0 10px;
+    padding: 28px 0 10px
 }
 
 .movie-row {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+    gap: 20px
 }
 
 .movie-grid {
     display: grid;
-    gap: 24px;
+    gap: 24px
 }
 
 .movie-grid-four-col {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr))
 }
 
 .catalog-layout {
     display: grid;
     grid-template-columns: 320px 1fr;
     gap: 28px;
-    align-items: start;
+    align-items: start
 }
 
 .profile-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
     gap: 24px;
-    align-items: start;
+    align-items: start
 }
 
 .auth-shell {
@@ -40,48 +40,49 @@
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 32px;
-    align-items: center;
+    align-items: center
 }
 
 .auth-shell.auth-shell-wide {
-    grid-template-columns: 0.95fr 1.05fr;
+    grid-template-columns: 0.95fr 1.05fr
 }
 
 .auth-shell.single-panel {
     grid-template-columns: 1fr;
     max-width: 720px;
-    margin: 0 auto;
+    margin: 0 auto
 }
 
 .detail-hero {
     display: grid;
     grid-template-columns: 360px 1fr;
     gap: 28px;
-    align-items: start;
+    align-items: start
 }
 
-@media (max-width: 1400px) {
+@media (max-width:1400px) {
     .movie-grid-four-col {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr))
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width:991px) {
+
     .catalog-layout,
     .profile-grid,
     .auth-shell,
     .auth-shell.auth-shell-wide,
     .detail-hero {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 
     .movie-grid-four-col {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width:640px) {
     .movie-grid-four-col {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 }

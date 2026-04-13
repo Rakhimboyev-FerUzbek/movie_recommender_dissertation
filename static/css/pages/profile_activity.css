@@ -1,6 +1,6 @@
 .profile-activity-section {
     padding: 24px;
-    margin-top: 18px;
+    margin-top: 18px
 }
 
 .profile-activity-head {
@@ -9,19 +9,19 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 14px;
-    flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .profile-activity-head h3 {
     margin: 8px 0 6px;
     font-size: 1.7rem;
     font-weight: 900;
-    color: var(--text);
+    color: var(--text)
 }
 
 .profile-activity-head p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .profile-activity-head-badge {
@@ -35,13 +35,13 @@
     color: var(--text);
     font-size: 0.88rem;
     font-weight: 700;
-    white-space: nowrap;
+    white-space: nowrap
 }
 
 .profile-activity-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: 16px
 }
 
 .profile-activity-card {
@@ -57,20 +57,20 @@
     background: rgba(255, 255, 255, 0.03);
     transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
     min-height: 235px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .profile-activity-card:hover {
     transform: translateY(-4px);
     border-color: rgba(124, 92, 255, 0.36);
     background: rgba(124, 92, 255, 0.06);
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14)
 }
 
 .profile-activity-card-top {
     display: flex;
     gap: 16px;
-    align-items: flex-start;
+    align-items: flex-start
 }
 
 .profile-activity-icon {
@@ -85,7 +85,7 @@
     font-weight: 900;
     color: #fff;
     background: linear-gradient(135deg, var(--primary), var(--primary-2));
-    box-shadow: 0 12px 26px rgba(124, 92, 255, 0.24);
+    box-shadow: 0 12px 26px rgba(124, 92, 255, 0.24)
 }
 
 .profile-activity-content {
@@ -93,20 +93,20 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 14px
 }
 
 .profile-activity-topline {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 12px
 }
 
 .profile-activity-label {
     font-size: 1.08rem;
     font-weight: 800;
-    color: var(--text);
+    color: var(--text)
 }
 
 .profile-activity-count {
@@ -121,20 +121,20 @@
     border: 1px solid var(--border);
     color: var(--text);
     font-size: 0.95rem;
-    font-weight: 800;
+    font-weight: 800
 }
 
 .profile-activity-card p {
     margin: 0;
     color: var(--text-muted);
     line-height: 1.6;
-    font-size: 0.95rem;
+    font-size: 0.95rem
 }
 
 .profile-activity-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 10px
 }
 
 .profile-activity-tags span {
@@ -147,11 +147,11 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
     color: var(--text);
     font-size: 0.84rem;
-    font-weight: 700;
+    font-weight: 700
 }
 
 .profile-activity-footer {
-    margin-top: auto;
+    margin-top: auto
 }
 
 .profile-activity-cta {
@@ -168,49 +168,49 @@
     color: var(--text);
     font-size: 0.94rem;
     font-weight: 800;
-    transition: all 0.22s ease;
+    transition: all 0.22s ease
 }
 
 .profile-activity-card:hover .profile-activity-cta {
     background: linear-gradient(135deg, var(--primary), var(--primary-2));
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 10px 24px rgba(124, 92, 255, 0.22);
+    box-shadow: 0 10px 24px rgba(124, 92, 255, 0.22)
 }
 
-@media (max-width: 1100px) {
+@media (max-width:1100px) {
     .profile-activity-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr
     }
 
     .profile-activity-card {
-        min-height: 0;
+        min-height: 0
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width:576px) {
     .profile-activity-section {
-        padding: 18px;
+        padding: 18px
     }
 
     .profile-activity-card {
-        padding: 18px;
+        padding: 18px
     }
 
     .profile-activity-card-top {
-        gap: 14px;
+        gap: 14px
     }
 
     .profile-activity-icon {
         width: 54px;
         height: 54px;
-        font-size: 1.35rem;
+        font-size: 1.35rem
     }
 
     .profile-activity-head-badge {
         width: 100%;
         justify-content: center;
         white-space: normal;
-        text-align: center;
+        text-align: center
     }
 }

@@ -58,8 +58,9 @@
                                 <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
                                     class="interaction-title-link">{{ favorite.movie.title }}</a>
                                 <div class="interaction-meta-line">
-                                    {% if favorite.movie.release_year %}<span>{{ favorite.movie.release_year }}</span>{%
-                                    endif %}
+                                    {% if favorite.movie.release_year %}
+                                    <span>{{ favorite.movie.release_year }}</span>
+                                    {%endif %}
                                     <span>★ {{ favorite.movie.avg_rating|floatformat:1 }}</span>
                                 </div>
                             </div>
@@ -67,12 +68,11 @@
                                 class="favorite-toggle-form" data-movie-slug="{{ favorite.movie.slug }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" class="favorite-remove-btn"
-                                    title="Remove from favorites">♥</button>
+                                <button type="submit" class="favorite-remove-btn" title="Remove from favorites">♥</button>
                             </form>
                         </div>
-                        <p class="interaction-overview">{{ favorite.movie.overview|default:"Tavsif mavjud
-                            emas."|truncatechars:160 }}</p>
+                        <p class="interaction-overview">
+                            {{ favorite.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
                         <div class="interaction-chip-row">
                             <span class="interaction-chip">Qo'shilgan: {{ favorite.created_at|date:"Y-m-d H:i" }}</span>
                             {% for genre in favorite.movie.genres.all|slice:":3" %}
@@ -89,8 +89,7 @@
                 {% endfor %}
             </div>
 
-            {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence
-            pagination_query=pagination_query %}
+            {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
         </div>
 
         {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence

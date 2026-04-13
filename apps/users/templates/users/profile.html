@@ -124,12 +124,6 @@
                                     <div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>
                                     {% endif %}
                                 </div>
-                            </div>
-
-                            <div class="glass-card profile-info-card mt-4">
-                                <div class="profile-card-head">
-                                    <h4>{{ t.additional_information }}</h4>
-                                </div>
 
                                 <div class="profile-readonly-block">
                                     <div class="profile-info-item full">
@@ -183,32 +177,6 @@
                                 <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
                                 <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
                             </div>
-
-                            <div class="glass-card profile-danger-zone profile-danger-zone-wide mt-4">
-                                <div class="profile-danger-zone-content">
-                                    <div class="profile-danger-zone-left">
-                                        <div class="profile-danger-zone-badge">
-                                            <span class="profile-danger-zone-dot"></span>
-                                            {{ t.danger_zone }}
-                                        </div>
-
-                                        <h4 class="profile-danger-zone-title">Profilni o‘chirish</h4>
-                                        <p class="profile-danger-zone-text">
-                                            Bu amal profilingizni va unga bog‘liq barcha ma’lumotlarni butunlay
-                                            o‘chiradi.
-                                            Reytinglar, saqlangan filmlar, ko‘rish tarixi va foydalanuvchi bilan bog‘liq
-                                            boshqa yozuvlar bazadan olib tashlanadi. Bu amal ortga qaytarilmaydi.
-                                        </p>
-                                    </div>
-
-                                    <div class="profile-danger-zone-right">
-                                        <button type="button" class="profile-danger-btn"
-                                            onclick="if(confirm('Haqiqatan ham profilingizni o‘chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
-                                            Profilni o‘chirish
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </form>
                     {% else %}
@@ -254,12 +222,6 @@
                                     <span class="text-muted">{{ t.no_preferred_genres }}</span>
                                     {% endfor %}
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-card profile-info-card mt-4">
-                            <div class="profile-card-head">
-                                <h4>{{ t.additional_information }}</h4>
                             </div>
 
                             <div class="profile-readonly-block">

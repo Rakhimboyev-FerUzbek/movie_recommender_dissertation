@@ -4,24 +4,20 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    background:
-        linear-gradient(90deg, rgba(8,12,24,0.96), rgba(8,12,24,0.52)),
-        url("/static/images/background/hero_cinema.svg") center/cover no-repeat;
+    background: linear-gradient(90deg, rgba(8, 12, 24, 0.96), rgba(8, 12, 24, 0.52)), url("/static/images/background/hero_cinema.svg") center/cover no-repeat
 }
 
 body[data-theme="light"] .hero-banner {
-    background:
-        linear-gradient(90deg, rgba(244,247,251,0.95), rgba(244,247,251,0.56)),
-        url("/static/images/background/hero_cinema.svg") center/cover no-repeat;
+    background: linear-gradient(90deg, rgba(244, 247, 251, 0.95), rgba(244, 247, 251, 0.56)), url("/static/images/background/hero_cinema.svg") center/cover no-repeat
 }
 
 .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 2
 }
 
 .hero-copy {
-    max-width: 720px;
+    max-width: 720px
 }
 
 .hero-copy h1 {
@@ -29,27 +25,27 @@ body[data-theme="light"] .hero-banner {
     line-height: 1.05;
     font-weight: 900;
     margin-bottom: 18px;
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .hero-copy p {
     font-size: 1.08rem;
     color: var(--text-muted) !important;
     max-width: 640px;
-    margin-bottom: 26px;
+    margin-bottom: 26px
 }
 
 .hero-actions {
     display: flex;
     gap: 14px;
-    flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .auth-page,
 .profile-page,
 .catalog-page,
 .movie-detail-page {
-    padding: 10px 0 20px;
+    padding: 10px 0 20px
 }
 
 .auth-brand-panel h1,
@@ -59,14 +55,14 @@ body[data-theme="light"] .hero-banner {
     font-size: clamp(2rem, 4vw, 3.4rem);
     font-weight: 900;
     margin-bottom: 16px;
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .auth-brand-panel p,
 .catalog-hero p,
 .page-heading p {
     color: var(--text-muted) !important;
-    font-size: 1.04rem;
+    font-size: 1.04rem
 }
 
 .form-label,
@@ -75,40 +71,40 @@ body[data-theme="light"] .hero-banner {
 .auth-card h2,
 .auth-card h3,
 .detail-content h4 {
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .form-control,
 .form-textarea {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.06);
     border: 1px solid var(--border);
     color: var(--text);
     border-radius: var(--radius-md);
-    padding: 12px 14px;
+    padding: 12px 14px
 }
 
 body[data-theme="light"] .form-control,
 body[data-theme="light"] .form-textarea {
-    background: rgba(255,255,255,0.85);
-    color: var(--text);
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--text)
 }
 
 .form-control::placeholder,
 .form-textarea::placeholder {
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .form-control:focus,
 .form-textarea:focus {
-    border-color: rgba(124,92,255,0.55);
-    box-shadow: 0 0 0 0.2rem rgba(124,92,255,0.16);
-    background: rgba(255,255,255,0.08);
-    color: var(--text);
+    border-color: rgba(124, 92, 255, 0.55);
+    box-shadow: 0 0 0 0.2rem rgba(124, 92, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text)
 }
 
 .catalog-sidebar {
     position: sticky;
-    top: 88px;
+    top: 88px
 }
 
 .detail-poster img,
@@ -117,7 +113,7 @@ body[data-theme="light"] .form-textarea {
     min-height: 540px;
     object-fit: cover;
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow)
 }
 
 .detail-meta {
@@ -125,24 +121,25 @@ body[data-theme="light"] .form-textarea {
     gap: 14px;
     flex-wrap: wrap;
     color: var(--text-muted);
-    margin-bottom: 16px;
+    margin-bottom: 16px
 }
 
 .back-link {
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .fade-up {
-    animation: fadeUp 0.7s ease both;
+    animation: fadeUp 0.7s ease both
 }
 
 @keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(24px);
+        transform: translateY(24px)
     }
+
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0)
     }
 }

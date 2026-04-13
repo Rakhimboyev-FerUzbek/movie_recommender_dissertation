@@ -25,11 +25,39 @@
 
             <div class="detail-v4-top-main">
                 <div class="glass-card detail-v4-header-card">
+                <div class="detail-v4-title-row">
                     <h1 class="detail-v4-title">{{ movie.title }}</h1>
+
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-title-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button
+                                type="submit"
+                                class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
+                                id="favoriteToggleButton"
+                                title="Favorites"
+                                aria-label="Favorites"
+                                aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
+                            >
+                                <span class="favorite-heart-icon" aria-hidden="true">♥</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        <a
+                            href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
+                            class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
+                            title="Favorites"
+                            aria-label="Favorites"
+                        >
+                            <span class="favorite-heart-icon" aria-hidden="true">♥</span>
+                        </a>
+                    {% endif %}
+                </div>
 
                     <div class="detail-v4-header-bar">
                         <div class="detail-v4-meta-side">
-                            <div class="detail-v4-meta-row">
+                           <div class="detail-v4-meta-row">
                                 {% if movie.release_year %}
                                     <span class="detail-stat-pill">{{ movie.release_year }}</span>
                                 {% endif %}
@@ -45,19 +73,6 @@
                                 {% endfor %}
                             </div>
 
-                            {% if user.is_authenticated %}
-                                <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-form ms-2">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                    <button type="submit" class="detail-favorite-btn {% if is_favorite %}is-active{% endif %}" id="favoriteToggleButton" title="Favorites">
-                                        <span class="favorite-heart-icon">♥</span>
-                                    </button>
-                                </form>
-                            {% else %}
-                                <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="detail-favorite-btn ms-2" title="Favorites">
-                                    <span class="favorite-heart-icon">♥</span>
-                                </a>
-                            {% endif %}
                         </div>
 
                         <div class="detail-v4-inline-rating" id="rating-section">
@@ -355,17 +370,6 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-        </div>
-
-        <div class="similar-section mt-4 fade-up">
-            {% include "includes/section_header.html" with title=t.similar_movies subtitle=t.featured %}
-            <div class="movie-row">
-                {% for movie in similar_movies %}
-                    {% include "includes/movie_card.html" with movie=movie next_url=request.get_full_path %}
-                {% empty %}
-                    <div class="empty-state-card">{{ t.no_similar_movies }}</div>
-                {% endfor %}
             </div>
         </div>
     </div>
@@ -722,12 +726,7 @@
             if (!response.ok || !data.ok) return;
 
             favoriteButton.classList.toggle("is-active", data.is_favorite);
-
-            if (data.action === "added") {
-                alert(`"${data.movie_title}" favorites ga qo'shildi.`);
-            } else {
-                alert(`"${data.movie_title}" favorites dan olib tashlandi.`);
-            }
+            favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
         } catch (error) {
             console.error(error);
         }
