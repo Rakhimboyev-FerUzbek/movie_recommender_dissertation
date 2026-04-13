@@ -5,6 +5,8 @@
 {% block content %}
 <section class="profile-page">
     <div class="container">
+
+        <!-- Page header -->
         <div class="profile-header-shell fade-up">
             <div>
                 <h1 class="profile-hero-title">{{ user.get_full_name|default:request.user.username }}</h1>
@@ -12,29 +14,22 @@
             </div>
         </div>
 
+        <!-- Main card: sidebar + main content -->
         <div class="glass-card profile-top-shell-card fade-up">
             <div class="profile-grid profile-grid--inside-shell">
+
+                <!-- Sidebar -->
                 <aside class="profile-sidebar">
                     <div class="glass-card profile-showcase-card profile-inner-card">
                         <div class="profile-photo-shell">
                             {% if profile.profile_photo %}
-                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}"
-                                class="profile-photo-preview">
+                                <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview">
                             {% else %}
-                            <div class="avatar-circle profile-avatar-large">
-                                {{ request.user.username|slice:":1"|upper }}
-                            </div>
+                                <div class="avatar-circle profile-avatar-large">{{ request.user.username|slice:":1"|upper }}</div>
                             {% endif %}
                         </div>
-
-                        <h3 class="profile-display-name">
-                            {{ request.user.get_full_name|default:request.user.username }}
-                        </h3>
-
-                        <p class="profile-email-line">
-                            {{ request.user.email|default:t.no_email }}
-                        </p>
-
+                        <h3 class="profile-display-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
+                        <p class="profile-email-line">{{ request.user.email|default:t.no_email }}</p>
                         <div class="profile-side-stats">
                             <div class="profile-stat-card">
                                 <span>{{ t.member_since }}</span>
@@ -48,378 +43,228 @@
                     </div>
                 </aside>
 
+                <!-- Main content -->
                 <div class="profile-main">
                     {% if is_edit_mode %}
                     <form method="post" enctype="multipart/form-data" novalidate class="profile-main-edit-form">
                         {% csrf_token %}
-
                         <div class="profile-overview-stack">
-                            <div class="glass-card profile-info-card profile-account-card-compact profile-genres-card mt-4">
-                                <div class="profile-card-head">
-                                    <h4>{{ t.account_information }}</h4>
-                                </div>
+
+                            <div class="profile-top-actions">
+                                <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
+                                <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
+                            </div>
+
+                            <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
+                                <div class="profile-card-head"><h4>{{ t.account_information }}</h4></div>
 
                                 <div class="profile-info-grid profile-info-grid--two">
                                     <div class="profile-info-item">
                                         <span>{{ t.first_name }}</span>
                                         {{ user_form.first_name }}
-                                        {% if user_form.first_name.errors %}
-                                        <div class="text-danger small profile-field-error">
-                                            {{ user_form.first_name.errors }}
-                                        </div>
-                                        {% endif %}
+                                        {% if user_form.first_name.errors %}<div class="text-danger small profile-field-error">{{ user_form.first_name.errors }}</div>{% endif %}
                                     </div>
-
                                     <div class="profile-info-item">
                                         <span>{{ t.last_name }}</span>
                                         {{ user_form.last_name }}
-                                        {% if user_form.last_name.errors %}
-                                        <div class="text-danger small profile-field-error">
-                                            {{ user_form.last_name.errors }}
-                                        </div>
-                                        {% endif %}
+                                        {% if user_form.last_name.errors %}<div class="text-danger small profile-field-error">{{ user_form.last_name.errors }}</div>{% endif %}
                                     </div>
                                 </div>
 
-                                <div class="profile-info-grid profile-info-grid--email-birth mt-3">
+                                <div class="profile-info-grid profile-info-grid--two mt-3">
                                     <div class="profile-info-item">
                                         <span>{{ t.email }}</span>
                                         {{ user_form.email }}
-                                        {% if user_form.email.errors %}
-                                        <div class="text-danger small profile-field-error">
-                                            {{ user_form.email.errors }}
-                                        </div>
-                                        {% endif %}
+                                        {% if user_form.email.errors %}<div class="text-danger small profile-field-error">{{ user_form.email.errors }}</div>{% endif %}
                                     </div>
-
                                     <div class="profile-info-item">
                                         <span>{{ t.birth_year }}</span>
                                         {{ profile_form.birth_year }}
-                                        {% if profile_form.birth_year.errors %}
-                                        <div class="text-danger small profile-field-error">
-                                            {{ profile_form.birth_year.errors }}
-                                        </div>
-                                        {% endif %}
+                                        {% if profile_form.birth_year.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_year.errors }}</div>{% endif %}
                                     </div>
                                 </div>
-                            
-                                <div class="profile-card-head">
-                                    <h4>{{ t.favorite_genres }}</h4>
-                                </div>
 
+                                <div class="profile-card-head mt-3"><h4>{{ t.favorite_genres }}</h4></div>
                                 <div class="profile-info-item full">
-                                    <div class="profile-genre-grid mt-2">
+                                    <div class="profile-genre-grid mt-1">
                                         {% for value, label in genre_choices %}
                                         <label class="profile-genre-option">
-                                            <input type="checkbox" name="preferred_genres" value="{{ value }}" 
-                                            {% if value in selected_profile_genres %}
-                                            checked
-                                                {% endif %}>
+                                            <input type="checkbox" name="preferred_genres" value="{{ value }}" {% if value in selected_profile_genres %}checked{% endif %}>
                                             <span>{{ label }}</span>
                                         </label>
                                         {% endfor %}
                                     </div>
-
-                                    {% if profile_form.preferred_genres.errors %}
-                                    <div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>
-                                    {% endif %}
+                                    {% if profile_form.preferred_genres.errors %}<div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>{% endif %}
                                 </div>
 
-                                <div class="profile-readonly-block">
-                                    <div class="profile-info-item full">
-                                        <span>{{ t.bio }}</span>
-                                        {{ profile_form.bio }}
-                                        {% if profile_form.bio.errors %}
-                                        <div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>
-                                        {% endif %}
-                                    </div>
+                                <div class="profile-info-item full profile-bio-item mt-3">
+                                    <span>{{ t.bio }}</span>
+                                    <div class="profile-bio-edit-wrap">{{ profile_form.bio }}</div>
+                                    {% if profile_form.bio.errors %}<div class="text-danger small mt-1">{{ profile_form.bio.errors }}</div>{% endif %}
                                 </div>
                             </div>
 
-                            <div class="glass-card profile-info-card mt-4">
-                                <div class="profile-card-head">
-                                    <h4>{{ t.profile_photo }}</h4>
-                                </div>
-
+                            <div class="glass-card profile-unified-card mt-3">
+                                <div class="profile-card-head"><h4>{{ t.profile_photo }}</h4></div>
                                 <div class="profile-photo-edit-row">
                                     <div class="profile-photo-mini-preview">
                                         {% if profile.profile_photo %}
-                                        <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}"
-                                            class="profile-photo-preview small">
+                                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview small">
                                         {% else %}
-                                        <div class="avatar-circle profile-avatar-small">
-                                            {{ request.user.username|slice:":1"|upper }}
-                                        </div>
+                                            <div class="avatar-circle profile-avatar-small">{{ request.user.username|slice:":1"|upper }}</div>
                                         {% endif %}
                                     </div>
-
                                     <div class="profile-photo-fields">
                                         <label class="form-label mb-2">{{ t.profile_photo }}</label>
                                         {{ profile_form.profile_photo }}
-
-                                        {% if profile_form.profile_photo.errors %}
-                                        <div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}
-                                        </div>
-                                        {% endif %}
-
+                                        {% if profile_form.profile_photo.errors %}<div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>{% endif %}
                                         <div class="form-check mt-3">
                                             {{ profile_form.remove_profile_photo }}
-                                            <label class="form-check-label"
-                                                for="{{ profile_form.remove_profile_photo.id_for_label }}">
-                                                {{ t.remove_profile_photo }}
-                                            </label>
+                                            <label class="form-check-label" for="{{ profile_form.remove_profile_photo.id_for_label }}">{{ t.remove_profile_photo }}</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="profile-header-actions profile-header-actions--bottom-right mt-4">
-                                <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
-                                <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
-                            </div>
                         </div>
                     </form>
+
                     {% else %}
                     <div class="profile-overview-stack">
-                        <div class="glass-card profile-info-card profile-account-card-compact profile-genres-card mt-4">
-                            <div class="profile-card-head">
-                                <h4>{{ t.account_information }}</h4>
-                            </div>
+
+                        <div class="profile-top-actions">
+                            <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile|default:"Tahrirlash" }}</a>
+                        </div>
+
+                        <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
+                            <div class="profile-card-head"><h4>{{ t.account_information }}</h4></div>
 
                             <div class="profile-info-grid profile-info-grid--two">
                                 <div class="profile-info-item">
                                     <span>{{ t.first_name }}</span>
                                     <strong>{{ request.user.first_name|default:"—" }}</strong>
                                 </div>
-
                                 <div class="profile-info-item">
                                     <span>{{ t.last_name }}</span>
                                     <strong>{{ request.user.last_name|default:"—" }}</strong>
                                 </div>
                             </div>
 
-                            <div class="profile-info-grid profile-info-grid--email-birth mt-3">
+                            <div class="profile-info-grid profile-info-grid--two mt-3">
                                 <div class="profile-info-item">
                                     <span>{{ t.email }}</span>
                                     <strong>{{ request.user.email|default:t.no_email }}</strong>
                                 </div>
-
                                 <div class="profile-info-item">
                                     <span>{{ t.birth_year }}</span>
                                     <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
                                 </div>
                             </div>
 
-                            <div class="profile-card-head">
-                                <h4>{{ t.favorite_genres }}</h4>
-                            </div>
-
+                            <div class="profile-card-head mt-3"><h4>{{ t.favorite_genres }}</h4></div>
                             <div class="profile-info-item full">
-                                 <div class="genre-chip-wrap mt-2"> 
+                                <div class="genre-chip-wrap mt-1">
                                     {% for genre in profile.preferred_genres %}
-                                    <span class="genre-chip">{{ genre }}</span>
+                                        <span class="genre-chip">{{ genre }}</span>
                                     {% empty %}
-                                    <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                                        <span class="text-muted">{{ t.no_preferred_genres }}</span>
                                     {% endfor %}
                                 </div>
                             </div>
 
-                            <div class="profile-readonly-block">
-                                <div class="profile-info-item full">
-                                    <span>{{ t.bio }}</span>
-                                    <p>{{ profile.bio|default:t.no_bio }}</p>
-                                </div>
+                            <div class="profile-info-item full profile-bio-item mt-3">
+                                <span>{{ t.bio }}</span>
+                                <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
                             </div>
                         </div>
 
-                        <div class="profile-header-actions profile-header-actions--top-right mt-4">
-                            <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">
-                                {{ t.edit_profile|default:"Tahrirlash" }}
-                            </a>
-                        </div>
-
-                        <div class="glass-card profile-danger-zone profile-danger-zone-wide">
+                        <div class="glass-card profile-danger-zone-wide mt-3">
                             <div class="profile-danger-zone-content">
                                 <div class="profile-danger-zone-left">
                                     <div class="profile-danger-zone-badge">
                                         <span class="profile-danger-zone-dot"></span>
                                         {{ t.danger_zone }}
                                     </div>
-
-                                    <h4 class="profile-danger-zone-title">Profilni o‘chirish</h4>
+                                    <h4 class="profile-danger-zone-title">Profilni o'chirish</h4>
                                     <p class="profile-danger-zone-text">
-                                        Bu amal profilingizni va unga bog‘liq barcha ma’lumotlarni butunlay o‘chiradi.
-                                        Reytinglar, saqlangan filmlar, ko‘rish tarixi va foydalanuvchi bilan bog‘liq
+                                        Bu amal profilingizni va unga bog'liq barcha ma'lumotlarni butunlay o'chiradi.
+                                        Reytinglar, saqlangan filmlar, ko'rish tarixi va foydalanuvchi bilan bog'liq
                                         boshqa yozuvlar bazadan olib tashlanadi. Bu amal ortga qaytarilmaydi.
                                     </p>
                                 </div>
-
                                 <div class="profile-danger-zone-right">
-                                    <button
-                                        type="button"
-                                        class="profile-danger-btn"
-                                        onclick="if(confirm('Haqiqatan ham profilingizni o‘chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }"
-                                    >
-                                        Profilni o‘chirish
+                                    <button type="button" class="profile-danger-btn"
+                                        onclick="if(confirm('Haqiqatan ham profilingizni o\u2019chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
+                                        Profilni o'chirish
                                     </button>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     {% endif %}
 
-                    <form id="deleteAccountForm" method="post" action="{% url 'delete_account' %}"
-                        style="display:none;">
-                        {% csrf_token %}
-                    </form>
+                    <form id="deleteAccountForm" method="post" action="{% url 'delete_account' %}" style="display:none;">{% csrf_token %}</form>
                 </div>
+
             </div>
         </div>
 
+        <!-- Activity -->
         <div class="glass-card profile-activity-section fade-up mt-4">
             <div class="profile-activity-head">
                 <div>
                     <h3>Foydalanuvchi faoliyati</h3>
-                    <p>Saqlangan filmlar, berilgan reytinglar va ko‘rilgan filmlar tarixi.</p>
+                    <p>Saqlangan filmlar, berilgan reytinglar va ko'rilgan filmlar tarixi.</p>
                 </div>
-                <span class="profile-activity-head-badge">Kartani bosing — bo‘lim ochiladi</span>
+                <span class="profile-activity-head-badge">Kartani bosing — bo'lim ochiladi</span>
             </div>
-
             <div class="profile-activity-grid">
                 <a href="{% url 'favorites_list' %}" class="profile-activity-card">
                     <div class="profile-activity-card-top">
                         <div class="profile-activity-icon">♥</div>
-
                         <div class="profile-activity-content">
                             <div class="profile-activity-topline">
                                 <span class="profile-activity-label">Favorites</span>
                                 <strong class="profile-activity-count">{{ favorites_count }}</strong>
                             </div>
-
-                            <p>Saqlab qo‘yilgan sevimli filmlar bo‘limi. Barcha saqlangan kontentni shu yerda
-                                boshqarishingiz mumkin.</p>
-
-                            <div class="profile-activity-tags">
-                                <span>Saqlanganlar</span>
-                                <span>Tez kirish</span>
-                            </div>
+                            <p>Saqlab qo'yilgan sevimli filmlar bo'limi.</p>
+                            <div class="profile-activity-tags"><span>Saqlanganlar</span><span>Tez kirish</span></div>
                         </div>
                     </div>
-
-                    <div class="profile-activity-footer">
-                        <span class="profile-activity-cta">
-                            Batafsil ko‘rish
-                            <span aria-hidden="true">→</span>
-                        </span>
-                    </div>
+                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
                 </a>
-
                 <a href="{% url 'ratings_list' %}" class="profile-activity-card">
                     <div class="profile-activity-card-top">
                         <div class="profile-activity-icon">★</div>
-
                         <div class="profile-activity-content">
                             <div class="profile-activity-topline">
                                 <span class="profile-activity-label">Ratings</span>
                                 <strong class="profile-activity-count">{{ ratings_count }}</strong>
                             </div>
-
-                            <p>Berilgan baholarni va reyting faoliyatingizni ko‘rish, nazorat qilish va ko‘rib chiqish
-                                uchun alohida bo‘lim.</p>
-
-                            <div class="profile-activity-tags">
-                                <span>Baholar</span>
-                                <span>Faoliyat</span>
-                            </div>
+                            <p>Berilgan baholarni ko'rish va nazorat qilish.</p>
+                            <div class="profile-activity-tags"><span>Baholar</span><span>Faoliyat</span></div>
                         </div>
                     </div>
-
-                    <div class="profile-activity-footer">
-                        <span class="profile-activity-cta">
-                            Batafsil ko‘rish
-                            <span aria-hidden="true">→</span>
-                        </span>
-                    </div>
+                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
                 </a>
-
                 <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
                     <div class="profile-activity-card-top">
                         <div class="profile-activity-icon">▶</div>
-
                         <div class="profile-activity-content">
                             <div class="profile-activity-topline">
                                 <span class="profile-activity-label">Watch History</span>
                                 <strong class="profile-activity-count">{{ watch_history_count }}</strong>
                             </div>
-
-                            <p>Ko‘rilgan filmlar va oxirgi ko‘rish jarayonlari bo‘yicha umumiy tarixni shu bo‘lim orqali
-                                ochishingiz mumkin.</p>
-
-                            <div class="profile-activity-tags">
-                                <span>Tarix</span>
-                                <span>Ko‘rilganlar</span>
-                            </div>
+                            <p>Ko'rilgan filmlar va ko'rish tarixi.</p>
+                            <div class="profile-activity-tags"><span>Tarix</span><span>Ko'rilganlar</span></div>
                         </div>
                     </div>
-
-                    <div class="profile-activity-footer">
-                        <span class="profile-activity-cta">
-                            Batafsil ko‘rish
-                            <span aria-hidden="true">→</span>
-                        </span>
-                    </div>
+                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
                 </a>
             </div>
         </div>
+
     </div>
 </section>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const openBtn = document.getElementById("openDeleteAccountModal");
-        const cancelBtn = document.getElementById("cancelDeleteAccount");
-        const confirmBtn = document.getElementById("confirmDeleteAccount");
-        const overlay = document.getElementById("deleteAccountOverlay");
-        const modal = document.getElementById("deleteAccountModal");
-        const form = document.getElementById("deleteAccountForm");
-
-        if (!openBtn || !cancelBtn || !confirmBtn || !overlay || !modal || !form) {
-            return;
-        }
-
-        function openModal() {
-            overlay.classList.add("is-active");
-            modal.classList.add("is-active");
-            document.body.classList.add("modal-open");
-        }
-
-        function closeModal() {
-            overlay.classList.remove("is-active");
-            modal.classList.remove("is-active");
-            document.body.classList.remove("modal-open");
-        }
-
-        openBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            openModal();
-        });
-
-        cancelBtn.addEventListener("click", function () {
-            closeModal();
-        });
-
-        overlay.addEventListener("click", function () {
-            closeModal();
-        });
-
-        confirmBtn.addEventListener("click", function () {
-            form.submit();
-        });
-
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape" && modal.classList.contains("is-active")) {
-                closeModal();
-            }
-        });
-    });
-</script>
 {% endblock %}
