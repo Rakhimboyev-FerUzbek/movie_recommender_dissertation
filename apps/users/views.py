@@ -11,6 +11,7 @@ from config.translations import get_translation
 
 from apps.interactions.models import Favorite, Rating, WatchHistory
 
+
 def register_view(request):
     if request.user.is_authenticated:
         return redirect("profile")
@@ -61,7 +62,7 @@ def profile_view(request):
         else list(profile.preferred_genres or [])
     )
     genre_choices = list(profile_form.fields["preferred_genres"].choices)
-    
+
     favorites_count = Favorite.objects.filter(user=request.user).count()
     ratings_count = Rating.objects.filter(user=request.user).count()
     watch_history_count = WatchHistory.objects.filter(user=request.user).count()
@@ -85,6 +86,7 @@ def profile_view(request):
     )
 
     context = {
+        "t": t,
         "user_form": user_form,
         "profile_form": profile_form,
         "profile": profile,
@@ -111,21 +113,11 @@ def delete_account_view(request):
     profile = getattr(user, "profile", None)
 
     with transaction.atomic():
-        if profile:
-            profile.bio = ""
-            profile.birth_year = None
-            profile.preferred_genres = []
-            profile.profile_photo = None
-            profile.save()
+        if profile and getattr(profile, "profile_photo", None):
+            profile.profile_photo.delete(save=False)
 
-        user.first_name = ""
-        user.last_name = ""
-        user.email = ""
-        user.username = f"deleted_user_{user.pk}"
-        user.is_active = False
-        user.set_unusable_password()
-        user.save()
+        logout(request)
+        user.delete()
 
-    logout(request)
     messages.success(request, t["account_deleted"])
     return redirect("home")

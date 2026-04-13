@@ -73,7 +73,7 @@ class FavoriteFilterForm(forms.Form):
             ("year_desc", "Yil bo'yicha (yangi)"),
             ("year_asc", "Yil bo'yicha (eski)"),
         ],
-        widget=forms.Select(attrs={"class": "form-select"}),
+        widget=forms.Select(attrs={"class": "form-select interaction-sort-native"}),
     )
 
 
@@ -97,7 +97,7 @@ class UserRatingFilterForm(forms.Form):
             ("title_asc", "Nom bo'yicha (A-Z)"),
             ("title_desc", "Nom bo'yicha (Z-A)"),
         ],
-        widget=forms.Select(attrs={"class": "form-select"}),
+        widget=forms.Select(attrs={"class": "form-select interaction-sort-native"}),
     )
 
 
@@ -120,5 +120,5 @@ class WatchHistoryFilterForm(forms.Form):
             ("title_asc", "Nom bo'yicha (A-Z)"),
             ("title_desc", "Nom bo'yicha (Z-A)"),
         ],
-        widget=forms.Select(attrs={"class": "form-select"}),
+        widget=forms.Select(attrs={"class": "form-select interaction-sort-native"}),
     )
