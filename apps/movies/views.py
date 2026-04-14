@@ -71,6 +71,7 @@ def build_ordering(sort_key: str):
         "rating_desc": ["-avg_rating", "title"],
         "year_desc": ["-release_year", "title"],
         "year_asc": ["release_year", "title"],
+        "count_desc": ["-rating_count", "title"],
         "title_asc": ["title"],
         "title_desc": ["-title"],
     }
@@ -112,6 +113,13 @@ def movie_list_view(request):
     current_params.pop("page", None)
     pagination_query = current_params.urlencode()
 
+    favorite_movie_ids = set()
+    if request.user.is_authenticated:
+        favorite_movie_ids = set(
+            Favorite.objects.filter(user=request.user, movie__is_active=True)
+            .values_list("movie_id", flat=True)
+        )
+
     context = {
         "form": form,
         "movies": page_obj.object_list,
@@ -122,6 +130,7 @@ def movie_list_view(request):
         "selected_year": selected_year,
         "selected_sort": selected_sort,
         "selected_genre_ids": selected_genre_ids,
+        "favorite_movie_ids": favorite_movie_ids,
     }
     return render(request, "movies/movie_list.html", context)
 

@@ -11,7 +11,7 @@
     display: grid;
     grid-template-columns: minmax(320px, 1.1fr) minmax(420px, 0.95fr);
     gap: 18px;
-    align-items: start;
+    align-items: center;
 }
 
 .auto-rec-hero__copy h1 {
@@ -496,5 +496,42 @@ body[data-theme="light"] .auto-rec-fav-btn {
 
     .auto-rec-snackbar {
         width: 100%;
+    }
+}
+
+/* Auto recommendation header: vertical center fix */
+.auto-rec-hero {
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auto-rec-toolbar-shell {
+    align-self: center;
+    width: 100%;
+}
+
+.auto-rec-toolbar {
+    align-items: center;
+}
+
+.auto-rec-toolbar__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (max-width: 1200px) {
+    .auto-rec-hero {
+        min-height: unset;
+    }
+
+    .auto-rec-hero__layout {
+        align-items: start;
+    }
+
+    .auto-rec-toolbar-shell {
+        align-self: stretch;
     }
 }

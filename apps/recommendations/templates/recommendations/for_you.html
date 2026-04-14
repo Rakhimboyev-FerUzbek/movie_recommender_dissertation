@@ -15,38 +15,39 @@
                     </p>
                 </div>
 
-                <div class="auto-rec-toolbar">
-                    <div class="auto-rec-toolbar__item">
-                        <label for="autoRecSearch" class="form-label">Qidiruv</label>
-                        <input
-                            type="text"
-                            id="autoRecSearch"
-                            class="form-control"
-                            placeholder="Film nomi bo‘yicha qidiring..."
-                            autocomplete="off"
-                        >
-                    </div>
+                <div class="auto-rec-toolbar-shell">
+                    <div class="auto-rec-toolbar">
+                        <div class="auto-rec-toolbar__item">
+                            <label for="autoRecSearch" class="form-label">Qidiruv</label>
+                            <input
+                                type="text"
+                                id="autoRecSearch"
+                                class="form-control"
+                                placeholder="Film nomi bo‘yicha qidiring..."
+                                autocomplete="off"
+                            >
+                        </div>
 
-                    <div class="auto-rec-toolbar__item">
-                        <label for="autoRecSort" class="form-label">Saralash</label>
-                        <select id="autoRecSort" class="form-select auto-rec-native-select">
-                            <option value="rating_desc">Reyting bo‘yicha: yuqori</option>
-                            <option value="rating_asc">Reyting bo‘yicha: past</option>
-                            <option value="year_desc">Yil bo‘yicha: yangi</option>
-                            <option value="year_asc">Yil bo‘yicha: eski</option>
-                            <option value="count_desc">Ovozlar soni bo‘yicha</option>
-                            <option value="title_asc">Nom bo‘yicha: A-Z</option>
-                            <option value="title_desc">Nom bo‘yicha: Z-A</option>
-                        </select>
+                        <div class="auto-rec-toolbar__item">
+                            <label for="autoRecSort" class="form-label">Saralash</label>
+                            <select id="autoRecSort" class="form-select auto-rec-native-select">
+                                <option value="rating_desc">Reyting bo‘yicha: yuqori</option>
+                                <option value="rating_asc">Reyting bo‘yicha: past</option>
+                                <option value="year_desc">Yil bo‘yicha: yangi</option>
+                                <option value="year_asc">Yil bo‘yicha: eski</option>
+                                <option value="count_desc">Baho soni bo‘yicha</option>
+                                <option value="title_asc">Nom bo‘yicha: A-Z</option>
+                                <option value="title_desc">Nom bo‘yicha: Z-A</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
 
-        {% if recommendations_page %}
+        {% if recommendations %}
             <div id="autoRecGrid" class="auto-rec-grid">
-                {% for item in recommendations_page %}
+                {% for item in recommendations %}
                     <article
                         class="auto-rec-card"
                         data-title="{{ item.movie.title|lower|escape }}"
@@ -84,9 +85,9 @@
                                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                     <button
                                         type="submit"
-                                        class="auto-rec-fav-btn {% if favorite_movie_ids and item.movie.id in favorite_movie_ids %}is-active{% endif %}"
+                                        class="auto-rec-fav-btn {% if item.movie.id in favorite_movie_ids %}is-active{% endif %}"
                                         aria-label="Favorites"
-                                        aria-pressed="{% if favorite_movie_ids and item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
+                                        aria-pressed="{% if item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
                                         title="Favorites"
                                     >
                                         <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
@@ -122,37 +123,7 @@
                 {% endfor %}
             </div>
 
-            {% if page_obj.paginator.num_pages > 1 %}
-                <div class="pagination-wrap mt-4">
-                    <nav aria-label="Recommendation pagination">
-                        <ul class="pagination custom-pagination justify-content-center">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Oldingi</a>
-                                </li>
-                            {% endif %}
-
-                            {% for num in page_obj.paginator.page_range %}
-                                {% if num == page_obj.number %}
-                                    <li class="page-item active">
-                                        <span class="page-link">{{ num }}</span>
-                                    </li>
-                                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-
-                            {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Keyingi</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </div>
-            {% endif %}
+            <div id="autoRecSentinel" class="auto-rec-sentinel" aria-hidden="true"></div>
         {% else %}
             <div class="empty-state-card">
                 <h4 class="mb-2">Hozircha tavsiya shakllantirilmadi</h4>
@@ -173,7 +144,14 @@
     const nativeSelect = document.getElementById("autoRecSort");
     const visibleCount = document.getElementById("autoRecVisibleCount");
     const snackbarStack = document.getElementById("autoRecSnackbarStack");
+    const sentinel = document.getElementById("autoRecSentinel");
     const cards = Array.from(grid.querySelectorAll(".auto-rec-card"));
+
+    const INITIAL_BATCH = 12;
+    const NEXT_BATCH = 9;
+
+    let currentFiltered = [];
+    let currentLimit = INITIAL_BATCH;
 
     function escapeHtml(text) {
         const div = document.createElement("div");
@@ -247,7 +225,24 @@
         });
     }
 
-    function applyFilters() {
+    function renderVisibleCards() {
+        cards.forEach(card => {
+            card.hidden = true;
+        });
+
+        currentFiltered.slice(0, currentLimit).forEach(card => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+
+        visibleCount.textContent = currentFiltered.length;
+
+        if (sentinel) {
+            sentinel.hidden = currentLimit >= currentFiltered.length;
+        }
+    }
+
+    function applyFilters(resetLimit = true) {
         const query = (searchInput.value || "").trim().toLowerCase();
 
         let filtered = cards.filter(card => {
@@ -255,18 +250,19 @@
             return !query || title.includes(query);
         });
 
-        filtered = sortCards(filtered);
+        currentFiltered = sortCards(filtered);
 
-        cards.forEach(card => {
-            card.hidden = true;
-        });
+        if (resetLimit) {
+            currentLimit = INITIAL_BATCH;
+        }
 
-        filtered.forEach(card => {
-            card.hidden = false;
-            grid.appendChild(card);
-        });
+        renderVisibleCards();
+    }
 
-        visibleCount.textContent = filtered.length;
+    function loadMoreCards() {
+        if (currentLimit >= currentFiltered.length) return;
+        currentLimit += NEXT_BATCH;
+        renderVisibleCards();
     }
 
     function buildPortalSelect(selectEl) {
@@ -337,7 +333,7 @@
                 selectEl.value = option.value;
                 syncValue();
                 closeMenu();
-                applyFilters();
+                applyFilters(true);
             });
 
             menu.appendChild(btn);
@@ -350,6 +346,7 @@
         trigger.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
+
             if (menu.classList.contains("is-open")) {
                 closeMenu();
             } else {
@@ -416,11 +413,25 @@
         }
     });
 
-    searchInput.addEventListener("input", applyFilters);
-    nativeSelect.addEventListener("change", applyFilters);
+    if (sentinel) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreCards();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        observer.observe(sentinel);
+    }
+
+    searchInput.addEventListener("input", () => applyFilters(true));
+    nativeSelect.addEventListener("change", () => applyFilters(true));
 
     buildPortalSelect(nativeSelect);
-    applyFilters();
+    applyFilters(true);
 })();
 </script>
 {% endblock %}

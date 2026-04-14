@@ -756,3 +756,55 @@ body[data-theme="light"] .app-footer {
         align-items: flex-start
     }
 }
+
+/* =========================
+   AUTO REC: infinite scroll + centered filters
+   ========================= */
+
+.auto-rec-hero {
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auto-rec-hero__layout {
+    align-items: center;
+}
+
+.auto-rec-toolbar-shell {
+    align-self: center;
+    width: 100%;
+}
+
+.auto-rec-toolbar {
+    align-items: center;
+}
+
+.auto-rec-toolbar__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auto-rec-sentinel {
+    width: 100%;
+    height: 1px;
+    margin-top: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+    .auto-rec-hero {
+        min-height: unset;
+    }
+
+    .auto-rec-hero__layout {
+        align-items: start;
+    }
+
+    .auto-rec-toolbar-shell {
+        align-self: stretch;
+    }
+}
