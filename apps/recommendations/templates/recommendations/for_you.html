@@ -3,109 +3,121 @@
 {% block title %}Shaxsiy tavsiyalar{% endblock %}
 
 {% block content %}
-<section class="content-section recommendation-dashboard">
+<section class="content-section auto-rec-page">
     <div class="container">
-        <div class="glass-card recommendation-hero-card mb-4">
-            <div class="recommendation-hero-copy">
-                <span class="hero-kicker">Personalized Picks</span>
-                <h1 class="mb-2">Shaxsiy tavsiyalar</h1>
-                <p class="text-muted mb-0">
-                    Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.
-                </p>
-            </div>
-        </div>
-
-        <div class="glass-card recommendation-toolbar-card mb-4">
-            <div class="recommendation-toolbar">
-                <div class="recommendation-toolbar-item recommendation-search-wrap">
-                    <label for="recommendationSearch" class="form-label">Qidiruv</label>
-                    <input
-                        type="text"
-                        id="recommendationSearch"
-                        class="form-control"
-                        placeholder="Film nomi bo‘yicha qidiring..."
-                        autocomplete="off"
-                    >
+        <div class="glass-card auto-rec-hero mb-4">
+            <div class="auto-rec-hero__layout">
+                <div class="auto-rec-hero__copy">
+                    <span class="hero-kicker">Personalized Picks</span>
+                    <h1 class="mb-2">Shaxsiy tavsiyalar</h1>
+                    <p class="text-muted mb-0">
+                        Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.
+                    </p>
                 </div>
 
-                <div class="recommendation-toolbar-item recommendation-toolbar-wide">
-                    <label class="form-label mb-2">Janrlar</label>
-                    <div class="genre-filter-group" id="genreFilterGroup">
-                        <button type="button" class="genre-filter-chip active" data-genre="__all__">Barcha janrlar</button>
-                        {% for genre_name in genre_filters %}
-                            <button type="button" class="genre-filter-chip" data-genre="{{ genre_name|lower }}">{{ genre_name }}</button>
-                        {% endfor %}
+                <div class="auto-rec-toolbar">
+                    <div class="auto-rec-toolbar__item">
+                        <label for="autoRecSearch" class="form-label">Qidiruv</label>
+                        <input
+                            type="text"
+                            id="autoRecSearch"
+                            class="form-control"
+                            placeholder="Film nomi bo‘yicha qidiring..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="auto-rec-toolbar__item">
+                        <label for="autoRecSort" class="form-label">Saralash</label>
+                        <select id="autoRecSort" class="form-select auto-rec-native-select">
+                            <option value="rating_desc">Reyting bo‘yicha: yuqori</option>
+                            <option value="rating_asc">Reyting bo‘yicha: past</option>
+                            <option value="year_desc">Yil bo‘yicha: yangi</option>
+                            <option value="year_asc">Yil bo‘yicha: eski</option>
+                            <option value="count_desc">Ovozlar soni bo‘yicha</option>
+                            <option value="title_asc">Nom bo‘yicha: A-Z</option>
+                            <option value="title_desc">Nom bo‘yicha: Z-A</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="recommendation-toolbar-item">
-                    <label for="recommendationSort" class="form-label">Saralash</label>
-                    <select id="recommendationSort" class="form-select">
-                        <option value="rating_desc">Reyting bo‘yicha</option>
-                        <option value="year_desc">Yil bo‘yicha</option>
-                        <option value="title_asc">Nom A-Z</option>
-                    </select>
-                </div>
             </div>
-
-            <div class="recommendation-toolbar-foot">
-                <div class="recommendation-results-info">
-                    Jami tavsiyalar: <strong id="recommendationVisibleCount">{{ total_recommendations }}</strong>
-                </div>
-            </div>
+            
         </div>
 
         {% if recommendations_page %}
-            <div id="recommendationGrid" class="rec-grid">
+            <div id="autoRecGrid" class="auto-rec-grid">
                 {% for item in recommendations_page %}
                     <article
-                        class="movie-card rec-card"
+                        class="auto-rec-card"
                         data-title="{{ item.movie.title|lower|escape }}"
-                        data-genres="{% for genre in item.movie.genres.all %}{{ genre.name|lower }} {% endfor %}"
                         data-year="{{ item.movie.release_year|default:0 }}"
                         data-rating="{{ item.avg_rating }}"
+                        data-count="{{ item.rating_count|default:0 }}"
                     >
-                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
-                            <div class="movie-poster-wrap rec-poster-wrap">
+                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="auto-rec-card__poster-link">
+                            <div class="auto-rec-card__poster-wrap">
                                 {% if item.movie.poster_url %}
-                                    <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="movie-poster">
+                                    <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="auto-rec-card__poster">
                                 {% else %}
-                                    <div class="movie-poster placeholder-poster">
+                                    <div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
                                         <span>{{ item.movie.title|slice:":1" }}</span>
                                     </div>
                                 {% endif %}
                             </div>
-
-                            <div class="movie-card-body rec-card-body">
-                                <h5 class="movie-title rec-title">{{ item.movie.title }}</h5>
-
-                                <div class="rec-sub-meta">
-                                    <span class="rec-year-country">
-                                        {% if item.movie.release_year %}{{ item.movie.release_year }}{% endif %}
-                                        {% if item.movie.release_year and item.movie.country %} · {% endif %}
-                                        {{ item.movie.country|default:"Noma'lum davlat" }}
-                                    </span>
-                                </div>
-
-                                <div class="rec-rating-row">
-                                    <span class="rating-pill">
-                                        <span class="rating-star">★</span>
-                                        <span class="rating-value">{{ item.avg_rating|floatformat:1 }}</span>
-                                    </span>
-
-                                    <span class="engagement-pill">
-                                        <span class="engagement-label">Baho</span>
-                                        <strong>{{ item.rating_count }}</strong>
-                                    </span>
-                                </div>
-
-                                <div class="movie-genre-chips">
-                                    {% for genre in item.movie.genres.all|slice:":3" %}
-                                        <span class="genre-chip">{{ genre.name }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
                         </a>
+
+                        <div class="auto-rec-card__body">
+                            <div class="auto-rec-card__title-row">
+                                <h5 class="auto-rec-card__title">
+                                    <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}">
+                                        {{ item.movie.title }}
+                                    </a>
+                                </h5>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'favorite_toggle' item.movie.slug %}"
+                                    class="auto-rec-fav-form"
+                                    data-movie-title="{{ item.movie.title|escape }}"
+                                >
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button
+                                        type="submit"
+                                        class="auto-rec-fav-btn {% if favorite_movie_ids and item.movie.id in favorite_movie_ids %}is-active{% endif %}"
+                                        aria-label="Favorites"
+                                        aria-pressed="{% if favorite_movie_ids and item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
+                                        title="Favorites"
+                                    >
+                                        <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="auto-rec-card__country">
+                                {{ item.movie.country|default:"Noma'lum davlat" }}
+                            </div>
+
+                            <div class="auto-rec-card__stats">
+                                {% if item.movie.release_year %}
+                                    <span class="auto-rec-pill">{{ item.movie.release_year }}</span>
+                                {% endif %}
+
+                                <span class="auto-rec-pill auto-rec-pill--rating">
+                                    ★ {{ item.avg_rating|floatformat:1 }}
+                                </span>
+
+                                <span class="auto-rec-pill">
+                                    {{ item.rating_count }} ta baho
+                                </span>
+                            </div>
+
+                            <div class="auto-rec-card__genres">
+                                {% for genre in item.movie.genres.all|slice:":2" %}
+                                    <span class="genre-chip">{{ genre.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </article>
                 {% endfor %}
             </div>
@@ -147,59 +159,100 @@
                 <p class="mb-0">Bir nechta filmga baho bering yoki profil janrlarini belgilang.</p>
             </div>
         {% endif %}
+
+        <div id="autoRecSnackbarStack" class="auto-rec-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
     </div>
 </section>
 
 <script>
 (function () {
-    const grid = document.getElementById("recommendationGrid");
+    const grid = document.getElementById("autoRecGrid");
     if (!grid) return;
 
-    const searchInput = document.getElementById("recommendationSearch");
-    const sortSelect = document.getElementById("recommendationSort");
-    const visibleCount = document.getElementById("recommendationVisibleCount");
-    const genreButtons = Array.from(document.querySelectorAll(".genre-filter-chip"));
-    const cards = Array.from(grid.querySelectorAll(".rec-card"));
+    const searchInput = document.getElementById("autoRecSearch");
+    const nativeSelect = document.getElementById("autoRecSort");
+    const visibleCount = document.getElementById("autoRecVisibleCount");
+    const snackbarStack = document.getElementById("autoRecSnackbarStack");
+    const cards = Array.from(grid.querySelectorAll(".auto-rec-card"));
 
-    let selectedGenres = new Set();
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
 
-    function syncGenreButtons() {
-        genreButtons.forEach(btn => {
-            const genre = btn.dataset.genre;
-            if (genre === "__all__") {
-                btn.classList.toggle("active", selectedGenres.size === 0);
-            } else {
-                btn.classList.toggle("active", selectedGenres.has(genre));
-            }
+    function showSnackbar(movieTitle, variant) {
+        const item = document.createElement("div");
+        item.className = `auto-rec-snackbar auto-rec-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const text = variant === "success"
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilarga qo'shildi.`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilardan olib tashlandi.`;
+
+        item.innerHTML = `
+            <div class="auto-rec-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="auto-rec-snackbar__content">
+                <div class="auto-rec-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="auto-rec-snackbar__text">${text}</div>
+            </div>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
+
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timer = setTimeout(removeItem, 3200);
+
+        item.querySelector(".auto-rec-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timer);
+            removeItem();
         });
     }
 
     function sortCards(filteredCards) {
-        const mode = sortSelect.value;
+        const mode = nativeSelect.value;
 
         return [...filteredCards].sort((a, b) => {
-            if (mode === "title_asc") {
-                return a.dataset.title.localeCompare(b.dataset.title);
-            }
-            if (mode === "year_desc") {
-                return parseInt(b.dataset.year || "0", 10) - parseInt(a.dataset.year || "0", 10);
-            }
-            return parseFloat(b.dataset.rating || "0") - parseFloat(a.dataset.rating || "0");
+            const titleA = a.dataset.title || "";
+            const titleB = b.dataset.title || "";
+            const yearA = parseInt(a.dataset.year || "0", 10);
+            const yearB = parseInt(b.dataset.year || "0", 10);
+            const ratingA = parseFloat(a.dataset.rating || "0");
+            const ratingB = parseFloat(b.dataset.rating || "0");
+            const countA = parseInt(a.dataset.count || "0", 10);
+            const countB = parseInt(b.dataset.count || "0", 10);
+
+            if (mode === "title_asc") return titleA.localeCompare(titleB);
+            if (mode === "title_desc") return titleB.localeCompare(titleA);
+            if (mode === "year_desc") return yearB - yearA;
+            if (mode === "year_asc") return yearA - yearB;
+            if (mode === "rating_asc") return ratingA - ratingB;
+            if (mode === "count_desc") return countB - countA;
+            return ratingB - ratingA;
         });
     }
 
     function applyFilters() {
         const query = (searchInput.value || "").trim().toLowerCase();
-        const selected = Array.from(selectedGenres);
 
         let filtered = cards.filter(card => {
             const title = card.dataset.title || "";
-            const genres = (card.dataset.genres || "").trim().split(/\s+/).filter(Boolean);
-
-            const titleMatch = !query || title.includes(query);
-            const genreMatch = selected.length === 0 || selected.every(g => genres.includes(g));
-
-            return titleMatch && genreMatch;
+            return !query || title.includes(query);
         });
 
         filtered = sortCards(filtered);
@@ -216,29 +269,157 @@
         visibleCount.textContent = filtered.length;
     }
 
-    genreButtons.forEach(btn => {
-        btn.addEventListener("click", function () {
-            const genre = this.dataset.genre;
+    function buildPortalSelect(selectEl) {
+        if (!selectEl || selectEl.dataset.enhanced === "1") return;
 
-            if (genre === "__all__") {
-                selectedGenres.clear();
-            } else {
-                if (selectedGenres.has(genre)) {
-                    selectedGenres.delete(genre);
-                } else {
-                    selectedGenres.add(genre);
-                }
-            }
+        selectEl.dataset.enhanced = "1";
+        selectEl.classList.add("is-enhanced");
 
-            syncGenreButtons();
-            applyFilters();
+        const wrapper = document.createElement("div");
+        wrapper.className = "auto-rec-select";
+
+        const trigger = document.createElement("button");
+        trigger.type = "button";
+        trigger.className = "auto-rec-select__trigger";
+        trigger.setAttribute("aria-haspopup", "listbox");
+        trigger.setAttribute("aria-expanded", "false");
+
+        const value = document.createElement("span");
+        value.className = "auto-rec-select__value";
+
+        const chevron = document.createElement("span");
+        chevron.className = "auto-rec-select__chevron";
+
+        trigger.appendChild(value);
+        trigger.appendChild(chevron);
+
+        const menu = document.createElement("div");
+        menu.className = "auto-rec-select__menu";
+        menu.setAttribute("role", "listbox");
+        document.body.appendChild(menu);
+
+        function syncValue() {
+            const selected = selectEl.options[selectEl.selectedIndex];
+            value.textContent = selected ? selected.textContent : "Tanlang";
+            menu.querySelectorAll(".auto-rec-select__option").forEach(btn => {
+                btn.classList.toggle("is-active", btn.dataset.value === selectEl.value);
+            });
+        }
+
+        function positionMenu() {
+            const rect = trigger.getBoundingClientRect();
+            menu.style.top = `${rect.bottom + 6}px`;
+            menu.style.left = `${rect.left}px`;
+            menu.style.width = `${rect.width}px`;
+        }
+
+        function openMenu() {
+            positionMenu();
+            menu.classList.add("is-open");
+            trigger.classList.add("is-open");
+            trigger.setAttribute("aria-expanded", "true");
+        }
+
+        function closeMenu() {
+            menu.classList.remove("is-open");
+            trigger.classList.remove("is-open");
+            trigger.setAttribute("aria-expanded", "false");
+        }
+
+        Array.from(selectEl.options).forEach(option => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "auto-rec-select__option";
+            btn.textContent = option.textContent;
+            btn.dataset.value = option.value;
+
+            btn.addEventListener("click", () => {
+                selectEl.value = option.value;
+                syncValue();
+                closeMenu();
+                applyFilters();
+            });
+
+            menu.appendChild(btn);
         });
+
+        selectEl.parentNode.insertBefore(wrapper, selectEl);
+        wrapper.appendChild(selectEl);
+        wrapper.appendChild(trigger);
+
+        trigger.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (menu.classList.contains("is-open")) {
+                closeMenu();
+            } else {
+                document.querySelectorAll(".auto-rec-select__menu.is-open").forEach(node => node.classList.remove("is-open"));
+                document.querySelectorAll(".auto-rec-select__trigger.is-open").forEach(node => {
+                    node.classList.remove("is-open");
+                    node.setAttribute("aria-expanded", "false");
+                });
+                openMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (menu.classList.contains("is-open")) positionMenu();
+        });
+
+        window.addEventListener("scroll", () => {
+            if (menu.classList.contains("is-open")) positionMenu();
+        }, true);
+
+        document.addEventListener("click", (event) => {
+            if (!wrapper.contains(event.target) && !menu.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeMenu();
+        });
+
+        syncValue();
+    }
+
+    async function toggleFavorite(form, button) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) return;
+
+        button.classList.toggle("is-active", data.is_favorite);
+        button.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+        const movieTitle = data.movie_title || form.dataset.movieTitle || "Film";
+        showSnackbar(movieTitle, data.is_favorite ? "success" : "error");
+    }
+
+    document.addEventListener("submit", async function (event) {
+        const form = event.target.closest(".auto-rec-fav-form");
+        if (!form) return;
+
+        event.preventDefault();
+
+        const button = form.querySelector(".auto-rec-fav-btn");
+        if (!button) return;
+
+        try {
+            await toggleFavorite(form, button);
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     searchInput.addEventListener("input", applyFilters);
-    sortSelect.addEventListener("change", applyFilters);
+    nativeSelect.addEventListener("change", applyFilters);
 
-    syncGenreButtons();
+    buildPortalSelect(nativeSelect);
     applyFilters();
 })();
 </script>

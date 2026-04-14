@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
+from apps.interactions.models import Favorite
 from apps.recommendations.forms import RecommendationLabForm
 from apps.recommendations.services import RecommendationService
 
@@ -23,24 +24,25 @@ def auto_recommendation_view(request):
 
     all_recommendations = result["recommendations"]
 
-    genre_filters = sorted(
-        {
-            genre.name
-            for item in all_recommendations
-            for genre in item["movie"].genres.all()
-        }
+    favorite_movie_ids = set(
+        Favorite.objects.filter(user=request.user, movie__is_active=True)
+        .values_list("movie_id", flat=True)
     )
 
     paginator = Paginator(all_recommendations, 24)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
+    favorite_movie_ids = set(
+        Favorite.objects.filter(user=request.user, movie__is_active=True)
+        .values_list("movie_id", flat=True)
+    )
 
     context = {
         "result": result,
-        "genre_filters": genre_filters,
         "total_recommendations": len(all_recommendations),
         "page_obj": page_obj,
         "recommendations_page": page_obj.object_list,
+        "favorite_movie_ids": favorite_movie_ids,
     }
     return render(request, "recommendations/for_you.html", context)
 
