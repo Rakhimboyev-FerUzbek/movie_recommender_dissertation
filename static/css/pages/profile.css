@@ -1496,3 +1496,151 @@ body[data-theme="light"] .profile-danger-btn:hover {
         justify-content: flex-start
     }
 }
+/* ── Profile: top actions bar ─────────────────────────────── */
+.profile-top-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+/* ── Profile: unified card ────────────────────────────────── */
+.profile-unified-card {
+    padding: 20px;
+}
+
+/* ── Profile: Bio ─────────────────────────────────────────── */
+.profile-bio-item {
+    padding: 14px !important;
+}
+
+/* View mode bio: max 5 lines, scrollable if more, dynamic if less */
+.profile-bio-view {
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    /* 5 qator: 5 × 1.7em × 0.95rem ≈ 8.075em */
+    max-height: calc(1.7em * 5);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 92, 255, 0.3) transparent;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.profile-bio-view::-webkit-scrollbar {
+    width: 4px;
+}
+.profile-bio-view::-webkit-scrollbar-track {
+    background: transparent;
+}
+.profile-bio-view::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.35);
+    border-radius: 4px;
+}
+
+/* Edit mode bio textarea */
+.profile-bio-edit-wrap textarea,
+.profile-bio-edit-wrap .form-control {
+    /* Same 5 qator constraint */
+    max-height: calc(1.7em * 5 + 20px) !important;
+    min-height: calc(1.7em * 2) !important;
+    height: auto !important;
+    resize: vertical;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 92, 255, 0.3) transparent;
+}
+
+.profile-bio-edit-wrap textarea::-webkit-scrollbar {
+    width: 4px;
+}
+.profile-bio-edit-wrap textarea::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.35);
+    border-radius: 4px;
+}
+
+/* ── Compact: reduce mt-4 gap inside profile top shell ───── */
+.profile-unified-card + .profile-unified-card {
+    margin-top: 14px;
+}
+
+/* Remove extra mt-4 on the account card */
+.profile-overview-stack > .profile-unified-card:first-of-type {
+    margin-top: 0 !important;
+}
+
+/* =========================
+   PROFILE COLUMN ALIGNMENT FIX
+   equal-height / bottom alignment
+   ========================= */
+
+.profile-grid--inside-shell {
+    align-items: stretch !important;
+}
+
+.profile-sidebar,
+.profile-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-sidebar > *,
+.profile-main > * {
+    width: 100%;
+}
+
+.profile-sidebar-stack,
+.profile-overview-stack {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.profile-sidebar-stack .profile-showcase-card {
+    flex: 1 1 auto;
+}
+
+.profile-danger-zone-compact {
+    margin-top: auto;
+}
+
+.profile-main .profile-overview-stack,
+.profile-main .profile-main-edit-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.profile-main .profile-overview-stack > .glass-card,
+.profile-main .profile-main-edit-form > .glass-card,
+.profile-account-card-compact.profile-genres-card {
+    flex: 1 1 auto;
+}
+
+/* edit rejim ichidagi asosiy karta ham cho'zilsin */
+.profile-main-edit-form .profile-account-card-compact.profile-genres-card {
+    min-height: 100%;
+}
+
+@media (max-width: 1100px) {
+    .profile-grid--inside-shell {
+        align-items: start !important;
+    }
+
+    .profile-sidebar-stack,
+    .profile-overview-stack,
+    .profile-main .profile-main-edit-form {
+        height: auto;
+    }
+
+    .profile-danger-zone-compact {
+        margin-top: 16px;
+    }
+}
+
+

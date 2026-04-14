@@ -65,6 +65,8 @@
                                     <span class="detail-stat-pill">{{ movie.duration_minutes|format_runtime }}</span>
                                 {% endif %}
                                 <span class="detail-stat-pill rating-pill">★ {{ movie.avg_rating|floatformat:1 }}</span>
+                                <span class="detail-stat-pill">{{ movie.rating_count }} ta baho</span>
+                                </span>
                             </div>
 
                             <div class="genre-chip-wrap mt-3">
@@ -374,6 +376,13 @@
         </div>
     </div>
 </section>
+
+<!-- Snackbar / Toast -->
+<div id="kc-snackbar" class="kc-snackbar" role="alert" aria-live="polite" aria-atomic="true">
+    <span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
+    <span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
+    <button class="kc-snackbar-close" id="kc-snackbar-close" aria-label="Yopish">×</button>
+</div>
 
 <script>
 (function () {
@@ -708,7 +717,42 @@
 })();
 
 (function () {
-    const favoriteForm = document.getElementById("favoriteToggleForm");
+    // ── Snackbar ──────────────────────────────────────────────
+    const snackbar   = document.getElementById("kc-snackbar");
+    const snackIcon  = document.getElementById("kc-snackbar-icon");
+    const snackMsg   = document.getElementById("kc-snackbar-msg");
+    const snackClose = document.getElementById("kc-snackbar-close");
+    let snackTimer   = null;
+
+    function showSnackbar(message, type) {
+        if (!snackbar) return;
+        clearTimeout(snackTimer);
+
+        snackbar.className = "kc-snackbar kc-snackbar--" + type + " kc-snackbar--visible";
+        snackIcon.textContent  = type === "success" ? "✓" : "✕";
+        snackMsg.textContent   = message;
+
+        snackTimer = setTimeout(hideSnackbar, 3500);
+    }
+
+    function hideSnackbar() {
+        if (!snackbar) return;
+        snackbar.classList.remove("kc-snackbar--visible");
+        snackbar.classList.add("kc-snackbar--hiding");
+        setTimeout(() => {
+            snackbar.classList.remove("kc-snackbar--hiding");
+        }, 350);
+    }
+
+    if (snackClose) {
+        snackClose.addEventListener("click", function () {
+            clearTimeout(snackTimer);
+            hideSnackbar();
+        });
+    }
+
+    // ── Favorite Toggle ───────────────────────────────────────
+    const favoriteForm   = document.getElementById("favoriteToggleForm");
     const favoriteButton = document.getElementById("favoriteToggleButton");
     if (!favoriteForm || !favoriteButton) return;
 
@@ -727,6 +771,12 @@
 
             favoriteButton.classList.toggle("is-active", data.is_favorite);
             favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+            if (data.is_favorite) {
+                showSnackbar("Film sevimlilarga qo'shildi ♥", "success");
+            } else {
+                showSnackbar("Film sevimlilardan olib tashlandi", "error");
+            }
         } catch (error) {
             console.error(error);
         }

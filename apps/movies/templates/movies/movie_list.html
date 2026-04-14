@@ -4,7 +4,7 @@
 
 {% block content %}
 <section class="catalog-page">
-    <div class="container"> 
+    <div class="container">
         <div class="catalog-hero fade-up">
             <h1>{{ t.movie_catalog }}</h1>
         </div>
@@ -124,7 +124,7 @@
                 <div id="catalogResultsContainer">
                     <div class="movie-grid movie-grid-four-col">
                         {% for movie in movies %}
-                            {% include "includes/movie_card.html" with movie=movie %}
+                            {% include "includes/movie_card.html" with movie=movie show_favorite_button=True favorite_movie_ids=favorite_movie_ids next_url=request.get_full_path %}
                         {% empty %}
                             <div class="empty-state-card">
                                 <h4>{{ t.no_movies_found }}</h4>
@@ -137,6 +137,8 @@
                 </div>
             </div>
         </div>
+
+        <div id="catalogSnackbarStack" class="catalog-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
     </div>
 </section>
 
@@ -145,11 +147,58 @@
     const form = document.getElementById("catalogFilterForm");
     const searchInput = document.getElementById("id_q");
     const resultsContainer = document.getElementById("catalogResultsContainer");
+    const snackbarStack = document.getElementById("catalogSnackbarStack");
 
-    if (!form || !searchInput || !resultsContainer) return;
+    if (!form || !searchInput || !resultsContainer || !snackbarStack) return;
 
     let timer = null;
     let controller = null;
+
+    function closeAllSelects(except = null) {
+        document.querySelectorAll(".catalog-ui-select").forEach((root) => {
+            if (root !== except) {
+                root.classList.remove("is-open");
+            }
+        });
+    }
+
+    function initCustomSelects() {
+        const selects = document.querySelectorAll(".catalog-ui-select");
+
+        selects.forEach((root) => {
+            if (root.dataset.bound === "1") return;
+            root.dataset.bound = "1";
+
+            const hiddenInput = root.querySelector('input[type="hidden"]');
+            const trigger = root.querySelector("[data-ui-trigger]");
+            const label = root.querySelector("[data-ui-label]");
+            const options = root.querySelectorAll("[data-ui-value]");
+
+            if (!hiddenInput || !trigger || !label) return;
+
+            trigger.addEventListener("click", function () {
+                const willOpen = !root.classList.contains("is-open");
+                closeAllSelects(root);
+                root.classList.toggle("is-open", willOpen);
+            });
+
+            options.forEach((option) => {
+                option.addEventListener("click", function () {
+                    const value = this.dataset.uiValue ?? "";
+                    const text = this.dataset.uiText ?? this.textContent.trim();
+
+                    hiddenInput.value = value;
+                    label.textContent = text;
+
+                    options.forEach((btn) => btn.classList.remove("is-active"));
+                    this.classList.add("is-active");
+
+                    root.classList.remove("is-open");
+                    fetchAndReplaceResults(true, false);
+                });
+            });
+        });
+    }
 
     function buildQueryString() {
         const formData = new FormData(form);
@@ -165,14 +214,16 @@
         return params.toString();
     }
 
-    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false) {
+    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
         const activeElement = document.activeElement;
         const isSearchFocused = preserveCaret && activeElement === searchInput;
         const start = searchInput.selectionStart;
         const end = searchInput.selectionEnd;
 
-        const query = buildQueryString();
-        const targetUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+        const targetUrl = explicitUrl || (function () {
+            const query = buildQueryString();
+            return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+        })();
 
         if (controller) controller.abort();
         controller = new AbortController();
@@ -214,59 +265,87 @@
         }
     }
 
-    function setupCustomSelect(rootName, hiddenInputId, triggerId, menuId, labelId) {
-        const root = document.querySelector(`[data-select-root="${rootName}"]`);
-        const hiddenInput = document.getElementById(hiddenInputId);
-        const trigger = document.getElementById(triggerId);
-        const menu = document.getElementById(menuId);
-        const label = document.getElementById(labelId);
+    function showCatalogSnackbar(movieTitle, variant) {
+        const item = document.createElement("div");
+        item.className = `catalog-snackbar catalog-snackbar--${variant}`;
 
-        if (!root || !hiddenInput || !trigger || !menu || !label) return;
+        const safeTitle = (movieTitle || "Film")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
 
-        trigger.addEventListener("click", function () {
-            const willOpen = !root.classList.contains("is-open");
+        const message = variant === "success"
+            ? `<span class="catalog-snackbar__movie">"${safeTitle}"</span> favorites ga qo'shildi.`
+            : `<span class="catalog-snackbar__movie">"${safeTitle}"</span> favorites dan olib tashlandi.`;
 
-            document.querySelectorAll(".custom-filter-select.is-open").forEach(el => {
-                el.classList.remove("is-open");
-                const btn = el.querySelector(".custom-filter-trigger");
-                if (btn) btn.setAttribute("aria-expanded", "false");
-            });
+        item.innerHTML = `
+            <div class="catalog-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="catalog-snackbar__content">
+                <div class="catalog-snackbar__title">
+                    ${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}
+                </div>
+                <div class="catalog-snackbar__text">${message}</div>
+            </div>
+            <button type="button" class="catalog-snackbar__close" aria-label="Yopish">×</button>
+        `;
 
-            if (willOpen) {
-                root.classList.add("is-open");
-                trigger.setAttribute("aria-expanded", "true");
-            }
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
         });
 
-        menu.querySelectorAll(".custom-filter-option").forEach(option => {
-            option.addEventListener("click", function () {
-                const value = this.dataset.selectValue ?? "";
-                const text = this.dataset.selectLabel ?? this.textContent.trim();
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
 
-                hiddenInput.value = value;
-                label.textContent = text;
+        const timerId = setTimeout(removeItem, 3200);
 
-                menu.querySelectorAll(".custom-filter-option").forEach(btn => btn.classList.remove("is-active"));
-                this.classList.add("is-active");
-
-                root.classList.remove("is-open");
-                trigger.setAttribute("aria-expanded", "false");
-
-                fetchAndReplaceResults(true, false);
-            });
+        item.querySelector(".catalog-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timerId);
+            removeItem();
         });
     }
 
-    setupCustomSelect("year", "id_year", "yearTrigger", "yearMenu", "yearTriggerLabel");
-    setupCustomSelect("sort", "id_sort", "sortTrigger", "sortMenu", "sortTriggerLabel");
+    async function toggleFavorite(formEl, buttonEl) {
+        const response = await fetch(formEl.action, {
+            method: "POST",
+            body: new FormData(formEl),
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) return;
+
+        buttonEl.classList.toggle("is-active", data.is_favorite);
+        buttonEl.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+        const movieTitle = data.movie_title || formEl.dataset.movieTitle || "Film";
+        showCatalogSnackbar(movieTitle, data.is_favorite ? "success" : "error");
+    }
+
+    initCustomSelects();
 
     document.addEventListener("click", function (event) {
-        if (!event.target.closest(".custom-filter-select")) {
-            document.querySelectorAll(".custom-filter-select.is-open").forEach(el => {
-                el.classList.remove("is-open");
-                const btn = el.querySelector(".custom-filter-trigger");
-                if (btn) btn.setAttribute("aria-expanded", "false");
-            });
+        if (!event.target.closest(".catalog-ui-select")) {
+            closeAllSelects();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeAllSelects();
         }
     });
 
@@ -300,91 +379,22 @@
         const href = link.getAttribute("href");
         if (!href) return;
 
-        if (controller) controller.abort();
-        controller = new AbortController();
-
-        fetch(href, {
-            method: "GET",
-            signal: controller.signal,
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
-            }
-        })
-        .then(response => {
-            if (!response.ok) return null;
-            return response.text();
-        })
-        .then(html => {
-            if (!html) return;
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-            const nextResults = doc.getElementById("catalogResultsContainer");
-            if (!nextResults) return;
-
-            resultsContainer.innerHTML = nextResults.innerHTML;
-            window.history.replaceState({}, "", href);
-        })
-        .catch(error => {
-            if (error.name !== "AbortError") {
-                console.error(error);
-            }
-        });
-    });
-})();
-</script>
-<script>
-(function () {
-    const selects = document.querySelectorAll(".catalog-ui-select");
-
-    function closeAll(except = null) {
-        selects.forEach((root) => {
-            if (root !== except) {
-                root.classList.remove("is-open");
-            }
-        });
-    }
-
-    selects.forEach((root) => {
-        const hiddenInput = root.querySelector('input[type="hidden"]');
-        const trigger = root.querySelector("[data-ui-trigger]");
-        const label = root.querySelector("[data-ui-label]");
-        const menu = root.querySelector("[data-ui-menu]");
-        const options = root.querySelectorAll("[data-ui-value]");
-
-        if (!hiddenInput || !trigger || !label || !menu) return;
-
-        trigger.addEventListener("click", function () {
-            const willOpen = !root.classList.contains("is-open");
-            closeAll(root);
-            root.classList.toggle("is-open", willOpen);
-        });
-
-        options.forEach((option) => {
-            option.addEventListener("click", function () {
-                const value = this.dataset.uiValue ?? "";
-                const text = this.dataset.uiText ?? this.textContent.trim();
-
-                hiddenInput.value = value;
-                label.textContent = text;
-
-                options.forEach((btn) => btn.classList.remove("is-active"));
-                this.classList.add("is-active");
-
-                root.classList.remove("is-open");
-            });
-        });
+        fetchAndReplaceResults(true, false, href);
     });
 
-    document.addEventListener("click", function (event) {
-        if (!event.target.closest(".catalog-ui-select")) {
-            closeAll();
-        }
-    });
+    document.addEventListener("submit", async function (event) {
+        const formEl = event.target.closest(".catalog-fav-form");
+        if (!formEl) return;
 
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            closeAll();
+        event.preventDefault();
+
+        const buttonEl = formEl.querySelector(".catalog-fav-btn");
+        if (!buttonEl) return;
+
+        try {
+            await toggleFavorite(formEl, buttonEl);
+        } catch (error) {
+            console.error(error);
         }
     });
 })();
