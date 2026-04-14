@@ -21,7 +21,7 @@
                         <div>
                             <label class="form-label">Qidiruv</label>
                             <input type="text" name="q" class="form-control" value="{{ selected_query }}"
-                                placeholder="Film nomi bo'yicha qidiring...">
+                                   placeholder="Film nomi bo'yicha qidiring...">
                         </div>
                         <div>
                             <label class="form-label">Saralash</label>
@@ -43,46 +43,56 @@
                     <div class="favorite-card-media">
                         <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
                         <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
-                            class="favorite-poster-link">
+                           class="favorite-poster-link">
                             {% if favorite.movie.poster_url %}
-                            <img src="{{ favorite.movie.poster_url }}" alt="{{ favorite.movie.title }}"
-                                class="favorite-poster-img">
+                                <img src="{{ favorite.movie.poster_url }}" alt="{{ favorite.movie.title }}"
+                                     class="favorite-poster-img">
                             {% else %}
-                            <div class="favorite-poster-placeholder">{{ favorite.movie.title|slice:":1" }}</div>
+                                <div class="favorite-poster-placeholder">{{ favorite.movie.title|slice:":1" }}</div>
                             {% endif %}
                         </a>
                     </div>
+
                     <div class="favorite-card-content">
                         <div class="favorite-card-head">
                             <div>
                                 <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
-                                    class="interaction-title-link">{{ favorite.movie.title }}</a>
+                                   class="interaction-title-link">{{ favorite.movie.title }}</a>
                                 <div class="interaction-meta-line">
                                     {% if favorite.movie.release_year %}
-                                    <span>{{ favorite.movie.release_year }}</span>
-                                    {%endif %}
+                                        <span>{{ favorite.movie.release_year }}</span>
+                                    {% endif %}
                                     <span>★ {{ favorite.movie.avg_rating|floatformat:1 }}</span>
                                 </div>
                             </div>
-                            <form method="post" action="{% url 'favorite_toggle' favorite.movie.slug %}"
-                                class="favorite-toggle-form" data-movie-slug="{{ favorite.movie.slug }}">
+
+                            <form method="post"
+                                  action="{% url 'favorite_toggle' favorite.movie.slug %}"
+                                  class="favorite-toggle-form"
+                                  data-movie-slug="{{ favorite.movie.slug }}"
+                                  data-movie-title="{{ favorite.movie.title|escape }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" class="favorite-remove-btn" title="Remove from favorites">♥</button>
+                                <button type="submit" class="favorite-remove-btn" title="Remove from favorites">
+                                    ♥
+                                </button>
                             </form>
                         </div>
+
                         <p class="interaction-overview">
-                            {{ favorite.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
+                            {{ favorite.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}
+                        </p>
+
                         <div class="interaction-chip-row">
                             <span class="interaction-chip">Qo'shilgan: {{ favorite.created_at|date:"Y-m-d H:i" }}</span>
                             {% for genre in favorite.movie.genres.all|slice:":3" %}
-                            <span class="genre-chip">{{ genre.name }}</span>
+                                <span class="genre-chip">{{ genre.name }}</span>
                             {% endfor %}
                         </div>
                     </div>
                 </article>
                 {% empty %}
-                <div class="glass-card empty-state-card full-span-card">
+                <div class="glass-card empty-state-card full-span-card" id="favoritesEmptyState">
                     <h4>Favorites hozircha bo'sh</h4>
                     <p>Movie detail sahifasidagi yurakcha tugma orqali filmlarni saqlashingiz mumkin.</p>
                 </div>
@@ -91,38 +101,125 @@
 
             {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
         </div>
+
+        <div id="favoritesSnackbarStack" class="favorites-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
     </div>
 </section>
 
 <script>
-    (function () {
-        function postAjax(form) {
-            return fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            }).then(r => r.json().then(data => ({ ok: r.ok, data })));
+(function () {
+    const snackbarStack = document.getElementById("favoritesSnackbarStack");
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function showFavoriteSnackbar(movieTitle, variant) {
+        if (!snackbarStack) return;
+
+        const item = document.createElement("div");
+        item.className = `favorites-snackbar favorites-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const message = variant === "success"
+            ? `<span class="favorites-snackbar__movie">"${safeTitle}"</span> favorites ga qo'shildi.`
+            : `<span class="favorites-snackbar__movie">"${safeTitle}"</span> favorites dan olib tashlandi.`;
+
+        item.innerHTML = `
+            <div class="favorites-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="favorites-snackbar__content">
+                <div class="favorites-snackbar__title">
+                    ${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}
+                </div>
+                <div class="favorites-snackbar__text">${message}</div>
+            </div>
+            <button type="button" class="favorites-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
+
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timer = setTimeout(removeItem, 3200);
+
+        item.querySelector(".favorites-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timer);
+            removeItem();
+        });
+    }
+
+    async function postAjax(form) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+        return { ok: response.ok, data };
+    }
+
+    function ensureEmptyState() {
+        const grid = document.getElementById("favoritesGrid");
+        if (!grid) return;
+
+        const cards = grid.querySelectorAll(".favorite-row-card");
+        const emptyState = document.getElementById("favoritesEmptyState");
+
+        if (cards.length === 0 && !emptyState) {
+            const empty = document.createElement("div");
+            empty.className = "glass-card empty-state-card full-span-card";
+            empty.id = "favoritesEmptyState";
+            empty.innerHTML = `
+                <h4>Favorites hozircha bo'sh</h4>
+                <p>Movie detail sahifasidagi yurakcha tugma orqali filmlarni saqlashingiz mumkin.</p>
+            `;
+            grid.appendChild(empty);
         }
+    }
 
-        document.addEventListener('submit', async function (event) {
-            const form = event.target.closest('.favorite-toggle-form');
-            if (!form) return;
+    document.addEventListener("submit", async function (event) {
+        const form = event.target.closest(".favorite-toggle-form");
+        if (!form) return;
 
-            event.preventDefault();
+        event.preventDefault();
 
+        try {
             const result = await postAjax(form);
             if (!result.ok || !result.data.ok) return;
 
             const slug = form.dataset.movieSlug;
+            const movieTitle = result.data.movie_title || form.dataset.movieTitle || "Film";
             const card = document.getElementById(`favorite-card-${slug}`);
 
-            if (result.data.action === 'removed' && card) {
-                card.remove();
-                alert(`"${result.data.movie_title}" favorites dan olib tashlandi.`);
-            } else if (result.data.action === 'added') {
-                alert(`"${result.data.movie_title}" favorites ga qo'shildi.`);
+            if (result.data.action === "removed") {
+                if (card) {
+                    card.remove();
+                }
+                ensureEmptyState();
+                showFavoriteSnackbar(movieTitle, "error");
+            } else if (result.data.action === "added") {
+                showFavoriteSnackbar(movieTitle, "success");
             }
-        });
-    })();
+        } catch (error) {
+            console.error(error);
+        }
+    });
+})();
 </script>
 {% endblock %}
