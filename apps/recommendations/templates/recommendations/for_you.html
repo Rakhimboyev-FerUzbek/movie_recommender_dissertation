@@ -28,17 +28,36 @@
                             >
                         </div>
 
-                        <div class="auto-rec-toolbar__item">
-                            <label for="autoRecSort" class="form-label">Saralash</label>
-                            <select id="autoRecSort" class="form-select auto-rec-native-select">
-                                <option value="rating_desc">Reyting bo‘yicha: yuqori</option>
-                                <option value="rating_asc">Reyting bo‘yicha: past</option>
-                                <option value="year_desc">Yil bo‘yicha: yangi</option>
-                                <option value="year_asc">Yil bo‘yicha: eski</option>
-                                <option value="count_desc">Baho soni bo‘yicha</option>
-                                <option value="title_asc">Nom bo‘yicha: A-Z</option>
-                                <option value="title_desc">Nom bo‘yicha: Z-A</option>
-                            </select>
+                        <div class="auto-rec-toolbar__item auto-rec-toolbar__item--sort">
+                            <label for="autoRecSortField" class="form-label">Saralash</label>
+
+                            <div class="auto-rec-sort-row">
+                                <select id="autoRecSortField" class="form-select auto-rec-native-select">
+                                    <option value="default">Standart</option>
+                                    <option value="rating">Reyting</option>
+                                    <option value="year">Yil</option>
+                                    <option value="count">Baho soni</option>
+                                    <option value="title">Nom</option>
+                                </select>
+
+                                <button
+                                    type="button"
+                                    id="autoRecSortDirection"
+                                    class="auto-rec-sort-direction"
+                                    data-desc="true"
+                                    aria-label="Saralash yo‘nalishini almashtirish"
+                                    title="Saralash yo‘nalishini almashtirish"
+                                >
+                                    <span class="auto-rec-sort-direction__icon">↓</span>
+                                    <span class="auto-rec-sort-direction__text">Kamayish</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auto-rec-hero__foot">
+                        <div class="auto-rec-results-info">
+                            Jami tavsiyalar: <strong id="autoRecVisibleCount">{{ total_recommendations }}</strong>
                         </div>
                     </div>
                 </div>
@@ -50,6 +69,7 @@
                 {% for item in recommendations %}
                     <article
                         class="auto-rec-card"
+                        data-index="{{ forloop.counter0 }}"
                         data-title="{{ item.movie.title|lower|escape }}"
                         data-year="{{ item.movie.release_year|default:0 }}"
                         data-rating="{{ item.avg_rating }}"
@@ -141,7 +161,10 @@
     if (!grid) return;
 
     const searchInput = document.getElementById("autoRecSearch");
-    const nativeSelect = document.getElementById("autoRecSort");
+    const sortField = document.getElementById("autoRecSortField");
+    const sortDirectionBtn = document.getElementById("autoRecSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".auto-rec-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".auto-rec-sort-direction__text");
     const visibleCount = document.getElementById("autoRecVisibleCount");
     const snackbarStack = document.getElementById("autoRecSnackbarStack");
     const sentinel = document.getElementById("autoRecSentinel");
@@ -157,6 +180,39 @@
         const div = document.createElement("div");
         div.textContent = text || "";
         return div.innerHTML;
+    }
+
+    function defaultDirectionFor(field) {
+        if (field === "title") return false;
+        if (field === "default") return true;
+        return true;
+    }
+
+    function isDescending() {
+        return sortDirectionBtn.dataset.desc === "true";
+    }
+
+    function syncDirectionButton() {
+        const field = sortField.value;
+        const desc = isDescending();
+        const isDefault = field === "default";
+
+        sortDirectionBtn.disabled = isDefault;
+        sortDirectionBtn.classList.toggle("is-disabled", isDefault);
+
+        if (isDefault) {
+            sortDirectionIcon.textContent = "•";
+            sortDirectionText.textContent = "Standart";
+            return;
+        }
+
+        if (desc) {
+            sortDirectionIcon.textContent = "↓";
+            sortDirectionText.textContent = "Kamayish";
+        } else {
+            sortDirectionIcon.textContent = "↑";
+            sortDirectionText.textContent = "O‘sish";
+        }
     }
 
     function showSnackbar(movieTitle, variant) {
@@ -203,7 +259,14 @@
     }
 
     function sortCards(filteredCards) {
-        const mode = nativeSelect.value;
+        const field = sortField.value;
+        const desc = isDescending();
+
+        if (field === "default") {
+            return [...filteredCards].sort((a, b) => {
+                return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
+            });
+        }
 
         return [...filteredCards].sort((a, b) => {
             const titleA = a.dataset.title || "";
@@ -215,13 +278,19 @@
             const countA = parseInt(a.dataset.count || "0", 10);
             const countB = parseInt(b.dataset.count || "0", 10);
 
-            if (mode === "title_asc") return titleA.localeCompare(titleB);
-            if (mode === "title_desc") return titleB.localeCompare(titleA);
-            if (mode === "year_desc") return yearB - yearA;
-            if (mode === "year_asc") return yearA - yearB;
-            if (mode === "rating_asc") return ratingA - ratingB;
-            if (mode === "count_desc") return countB - countA;
-            return ratingB - ratingA;
+            let result = 0;
+
+            if (field === "title") {
+                result = titleA.localeCompare(titleB);
+            } else if (field === "year") {
+                result = yearA - yearB;
+            } else if (field === "rating") {
+                result = ratingA - ratingB;
+            } else if (field === "count") {
+                result = countA - countB;
+            }
+
+            return desc ? -result : result;
         });
     }
 
@@ -331,6 +400,9 @@
 
             btn.addEventListener("click", () => {
                 selectEl.value = option.value;
+
+                sortDirectionBtn.dataset.desc = String(defaultDirectionFor(option.value));
+                syncDirectionButton();
                 syncValue();
                 closeMenu();
                 applyFilters(true);
@@ -428,9 +500,16 @@
     }
 
     searchInput.addEventListener("input", () => applyFilters(true));
-    nativeSelect.addEventListener("change", () => applyFilters(true));
+    sortDirectionBtn.addEventListener("click", () => {
+        if (sortField.value === "default") return;
+        sortDirectionBtn.dataset.desc = String(!isDescending());
+        syncDirectionButton();
+        applyFilters(true);
+    });
 
-    buildPortalSelect(nativeSelect);
+    buildPortalSelect(sortField);
+    sortDirectionBtn.dataset.desc = String(defaultDirectionFor(sortField.value));
+    syncDirectionButton();
     applyFilters(true);
 })();
 </script>

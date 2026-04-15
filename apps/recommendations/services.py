@@ -26,12 +26,12 @@ MODEL_SVD = "svd"
 MODEL_HYBRID = "hybrid"
 
 MODEL_LABELS = {
-    MODEL_AUTO: "Auto Hybrid",
+    MODEL_AUTO: "Auto (Adaptive)",
     MODEL_POPULARITY: "Popularity",
     MODEL_CONTENT: "Content-Based",
     MODEL_ITEM: "Item-Based KNN",
     MODEL_SVD: "SVD",
-    MODEL_HYBRID: "Hybrid",
+    MODEL_HYBRID: "Hybrid (Weighted)",
 }
 
 SCENARIO_NORMAL = "normal"
@@ -319,14 +319,35 @@ class RecommendationService:
     def _resolve_model(self, user: User, requested_model: str, scenario: str) -> str:
         if requested_model != MODEL_AUTO:
             return requested_model
+
+        preferred_genres = self._get_preferred_genres(user)
+        rating_count = self._get_user_rating_count(user.id)
+
         if scenario == SCENARIO_NEW_USER:
+            return MODEL_CONTENT if preferred_genres else MODEL_POPULARITY
+
+        if rating_count == 0:
+            return MODEL_CONTENT if preferred_genres else MODEL_POPULARITY
+
+        if rating_count < 5:
+            return MODEL_CONTENT
+
+        if rating_count < 15:
+            return (
+                MODEL_ITEM
+                if not self.runtime.item_similarity_df.empty
+                else MODEL_HYBRID
+            )
+
+        if rating_count < 30:
             return MODEL_HYBRID
 
-        rating_count = self._get_user_rating_count(user.id)
-        if rating_count == 0:
-            return MODEL_HYBRID
-        if rating_count < 5:
-            return MODEL_HYBRID
+        if (
+            self.runtime.svd_prediction_df is not None
+            and user.id in self.runtime.svd_prediction_df.index
+        ):
+            return MODEL_SVD
+
         return MODEL_HYBRID
 
     def _generate_by_model(
@@ -385,15 +406,50 @@ class RecommendationService:
     def _merge_with_fallback(
         self, primary_df: pd.DataFrame, fallback_df: pd.DataFrame
     ) -> pd.DataFrame:
+        if fallback_df.empty and primary_df.empty:
+            return pd.DataFrame(
+                columns=[
+                    "movie_id",
+                    "avg_rating",
+                    "rating_count",
+                    "popularity_score",
+                    "final_score",
+                ]
+            )
+
         if primary_df.empty:
-            return fallback_df.copy()
-        merged = fallback_df.merge(primary_df, on="movie_id", how="left")
-        score_columns = [col for col in merged.columns if col.endswith("_score")]
-        main_col = score_columns[-1]
+            return fallback_df.copy().reset_index(drop=True)
+
+        base_columns = [
+            col
+            for col in ["movie_id", "avg_rating", "rating_count", "popularity_score", "popularity_norm"]
+            if col in fallback_df.columns
+        ]
+        merged = fallback_df[base_columns].copy()
+
+        primary_extra_columns = [
+            col for col in primary_df.columns if col not in {"avg_rating", "rating_count", "popularity_score"}
+        ]
+        if "movie_id" not in primary_extra_columns:
+            primary_extra_columns = ["movie_id", *primary_extra_columns]
+
+        merged = merged.merge(primary_df[primary_extra_columns], on="movie_id", how="left")
+
+        score_columns = [col for col in merged.columns if col.endswith("_score") and col != "popularity_score"]
+        main_col = score_columns[-1] if score_columns else "popularity_score"
+
+        if main_col not in merged.columns:
+            merged[main_col] = 0.0
+
         merged[main_col] = merged[main_col].fillna(0.0)
-        merged["final_score"] = merged[main_col] + (
-            0.05 * merged.get("popularity_norm", 0.0)
-        )
+        popularity_boost = merged["popularity_norm"] if "popularity_norm" in merged.columns else 0.0
+        merged["final_score"] = merged[main_col] + (0.05 * popularity_boost)
+
+        if "rating_count" not in merged.columns:
+            merged["rating_count"] = 0
+        if "avg_rating" not in merged.columns:
+            merged["avg_rating"] = 0.0
+
         return merged.sort_values(
             ["final_score", "rating_count", "avg_rating"], ascending=False
         ).reset_index(drop=True)

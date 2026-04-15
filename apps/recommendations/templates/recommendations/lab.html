@@ -3,60 +3,121 @@
 {% block title %}Recommendation Lab{% endblock %}
 
 {% block content %}
-<section class="content-section">
+<section class="content-section lab-page">
     <div class="container">
-        <div class="glass-card mb-4">
-            <span class="hero-kicker">Selectable Recommendation</span>
-            <h1 class="mb-2">Recommendation Lab</h1>
+        <div class="glass-card lab-hero mb-4">
+            <div class="lab-hero__layout">
+                <div class="lab-hero__copy">
+                    <span class="hero-kicker">Selectable Recommendation</span>
+                    <h1 class="mb-2">Recommendation Lab</h1>
+                    <p class="text-muted mb-0">
+                        Bu sahifa BMI himoyasi va eksperimental tahlil uchun mo‘ljallangan.
+                        Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli stsenariylar
+                        bo‘yicha natijalarni taqqoslash mumkin.
+                    </p>
+                </div>
+
+                <div class="lab-control-card">
+                    <form method="get" class="lab-control-form">
+                        <div class="lab-control-grid">
+                            <div class="lab-control-item">
+                                <label class="form-label">Target user ID</label>
+                                {{ form.user_id }}
+                                <div class="text-danger small mt-2">{{ form.user_id.errors }}</div>
+                            </div>
+
+                            <div class="lab-control-item">
+                                <label class="form-label">Top-K</label>
+                                {{ form.top_k }}
+                                <div class="text-danger small mt-2">{{ form.top_k.errors }}</div>
+                            </div>
+
+                            <div class="lab-control-item">
+                                <label class="form-label">Model</label>
+                                {{ form.model }}
+                            </div>
+
+                            <div class="lab-control-item">
+                                <label class="form-label">Scenario</label>
+                                {{ form.scenario }}
+                            </div>
+                        </div>
+
+                        <div class="lab-control-actions">
+                            <button type="submit" class="btn btn-primary-gradient">Run Lab</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="glass-card mb-4">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label class="form-label">Target user ID</label>
-                    {{ form.user_id }}
-                    <div class="text-danger small">{{ form.user_id.errors }}</div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Model</label>
-                    {{ form.model }}
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Scenario</label>
-                    {{ form.scenario }}
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Top-K</label>
-                    {{ form.top_k }}
-                </div>
-                <div class="col-md-1 d-grid">
-                    <button type="submit" class="btn btn-primary-gradient">Run</button>
-                </div>
-            </form>
+        <div class="lab-note-grid mb-4">
+            <div class="glass-card lab-note-card">
+                <h5>User ID</h5>
+                <p id="labUserHelp" class="mb-0">
+                    Bu maydon tavsiyalar qaysi foydalanuvchi nomidan hisoblanishini belgilaydi.
+                    Bu login almashtirmaydi, faqat target userni tanlaydi.
+                </p>
+            </div>
+
+            <div class="glass-card lab-note-card">
+                <h5>Model</h5>
+                <p id="labModelHelp" class="mb-0">
+                    Tanlangan modelga qarab tavsiya usuli o‘zgaradi.
+                </p>
+            </div>
+
+            <div class="glass-card lab-note-card">
+                <h5>Scenario</h5>
+                <p id="labScenarioHelp" class="mb-0">
+                    Scenario recommendation tizimi qaysi sharoitda ishlayotganini bildiradi.
+                </p>
+            </div>
+
+            <div class="glass-card lab-note-card">
+                <h5>Top-K</h5>
+                <p id="labTopKHelp" class="mb-0">
+                    Top-K qaytariladigan tavsiyalar sonini bildiradi. Bu yerda 30 bilan cheklanishi
+                    UI va demo nazorati uchun qilingan.
+                </p>
+            </div>
         </div>
 
         {% if result %}
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
-                    <div class="glass-card h-100">
+                    <div class="glass-card h-100 lab-meta-card">
                         <div class="profile-card-head">
                             <h5 class="mb-0">Experiment summary</h5>
                         </div>
-                        <ul class="list-unstyled mt-3 mb-0 small">
-                            <li class="mb-2"><strong>User:</strong> {{ selected_user.username }} (ID={{ selected_user.id }})</li>
-                            <li class="mb-2"><strong>Requested model:</strong> {{ form.cleaned_data.model }}</li>
-                            <li class="mb-2"><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
-                            <li class="mb-2"><strong>Scenario:</strong> {{ result.scenario_label }}</li>
-                            <li class="mb-2"><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
-                            <li class="mb-2"><strong>Preferred genres:</strong>
+
+                        <ul class="list-unstyled mt-3 mb-0 small lab-summary-list">
+                            <li><strong>User:</strong> {{ selected_user.username }} (ID={{ selected_user.id }})</li>
+                            <li>
+                                <strong>Requested model:</strong>
+                                {% if result.requested_model == "auto" %}Auto (Adaptive)
+                                {% elif result.requested_model == "popularity" %}Popularity
+                                {% elif result.requested_model == "content" %}Content-Based
+                                {% elif result.requested_model == "item" %}Item-Based KNN
+                                {% elif result.requested_model == "svd" %}SVD
+                                {% elif result.requested_model == "hybrid" %}Hybrid (Weighted)
+                                {% else %}{{ result.requested_model }}{% endif %}
+                            </li>
+                            <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
+                            <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
+                            <li><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
+                            <li>
+                                <strong>Preferred genres:</strong>
                                 {% if result.preferred_genres %}
                                     {{ result.preferred_genres|join:", " }}
                                 {% else %}
                                     kiritilmagan
                                 {% endif %}
                             </li>
-                            {% if result.weights %}
-                                <li class="mb-2"><strong>Hybrid weights:</strong>
+
+                            {% if result.resolved_model == "hybrid" %}
+                                <li>
+                                    <strong>Hybrid weights:</strong><br>
                                     content={{ result.weights.content|floatformat:2 }},
                                     item={{ result.weights.item|floatformat:2 }},
                                     svd={{ result.weights.svd|floatformat:2 }},
@@ -66,58 +127,153 @@
                         </ul>
                     </div>
                 </div>
+
                 <div class="col-lg-8">
-                    <div class="glass-card h-100">
+                    <div class="glass-card h-100 lab-meta-card">
                         <div class="profile-card-head">
-                            <h5 class="mb-0">Natija va metodologik izoh</h5>
+                            <h5 class="mb-0">Metodologik izoh</h5>
                         </div>
+
                         <div class="mt-3 small text-muted">
-                            <p class="mb-2">Selectable mode production default rejim emas. Bu sahifa alohida request bo'yicha modelni tanlaydi, shu sabab tizimning Auto Recommendation oqimi buzilmaydi.</p>
-                            <p class="mb-0">Cold start stsenariysida tizim tarixiy reytinglardan foydalanishni cheklab, profil janrlari va popularity signalini kuchaytiradi. Explainability esa har bir tavsiya kartasida ko'rsatiladi.</p>
+                            <p class="mb-2">
+                                Selectable Lab production default oqimi emas. Bu sahifa alohida request bo‘yicha
+                                modelni qo‘lda tanlash imkonini beradi, shu sababli odatiy Auto Recommendation
+                                oqimi buzilmaydi.
+                            </p>
+                            <p class="mb-2">
+                                `Auto (Adaptive)` modelida tizim foydalanuvchi tarixiga qarab modelni avtomatik tanlaydi.
+                                `Hybrid (Weighted)` esa doim hybrid formulani majburan ishlatadi.
+                            </p>
+                            <p class="mb-0">
+                                `new_user` stsenariysida item-based va SVD signallari amalda zaiflashadi,
+                                content va popularity signallari esa kuchayadi.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {% if result.recommendations %}
-                <div class="movie-row">
+                <div class="auto-rec-grid lab-results-grid">
                     {% for item in result.recommendations %}
-                        <div class="movie-card">
-                            <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="movie-card-link">
-                                <div class="movie-poster-wrap">
+                        <article class="auto-rec-card lab-result-card">
+                            <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="auto-rec-card__poster-link">
+                                <div class="auto-rec-card__poster-wrap">
                                     {% if item.movie.poster_url %}
-                                        <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="movie-poster">
+                                        <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="auto-rec-card__poster">
                                     {% else %}
-                                        <div class="movie-poster placeholder-poster">
+                                        <div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
                                             <span>{{ item.movie.title|slice:":1" }}</span>
                                         </div>
                                     {% endif %}
                                 </div>
-                                <div class="movie-card-body">
-                                    <h5 class="movie-title">{{ item.movie.title }}</h5>
-                                    <div class="movie-meta">
-                                        {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
-                                        <span>★ {{ item.avg_rating|floatformat:1 }}</span>
-                                        <span>Score {{ item.score|floatformat:3 }}</span>
-                                    </div>
-                                    <div class="movie-genre-chips">
-                                        {% for genre in item.movie.genres.all|slice:":2" %}
-                                            <span class="genre-chip">{{ genre.name }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
                             </a>
-                            <div class="glass-card mt-2 p-3">
-                                <small class="text-muted d-block mb-1">Explainability</small>
-                                <p class="mb-0 small">{{ item.explanation }}</p>
+
+                            <div class="auto-rec-card__body">
+                                <div class="auto-rec-card__title-row">
+                                    <h5 class="auto-rec-card__title">
+                                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}">
+                                            {{ item.movie.title }}
+                                        </a>
+                                    </h5>
+                                </div>
+
+                                <div class="auto-rec-card__country">
+                                    {{ item.movie.country|default:"Noma'lum davlat" }}
+                                </div>
+
+                                <div class="auto-rec-card__stats">
+                                    {% if item.movie.release_year %}
+                                        <span class="auto-rec-pill">{{ item.movie.release_year }}</span>
+                                    {% endif %}
+
+                                    <span class="auto-rec-pill auto-rec-pill--rating">
+                                        ★ {{ item.avg_rating|floatformat:1 }}
+                                    </span>
+
+                                    <span class="auto-rec-pill">
+                                        Score {{ item.score|floatformat:3 }}
+                                    </span>
+                                </div>
+
+                                <div class="auto-rec-card__genres">
+                                    {% for genre in item.movie.genres.all|slice:":2" %}
+                                        <span class="genre-chip">{{ genre.name }}</span>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="lab-explain-box">
+                                    <small class="lab-explain-box__label">Explainability</small>
+                                    <p class="mb-0">{{ item.explanation }}</p>
+                                </div>
                             </div>
-                        </div>
+                        </article>
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="empty-state-card">Tanlangan konfiguratsiya bo'yicha tavsiya qaytmadi.</div>
+                <div class="empty-state-card">Tanlangan konfiguratsiya bo‘yicha tavsiya qaytmadi.</div>
             {% endif %}
         {% endif %}
     </div>
 </section>
+
+<script>
+(function () {
+    const modelField = document.getElementById("id_model");
+    const scenarioField = document.getElementById("id_scenario");
+    const topKField = document.getElementById("id_top_k");
+    const userField = document.getElementById("id_user_id");
+
+    const modelHelp = document.getElementById("labModelHelp");
+    const scenarioHelp = document.getElementById("labScenarioHelp");
+    const topKHelp = document.getElementById("labTopKHelp");
+    const userHelp = document.getElementById("labUserHelp");
+
+    if (!modelField || !scenarioField || !topKField || !userField) return;
+
+    const MODEL_INFO = {
+        auto: "Auto (Adaptive) foydalanuvchi tarixi va scenario asosida modelni avtomatik tanlaydi. Bu productionga eng yaqin tajriba rejimi.",
+        popularity: "Popularity faqat ommaboplik signaliga tayanadi. Cold-start va yangi foydalanuvchilar uchun tushunarli baseline hisoblanadi.",
+        content: "Content-Based title, overview, genres, director, cast, language va country kabi meta-ma’lumotlar asosida o‘xshashlik topadi.",
+        item: "Item-Based KNN foydalanuvchi baholagan filmlarga o‘xshash boshqa filmlarni topadi. Tarix kam bo‘lsa kuchsizlashadi.",
+        svd: "SVD latent faktorlar orqali foydalanuvchi dididagi yashirin naqshlarni topishga harakat qiladi. Yetarli tarix bo‘lsa foydali.",
+        hybrid: "Hybrid (Weighted) content, item, svd va popularity signallarini vazn bilan qo‘shadi."
+    };
+
+    const SCENARIO_INFO = {
+        normal: "Normal scenario odatiy foydalanuvchi uchun ishlaydi. Tizim tarixiy reytinglar va boshqa signallardan to‘liq foydalanadi.",
+        new_user: "New user cold start scenario foydalanuvchi tarixsiz holatini simulyatsiya qiladi. Bu rejimda content/popularity signali ustunroq bo‘ladi."
+    };
+
+    function updateLabNotes() {
+        const modelValue = modelField.value || "auto";
+        const scenarioValue = scenarioField.value || "normal";
+        const topKValue = topKField.value || "10";
+        const userValue = userField.value || "joriy user";
+
+        if (modelHelp) {
+            modelHelp.textContent = MODEL_INFO[modelValue] || "Tanlangan modelga qarab tavsiya usuli o‘zgaradi.";
+        }
+
+        if (scenarioHelp) {
+            scenarioHelp.textContent = SCENARIO_INFO[scenarioValue] || "Tanlangan scenario recommendation tizimining sharoitini belgilaydi.";
+        }
+
+        if (topKHelp) {
+            topKHelp.textContent = `Top-K = ${topKValue}. Bu qaytariladigan tavsiyalar soni. Lab UI’da max 30 bo‘lishi sahifani boshqariladigan va tez saqlash uchun qilingan.`;
+        }
+
+        if (userHelp) {
+            userHelp.textContent = `Hozir target user: ${userValue}. Bu login almashtirmaydi, faqat qaysi user uchun tavsiya hisoblanishini belgilaydi.`;
+        }
+    }
+
+    modelField.addEventListener("change", updateLabNotes);
+    scenarioField.addEventListener("change", updateLabNotes);
+    topKField.addEventListener("input", updateLabNotes);
+    userField.addEventListener("input", updateLabNotes);
+
+    updateLabNotes();
+})();
+</script>
 {% endblock %}
