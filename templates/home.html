@@ -1,37 +1,199 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{ t.site_name }}{% endblock %}
+{% block title %}{{ t.site_name }} — Onlayn Kino Platformasi{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+
+{# ─── HERO ─────────────────────────────────────────────────── #}
 {% include "includes/hero_banner.html" %}
 
-{% if user.is_authenticated %}
-<section class="content-section">
+{# ─── STATS ───────────────────────────────────────────────── #}
+<section class="stats-section">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-            <div>
-                <span class="hero-kicker">Auto Recommendation</span>
-                <h2 class="mb-1">Siz uchun tavsiyalar</h2>
-                <p class="text-muted mb-0">Tizim sizning baholaringiz va profil janrlaringiz asosida avtomatik gibrid strategiya tanlaydi.</p>
+        <div class="stats-grid reveal">
+            <div class="stat-cell">
+                <span class="stat-icon">👥</span>
+                <span class="stat-number" data-count="152000" data-suffix="+">0</span>
+                <span class="stat-label">Foydalanuvchilar</span>
             </div>
-            <a href="{% url 'recommend_for_you' %}" class="btn btn-primary-gradient">To'liq ko'rish</a>
+            <div class="stat-cell">
+                <span class="stat-icon">🎬</span>
+                <span class="stat-number" data-count="58400" data-suffix="+">0</span>
+                <span class="stat-label">Film bazasi</span>
+            </div>
+            <div class="stat-cell">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-number" data-count="2700000" data-suffix="+">0</span>
+                <span class="stat-label">Berilgan baholar</span>
+            </div>
+            <div class="stat-cell">
+                <span class="stat-icon">🤖</span>
+                <span class="stat-number" data-count="98" data-suffix="%">0</span>
+                <span class="stat-label">Qoniqish darajasi</span>
+            </div>
         </div>
+    </div>
+</section>
 
-        <div class="movie-row">
+{# ─── GENRE TICKER ─────────────────────────────────────────── #}
+<div class="genre-ticker-section">
+    <div class="genre-ticker-inner">
+        <div class="genre-ticker-track" id="genreTicker">
+            <a href="{% url 'movie_list' %}?genre=action"    class="genre-chip-ticker">🔥 Action</a>
+            <a href="{% url 'movie_list' %}?genre=drama"     class="genre-chip-ticker">🎭 Drama</a>
+            <a href="{% url 'movie_list' %}?genre=comedy"    class="genre-chip-ticker">😄 Comedy</a>
+            <a href="{% url 'movie_list' %}?genre=thriller"  class="genre-chip-ticker">😱 Thriller</a>
+            <a href="{% url 'movie_list' %}?genre=horror"    class="genre-chip-ticker">👻 Horror</a>
+            <a href="{% url 'movie_list' %}?genre=romance"   class="genre-chip-ticker">💕 Romance</a>
+            <a href="{% url 'movie_list' %}?genre=sci-fi"    class="genre-chip-ticker">🚀 Sci‑Fi</a>
+            <a href="{% url 'movie_list' %}?genre=animation" class="genre-chip-ticker">✨ Animation</a>
+            <a href="{% url 'movie_list' %}?genre=fantasy"   class="genre-chip-ticker">🧙 Fantasy</a>
+            <a href="{% url 'movie_list' %}?genre=crime"     class="genre-chip-ticker">🕵️ Crime</a>
+            <a href="{% url 'movie_list' %}?genre=adventure" class="genre-chip-ticker">🌍 Adventure</a>
+            <a href="{% url 'movie_list' %}?genre=documentary" class="genre-chip-ticker">📹 Documentary</a>
+            <a href="{% url 'movie_list' %}?genre=history"   class="genre-chip-ticker">🏛️ History</a>
+            <a href="{% url 'movie_list' %}?genre=music"     class="genre-chip-ticker">🎵 Music</a>
+            <a href="{% url 'movie_list' %}?genre=biography" class="genre-chip-ticker">📖 Biography</a>
+            <!-- Duplicate for seamless loop -->
+            <a href="{% url 'movie_list' %}?genre=action"    class="genre-chip-ticker">🔥 Action</a>
+            <a href="{% url 'movie_list' %}?genre=drama"     class="genre-chip-ticker">🎭 Drama</a>
+            <a href="{% url 'movie_list' %}?genre=comedy"    class="genre-chip-ticker">😄 Comedy</a>
+            <a href="{% url 'movie_list' %}?genre=thriller"  class="genre-chip-ticker">😱 Thriller</a>
+            <a href="{% url 'movie_list' %}?genre=horror"    class="genre-chip-ticker">👻 Horror</a>
+            <a href="{% url 'movie_list' %}?genre=romance"   class="genre-chip-ticker">💕 Romance</a>
+            <a href="{% url 'movie_list' %}?genre=sci-fi"    class="genre-chip-ticker">🚀 Sci‑Fi</a>
+            <a href="{% url 'movie_list' %}?genre=animation" class="genre-chip-ticker">✨ Animation</a>
+            <a href="{% url 'movie_list' %}?genre=fantasy"   class="genre-chip-ticker">🧙 Fantasy</a>
+            <a href="{% url 'movie_list' %}?genre=crime"     class="genre-chip-ticker">🕵️ Crime</a>
+            <a href="{% url 'movie_list' %}?genre=adventure" class="genre-chip-ticker">🌍 Adventure</a>
+            <a href="{% url 'movie_list' %}?genre=documentary" class="genre-chip-ticker">📹 Documentary</a>
+            <a href="{% url 'movie_list' %}?genre=history"   class="genre-chip-ticker">🏛️ History</a>
+            <a href="{% url 'movie_list' %}?genre=music"     class="genre-chip-ticker">🎵 Music</a>
+            <a href="{% url 'movie_list' %}?genre=biography" class="genre-chip-ticker">📖 Biography</a>
+        </div>
+    </div>
+</div>
+
+{# ─── WHY KINOCLONE ────────────────────────────────────────── #}
+<section class="why-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-5 mb-lg-0 reveal">
+                <div class="section-eyebrow">Nima uchun biz?</div>
+                <h2 class="section-headline">BOSHQA SAYTLARDAN<br><span class="title-accent">FARQIMIZ</span></h2>
+                <p class="section-subtext">
+                    Oddiy kino ro'yxatidan farqli o'laroq, {{ t.site_name }} AI tavsiya tizimi orqali
+                    har bir foydalanuvchiga shaxsiylashtirilgan kino tajribasi taklif etadi.
+                </p>
+            </div>
+            <div class="col-lg-7">
+                <div class="features-grid">
+                    <div class="feature-card reveal reveal-delay-1">
+                        <div class="feature-card-glow" style="background: rgba(124,92,255,0.4);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(124,92,255,0.12); --icon-border: rgba(124,92,255,0.25);">🤖</div>
+                        <div class="feature-title">Gibrid AI Tavsiya</div>
+                        <div class="feature-desc">
+                            Content-based (60%) + Collaborative Filtering (40%) kombinatsiyasi — boshqa saytlarda yo'q aralash strategiya.
+                        </div>
+                        <span class="feature-badge">Exclusive</span>
+                    </div>
+
+                    <div class="feature-card reveal reveal-delay-2">
+                        <div class="feature-card-glow" style="background: rgba(76,201,240,0.35);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(76,201,240,0.1); --icon-border: rgba(76,201,240,0.22);">🌐</div>
+                        <div class="feature-title">3 tilda ishlaydi</div>
+                        <div class="feature-desc">
+                            O'zbek, Rus va Ingliz tillarida to'liq qo'llab-quvvatlash. Har bir foydalanuvchi o'z tilida.
+                        </div>
+                        <span class="feature-badge">UZ · RU · EN</span>
+                    </div>
+
+                    <div class="feature-card reveal reveal-delay-3">
+                        <div class="feature-card-glow" style="background: rgba(56,211,159,0.3);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(56,211,159,0.1); --icon-border: rgba(56,211,159,0.22);">⚡</div>
+                        <div class="feature-title">Real vaqt tahlili</div>
+                        <div class="feature-desc">
+                            Har bir baho va ko'rishdan so'ng tavsiyalar avtomatik yangilanadi. Qanchalik ko'p ishlatsangiz, shunchalik aniq.
+                        </div>
+                        <span class="feature-badge">Live Updates</span>
+                    </div>
+
+                    <div class="feature-card reveal reveal-delay-1">
+                        <div class="feature-card-glow" style="background: rgba(255,200,61,0.3);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(255,200,61,0.1); --icon-border: rgba(255,200,61,0.22);">⭐</div>
+                        <div class="feature-title">Batafsil reyting</div>
+                        <div class="feature-desc">
+                            Faqat umumiy baho emas — janr bo'yicha, davlat bo'yicha va yil bo'yicha reytinglar alohida ko'rsatiladi.
+                        </div>
+                        <span class="feature-badge">Deep Analytics</span>
+                    </div>
+
+                    <div class="feature-card reveal reveal-delay-2">
+                        <div class="feature-card-glow" style="background: rgba(255,93,115,0.3);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(255,93,115,0.1); --icon-border: rgba(255,93,115,0.22);">❤️</div>
+                        <div class="feature-title">Sevimlilar ro'yxati</div>
+                        <div class="feature-desc">
+                            Ko'rmoqchi filmlaringizni saqlang, ko'rganlaringizni belgilang va tarixingizni kuzating.
+                        </div>
+                        <span class="feature-badge">Personal</span>
+                    </div>
+
+                    <div class="feature-card reveal reveal-delay-3">
+                        <div class="feature-card-glow" style="background: rgba(124,92,255,0.35);"></div>
+                        <div class="feature-icon-wrap" style="--icon-bg: rgba(124,92,255,0.1); --icon-border: rgba(124,92,255,0.22);">🔒</div>
+                        <div class="feature-title">Bepul & Xavfsiz</div>
+                        <div class="feature-desc">
+                            Hech qanday reklama yo'q, maxfiylik kafolatlangan. Ro'yxatdan o'ting va barcha imkoniyatlardan foydalaning.
+                        </div>
+                        <span class="feature-badge">Free Forever</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ─── PERSONALIZED RECS ────────────────────────────────────── #}
+{% if user.is_authenticated %}
+<section class="home-section">
+    <div class="container">
+        <div class="home-section-header reveal">
+            <div>
+                <h2 class="home-section-title">🎯 Siz uchun tavsiyalar</h2>
+                <p class="home-section-sub">Tizim sizning baholaringiz asosida avtomatik tanlangan</p>
+            </div>
+            <a href="{% url 'recommend_for_you' %}" class="home-section-link">
+                To'liqini ko'rish →
+            </a>
+        </div>
+        <div class="movie-row reveal">
             {% for item in personalized_recommendations %}
                 {% include "includes/movie_card.html" with movie=item.movie %}
             {% empty %}
-                <div class="empty-state-card">Tavsiyalarni kuchaytirish uchun bir nechta filmga baho bering yoki profil janrlarini tanlang.</div>
+                <div class="empty-state-card">
+                    Tavsiyalarni kuchaytirish uchun bir nechta filmga baho bering yoki profil janrlarini tanlang.
+                </div>
             {% endfor %}
         </div>
     </div>
 </section>
 {% endif %}
 
-<section class="content-section">
+{# ─── FEATURED MOVIES ──────────────────────────────────────── #}
+<section class="home-section">
     <div class="container">
-        {% include "includes/section_header.html" with title=t.featured subtitle=t.explore_now %}
-        <div class="movie-row">
+        <div class="home-section-header reveal">
+            <div>
+                <h2 class="home-section-title">🔥 {{ t.featured }}</h2>
+                <p class="home-section-sub">Eng ko'p ko'rilgan va muhokama qilingan filmlar</p>
+            </div>
+            <a href="{% url 'movie_list' %}" class="home-section-link">
+                {{ t.explore_now|default:"Barchasini ko'rish" }} →
+            </a>
+        </div>
+        <div class="movie-row reveal">
             {% for movie in featured_movies %}
                 {% include "includes/movie_card.html" with movie=movie %}
             {% empty %}
@@ -41,10 +203,41 @@
     </div>
 </section>
 
-<section class="content-section">
+{# ─── CTA BANNER ───────────────────────────────────────────── #}
+{% if not user.is_authenticated %}
+<div class="container">
+    <div class="home-cta-banner reveal">
+        <div>
+            <div class="home-cta-title">🚀 BUGUN RO'YXATDAN O'TING</div>
+            <p class="home-cta-sub">
+                Shaxsiy tavsiyalar, sevimlilar ro'yxati va boshqa ko'plab imkoniyatlardan foydalaning. Bepul.
+            </p>
+        </div>
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="{% url 'register' %}" class="btn-cinema-primary">
+                ✨ Bepul ro'yxatdan o'tish
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light" style="border-radius: 999px; padding: 14px 28px; font-weight: 600;">
+                Kirish
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{# ─── TOP RATED ────────────────────────────────────────────── #}
+<section class="home-section">
     <div class="container">
-        {% include "includes/section_header.html" with title=t.top_rated subtitle=t.cinematic_experience %}
-        <div class="movie-row">
+        <div class="home-section-header reveal">
+            <div>
+                <h2 class="home-section-title">🏆 {{ t.top_rated }}</h2>
+                <p class="home-section-sub">{{ t.cinematic_experience }} — yuqori baholangan masterpiece'lar</p>
+            </div>
+            <a href="{% url 'movie_list' %}?sort=rating" class="home-section-link">
+                To'liq reyting →
+            </a>
+        </div>
+        <div class="movie-row reveal">
             {% for movie in top_rated_movies %}
                 {% include "includes/movie_card.html" with movie=movie %}
             {% empty %}
@@ -53,4 +246,51 @@
         </div>
     </div>
 </section>
+
+{# ─── HOME PAGE SCRIPTS ───────────────────────────────────── #}
+<script>
+/* ── Counter animation ─────────────────────────────────── */
+function animateCounter(el) {
+    const target  = parseInt(el.dataset.count, 10);
+    const suffix  = el.dataset.suffix || '';
+    const dur     = 1800;
+    const start   = performance.now();
+
+    function fmt(n) {
+        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (n >= 1000)    return (n / 1000).toFixed(0) + 'K';
+        return n.toString();
+    }
+
+    function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 4);
+        const cur  = Math.round(ease * target);
+        el.textContent = fmt(cur) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+/* ── Scroll reveal ─────────────────────────────────────── */
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add('visible');
+
+        // Trigger counters inside this element
+        el.querySelectorAll('[data-count]').forEach(animateCounter);
+        io.unobserve(el);
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal, .stats-grid').forEach(el => io.observe(el));
+
+// Also observe individual stat-cells for stagger
+document.querySelectorAll('.stat-cell').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+    io.observe(el);
+});
+</script>
 {% endblock %}

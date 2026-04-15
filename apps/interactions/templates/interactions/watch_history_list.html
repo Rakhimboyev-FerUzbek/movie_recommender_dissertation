@@ -16,16 +16,55 @@
             </div>
 
             <div class="glass-card interaction-filter-card interaction-filter-card--top">
-                <form method="get" class="interaction-filter-form">
+                <form method="get" class="interaction-filter-form" id="interactionFilterForm">
                     <div class="interaction-filter-grid">
                         <div>
                             <label class="form-label">Qidiruv</label>
-                            <input type="text" name="q" class="form-control" value="{{ selected_query }}" placeholder="Film nomi bo'yicha qidiring...">
+                            <input
+                                type="text"
+                                name="q"
+                                id="interactionSearchInput"
+                                class="form-control"
+                                value="{{ selected_query }}"
+                                placeholder="Film nomi bo'yicha qidiring..."
+                                autocomplete="off"
+                            >
                         </div>
+
                         <div>
                             <label class="form-label">Saralash</label>
-                            {{ form.sort }}
+                            <input type="hidden" name="sort" id="interactionSortValue" value="{{ selected_sort }}">
+
+                            <div class="interaction-sort-row">
+                                <div class="interaction-sort-select" id="interactionSortSelect">
+                                    <button type="button" class="interaction-sort-select__trigger" id="interactionSortTrigger">
+                                        <span id="interactionSortTriggerLabel">Oxirgi ko'rilgan</span>
+                                        <span class="interaction-sort-select__chevron"></span>
+                                    </button>
+
+                                    <div class="interaction-sort-select__menu" id="interactionSortMenu">
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="date">Oxirgi ko'rilgan</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="watch_count">Ko'rish soni</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="title">Nom</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="year">Yil</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="count">Baho soni</button>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    id="interactionSortDirection"
+                                    class="interaction-sort-direction"
+                                    data-desc="true"
+                                    title="Saralash yo'nalishi"
+                                    aria-label="Saralash yo'nalishi"
+                                >
+                                    <span class="interaction-sort-direction__icon">↓</span>
+                                    <span class="interaction-sort-direction__text">Kamayish</span>
+                                </button>
+                            </div>
                         </div>
+
                         <div class="interaction-filter-actions">
                             <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
                             <a href="{% url 'watch_history_list' %}" class="btn btn-outline-soft">Tozalash</a>
@@ -56,6 +95,7 @@
                                     <div class="interaction-meta-line">
                                         {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
                                         <span class="interaction-chip">Ko'rishlar: {{ item.watch_count }}</span>
+                                        <span>{{ item.movie.rating_count }} ta baho</span>
                                     </div>
                                 </div>
                                 <span class="interaction-chip">Oxirgi: {{ item.watched_at|date:"Y-m-d H:i" }}</span>
@@ -75,4 +115,188 @@
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const form = document.getElementById("interactionFilterForm");
+    const searchInput = document.getElementById("interactionSearchInput");
+    const resultsContainer = document.getElementById("interactionResults");
+
+    const sortHidden = document.getElementById("interactionSortValue");
+    const sortRoot = document.getElementById("interactionSortSelect");
+    const sortTrigger = document.getElementById("interactionSortTrigger");
+    const sortMenu = document.getElementById("interactionSortMenu");
+    const sortLabel = document.getElementById("interactionSortTriggerLabel");
+    const sortDirectionBtn = document.getElementById("interactionSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".interaction-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".interaction-sort-direction__text");
+
+    if (!form || !searchInput || !resultsContainer) return;
+
+    let timer = null;
+    let controller = null;
+
+    const FIELD_LABELS = {
+        date: "Oxirgi ko'rilgan",
+        watch_count: "Ko'rish soni",
+        title: "Nom",
+        year: "Yil",
+        count: "Baho soni",
+    };
+
+    function encodeSort(field, desc) {
+        if (field === "date") return desc ? "recent" : "oldest";
+        if (field === "watch_count") return desc ? "watch_count_desc" : "watch_count_asc";
+        if (field === "title") return desc ? "title_desc" : "title_asc";
+        if (field === "year") return desc ? "year_desc" : "year_asc";
+        if (field === "count") return desc ? "count_desc" : "count_asc";
+        return "recent";
+    }
+
+    function decodeSort(value) {
+        const map = {
+            "recent": { field: "date", desc: true },
+            "oldest": { field: "date", desc: false },
+            "watch_count_desc": { field: "watch_count", desc: true },
+            "watch_count_asc": { field: "watch_count", desc: false },
+            "title_desc": { field: "title", desc: true },
+            "title_asc": { field: "title", desc: false },
+            "year_desc": { field: "year", desc: true },
+            "year_asc": { field: "year", desc: false },
+            "count_desc": { field: "count", desc: true },
+            "count_asc": { field: "count", desc: false },
+        };
+        return map[value || "recent"] || { field: "date", desc: true };
+    }
+
+    function syncSortUi() {
+        const decoded = decodeSort(sortHidden.value);
+        sortLabel.textContent = FIELD_LABELS[decoded.field] || "Oxirgi ko'rilgan";
+
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
+            btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
+        });
+
+        sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
+        sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
+        sortDirectionText.textContent = decoded.desc ? "" : "";
+    }
+
+    function closeAll() {
+        sortRoot.classList.remove("is-open");
+    }
+
+    function buildQueryString() {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            if (key === "page") continue;
+            if (value !== "") params.append(key, value);
+        }
+
+        return params.toString();
+    }
+
+    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
+        const activeElement = document.activeElement;
+        const isSearchFocused = preserveCaret && activeElement === searchInput;
+        const start = searchInput.selectionStart;
+        const end = searchInput.selectionEnd;
+
+        const targetUrl = explicitUrl || (function () {
+            const query = buildQueryString();
+            return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+        })();
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                signal: controller.signal,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextResults = doc.getElementById("interactionResults");
+            if (!nextResults) return;
+
+            resultsContainer.innerHTML = nextResults.innerHTML;
+
+            if (pushUrl) {
+                window.history.replaceState({}, "", targetUrl);
+            }
+
+            if (isSearchFocused) {
+                searchInput.focus();
+                if (typeof start === "number" && typeof end === "number") {
+                    searchInput.setSelectionRange(start, end);
+                }
+            }
+        } catch (error) {
+            if (error.name !== "AbortError") console.error(error);
+        }
+    }
+
+    sortTrigger.addEventListener("click", function () {
+        sortRoot.classList.toggle("is-open");
+    });
+
+    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+        option.addEventListener("click", function () {
+            const field = this.dataset.sortField || "date";
+            sortHidden.value = encodeSort(field, true);
+            sortRoot.classList.remove("is-open");
+            syncSortUi();
+            fetchAndReplaceResults(true, false);
+        });
+    });
+
+    sortDirectionBtn.addEventListener("click", function () {
+        const decoded = decodeSort(sortHidden.value);
+        sortHidden.value = encodeSort(decoded.field, !decoded.desc);
+        syncSortUi();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".interaction-sort-select")) closeAll();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeAll();
+    });
+
+    searchInput.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fetchAndReplaceResults(true, true);
+        }, 350);
+    });
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("click", function (event) {
+        const link = event.target.closest("#interactionResults .pagination a");
+        if (!link) return;
+
+        event.preventDefault();
+        const href = link.getAttribute("href");
+        if (!href) return;
+
+        fetchAndReplaceResults(true, false, href);
+    });
+
+    syncSortUi();
+})();
+</script>
 {% endblock %}

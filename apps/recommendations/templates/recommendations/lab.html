@@ -12,8 +12,8 @@
                     <h1 class="mb-2">Recommendation Lab</h1>
                     <p class="text-muted mb-0">
                         Bu sahifa BMI himoyasi va eksperimental tahlil uchun mo‘ljallangan.
-                        Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli stsenariylar
-                        bo‘yicha natijalarni taqqoslash mumkin.
+                        Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli
+                        stsenariylar bo‘yicha natijalarni taqqoslash mumkin.
                     </p>
                 </div>
 
@@ -51,58 +51,64 @@
             </div>
         </div>
 
-        <div class="lab-note-grid mb-4">
-            <div class="glass-card lab-note-card">
-                <h5>User ID</h5>
-                <p id="labUserHelp" class="mb-0">
-                    Bu maydon tavsiyalar qaysi foydalanuvchi nomidan hisoblanishini belgilaydi.
-                    Bu login almashtirmaydi, faqat target userni tanlaydi.
-                </p>
-            </div>
-
-            <div class="glass-card lab-note-card">
-                <h5>Model</h5>
-                <p id="labModelHelp" class="mb-0">
-                    Tanlangan modelga qarab tavsiya usuli o‘zgaradi.
-                </p>
-            </div>
-
-            <div class="glass-card lab-note-card">
-                <h5>Scenario</h5>
-                <p id="labScenarioHelp" class="mb-0">
-                    Scenario recommendation tizimi qaysi sharoitda ishlayotganini bildiradi.
-                </p>
-            </div>
-
-            <div class="glass-card lab-note-card">
-                <h5>Top-K</h5>
-                <p id="labTopKHelp" class="mb-0">
-                    Top-K qaytariladigan tavsiyalar sonini bildiradi. Bu yerda 30 bilan cheklanishi
-                    UI va demo nazorati uchun qilingan.
-                </p>
-            </div>
-        </div>
-
         {% if result %}
+            <div class="glass-card lab-results-filter-card mb-4">
+                <div class="lab-results-filter-grid">
+                    <div class="lab-results-filter-item">
+                        <label class="form-label">Qidiruv</label>
+                        <input
+                            type="text"
+                            id="labResultSearch"
+                            class="form-control"
+                            placeholder="Film nomi bo'yicha qidiring..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="lab-results-filter-item">
+                        <label class="form-label">Saralash</label>
+
+                        <div class="lab-sort-row">
+                            <div class="lab-sort-select" id="labSortSelect">
+                                <button type="button" class="lab-sort-select__trigger" id="labSortTrigger">
+                                    <span id="labSortTriggerLabel">Standart</span>
+                                    <span class="lab-sort-select__chevron"></span>
+                                </button>
+
+                                <div class="lab-sort-select__menu" id="labSortMenu">
+                                    <button type="button" class="lab-sort-select__option is-active" data-sort-field="default">Standart</button>
+                                    <button type="button" class="lab-sort-select__option" data-sort-field="score">Score</button>
+                                    <button type="button" class="lab-sort-select__option" data-sort-field="rating">Reyting</button>
+                                    <button type="button" class="lab-sort-select__option" data-sort-field="year">Yil</button>
+                                    <button type="button" class="lab-sort-select__option" data-sort-field="title">Nom</button>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                id="labSortDirection"
+                                class="lab-sort-direction"
+                                data-desc="true"
+                                title="Saralash yo'nalishi"
+                                aria-label="Saralash yo'nalishi"
+                            >
+                                <span class="lab-sort-direction__icon">•</span>
+                                <span class="lab-sort-direction__text">Standart</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
                     <div class="glass-card h-100 lab-meta-card">
                         <div class="profile-card-head">
                             <h5 class="mb-0">Experiment summary</h5>
                         </div>
-
                         <ul class="list-unstyled mt-3 mb-0 small lab-summary-list">
                             <li><strong>User:</strong> {{ selected_user.username }} (ID={{ selected_user.id }})</li>
-                            <li>
-                                <strong>Requested model:</strong>
-                                {% if result.requested_model == "auto" %}Auto (Adaptive)
-                                {% elif result.requested_model == "popularity" %}Popularity
-                                {% elif result.requested_model == "content" %}Content-Based
-                                {% elif result.requested_model == "item" %}Item-Based KNN
-                                {% elif result.requested_model == "svd" %}SVD
-                                {% elif result.requested_model == "hybrid" %}Hybrid (Weighted)
-                                {% else %}{{ result.requested_model }}{% endif %}
-                            </li>
+                            <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
                             <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
                             <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
                             <li><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
@@ -114,8 +120,7 @@
                                     kiritilmagan
                                 {% endif %}
                             </li>
-
-                            {% if result.resolved_model == "hybrid" %}
+                            {% if result.weights %}
                                 <li>
                                     <strong>Hybrid weights:</strong><br>
                                     content={{ result.weights.content|floatformat:2 }},
@@ -131,22 +136,20 @@
                 <div class="col-lg-8">
                     <div class="glass-card h-100 lab-meta-card">
                         <div class="profile-card-head">
-                            <h5 class="mb-0">Metodologik izoh</h5>
+                            <h5 class="mb-0">Natija va metodologik izoh</h5>
                         </div>
-
                         <div class="mt-3 small text-muted">
                             <p class="mb-2">
-                                Selectable Lab production default oqimi emas. Bu sahifa alohida request bo‘yicha
-                                modelni qo‘lda tanlash imkonini beradi, shu sababli odatiy Auto Recommendation
-                                oqimi buzilmaydi.
+                                Selectable mode production default rejim emas. Bu sahifa alohida request bo‘yicha
+                                modelni tanlaydi, shu sabab tizimning Auto Recommendation oqimi buzilmaydi.
                             </p>
                             <p class="mb-2">
-                                `Auto (Adaptive)` modelida tizim foydalanuvchi tarixiga qarab modelni avtomatik tanlaydi.
-                                `Hybrid (Weighted)` esa doim hybrid formulani majburan ishlatadi.
+                                Cold start stsenariysida tizim tarixiy reytinglardan foydalanishni cheklab,
+                                profil janrlari va popularity signalini kuchaytiradi.
                             </p>
                             <p class="mb-0">
-                                `new_user` stsenariysida item-based va SVD signallari amalda zaiflashadi,
-                                content va popularity signallari esa kuchayadi.
+                                Quyidagi natijalar frontend ichida qidiruv va qayta saralash bilan ko‘riladi,
+                                ammo recommendation score’ning asl hisoblash logikasi o‘zgarmaydi.
                             </p>
                         </div>
                     </div>
@@ -154,9 +157,16 @@
             </div>
 
             {% if result.recommendations %}
-                <div class="auto-rec-grid lab-results-grid">
+                <div id="labResultsGrid" class="auto-rec-grid lab-results-grid">
                     {% for item in result.recommendations %}
-                        <article class="auto-rec-card lab-result-card">
+                        <article
+                            class="auto-rec-card lab-result-card"
+                            data-index="{{ forloop.counter0 }}"
+                            data-title="{{ item.movie.title|lower|escape }}"
+                            data-year="{{ item.movie.release_year|default:0 }}"
+                            data-rating="{{ item.avg_rating }}"
+                            data-score="{{ item.score|default:0 }}"
+                        >
                             <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="auto-rec-card__poster-link">
                                 <div class="auto-rec-card__poster-wrap">
                                     {% if item.movie.poster_url %}
@@ -219,61 +229,148 @@
 
 <script>
 (function () {
-    const modelField = document.getElementById("id_model");
-    const scenarioField = document.getElementById("id_scenario");
-    const topKField = document.getElementById("id_top_k");
-    const userField = document.getElementById("id_user_id");
+    const grid = document.getElementById("labResultsGrid");
+    if (!grid) return;
 
-    const modelHelp = document.getElementById("labModelHelp");
-    const scenarioHelp = document.getElementById("labScenarioHelp");
-    const topKHelp = document.getElementById("labTopKHelp");
-    const userHelp = document.getElementById("labUserHelp");
+    const searchInput = document.getElementById("labResultSearch");
+    const sortRoot = document.getElementById("labSortSelect");
+    const sortTrigger = document.getElementById("labSortTrigger");
+    const sortMenu = document.getElementById("labSortMenu");
+    const sortLabel = document.getElementById("labSortTriggerLabel");
+    const sortDirectionBtn = document.getElementById("labSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".lab-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".lab-sort-direction__text");
 
-    if (!modelField || !scenarioField || !topKField || !userField) return;
+    const cards = Array.from(grid.querySelectorAll(".lab-result-card"));
+    let currentField = "default";
+    let currentDesc = true;
 
-    const MODEL_INFO = {
-        auto: "Auto (Adaptive) foydalanuvchi tarixi va scenario asosida modelni avtomatik tanlaydi. Bu productionga eng yaqin tajriba rejimi.",
-        popularity: "Popularity faqat ommaboplik signaliga tayanadi. Cold-start va yangi foydalanuvchilar uchun tushunarli baseline hisoblanadi.",
-        content: "Content-Based title, overview, genres, director, cast, language va country kabi meta-ma’lumotlar asosida o‘xshashlik topadi.",
-        item: "Item-Based KNN foydalanuvchi baholagan filmlarga o‘xshash boshqa filmlarni topadi. Tarix kam bo‘lsa kuchsizlashadi.",
-        svd: "SVD latent faktorlar orqali foydalanuvchi dididagi yashirin naqshlarni topishga harakat qiladi. Yetarli tarix bo‘lsa foydali.",
-        hybrid: "Hybrid (Weighted) content, item, svd va popularity signallarini vazn bilan qo‘shadi."
+    const FIELD_LABELS = {
+        default: "Standart",
+        score: "Score",
+        rating: "Reyting",
+        year: "Yil",
+        title: "Nom",
     };
 
-    const SCENARIO_INFO = {
-        normal: "Normal scenario odatiy foydalanuvchi uchun ishlaydi. Tizim tarixiy reytinglar va boshqa signallardan to‘liq foydalanadi.",
-        new_user: "New user cold start scenario foydalanuvchi tarixsiz holatini simulyatsiya qiladi. Bu rejimda content/popularity signali ustunroq bo‘ladi."
-    };
+    function defaultDirectionFor(field) {
+        if (field === "title") return false;
+        if (field === "default") return true;
+        return true;
+    }
 
-    function updateLabNotes() {
-        const modelValue = modelField.value || "auto";
-        const scenarioValue = scenarioField.value || "normal";
-        const topKValue = topKField.value || "10";
-        const userValue = userField.value || "joriy user";
+    function closeAll() {
+        if (sortRoot) sortRoot.classList.remove("is-open");
+    }
 
-        if (modelHelp) {
-            modelHelp.textContent = MODEL_INFO[modelValue] || "Tanlangan modelga qarab tavsiya usuli o‘zgaradi.";
-        }
+    function syncSortUi() {
+        sortLabel.textContent = FIELD_LABELS[currentField] || "Standart";
 
-        if (scenarioHelp) {
-            scenarioHelp.textContent = SCENARIO_INFO[scenarioValue] || "Tanlangan scenario recommendation tizimining sharoitini belgilaydi.";
-        }
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
+            btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
+        });
 
-        if (topKHelp) {
-            topKHelp.textContent = `Top-K = ${topKValue}. Bu qaytariladigan tavsiyalar soni. Lab UI’da max 30 bo‘lishi sahifani boshqariladigan va tez saqlash uchun qilingan.`;
-        }
-
-        if (userHelp) {
-            userHelp.textContent = `Hozir target user: ${userValue}. Bu login almashtirmaydi, faqat qaysi user uchun tavsiya hisoblanishini belgilaydi.`;
+        if (currentField === "default") {
+            sortDirectionBtn.disabled = true;
+            sortDirectionBtn.classList.add("is-disabled");
+            sortDirectionIcon.textContent = "•";
+            sortDirectionText.textContent = "Standart";
+        } else {
+            sortDirectionBtn.disabled = false;
+            sortDirectionBtn.classList.remove("is-disabled");
+            sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
+            sortDirectionText.textContent = currentDesc ? "" : "";
         }
     }
 
-    modelField.addEventListener("change", updateLabNotes);
-    scenarioField.addEventListener("change", updateLabNotes);
-    topKField.addEventListener("input", updateLabNotes);
-    userField.addEventListener("input", updateLabNotes);
+    function sortCards(filteredCards) {
+        if (currentField === "default") {
+            return [...filteredCards].sort((a, b) => {
+                return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
+            });
+        }
 
-    updateLabNotes();
+        return [...filteredCards].sort((a, b) => {
+            const titleA = a.dataset.title || "";
+            const titleB = b.dataset.title || "";
+            const yearA = parseInt(a.dataset.year || "0", 10);
+            const yearB = parseInt(b.dataset.year || "0", 10);
+            const ratingA = parseFloat(a.dataset.rating || "0");
+            const ratingB = parseFloat(b.dataset.rating || "0");
+            const scoreA = parseFloat(a.dataset.score || "0");
+            const scoreB = parseFloat(b.dataset.score || "0");
+
+            let result = 0;
+
+            if (currentField === "title") {
+                result = titleA.localeCompare(titleB);
+            } else if (currentField === "year") {
+                result = yearA - yearB;
+            } else if (currentField === "rating") {
+                result = ratingA - ratingB;
+            } else if (currentField === "score") {
+                result = scoreA - scoreB;
+            }
+
+            return currentDesc ? -result : result;
+        });
+    }
+
+    function applyLabFilters() {
+        const query = (searchInput.value || "").trim().toLowerCase();
+
+        let filtered = cards.filter((card) => {
+            const title = card.dataset.title || "";
+            return !query || title.includes(query);
+        });
+
+        filtered = sortCards(filtered);
+
+        cards.forEach((card) => {
+            card.hidden = true;
+        });
+
+        filtered.forEach((card) => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+    }
+
+    sortTrigger.addEventListener("click", function () {
+        sortRoot.classList.toggle("is-open");
+    });
+
+    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+        option.addEventListener("click", function () {
+            currentField = this.dataset.sortField || "default";
+            currentDesc = defaultDirectionFor(currentField);
+            closeAll();
+            syncSortUi();
+            applyLabFilters();
+        });
+    });
+
+    sortDirectionBtn.addEventListener("click", function () {
+        if (currentField === "default") return;
+        currentDesc = !currentDesc;
+        syncSortUi();
+        applyLabFilters();
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".lab-sort-select")) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeAll();
+    });
+
+    searchInput.addEventListener("input", applyLabFilters);
+
+    syncSortUi();
+    applyLabFilters();
 })();
 </script>
 {% endblock %}

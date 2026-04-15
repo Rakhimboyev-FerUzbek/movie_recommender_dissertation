@@ -69,9 +69,11 @@ def build_ordering(sort_key: str):
     mapping = {
         "": ["title"],
         "rating_desc": ["-avg_rating", "title"],
+        "rating_asc": ["avg_rating", "title"],
         "year_desc": ["-release_year", "title"],
         "year_asc": ["release_year", "title"],
-        "count_desc": ["-rating_count", "title"],
+        "count_desc": ["-rating_count", "-avg_rating", "title"],
+        "count_asc": ["rating_count", "title"],
         "title_asc": ["title"],
         "title_desc": ["-title"],
     }
