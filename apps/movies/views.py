@@ -17,8 +17,17 @@ from apps.interactions.models import Comment, CommentLike, Favorite, Rating, Wat
 
 
 def home_view(request):
-    featured_movies = Movie.objects.filter(is_active=True).order_by("-popularity_score", "-avg_rating")[:8]
-    top_rated_movies = Movie.objects.filter(is_active=True).order_by("-avg_rating", "title")[:8]
+    available_movies = (
+        Movie.objects.filter(is_active=True)
+        .prefetch_related("genres")
+        .order_by("-created_at", "title")[:8]
+    )
+
+    top_rated_movies = (
+        Movie.objects.filter(is_active=True)
+        .prefetch_related("genres")
+        .order_by("-avg_rating", "-rating_count", "title")[:8]
+    )
 
     personalized_recommendations = []
     auto_summary = None
@@ -32,11 +41,19 @@ def home_view(request):
         )
         personalized_recommendations = auto_summary["recommendations"]
 
+    favorite_movie_ids = set()
+    if request.user.is_authenticated:
+        favorite_movie_ids = set(
+            Favorite.objects.filter(user=request.user, movie__is_active=True)
+            .values_list("movie_id", flat=True)
+        )
+
     context = {
-        "featured_movies": featured_movies,
+        "available_movies": available_movies,
         "top_rated_movies": top_rated_movies,
         "personalized_recommendations": personalized_recommendations,
         "auto_summary": auto_summary,
+        "favorite_movie_ids": favorite_movie_ids,
     }
     return render(request, "home.html", context)
 

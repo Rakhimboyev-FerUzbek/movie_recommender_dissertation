@@ -1,24 +1,26 @@
 <div
-    class="movie-card standard-movie-card"
+    class="movie-card standard-movie-card catalog-movie-card"
     data-title="{{ movie.title|lower|escape }}"
     data-genres="{% for genre in movie.genres.all %}{{ genre.name|lower }} {% endfor %}"
     data-year="{{ movie.release_year|default:0 }}"
     data-rating="{{ movie.avg_rating }}"
 >
-    <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="movie-poster-link">
-        <div class="movie-poster-wrap standard-poster-wrap">
-            {% if movie.poster_url %}
-                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
-            {% else %}
-                <div class="movie-poster placeholder-poster">
-                    <span>{{ movie.title|slice:":1" }}</span>
-                </div>
-            {% endif %}
-        </div>
-    </a>
+    <div class="catalog-card-poster-shell">
+        <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="movie-poster-link">
+            <div class="movie-poster-wrap standard-poster-wrap">
+                {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
+                {% else %}
+                    <div class="movie-poster placeholder-poster">
+                        <span>{{ movie.title|slice:":1" }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        </a>
+    </div>
 
     <div class="movie-card-body standard-card-body">
-        <div class="movie-title-row">
+        <div class="movie-title-row catalog-title-row">
             <h5 class="movie-title">
                 <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}">
                     {{ movie.title }}

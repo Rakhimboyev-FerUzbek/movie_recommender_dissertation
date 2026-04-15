@@ -1654,3 +1654,52 @@ body[data-theme="light"] .lab-sort-select__option.is-active {
         padding-bottom: 12px !important;
     }
 }
+
+/* =========================
+   FOR YOU CARD HOVER EFFECT
+   Films page dagidek hover
+   ========================= */
+
+.auto-rec-card {
+    transition:
+        transform 0.24s ease,
+        box-shadow 0.24s ease,
+        border-color 0.24s ease,
+        background 0.24s ease !important;
+    will-change: transform;
+}
+
+.auto-rec-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+    border-color: rgba(124, 92, 255, 0.34);
+}
+
+.auto-rec-card:hover .auto-rec-card__poster {
+    transform: scale(1.03);
+}
+
+.auto-rec-card__poster {
+    transition: transform 0.3s ease;
+}
+
+.auto-rec-card__poster-wrap {
+    overflow: hidden;
+}
+
+/* hover paytida title link ham ozgina jonlansin */
+.auto-rec-card:hover .auto-rec-card__title a {
+    color: #ffffff;
+}
+
+/* light mode uchun soyani yumshatish */
+body[data-theme="light"] .auto-rec-card:hover {
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+}
+
+/* mobil qurilmada hover effekti haddan oshmasin */
+@media (max-width: 767px) {
+    .auto-rec-card:hover {
+        transform: translateY(-4px);
+    }
+}
