@@ -177,14 +177,59 @@
             </div>
         </div>
 
-        {% if show_recommendation_reason %}
-        <div class="glass-card detail-v4-reason-card mt-4">
-            <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
+    {% if show_recommendation_reason %}
+    <div class="glass-card detail-v4-reason-card mt-4">
+        <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
+
+        {% if recommendation_reason %}
             <div class="detail-v4-reason-body">
-                Hozircha bu sahifa katalog ko‘rinishida ishlamoqda. Keyingi bosqichda bu blok real tavsiya mexanizmi bilan bog‘lanadi.
+                <p class="detail-v4-reason-text mb-0">{{ recommendation_reason.text }}</p>
+
+                <div class="detail-v4-reason-meta">
+                    <span class="detail-v4-reason-pill detail-v4-reason-pill--primary">
+                        Model: {{ recommendation_reason.resolved_model_label }}
+                    </span>
+                    <span class="detail-v4-reason-pill">
+                        Scenario: {{ recommendation_reason.scenario_label }}
+                    </span>
+                    <span class="detail-v4-reason-pill">
+                        Score: {{ recommendation_reason.score|floatformat:3 }}
+                    </span>
+                    <span class="detail-v4-reason-pill">
+                        Reytinglar soni: {{ recommendation_reason.user_rating_count }}
+                    </span>
+                </div>
+
+                {% if recommendation_reason.preferred_genres %}
+                <div class="detail-v4-reason-subblock">
+                    <div class="detail-v4-reason-subtitle">Profil janrlari</div>
+                    <div class="genre-chip-wrap mt-2">
+                        {% for genre_name in recommendation_reason.preferred_genres %}
+                            <span class="genre-chip">{{ genre_name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if recommendation_reason.resolved_model_label == "Hybrid" or recommendation_reason.resolved_model_label == "Hybrid (Weighted)" or recommendation_reason.weights %}
+                <div class="detail-v4-reason-subblock">
+                    <div class="detail-v4-reason-subtitle">Hybrid vaznlari</div>
+                    <div class="detail-v4-reason-weights">
+                        <span class="detail-v4-reason-weight">Content: {{ recommendation_reason.weights.content|default:0|floatformat:2 }}</span>
+                        <span class="detail-v4-reason-weight">Item: {{ recommendation_reason.weights.item|default:0|floatformat:2 }}</span>
+                        <span class="detail-v4-reason-weight">SVD: {{ recommendation_reason.weights.svd|default:0|floatformat:2 }}</span>
+                        <span class="detail-v4-reason-weight">Popularity: {{ recommendation_reason.weights.popularity|default:0|floatformat:2 }}</span>
+                    </div>
+                </div>
+                {% endif %}
             </div>
-        </div>
+        {% else %}
+            <div class="detail-v4-reason-body">
+                Bu film tavsiyalar oqimidan ochilgan, lekin ayni sessiya uchun explainability matni topilmadi.
+            </div>
         {% endif %}
+    </div>
+    {% endif %}
 
         <div class="detail-v4-engagement-grid mt-4">
             <div class="glass-card detail-v4-media-card">

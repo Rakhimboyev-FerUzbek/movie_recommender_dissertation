@@ -14,7 +14,7 @@ from django.db.models import Count, F, Q
 from django.utils import timezone
 
 from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
-
+from urllib.parse import parse_qs, urlparse
 
 def home_view(request):
     available_movies = (
@@ -182,12 +182,76 @@ def movie_detail_view(request, slug):
     back_url = next_url or reverse("movie_list")
 
     is_from_recommendations = False
+    recommendation_reason = None
+
     if next_url:
         recommendation_prefixes = (
             reverse("recommend_for_you"),
             reverse("recommendation_lab"),
         )
         is_from_recommendations = next_url.startswith(recommendation_prefixes)
+
+        if is_from_recommendations and request.user.is_authenticated:
+            parsed_next = urlparse(next_url)
+            query_params = parse_qs(parsed_next.query)
+
+            requested_model = "auto"
+            scenario_key = "normal"
+            target_user = request.user
+            top_k = None
+
+            if parsed_next.path.startswith(reverse("recommendation_lab")):
+                requested_model = query_params.get("model", ["auto"])[0] or "auto"
+                scenario_key = query_params.get("scenario", ["normal"])[0] or "normal"
+                target_user_id = query_params.get("user_id", [""])[0]
+                top_k_raw = query_params.get("top_k", [""])[0]
+
+                if target_user_id and str(target_user_id).isdigit():
+                    from django.contrib.auth import get_user_model
+                    User = get_user_model()
+                    target_user = User.objects.filter(pk=int(target_user_id)).first() or request.user
+
+                if top_k_raw and str(top_k_raw).isdigit():
+                    top_k = int(top_k_raw)
+
+            service = RecommendationService()
+            reason_result = service.recommend_for_user(
+                user=target_user,
+                model_key=requested_model,
+                top_k=top_k,
+                scenario=scenario_key,
+            )
+
+            current_item = next(
+                (item for item in reason_result["recommendations"] if item["movie"].id == movie.id),
+                None,
+            )
+
+            if current_item is None:
+                fallback_result = service.recommend_for_user(
+                    user=target_user,
+                    model_key=requested_model,
+                    top_k=None,
+                    scenario=scenario_key,
+                )
+                current_item = next(
+                    (item for item in fallback_result["recommendations"] if item["movie"].id == movie.id),
+                    None,
+                )
+                if current_item is not None:
+                    reason_result = fallback_result
+
+            if current_item is not None:
+                recommendation_reason = {
+                    "text": current_item["explanation"],
+                    "score": current_item.get("score", 0),
+                    "requested_model": reason_result.get("requested_model"),
+                    "resolved_model_label": reason_result.get("resolved_model_label"),
+                    "scenario_label": reason_result.get("scenario_label"),
+                    "user_rating_count": reason_result.get("user_rating_count", 0),
+                    "preferred_genres": reason_result.get("preferred_genres", []),
+                    "weights": reason_result.get("weights") or {},
+                }
 
     existing_rating = None
     is_favorite = False
@@ -254,6 +318,7 @@ def movie_detail_view(request, slug):
         "comments": comments,
         "full_video_mode": detect_full_video_mode(movie),
         "show_recommendation_reason": is_from_recommendations,
+        "recommendation_reason": recommendation_reason,
         "is_favorite": is_favorite,
     }
     return render(request, "movies/movie_detail.html", context)

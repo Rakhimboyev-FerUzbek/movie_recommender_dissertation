@@ -816,3 +816,102 @@ body[data-theme="light"] .detail-favorite-icon-btn.is-active .favorite-heart-ico
         transform: translateY(110%);
     }
 }
+
+/* =========================
+   DETAIL EXPLAINABILITY BLOCK
+   ========================= */
+
+.detail-v4-reason-card {
+    overflow: hidden;
+}
+
+.detail-v4-reason-head {
+    padding: 18px 22px;
+    font-size: 1.02rem;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.42), rgba(93, 170, 255, 0.28));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-v4-reason-body {
+    padding: 18px 22px 20px;
+}
+
+.detail-v4-reason-text {
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.detail-v4-reason-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.detail-v4-reason-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.detail-v4-reason-pill--primary {
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.18), rgba(93, 170, 255, 0.18));
+    border-color: rgba(124, 92, 255, 0.28);
+}
+
+.detail-v4-reason-subblock {
+    margin-top: 18px;
+}
+
+.detail-v4-reason-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.detail-v4-reason-weights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.detail-v4-reason-weight {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-reason-head,
+    .detail-v4-reason-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .detail-v4-reason-meta,
+    .detail-v4-reason-weights {
+        gap: 8px;
+    }
+}
