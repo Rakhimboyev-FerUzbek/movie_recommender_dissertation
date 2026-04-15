@@ -4,11 +4,11 @@
     z-index: 1000;
     backdrop-filter: blur(16px);
     background: rgba(8, 12, 24, 0.78);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border)
 }
 
 body[data-theme="light"] .app-navbar {
-    background: rgba(255, 255, 255, 0.84);
+    background: rgba(255, 255, 255, 0.84)
 }
 
 .brand-mark,
@@ -19,7 +19,7 @@ body[data-theme="light"] .app-navbar {
     gap: 10px;
     font-weight: 800;
     letter-spacing: 0.3px;
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .brand-dot {
@@ -27,31 +27,31 @@ body[data-theme="light"] .app-navbar {
     height: 12px;
     border-radius: 999px;
     background: linear-gradient(135deg, var(--primary), var(--primary-2));
-    box-shadow: 0 0 18px rgba(124, 92, 255, 0.8);
+    box-shadow: 0 0 18px rgba(124, 92, 255, 0.8)
 }
 
 .nav-link-clean {
     color: var(--text-muted) !important;
     font-weight: 500;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease
 }
 
 .nav-link-clean:hover,
 .nav-link-clean:focus,
 .nav-link-clean.active {
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .nav-toggler-clean {
-    border-color: var(--border);
+    border-color: var(--border)
 }
 
 .navbar-toggler-icon {
-    filter: invert(1);
+    filter: invert(1)
 }
 
 body[data-theme="light"] .navbar-toggler-icon {
-    filter: none;
+    filter: none
 }
 
 .lang-pill-btn {
@@ -65,7 +65,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     background: var(--surface);
     color: var(--text) !important;
     font-weight: 600;
-    box-shadow: none;
+    box-shadow: none
 }
 
 .lang-pill-btn:hover,
@@ -73,20 +73,20 @@ body[data-theme="light"] .navbar-toggler-icon {
 .lang-pill-btn:active {
     color: var(--text) !important;
     border-color: rgba(124, 92, 255, 0.35);
-    background: var(--surface);
+    background: var(--surface)
 }
 
 .lang-pill-btn::after {
-    margin-left: 10px;
+    margin-left: 10px
 }
 
 .lang-pill-flag {
     font-size: 1rem;
-    line-height: 1;
+    line-height: 1
 }
 
 .lang-pill-text {
-    white-space: nowrap;
+    white-space: nowrap
 }
 
 .lang-menu {
@@ -94,7 +94,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     padding: 10px;
     border-radius: 18px;
     background: var(--bg-soft);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border)
 }
 
 .lang-menu-item {
@@ -104,24 +104,24 @@ body[data-theme="light"] .navbar-toggler-icon {
     border-radius: 12px;
     padding: 12px 14px;
     color: var(--text);
-    font-weight: 500;
+    font-weight: 500
 }
 
 .lang-menu-item:hover,
 .lang-menu-item:focus {
     background: rgba(124, 92, 255, 0.10);
-    color: var(--text);
+    color: var(--text)
 }
 
 .lang-item-flag {
     width: 24px;
     text-align: center;
     font-size: 1rem;
-    line-height: 1;
+    line-height: 1
 }
 
 .lang-item-label {
-    flex: 1;
+    flex: 1
 }
 
 .theme-icon-btn {
@@ -135,7 +135,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     align-items: center;
     justify-content: center;
     font-size: 1.15rem;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease
 }
 
 .theme-icon-btn:hover,
@@ -143,7 +143,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     transform: translateY(-1px);
     border-color: rgba(124, 92, 255, 0.35);
     background: rgba(124, 92, 255, 0.08);
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .btn-profile-soft,
@@ -152,7 +152,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     padding: 10px 18px;
     border: 1px solid var(--border);
     color: var(--text) !important;
-    background: transparent;
+    background: transparent
 }
 
 .btn-profile-soft:hover,
@@ -161,7 +161,7 @@ body[data-theme="light"] .navbar-toggler-icon {
 .btn-outline-soft:focus {
     color: var(--text) !important;
     border-color: rgba(124, 92, 255, 0.35);
-    background: rgba(124, 92, 255, 0.08);
+    background: rgba(124, 92, 255, 0.08)
 }
 
 .btn-primary-gradient {
@@ -171,13 +171,13 @@ body[data-theme="light"] .navbar-toggler-icon {
     border-radius: 999px;
     padding: 11px 20px;
     box-shadow: var(--shadow);
-    transition: transform 0.25s ease, opacity 0.25s ease;
+    transition: transform 0.25s ease, opacity 0.25s ease
 }
 
 .btn-primary-gradient:hover,
 .btn-primary-gradient:focus {
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-2px)
 }
 
 .glass-card,
@@ -187,12 +187,12 @@ body[data-theme="light"] .navbar-toggler-icon {
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     backdrop-filter: blur(18px);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-lg)
 }
 
 .glass-card,
 .auth-card {
-    padding: 24px;
+    padding: 24px
 }
 
 .hero-kicker {
@@ -204,17 +204,17 @@ body[data-theme="light"] .navbar-toggler-icon {
     margin-bottom: 16px;
     font-size: 0.86rem;
     font-weight: 600;
-    color: var(--text);
+    color: var(--text)
 }
 
 .section-title {
     font-size: 1.75rem;
     font-weight: 800;
-    color: var(--text);
+    color: var(--text)
 }
 
 .section-subtitle {
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .movie-card {
@@ -223,22 +223,22 @@ body[data-theme="light"] .navbar-toggler-icon {
     border-radius: var(--radius-lg);
     background: var(--surface);
     border: 1px solid var(--border);
-    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    transition: transform 0.28s ease, box-shadow 0.28s ease
 }
 
 .movie-card:hover {
     transform: translateY(-8px) scale(1.01);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow)
 }
 
 .movie-card-link {
-    display: block;
+    display: block
 }
 
 .movie-poster-wrap {
     position: relative;
     height: 320px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-poster,
@@ -247,7 +247,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     height: 100%;
     display: block;
     object-fit: cover;
-    background: linear-gradient(135deg, rgba(124, 92, 255, 0.35), rgba(76, 201, 240, 0.18));
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.35), rgba(76, 201, 240, 0.18))
 }
 
 .placeholder-poster,
@@ -257,7 +257,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     justify-content: center;
     font-size: 4rem;
     font-weight: 800;
-    color: white;
+    color: white
 }
 
 .movie-overlay {
@@ -265,17 +265,17 @@ body[data-theme="light"] .navbar-toggler-icon {
     inset: 0;
     background: linear-gradient(to top, rgba(8, 12, 24, 0.95), rgba(8, 12, 24, 0.15));
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease
 }
 
 .movie-card:hover .movie-overlay {
-    opacity: 1;
+    opacity: 1
 }
 
 .movie-overlay-inner {
     position: absolute;
     bottom: 18px;
-    left: 18px;
+    left: 18px
 }
 
 .movie-badge {
@@ -283,18 +283,18 @@ body[data-theme="light"] .navbar-toggler-icon {
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px)
 }
 
 .movie-card-body {
-    padding: 16px;
+    padding: 16px
 }
 
 .movie-title {
     font-size: 1.05rem;
     font-weight: 700;
     margin-bottom: 8px;
-    color: var(--text);
+    color: var(--text)
 }
 
 .movie-meta {
@@ -302,14 +302,14 @@ body[data-theme="light"] .navbar-toggler-icon {
     gap: 12px;
     color: var(--text-muted);
     font-size: 0.92rem;
-    margin-bottom: 10px;
+    margin-bottom: 10px
 }
 
 .genre-chip-wrap,
 .movie-genre-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 8px
 }
 
 .genre-chip {
@@ -319,7 +319,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--border);
     font-size: 0.82rem;
-    color: var(--text);
+    color: var(--text)
 }
 
 .empty-state-card {
@@ -327,7 +327,7 @@ body[data-theme="light"] .navbar-toggler-icon {
     border-radius: var(--radius-lg);
     background: var(--surface);
     border: 1px dashed var(--border);
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .avatar-circle {
@@ -341,17 +341,18 @@ body[data-theme="light"] .navbar-toggler-icon {
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--primary-2));
     color: white;
-    margin-bottom: 16px;
+    margin-bottom: 16px
 }
 
 .app-footer {
     border-top: 1px solid var(--border);
-    background: rgba(8, 12, 24, 0.45);
+    background: rgba(8, 12, 24, 0.45)
 }
 
 body[data-theme="light"] .app-footer {
-    background: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.65)
 }
+
 .lang-pill-btn {
     display: inline-flex;
     align-items: center;
@@ -363,7 +364,7 @@ body[data-theme="light"] .app-footer {
     background: var(--surface);
     color: var(--text) !important;
     font-weight: 600;
-    box-shadow: none;
+    box-shadow: none
 }
 
 .lang-pill-btn:hover,
@@ -371,16 +372,16 @@ body[data-theme="light"] .app-footer {
 .lang-pill-btn:active {
     color: var(--text) !important;
     border-color: rgba(124, 92, 255, 0.35);
-    background: var(--surface);
+    background: var(--surface)
 }
 
 .lang-pill-btn::after {
-    margin-left: 6px;
+    margin-left: 6px
 }
 
 .lang-pill-text {
     white-space: nowrap;
-    line-height: 1;
+    line-height: 1
 }
 
 .lang-menu {
@@ -388,7 +389,7 @@ body[data-theme="light"] .app-footer {
     padding: 10px;
     border-radius: 16px;
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border)
 }
 
 .lang-menu-item {
@@ -398,13 +399,13 @@ body[data-theme="light"] .app-footer {
     border-radius: 12px;
     padding: 12px 14px;
     color: var(--text) !important;
-    font-weight: 500;
+    font-weight: 500
 }
 
 .lang-menu-item:hover,
 .lang-menu-item:focus {
     background: rgba(124, 92, 255, 0.10);
-    color: var(--text) !important;
+    color: var(--text) !important
 }
 
 .lang-flag-img {
@@ -412,15 +413,16 @@ body[data-theme="light"] .app-footer {
     height: 18px;
     object-fit: contain;
     flex-shrink: 0;
-    display: inline-block;
+    display: inline-block
 }
 
 .lang-item-label {
     line-height: 1.2;
-    white-space: nowrap;
+    white-space: nowrap
 }
+
 .movie-poster-wrap {
-    height: 260px;
+    height: 260px
 }
 
 .movie-title {
@@ -428,18 +430,19 @@ body[data-theme="light"] .app-footer {
     font-size: 1.05rem;
     font-weight: 700;
     margin-bottom: 8px;
-    line-height: 1.3;
+    line-height: 1.3
 }
 
 .genre-chip {
-    color: var(--text);
+    color: var(--text)
 }
 
-@media (max-width: 991px) {
+@media (max-width:991px) {
     .movie-poster-wrap {
-        height: 240px;
+        height: 240px
     }
 }
+
 .movie-card {
     position: relative;
     overflow: hidden;
@@ -447,23 +450,23 @@ body[data-theme="light"] .app-footer {
     background: var(--surface);
     border: 1px solid var(--border);
     transition: transform 0.28s ease, box-shadow 0.28s ease;
-    height: 100%;
+    height: 100%
 }
 
 .movie-card:hover {
     transform: translateY(-8px) scale(1.01);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow)
 }
 
 .movie-card-link {
     display: block;
-    height: 100%;
+    height: 100%
 }
 
 .movie-poster-wrap {
     position: relative;
     height: 290px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-poster,
@@ -472,11 +475,11 @@ body[data-theme="light"] .app-footer {
     height: 100%;
     display: block;
     object-fit: cover;
-    background: linear-gradient(135deg, rgba(124, 92, 255, 0.35), rgba(76, 201, 240, 0.18));
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.35), rgba(76, 201, 240, 0.18))
 }
 
 .movie-card-body {
-    padding: 16px;
+    padding: 16px
 }
 
 .movie-title {
@@ -484,7 +487,7 @@ body[data-theme="light"] .app-footer {
     font-weight: 700;
     margin-bottom: 8px;
     line-height: 1.3;
-    color: var(--text);
+    color: var(--text)
 }
 
 .movie-meta {
@@ -492,7 +495,7 @@ body[data-theme="light"] .app-footer {
     gap: 12px;
     color: var(--text-muted);
     font-size: 0.95rem;
-    margin-bottom: 12px;
+    margin-bottom: 12px
 }
 
 .genre-chip {
@@ -502,30 +505,32 @@ body[data-theme="light"] .app-footer {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--border);
     font-size: 0.82rem;
-    color: var(--text);
+    color: var(--text)
 }
 
-@media (max-width: 1400px) {
+@media (max-width:1400px) {
     .movie-poster-wrap {
-        height: 270px;
+        height: 270px
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width:991px) {
     .movie-poster-wrap {
-        height: 250px;
+        height: 250px
     }
 }
+
 .movie-card-link {
     display: block;
     height: 100%;
     color: inherit;
-    text-decoration: none;
+    text-decoration: none
 }
+
 .movie-card {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100%
 }
 
 .movie-card-link {
@@ -533,13 +538,13 @@ body[data-theme="light"] .app-footer {
     flex-direction: column;
     height: 100%;
     color: inherit;
-    text-decoration: none;
+    text-decoration: none
 }
 
 .movie-poster-wrap {
     position: relative;
     height: 330px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-card-body {
@@ -547,7 +552,7 @@ body[data-theme="light"] .app-footer {
     flex-direction: column;
     gap: 12px;
     min-height: 170px;
-    padding: 18px;
+    padding: 18px
 }
 
 .movie-title {
@@ -557,7 +562,7 @@ body[data-theme="light"] .app-footer {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-meta {
@@ -567,7 +572,7 @@ body[data-theme="light"] .app-footer {
     flex-wrap: wrap;
     color: var(--text-muted);
     font-size: 0.95rem;
-    margin-bottom: 0;
+    margin-bottom: 0
 }
 
 .rating-pill {
@@ -577,43 +582,44 @@ body[data-theme="light"] .app-footer {
     padding: 6px 12px;
     border-radius: 999px;
     background: rgba(255, 200, 61, 0.12);
-    border: 1px solid rgba(255, 200, 61, 0.28);
+    border: 1px solid rgba(255, 200, 61, 0.28)
 }
 
 .rating-star {
     color: #FFC83D;
     font-size: 1.12rem;
     line-height: 1;
-    font-weight: 900;
+    font-weight: 900
 }
 
 .rating-value {
     color: var(--text);
     font-size: 0.98rem;
-    font-weight: 800;
+    font-weight: 800
 }
 
 .meta-separator {
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .movie-genre-chips {
-    margin-top: auto;
+    margin-top: auto
 }
 
-@media (max-width: 767px) {
+@media (max-width:767px) {
     .movie-poster-wrap {
-        height: 280px;
+        height: 280px
     }
 
     .movie-card-body {
-        min-height: 160px;
+        min-height: 160px
     }
 }
+
 .movie-card {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100%
 }
 
 .movie-card-link {
@@ -621,13 +627,13 @@ body[data-theme="light"] .app-footer {
     flex-direction: column;
     height: 100%;
     color: inherit;
-    text-decoration: none;
+    text-decoration: none
 }
 
 .movie-poster-wrap {
     position: relative;
     height: 330px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-card-body {
@@ -635,7 +641,7 @@ body[data-theme="light"] .app-footer {
     flex-direction: column;
     gap: 12px;
     min-height: 150px;
-    padding: 18px;
+    padding: 18px
 }
 
 .movie-title {
@@ -645,7 +651,7 @@ body[data-theme="light"] .app-footer {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .movie-meta {
@@ -655,7 +661,7 @@ body[data-theme="light"] .app-footer {
     flex-wrap: wrap;
     color: var(--text-muted);
     font-size: 0.95rem;
-    margin-bottom: 0;
+    margin-bottom: 0
 }
 
 .rating-pill {
@@ -665,37 +671,38 @@ body[data-theme="light"] .app-footer {
     padding: 8px 14px;
     border-radius: 999px;
     background: rgba(255, 200, 61, 0.12);
-    border: 1px solid rgba(255, 200, 61, 0.3);
+    border: 1px solid rgba(255, 200, 61, 0.3)
 }
 
 .rating-star {
     color: #FFC83D;
     font-size: 1.18rem;
     line-height: 1;
-    font-weight: 900;
+    font-weight: 900
 }
 
 .rating-value {
     color: var(--text);
     font-size: 1.02rem;
-    font-weight: 800;
+    font-weight: 800
 }
 
 .movie-genre-chips {
-    margin-top: auto;
+    margin-top: auto
 }
 
-@media (max-width: 767px) {
+@media (max-width:767px) {
     .movie-poster-wrap {
-        height: 280px;
+        height: 280px
     }
 }
+
 .standard-movie-card .standard-poster-wrap {
-    height: 320px;
+    height: 320px
 }
 
 .standard-movie-card .standard-card-body {
-    min-height: 170px;
+    min-height: 170px
 }
 
 .engagement-pill {
@@ -707,18 +714,18 @@ body[data-theme="light"] .app-footer {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid var(--border);
     color: var(--text);
-    white-space: nowrap;
+    white-space: nowrap
 }
 
 .engagement-pill strong {
     font-size: 0.98rem;
     font-weight: 800;
-    color: var(--text);
+    color: var(--text)
 }
 
 .engagement-label {
     font-size: 0.84rem;
-    color: var(--text-muted);
+    color: var(--text-muted)
 }
 
 .rec-rating-row {
@@ -726,26 +733,78 @@ body[data-theme="light"] .app-footer {
     justify-content: space-between;
     align-items: center;
     gap: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 14px
 }
 
 .rec-sub-meta {
     margin-bottom: 12px;
     color: var(--text-muted);
-    font-size: 0.92rem;
+    font-size: 0.92rem
 }
 
 .rec-year-country {
-    display: inline-block;
+    display: inline-block
 }
 
-@media (max-width: 767px) {
+@media (max-width:767px) {
     .standard-movie-card .standard-poster-wrap {
-        height: 280px;
+        height: 280px
     }
 
     .rec-rating-row {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-start
+    }
+}
+
+/* =========================
+   AUTO REC: infinite scroll + centered filters
+   ========================= */
+
+.auto-rec-hero {
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auto-rec-hero__layout {
+    align-items: center;
+}
+
+.auto-rec-toolbar-shell {
+    align-self: center;
+    width: 100%;
+}
+
+.auto-rec-toolbar {
+    align-items: center;
+}
+
+.auto-rec-toolbar__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auto-rec-sentinel {
+    width: 100%;
+    height: 1px;
+    margin-top: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+    .auto-rec-hero {
+        min-height: unset;
+    }
+
+    .auto-rec-hero__layout {
+        align-items: start;
+    }
+
+    .auto-rec-toolbar-shell {
+        align-self: stretch;
     }
 }

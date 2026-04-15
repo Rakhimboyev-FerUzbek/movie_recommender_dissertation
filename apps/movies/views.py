@@ -10,6 +10,10 @@ from apps.movies.forms import MovieFilterForm
 from apps.movies.models import Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 from apps.recommendations.services import RecommendationService
+from django.db.models import Count, F, Q
+from django.utils import timezone
+
+from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
 
 
 def home_view(request):
@@ -65,8 +69,11 @@ def build_ordering(sort_key: str):
     mapping = {
         "": ["title"],
         "rating_desc": ["-avg_rating", "title"],
+        "rating_asc": ["avg_rating", "title"],
         "year_desc": ["-release_year", "title"],
         "year_asc": ["release_year", "title"],
+        "count_desc": ["-rating_count", "-avg_rating", "title"],
+        "count_asc": ["rating_count", "title"],
         "title_asc": ["title"],
         "title_desc": ["-title"],
     }
@@ -108,6 +115,13 @@ def movie_list_view(request):
     current_params.pop("page", None)
     pagination_query = current_params.urlencode()
 
+    favorite_movie_ids = set()
+    if request.user.is_authenticated:
+        favorite_movie_ids = set(
+            Favorite.objects.filter(user=request.user, movie__is_active=True)
+            .values_list("movie_id", flat=True)
+        )
+
     context = {
         "form": form,
         "movies": page_obj.object_list,
@@ -118,6 +132,7 @@ def movie_list_view(request):
         "selected_year": selected_year,
         "selected_sort": selected_sort,
         "selected_genre_ids": selected_genre_ids,
+        "favorite_movie_ids": favorite_movie_ids,
     }
     return render(request, "movies/movie_list.html", context)
 
@@ -158,8 +173,22 @@ def movie_detail_view(request, slug):
         is_from_recommendations = next_url.startswith(recommendation_prefixes)
 
     existing_rating = None
+    is_favorite = False
+
     if request.user.is_authenticated:
         existing_rating = Rating.objects.filter(user=request.user, movie=movie).first()
+        is_favorite = Favorite.objects.filter(user=request.user, movie=movie).exists()
+
+        history, created = WatchHistory.objects.get_or_create(
+            user=request.user,
+            movie=movie,
+            defaults={"watch_count": 1},
+        )
+        if not created:
+            WatchHistory.objects.filter(pk=history.pk).update(
+                watch_count=F("watch_count") + 1,
+                watched_at=timezone.now(),
+            )
 
     rating_initial = {}
     if existing_rating:
@@ -208,5 +237,6 @@ def movie_detail_view(request, slug):
         "comments": comments,
         "full_video_mode": detect_full_video_mode(movie),
         "show_recommendation_reason": is_from_recommendations,
+        "is_favorite": is_favorite,
     }
     return render(request, "movies/movie_detail.html", context)

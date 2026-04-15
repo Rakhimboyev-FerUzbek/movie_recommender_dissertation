@@ -8,6 +8,7 @@ SORT_CHOICES = [
     ("rating_desc", "Reyting bo'yicha"),
     ("year_desc", "Yil bo'yicha (yangi)"),
     ("year_asc", "Yil bo'yicha (eski)"),
+    ("count_desc", "Baho soni bo'yicha"),
     ("title_asc", "Nom bo'yicha (A-Z)"),
     ("title_desc", "Nom bo'yicha (Z-A)"),
 ]

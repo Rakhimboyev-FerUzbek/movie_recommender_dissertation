@@ -24,7 +24,7 @@ class RecommendationLabForm(forms.Form):
     user_id = forms.IntegerField(required=False, label="Target user ID")
     model = forms.ChoiceField(choices=MODEL_CHOICES, initial="hybrid", label="Model")
     scenario = forms.ChoiceField(choices=SCENARIO_CHOICES, initial="normal", label="Scenario")
-    top_k = forms.IntegerField(min_value=3, max_value=30, initial=10, label="Top-K")
+    top_k = forms.IntegerField(required=False, min_value=1, initial=10, label="Top-K")
 
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop("current_user", None)
@@ -38,7 +38,13 @@ class RecommendationLabForm(forms.Form):
         )
         self.fields["model"].widget.attrs.update({"class": "form-select"})
         self.fields["scenario"].widget.attrs.update({"class": "form-select"})
-        self.fields["top_k"].widget.attrs.update({"class": "form-control", "min": 3, "max": 30})
+        self.fields["top_k"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "min": 1,
+                "placeholder": "Masalan: 10 yoki 100",
+            }
+        )
 
         if current_user and not self.is_bound:
             self.initial.setdefault("user_id", current_user.id)
@@ -50,3 +56,9 @@ class RecommendationLabForm(forms.Form):
         if not User.objects.filter(pk=user_id).exists():
             raise forms.ValidationError("Bunday user topilmadi.")
         return int(user_id)
+
+    def clean_top_k(self):
+        top_k = self.cleaned_data.get("top_k")
+        if top_k in (None, ""):
+            return None
+        return int(top_k)

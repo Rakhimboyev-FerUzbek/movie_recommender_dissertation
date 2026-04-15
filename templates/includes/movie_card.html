@@ -5,7 +5,7 @@
     data-year="{{ movie.release_year|default:0 }}"
     data-rating="{{ movie.avg_rating }}"
 >
-    <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="movie-card-link">
+    <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="movie-poster-link">
         <div class="movie-poster-wrap standard-poster-wrap">
             {% if movie.poster_url %}
                 <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
@@ -14,42 +14,75 @@
                     <span>{{ movie.title|slice:":1" }}</span>
                 </div>
             {% endif %}
-
-            <div class="movie-overlay">
-                <div class="movie-overlay-inner">
-                    <span class="movie-badge">{{ t.details }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="movie-card-body standard-card-body">
-            <h5 class="movie-title">{{ movie.title }}</h5>
-
-            <div class="rec-sub-meta">
-                <span class="rec-year-country">
-                    {% if movie.release_year %}{{ movie.release_year }}{% endif %}
-                    {% if movie.release_year and movie.country %} · {% endif %}
-                    {{ movie.country|default:"Noma'lum davlat" }}
-                </span>
-            </div>
-
-            <div class="rec-rating-row">
-                <span class="rating-pill">
-                    <span class="rating-star">★</span>
-                    <span class="rating-value">{{ movie.avg_rating|floatformat:1 }}</span>
-                </span>
-
-                <span class="engagement-pill">
-                    <span class="engagement-label">Baho</span>
-                    <strong>{{ movie.rating_count }}</strong>
-                </span>
-            </div>
-
-            <div class="movie-genre-chips">
-                {% for genre in movie.genres.all|slice:":3" %}
-                    <span class="genre-chip">{{ genre.name }}</span>
-                {% endfor %}
-            </div>
         </div>
     </a>
+
+    <div class="movie-card-body standard-card-body">
+        <div class="movie-title-row">
+            <h5 class="movie-title">
+                <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}">
+                    {{ movie.title }}
+                </a>
+            </h5>
+
+            {% if show_favorite_button %}
+                {% if user.is_authenticated %}
+                    <form
+                        method="post"
+                        action="{% url 'favorite_toggle' movie.slug %}"
+                        class="catalog-fav-form"
+                        data-movie-title="{{ movie.title|escape }}"
+                    >
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next_url|default:request.get_full_path }}">
+                        <button
+                            type="submit"
+                            class="catalog-fav-btn {% if movie.id in favorite_movie_ids %}is-active{% endif %}"
+                            aria-label="Favorites"
+                            aria-pressed="{% if movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
+                            title="Favorites"
+                        >
+                            <span class="catalog-fav-btn__heart" aria-hidden="true">♥</span>
+                        </button>
+                    </form>
+                {% else %}
+                    <a
+                        href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
+                        class="catalog-fav-btn"
+                        aria-label="Favorites"
+                        title="Favorites"
+                    >
+                        <span class="catalog-fav-btn__heart" aria-hidden="true">♥</span>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="rec-sub-meta">
+            <span class="rec-year-country">
+                {{ movie.country|default:"Noma'lum davlat" }}
+            </span>
+        </div>
+
+        <div class="rec-rating-row">
+            {% if movie.release_year %}
+                <span class="meta-pill">{{ movie.release_year }}</span>
+            {% endif %}
+
+            <span class="rating-pill">
+                <span class="rating-star">★</span>
+                <span class="rating-value">{{ movie.avg_rating|floatformat:1 }}</span>
+            </span>
+
+            <span class="engagement-pill">
+                <strong>{{ movie.rating_count }} ta baho</strong>
+            </span>
+        </div>
+
+        <div class="movie-genre-chips">
+            {% for genre in movie.genres.all|slice:":3" %}
+                <span class="genre-chip">{{ genre.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
 </div>
