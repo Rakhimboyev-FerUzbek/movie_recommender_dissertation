@@ -184,3 +184,7 @@ from apps.interactions.models import Rating
 for r in Rating.objects.exclude(review="").order_by("id")[:20]:
     print(r.id, r.review, len(r.review))
 --------------------------------------------------------------------------------------------------------------------------------
+SELECT *
+FROM public.movies_movie
+ORDER BY CHAR_LENGTH(title) Desc;
+--------------------------------------------------------------------------------------------------------------------------------

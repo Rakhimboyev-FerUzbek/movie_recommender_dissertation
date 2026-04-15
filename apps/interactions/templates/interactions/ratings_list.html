@@ -75,9 +75,14 @@
         </div>
 
         <div id="interactionResults">
-            <div class="interaction-two-col-grid fade-up">
+            <div class="interaction-two-col-grid fade-up" id="ratingsGrid">
                 {% for item in ratings %}
-                    <article class="glass-card favorite-row-card">
+                    <article
+                        class="glass-card favorite-row-card interaction-click-card"
+                        data-href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}"
+                        tabindex="0"
+                        role="link"
+                    >
                         <div class="favorite-card-media">
                             <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
                             <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="favorite-poster-link">
@@ -114,7 +119,12 @@
                 {% endfor %}
             </div>
 
-            {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
+            <div
+                id="interactionPagerMeta"
+                class="interaction-hidden-pager"
+                data-next-url="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}{% endif %}">
+            </div>
+            <div id="interactionInfiniteSentinel" class="interaction-infinite-sentinel" aria-hidden="true"></div>
         </div>
     </div>
 </section>
@@ -138,6 +148,8 @@
 
     let timer = null;
     let controller = null;
+    let infiniteObserver = null;
+    let isLoadingMore = false;
 
     const FIELD_LABELS = {
         date: "Yangilangan sana",
@@ -201,6 +213,30 @@
         return params.toString();
     }
 
+    function getPagerMeta() {
+        return document.getElementById("interactionPagerMeta");
+    }
+
+    function getGrid() {
+        return document.getElementById("ratingsGrid");
+    }
+
+    function getSentinel() {
+        return document.getElementById("interactionInfiniteSentinel");
+    }
+
+    function getNextUrl() {
+        const pagerMeta = getPagerMeta();
+        return pagerMeta ? (pagerMeta.dataset.nextUrl || "") : "";
+    }
+
+    function updateNextUrl(value) {
+        const pagerMeta = getPagerMeta();
+        if (pagerMeta) {
+            pagerMeta.dataset.nextUrl = value || "";
+        }
+    }
+
     async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
         const activeElement = document.activeElement;
         const isSearchFocused = preserveCaret && activeElement === searchInput;
@@ -242,9 +278,75 @@
                     searchInput.setSelectionRange(start, end);
                 }
             }
+
+            setupInfiniteScroll();
         } catch (error) {
             if (error.name !== "AbortError") console.error(error);
         }
+    }
+
+    async function loadMoreResults() {
+        const nextUrl = getNextUrl();
+        const grid = getGrid();
+        if (!nextUrl || !grid || isLoadingMore) return;
+
+        isLoadingMore = true;
+
+        try {
+            const response = await fetch(nextUrl, {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextGrid = doc.getElementById("ratingsGrid");
+            const nextPagerMeta = doc.getElementById("interactionPagerMeta");
+
+            if (!nextGrid || !nextPagerMeta) return;
+
+            grid.insertAdjacentHTML("beforeend", nextGrid.innerHTML);
+            updateNextUrl(nextPagerMeta.dataset.nextUrl || "");
+            setupInfiniteScroll();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            isLoadingMore = false;
+        }
+    }
+
+    function setupInfiniteScroll() {
+        if (infiniteObserver) {
+            infiniteObserver.disconnect();
+            infiniteObserver = null;
+        }
+
+        const sentinel = getSentinel();
+        const nextUrl = getNextUrl();
+
+        if (!sentinel) return;
+
+        if (!nextUrl) {
+            sentinel.hidden = true;
+            return;
+        }
+
+        sentinel.hidden = false;
+
+        infiniteObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreResults();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        infiniteObserver.observe(sentinel);
     }
 
     sortTrigger.addEventListener("click", function () {
@@ -289,17 +391,37 @@
     });
 
     document.addEventListener("click", function (event) {
-        const link = event.target.closest("#interactionResults .pagination a");
-        if (!link) return;
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
 
-        event.preventDefault();
-        const href = link.getAttribute("href");
-        if (!href) return;
+        if (event.target.closest("a, button, form, input, textarea, select, label")) {
+            return;
+        }
 
-        fetchAndReplaceResults(true, false, href);
+        const href = card.dataset.href;
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (event.key === "Enter" || event.key === " ") {
+            if (event.target.closest("a, button, form, input, textarea, select, label")) {
+                return;
+            }
+            event.preventDefault();
+            const href = card.dataset.href;
+            if (href) {
+                window.location.href = href;
+            }
+        }
     });
 
     syncSortUi();
+    setupInfiniteScroll();
 })();
 </script>
 {% endblock %}
