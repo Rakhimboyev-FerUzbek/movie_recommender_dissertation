@@ -64,6 +64,10 @@ def _favorite_ordering(sort_key: str):
         "title_desc": ["-movie__title"],
         "year_desc": ["-movie__release_year", "movie__title"],
         "year_asc": ["movie__release_year", "movie__title"],
+        "rating_desc": ["-movie__avg_rating", "movie__title"],
+        "rating_asc": ["movie__avg_rating", "movie__title"],
+        "count_desc": ["-movie__rating_count", "-movie__avg_rating", "movie__title"],
+        "count_asc": ["movie__rating_count", "movie__title"],
     }.get(sort_key or "recent", ["-created_at"])
 
 
@@ -75,6 +79,10 @@ def _rating_ordering(sort_key: str):
         "rating_asc": ["rating", "-updated_at"],
         "title_asc": ["movie__title"],
         "title_desc": ["-movie__title"],
+        "year_desc": ["-movie__release_year", "movie__title"],
+        "year_asc": ["movie__release_year", "movie__title"],
+        "count_desc": ["-movie__rating_count", "-movie__avg_rating", "movie__title"],
+        "count_asc": ["movie__rating_count", "movie__title"],
     }.get(sort_key or "recent", ["-updated_at"])
 
 
@@ -83,8 +91,13 @@ def _history_ordering(sort_key: str):
         "recent": ["-watched_at"],
         "oldest": ["watched_at"],
         "watch_count_desc": ["-watch_count", "-watched_at"],
+        "watch_count_asc": ["watch_count", "-watched_at"],
         "title_asc": ["movie__title"],
         "title_desc": ["-movie__title"],
+        "year_desc": ["-movie__release_year", "movie__title"],
+        "year_asc": ["movie__release_year", "movie__title"],
+        "count_desc": ["-movie__rating_count", "-movie__avg_rating", "movie__title"],
+        "count_asc": ["movie__rating_count", "movie__title"],
     }.get(sort_key or "recent", ["-watched_at"])
 
 
