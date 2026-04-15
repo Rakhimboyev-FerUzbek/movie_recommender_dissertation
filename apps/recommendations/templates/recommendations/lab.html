@@ -15,6 +15,52 @@
                         Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli
                         stsenariylar bo‘yicha natijalarni taqqoslash mumkin.
                     </p>
+
+                    <div class="glass-card lab-inline-filter-card">
+                        <div class="lab-inline-filter-grid">
+                            <div class="lab-inline-filter-item">
+                                <label class="form-label">Qidiruv</label>
+                                <input
+                                    type="text"
+                                    id="labResultSearch"
+                                    class="form-control"
+                                    placeholder="Film nomi bo'yicha qidiring..."
+                                    autocomplete="off"
+                                >
+                            </div>
+
+                            <div class="lab-inline-filter-item">
+                                <label class="form-label">Saralash</label>
+                                <div class="lab-sort-row">
+                                    <div class="lab-sort-select" id="labSortSelect">
+                                        <button type="button" class="lab-sort-select__trigger" id="labSortTrigger">
+                                            <span id="labSortTriggerLabel">Score</span>
+                                            <span class="lab-sort-select__chevron"></span>
+                                        </button>
+
+                                        <div class="lab-sort-select__menu" id="labSortMenu">
+                                            <button type="button" class="lab-sort-select__option is-active" data-sort-field="score">Score</button>
+                                            <button type="button" class="lab-sort-select__option" data-sort-field="rating">Reyting</button>
+                                            <button type="button" class="lab-sort-select__option" data-sort-field="year">Yil</button>
+                                            <button type="button" class="lab-sort-select__option" data-sort-field="title">Nom</button>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        id="labSortDirection"
+                                        class="lab-sort-direction"
+                                        data-desc="true"
+                                        title="Saralash yo'nalishi"
+                                        aria-label="Saralash yo'nalishi"
+                                    >
+                                        <span class="lab-sort-direction__icon">↓</span>
+                                        <span class="lab-sort-direction__text">Kamayish</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="lab-control-card">
@@ -52,54 +98,6 @@
         </div>
 
         {% if result %}
-            <div class="glass-card lab-results-filter-card mb-4">
-                <div class="lab-results-filter-grid">
-                    <div class="lab-results-filter-item">
-                        <label class="form-label">Qidiruv</label>
-                        <input
-                            type="text"
-                            id="labResultSearch"
-                            class="form-control"
-                            placeholder="Film nomi bo'yicha qidiring..."
-                            autocomplete="off"
-                        >
-                    </div>
-
-                    <div class="lab-results-filter-item">
-                        <label class="form-label">Saralash</label>
-
-                        <div class="lab-sort-row">
-                            <div class="lab-sort-select" id="labSortSelect">
-                                <button type="button" class="lab-sort-select__trigger" id="labSortTrigger">
-                                    <span id="labSortTriggerLabel">Standart</span>
-                                    <span class="lab-sort-select__chevron"></span>
-                                </button>
-
-                                <div class="lab-sort-select__menu" id="labSortMenu">
-                                    <button type="button" class="lab-sort-select__option is-active" data-sort-field="default">Standart</button>
-                                    <button type="button" class="lab-sort-select__option" data-sort-field="score">Score</button>
-                                    <button type="button" class="lab-sort-select__option" data-sort-field="rating">Reyting</button>
-                                    <button type="button" class="lab-sort-select__option" data-sort-field="year">Yil</button>
-                                    <button type="button" class="lab-sort-select__option" data-sort-field="title">Nom</button>
-                                </div>
-                            </div>
-
-                            <button
-                                type="button"
-                                id="labSortDirection"
-                                class="lab-sort-direction"
-                                data-desc="true"
-                                title="Saralash yo'nalishi"
-                                aria-label="Saralash yo'nalishi"
-                            >
-                                <span class="lab-sort-direction__icon">•</span>
-                                <span class="lab-sort-direction__text">Standart</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
                     <div class="glass-card h-100 lab-meta-card">
@@ -148,8 +146,8 @@
                                 profil janrlari va popularity signalini kuchaytiradi.
                             </p>
                             <p class="mb-0">
-                                Quyidagi natijalar frontend ichida qidiruv va qayta saralash bilan ko‘riladi,
-                                ammo recommendation score’ning asl hisoblash logikasi o‘zgarmaydi.
+                                Quyidagi natijalar frontend ichida qidiruv va qayta saralash bilan ko‘riladi.
+                                Kartalar esa scroll qilingani sari bosqichma-bosqich ko‘rsatiladi.
                             </p>
                         </div>
                     </div>
@@ -220,6 +218,8 @@
                         </article>
                     {% endfor %}
                 </div>
+
+                <div id="labResultsSentinel" class="lab-results-sentinel" aria-hidden="true"></div>
             {% else %}
                 <div class="empty-state-card">Tanlangan konfiguratsiya bo‘yicha tavsiya qaytmadi.</div>
             {% endif %}
@@ -230,8 +230,6 @@
 <script>
 (function () {
     const grid = document.getElementById("labResultsGrid");
-    if (!grid) return;
-
     const searchInput = document.getElementById("labResultSearch");
     const sortRoot = document.getElementById("labSortSelect");
     const sortTrigger = document.getElementById("labSortTrigger");
@@ -240,13 +238,19 @@
     const sortDirectionBtn = document.getElementById("labSortDirection");
     const sortDirectionIcon = sortDirectionBtn.querySelector(".lab-sort-direction__icon");
     const sortDirectionText = sortDirectionBtn.querySelector(".lab-sort-direction__text");
+    const sentinel = document.getElementById("labResultsSentinel");
 
-    const cards = Array.from(grid.querySelectorAll(".lab-result-card"));
-    let currentField = "default";
+    let currentField = "score";
     let currentDesc = true;
 
+    const INITIAL_BATCH = 12;
+    const NEXT_BATCH = 9;
+
+    const cards = grid ? Array.from(grid.querySelectorAll(".lab-result-card")) : [];
+    let currentFiltered = [];
+    let currentLimit = INITIAL_BATCH;
+
     const FIELD_LABELS = {
-        default: "Standart",
         score: "Score",
         rating: "Reyting",
         year: "Yil",
@@ -255,7 +259,6 @@
 
     function defaultDirectionFor(field) {
         if (field === "title") return false;
-        if (field === "default") return true;
         return true;
     }
 
@@ -264,32 +267,15 @@
     }
 
     function syncSortUi() {
-        sortLabel.textContent = FIELD_LABELS[currentField] || "Standart";
-
+        sortLabel.textContent = FIELD_LABELS[currentField] || "Score";
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
         });
-
-        if (currentField === "default") {
-            sortDirectionBtn.disabled = true;
-            sortDirectionBtn.classList.add("is-disabled");
-            sortDirectionIcon.textContent = "•";
-            sortDirectionText.textContent = "Standart";
-        } else {
-            sortDirectionBtn.disabled = false;
-            sortDirectionBtn.classList.remove("is-disabled");
-            sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
-            sortDirectionText.textContent = currentDesc ? "" : "";
-        }
+        sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
+        sortDirectionText.textContent = currentDesc ? "Kamayish" : "O'sish";
     }
 
     function sortCards(filteredCards) {
-        if (currentField === "default") {
-            return [...filteredCards].sort((a, b) => {
-                return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
-            });
-        }
-
         return [...filteredCards].sort((a, b) => {
             const titleA = a.dataset.title || "";
             const titleB = b.dataset.title || "";
@@ -316,7 +302,26 @@
         });
     }
 
-    function applyLabFilters() {
+    function renderVisibleCards() {
+        if (!grid) return;
+
+        cards.forEach((card) => {
+            card.hidden = true;
+        });
+
+        currentFiltered.slice(0, currentLimit).forEach((card) => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+
+        if (sentinel) {
+            sentinel.hidden = currentLimit >= currentFiltered.length;
+        }
+    }
+
+    function applyLabFilters(resetLimit = true) {
+        if (!grid) return;
+
         const query = (searchInput.value || "").trim().toLowerCase();
 
         let filtered = cards.filter((card) => {
@@ -324,16 +329,21 @@
             return !query || title.includes(query);
         });
 
-        filtered = sortCards(filtered);
+        currentFiltered = sortCards(filtered);
 
-        cards.forEach((card) => {
-            card.hidden = true;
-        });
+        if (resetLimit) {
+            currentLimit = INITIAL_BATCH;
+        }
 
-        filtered.forEach((card) => {
-            card.hidden = false;
-            grid.appendChild(card);
-        });
+        renderVisibleCards();
+    }
+
+    function loadMoreCards() {
+        if (!grid) return;
+        if (currentLimit >= currentFiltered.length) return;
+
+        currentLimit += NEXT_BATCH;
+        renderVisibleCards();
     }
 
     sortTrigger.addEventListener("click", function () {
@@ -342,19 +352,18 @@
 
     sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
         option.addEventListener("click", function () {
-            currentField = this.dataset.sortField || "default";
+            currentField = this.dataset.sortField || "score";
             currentDesc = defaultDirectionFor(currentField);
             closeAll();
             syncSortUi();
-            applyLabFilters();
+            applyLabFilters(true);
         });
     });
 
     sortDirectionBtn.addEventListener("click", function () {
-        if (currentField === "default") return;
         currentDesc = !currentDesc;
         syncSortUi();
-        applyLabFilters();
+        applyLabFilters(true);
     });
 
     document.addEventListener("click", function (event) {
@@ -364,13 +373,31 @@
     });
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") closeAll();
+        if (event.key === "Escape") {
+            closeAll();
+        }
     });
 
-    searchInput.addEventListener("input", applyLabFilters);
+    searchInput.addEventListener("input", function () {
+        applyLabFilters(true);
+    });
+
+    if (sentinel && grid) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreCards();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        observer.observe(sentinel);
+    }
 
     syncSortUi();
-    applyLabFilters();
+    applyLabFilters(true);
 })();
 </script>
 {% endblock %}

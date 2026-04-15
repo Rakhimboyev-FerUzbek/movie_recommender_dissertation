@@ -67,7 +67,7 @@ def apply_genre_and_filter(queryset, genre_ids):
 
 def build_ordering(sort_key: str):
     mapping = {
-        "": ["title"],
+        "": ["-avg_rating", "title"],
         "rating_desc": ["-avg_rating", "title"],
         "rating_asc": ["avg_rating", "title"],
         "year_desc": ["-release_year", "title"],
@@ -77,7 +77,7 @@ def build_ordering(sort_key: str):
         "title_asc": ["title"],
         "title_desc": ["-title"],
     }
-    return mapping.get(sort_key, ["title"])
+    return mapping.get(sort_key, ["-avg_rating", "title"])
 
 
 def movie_list_view(request):

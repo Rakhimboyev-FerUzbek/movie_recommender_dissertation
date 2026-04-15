@@ -65,17 +65,21 @@
                         <div class="mb-3">
                             <label class="form-label">Saralash</label>
 
-                            <input type="hidden" name="sort" id="catalogSortValue" value="{{ selected_sort }}">
+                            <input
+                                type="hidden"
+                                name="sort"
+                                id="catalogSortValue"
+                                value="{% if selected_sort %}{{ selected_sort }}{% else %}rating_desc{% endif %}"
+                            >
 
                             <div class="catalog-sort-row">
                                 <div class="catalog-sort-select" id="catalogSortSelect">
                                     <button type="button" class="catalog-sort-select__trigger" id="catalogSortTrigger">
-                                        <span id="catalogSortTriggerLabel">Standart</span>
+                                        <span id="catalogSortTriggerLabel">Reyting</span>
                                         <span class="catalog-sort-select__chevron"></span>
                                     </button>
 
                                     <div class="catalog-sort-select__menu" id="catalogSortMenu">
-                                        <button type="button" class="catalog-sort-select__option" data-sort-field="default">Standart</button>
                                         <button type="button" class="catalog-sort-select__option" data-sort-field="rating">Reyting</button>
                                         <button type="button" class="catalog-sort-select__option" data-sort-field="year">Yil</button>
                                         <button type="button" class="catalog-sort-select__option" data-sort-field="count">Baho soni</button>
@@ -91,8 +95,8 @@
                                     title="Saralash yo'nalishi"
                                     aria-label="Saralash yo'nalishi"
                                 >
-                                    <span class="catalog-sort-direction__icon">•</span>
-                                    <span class="catalog-sort-direction__text">Standart</span>
+                                    <span class="catalog-sort-direction__icon">↓</span>
+                                    <span class="catalog-sort-direction__text">Kamayish</span>
                                 </button>
                             </div>
                         </div>
@@ -169,7 +173,6 @@
     let controller = null;
 
     const SORT_FIELD_LABELS = {
-        default: "Standart",
         rating: "Reyting",
         year: "Yil",
         count: "Baho soni",
@@ -177,17 +180,16 @@
     };
 
     function encodeSort(field, desc) {
-        if (field === "default") return "";
         if (field === "rating") return desc ? "rating_desc" : "rating_asc";
         if (field === "year") return desc ? "year_desc" : "year_asc";
         if (field === "count") return desc ? "count_desc" : "count_asc";
         if (field === "title") return desc ? "title_desc" : "title_asc";
-        return "";
+        return "rating_desc";
     }
 
     function decodeSort(value) {
         const map = {
-            "": { field: "default", desc: true },
+            "": { field: "rating", desc: true },
             "rating_desc": { field: "rating", desc: true },
             "rating_asc": { field: "rating", desc: false },
             "year_desc": { field: "year", desc: true },
@@ -197,7 +199,7 @@
             "title_desc": { field: "title", desc: true },
             "title_asc": { field: "title", desc: false },
         };
-        return map[value || ""] || { field: "default", desc: true };
+        return map[value || "rating_desc"] || { field: "rating", desc: true };
     }
 
     function closeAll(except = null) {
@@ -208,25 +210,15 @@
 
     function syncSortUi() {
         const decoded = decodeSort(sortHidden.value);
-        sortLabel.textContent = SORT_FIELD_LABELS[decoded.field] || "Standart";
+        sortLabel.textContent = SORT_FIELD_LABELS[decoded.field] || "Reyting";
 
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
         });
 
-        if (decoded.field === "default") {
-            sortDirectionBtn.dataset.desc = "true";
-            sortDirectionBtn.disabled = true;
-            sortDirectionBtn.classList.add("is-disabled");
-            sortDirectionIcon.textContent = "•";
-            sortDirectionText.textContent = "Standart";
-        } else {
-            sortDirectionBtn.disabled = false;
-            sortDirectionBtn.classList.remove("is-disabled");
-            sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
-            sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
-            sortDirectionText.textContent = decoded.desc ? "" : "";
-        }
+        sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
+        sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
+        sortDirectionText.textContent = decoded.desc ? "" : "";
     }
 
     function buildQueryString() {
@@ -324,10 +316,8 @@
 
     sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
         option.addEventListener("click", function () {
-            const field = this.dataset.sortField || "default";
-            const desc = field === "default" ? true : true;
-
-            sortHidden.value = encodeSort(field, desc);
+            const field = this.dataset.sortField || "rating";
+            sortHidden.value = encodeSort(field, true);
             sortRoot.classList.remove("is-open");
             syncSortUi();
             fetchAndReplaceResults(true, false);
@@ -336,8 +326,6 @@
 
     sortDirectionBtn.addEventListener("click", function () {
         const decoded = decodeSort(sortHidden.value);
-        if (decoded.field === "default") return;
-
         sortHidden.value = encodeSort(decoded.field, !decoded.desc);
         syncSortUi();
         fetchAndReplaceResults(true, false);

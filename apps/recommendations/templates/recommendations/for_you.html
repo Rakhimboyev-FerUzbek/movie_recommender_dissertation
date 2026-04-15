@@ -33,7 +33,6 @@
 
                             <div class="auto-rec-sort-row">
                                 <select id="autoRecSortField" class="form-select auto-rec-native-select">
-                                    <option value="default">Standart</option>
                                     <option value="rating">Reyting</option>
                                     <option value="year">Yil</option>
                                     <option value="count">Baho soni</option>
@@ -48,8 +47,8 @@
                                     aria-label="Saralash yo‘nalishini almashtirish"
                                     title="Saralash yo‘nalishini almashtirish"
                                 >
-                                    <span class="auto-rec-sort-direction__icon">↓</span>
-                                    <span class="auto-rec-sort-direction__text">Kamayish</span>
+                                    <span class="auto-rec-sort-direction__icon"></span>
+                                    <span class="auto-rec-sort-direction__text">Nom</span>
                                 </button>
                             </div>
                         </div>
@@ -184,7 +183,6 @@
 
     function defaultDirectionFor(field) {
         if (field === "title") return false;
-        if (field === "default") return true;
         return true;
     }
 
@@ -195,24 +193,13 @@
     function syncDirectionButton() {
         const field = sortField.value;
         const desc = isDescending();
-        const isDefault = field === "default";
+        const isRelevance = field === "relevance";
 
-        sortDirectionBtn.disabled = isDefault;
-        sortDirectionBtn.classList.toggle("is-disabled", isDefault);
+        sortDirectionBtn.disabled = isRelevance;
+        sortDirectionBtn.classList.toggle("is-disabled", isRelevance);
 
-        if (isDefault) {
-            sortDirectionIcon.textContent = "•";
-            sortDirectionText.textContent = "Standart";
-            return;
-        }
-
-        if (desc) {
-            sortDirectionIcon.textContent = "↓";
-            sortDirectionText.textContent = "";
-        } else {
-            sortDirectionIcon.textContent = "↑";
-            sortDirectionText.textContent = "";
-        }
+        sortDirectionIcon.textContent = desc ? "↓" : "↑";
+        sortDirectionText.textContent = desc ? "" : "";
     }
 
     function showSnackbar(movieTitle, variant) {
@@ -262,7 +249,7 @@
         const field = sortField.value;
         const desc = isDescending();
 
-        if (field === "default") {
+        if (field === "relevance") {
             return [...filteredCards].sort((a, b) => {
                 return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
             });
@@ -400,7 +387,6 @@
 
             btn.addEventListener("click", () => {
                 selectEl.value = option.value;
-
                 sortDirectionBtn.dataset.desc = String(defaultDirectionFor(option.value));
                 syncDirectionButton();
                 syncValue();
@@ -501,7 +487,7 @@
 
     searchInput.addEventListener("input", () => applyFilters(true));
     sortDirectionBtn.addEventListener("click", () => {
-        if (sortField.value === "default") return;
+        if (sortField.value === "relevance") return;
         sortDirectionBtn.dataset.desc = String(!isDescending());
         syncDirectionButton();
         applyFilters(true);
