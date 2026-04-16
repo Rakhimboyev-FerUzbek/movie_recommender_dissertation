@@ -9,18 +9,25 @@ from apps.movies.models import Genre
 from apps.users.models import UserProfile
 
 
-FIRST_NAMES = [
+MALE_FIRST_NAMES = [
     "Ali", "Vali", "Jasur", "Bekzod", "Sardor", "Aziz", "Akmal", "Shahzod",
     "Dilshod", "Oybek", "Umid", "Asadbek", "Zafar", "Nodir", "Jamshid",
-    "Madina", "Nilufar", "Gulnoza", "Aziza", "Shahnoza", "Malika", "Sevara",
-    "Dildora", "Laylo", "Munisa", "Mubina", "Zarina", "Sabina", "Nargiza",
+    "Sherzod", "Temur", "Bobur", "Rustam", "Anvar", "Ulugbek", "Islom",
 ]
 
-LAST_NAMES = [
+FEMALE_FIRST_NAMES = [
+    "Madina", "Nilufar", "Gulnoza", "Aziza", "Shahnoza", "Malika", "Sevara",
+    "Dildora", "Laylo", "Munisa", "Mubina", "Zarina", "Sabina", "Nargiza",
+    "Feruza", "Dilafruz", "Maftuna", "Gulbahor", "Shirin", "Mohira", "Zebo",
+]
+
+# Bular erkak formadagi bazaviy familiyalar.
+# Ayol uchun avtomatik ravishda oxiriga "a" qo'shiladi.
+MALE_LAST_NAMES = [
     "Karimov", "Aliyev", "Raximov", "Toshmatov", "Abdullayev", "Qodirov",
     "Ismoilov", "Saidov", "Ergashev", "Mamatov", "Usmonov", "Hakimov",
-    "Yuldashev", "Rasulov", "Nazarov", "Sobirova", "Qosimova", "Yoqubova",
-    "Asqarova", "Rahmonova", "Azimova", "Sodiqova", "Toirova", "Tursunova",
+    "Yuldashev", "Rasulov", "Nazarov", "Sobirov", "Qosimov", "Yoqubov",
+    "Asqarov", "Rahmonov", "Azimov", "Sodiqov", "Toirov", "Tursunov",
 ]
 
 BIO_TEMPLATES = [
@@ -35,7 +42,10 @@ BIO_TEMPLATES = [
 
 
 class Command(BaseCommand):
-    help = "Fill existing users with random first_name, last_name, bio, birth_date, phone_number and preferred_genres."
+    help = (
+        "Fill existing users with consistent random data: "
+        "gender, first_name, last_name, bio, birth_date, phone_number, preferred_genres."
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -105,8 +115,13 @@ class Command(BaseCommand):
             for user in users:
                 profile, _ = UserProfile.objects.get_or_create(user=user)
 
-                new_first_name = random.choice(FIRST_NAMES)
-                new_last_name = random.choice(LAST_NAMES)
+                # Bitta consistent paket generatsiya qilinadi:
+                # gender -> first_name -> last_name
+                pack = self.generate_identity_pack()
+
+                new_gender = pack["gender"]
+                new_first_name = pack["first_name"]
+                new_last_name = pack["last_name"]
                 new_birth_date = self.generate_birth_date()
                 new_phone = self.generate_phone_number()
                 new_genres = self.generate_preferred_genres(genre_names)
@@ -114,11 +129,18 @@ class Command(BaseCommand):
 
                 changed = False
 
-                if overwrite or not (user.first_name or "").strip():
-                    user.first_name = new_first_name
-                    changed = True
+                must_fix_identity = (
+                    overwrite
+                    or not (profile.gender or "").strip()
+                    or not (user.first_name or "").strip()
+                    or not (user.last_name or "").strip()
+                    or self.is_gender_firstname_mismatch(profile.gender, user.first_name)
+                    or self.is_gender_lastname_mismatch(profile.gender, user.last_name)
+                )
 
-                if overwrite or not (user.last_name or "").strip():
+                if must_fix_identity:
+                    profile.gender = new_gender
+                    user.first_name = new_first_name
                     user.last_name = new_last_name
                     changed = True
 
@@ -143,6 +165,7 @@ class Command(BaseCommand):
 
                     self.stdout.write(
                         f"[UPDATE] {user.username:<20} | "
+                        f"gender={profile.gender:<6} | "
                         f"name={user.first_name} {user.last_name} | "
                         f"birth_date={profile.birth_date} | "
                         f"phone={profile.phone_number} | "
@@ -162,6 +185,57 @@ class Command(BaseCommand):
 
         self.stdout.write("")
         self.stdout.write(self.style.SUCCESS(f"Tugadi. Updated: {updated_count}, Skipped: {skipped_count}"))
+
+    def generate_identity_pack(self) -> dict:
+        gender = random.choice([UserProfile.MALE, UserProfile.FEMALE])
+
+        if gender == UserProfile.FEMALE:
+            first_name = random.choice(FEMALE_FIRST_NAMES)
+            last_name = self.make_female_last_name(random.choice(MALE_LAST_NAMES))
+        else:
+            first_name = random.choice(MALE_FIRST_NAMES)
+            last_name = random.choice(MALE_LAST_NAMES)
+
+        return {
+            "gender": gender,
+            "first_name": first_name,
+            "last_name": last_name,
+        }
+
+    def make_female_last_name(self, male_last_name: str) -> str:
+        # Karimov -> Karimova
+        # Aliyev -> Aliyeva
+        # Tursunov -> Tursunova
+        if male_last_name.endswith("a"):
+            return male_last_name
+        return f"{male_last_name}a"
+
+    def is_gender_firstname_mismatch(self, gender: str, first_name: str) -> bool:
+        if not gender or not first_name:
+            return False
+
+        normalized_name = first_name.strip()
+
+        if gender == UserProfile.MALE and normalized_name in FEMALE_FIRST_NAMES:
+            return True
+        if gender == UserProfile.FEMALE and normalized_name in MALE_FIRST_NAMES:
+            return True
+
+        return False
+
+    def is_gender_lastname_mismatch(self, gender: str, last_name: str) -> bool:
+        if not gender or not last_name:
+            return False
+
+        normalized_last_name = last_name.strip()
+
+        if gender == UserProfile.FEMALE:
+            return not normalized_last_name.endswith("a")
+
+        if gender == UserProfile.MALE:
+            return normalized_last_name.endswith("a")
+
+        return False
 
     def generate_birth_date(self) -> date:
         today = date.today()

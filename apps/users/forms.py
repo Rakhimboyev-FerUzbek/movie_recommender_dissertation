@@ -78,6 +78,10 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
         widget=forms.DateInput(attrs={"type": "date"}),
     )
     phone_number = forms.CharField(max_length=20, required=True)
+    gender = forms.ChoiceField(
+        required=True,
+        choices=UserProfile.GENDER_CHOICES,
+    )
     preferred_genres = forms.MultipleChoiceField(
         required=True,
         widget=forms.CheckboxSelectMultiple,
@@ -92,6 +96,7 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
             "last_name",
             "birth_date",
             "phone_number",
+            "gender",
             "preferred_genres",
             "password1",
             "password2",
@@ -119,6 +124,7 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
         self.fields["last_name"].label = self.t["last_name"]
         self.fields["birth_date"].label = "Tug'ilgan kun"
         self.fields["phone_number"].label = "Telefon raqam"
+        self.fields["gender"].label = "Jinsi"
         self.fields["preferred_genres"].label = self.t["preferred_genres"]
         self.fields["password1"].label = self.t["password"]
         self.fields["password2"].label = self.t["confirm_password"]
@@ -170,6 +176,7 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
             profile, _ = UserProfile.objects.get_or_create(user=user)
             profile.birth_date = self.cleaned_data["birth_date"]
             profile.phone_number = self.cleaned_data["phone_number"].strip()
+            profile.gender = self.cleaned_data["gender"]
             profile.preferred_genres = self.cleaned_data.get("preferred_genres", [])
             profile.save()
 
@@ -211,12 +218,13 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ("bio", "birth_date", "phone_number", "profile_photo")
+        fields = ("bio", "birth_date", "phone_number", "gender", "profile_photo")
 
     def apply_translations(self):
         self.fields["bio"].label = self.t["bio"]
         self.fields["birth_date"].label = "Tug'ilgan kun"
         self.fields["phone_number"].label = "Telefon raqam"
+        self.fields["gender"].label = "Jinsi"
         self.fields["profile_photo"].label = self.t["profile_photo"]
         self.fields["preferred_genres"].label = self.t["preferred_genres"]
         self.fields["remove_profile_photo"].label = self.t["remove_profile_photo"]

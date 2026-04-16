@@ -4,6 +4,14 @@ from django.db import models
 
 
 class UserProfile(models.Model):
+    MALE = "male"
+    FEMALE = "female"
+
+    GENDER_CHOICES = [
+        (MALE, "Male"),
+        (FEMALE, "Female"),
+    ]
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -13,6 +21,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
     profile_photo = models.ImageField(upload_to="profiles/photos/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

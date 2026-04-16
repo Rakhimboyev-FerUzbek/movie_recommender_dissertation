@@ -133,6 +133,14 @@
                                         {% if profile_form.phone_number.errors %}<div class="text-danger small profile-field-error">{{ profile_form.phone_number.errors }}</div>{% endif %}
                                     </div>
                                     <div class="profile-info-item">
+                                        <span>Jinsi</span>
+                                        {{ profile_form.gender }}
+                                        {% if profile_form.gender.errors %}<div class="text-danger small profile-field-error">{{ profile_form.gender.errors }}</div>{% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-grid profile-info-grid--two mt-3">
+                                    <div class="profile-info-item">
                                         <span>{{ t.username }}</span>
                                         <input type="text" class="form-control" value="{{ request.user.username }}" disabled>
                                     </div>
@@ -276,6 +284,13 @@
                                     <span>Telefon raqam</span>
                                     <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
                                 </div>
+                                <div class="profile-info-item">
+                                    <span>Jinsi</span>
+                                    <strong>{{ profile.get_gender_display|default:"Kiritilmagan" }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="profile-info-grid profile-info-grid--two mt-3">
                                 <div class="profile-info-item">
                                     <span>{{ t.username }}</span>
                                     <strong>{{ request.user.username }}</strong>

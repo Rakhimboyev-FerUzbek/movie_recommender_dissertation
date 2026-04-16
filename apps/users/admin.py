@@ -20,6 +20,7 @@ class UserProfileInline(admin.StackedInline):
     fields = (
         "birth_date",
         "phone_number",
+        "gender",
         "bio",
         "preferred_genres",
         "profile_photo",
@@ -109,7 +110,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "birth_date", "phone_number", "created_at", "updated_at")
+    list_display = ("id", "user", "birth_date", "phone_number", "gender", "created_at", "updated_at")
     search_fields = ("user__username", "user__email", "phone_number")
     autocomplete_fields = ("user",)
 
