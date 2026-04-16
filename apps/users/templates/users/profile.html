@@ -5,8 +5,7 @@
 {% block content %}
 <section class="profile-page">
     <div class="container">
-    
-        <!-- Activity -->
+
         <div class="glass-card profile-activity-section fade-up mb-3">
             <div class="profile-activity-head">
                 <div>
@@ -61,7 +60,6 @@
             </div>
         </div>
 
-        <!-- Main card -->
         <div class="glass-card profile-top-shell-card fade-up">
 
             {% if is_edit_mode %}
@@ -90,8 +88,8 @@
                                     <strong>{{ request.user.username }}</strong>
                                 </div>
                                 <div class="profile-stat-card">
-                                    <span>{{ t.username }}</span>
-                                    <strong>{{ request.user.username }}</strong>
+                                    <span>Telefon</span>
+                                    <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -122,22 +120,21 @@
                                         {% if user_form.email.errors %}<div class="text-danger small profile-field-error">{{ user_form.email.errors }}</div>{% endif %}
                                     </div>
                                     <div class="profile-info-item">
-                                        <span>{{ t.birth_year }}</span>
-                                        {{ profile_form.birth_year }}
-                                        {% if profile_form.birth_year.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_year.errors }}</div>{% endif %}
+                                        <span>Tug'ilgan kun</span>
+                                        {{ profile_form.birth_date }}
+                                        {% if profile_form.birth_date.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_date.errors }}</div>{% endif %}
                                     </div>
                                 </div>
 
                                 <div class="profile-info-grid profile-info-grid--two mt-3">
                                     <div class="profile-info-item">
-                                        <span>{{ t.email }}</span>
-                                        {{ user_form.email }}
-                                        {% if user_form.email.errors %}<div class="text-danger small profile-field-error">{{ user_form.email.errors }}</div>{% endif %}
+                                        <span>Telefon raqam</span>
+                                        {{ profile_form.phone_number }}
+                                        {% if profile_form.phone_number.errors %}<div class="text-danger small profile-field-error">{{ profile_form.phone_number.errors }}</div>{% endif %}
                                     </div>
                                     <div class="profile-info-item">
-                                        <span>{{ t.birth_year }}</span>
-                                        {{ profile_form.birth_year }}
-                                        {% if profile_form.birth_year.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_year.errors }}</div>{% endif %}
+                                        <span>{{ t.username }}</span>
+                                        <input type="text" class="form-control" value="{{ request.user.username }}" disabled>
                                     </div>
                                 </div>
 
@@ -203,7 +200,7 @@
                             </div>
                             <div class="profile-danger-zone-right">
                                 <button type="button" class="profile-danger-btn"
-                                    onclick="if(confirm('Haqiqatan ham profilingizni o\u2019chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
+                                    onclick="if(confirm('Haqiqatan ham profilingizni o‘chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
                                     Profilni o'chirish
                                 </button>
                             </div>
@@ -240,8 +237,8 @@
                                 <strong>{{ request.user.username }}</strong>
                             </div>
                             <div class="profile-stat-card">
-                                <span>{{ t.username }}</span>
-                                <strong>{{ request.user.username }}</strong>
+                                <span>Telefon</span>
+                                <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
                             </div>
                         </div>
                     </div>
@@ -269,19 +266,19 @@
                                     <strong>{{ request.user.email|default:t.no_email }}</strong>
                                 </div>
                                 <div class="profile-info-item">
-                                    <span>{{ t.birth_year }}</span>
-                                    <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
+                                    <span>Tug'ilgan kun</span>
+                                    <strong>{{ profile.birth_date|date:"Y-m-d"|default:"Kiritilmagan" }}</strong>
                                 </div>
                             </div>
 
                             <div class="profile-info-grid profile-info-grid--two mt-3">
                                 <div class="profile-info-item">
-                                    <span>{{ t.email }}</span>
-                                    <strong>{{ request.user.email|default:t.no_email }}</strong>
+                                    <span>Telefon raqam</span>
+                                    <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
                                 </div>
                                 <div class="profile-info-item">
-                                    <span>{{ t.birth_year }}</span>
-                                    <strong>{{ profile.birth_year|default:t.no_birth_year }}</strong>
+                                    <span>{{ t.username }}</span>
+                                    <strong>{{ request.user.username }}</strong>
                                 </div>
                             </div>
 
@@ -305,15 +302,10 @@
                 <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
             </div>
 
-            <!-- Bottom row: danger left / edit right -->
             <div class="profile-bottom-row-fixed mt-3">
                 <div class="glass-card profile-danger-inline-card">
                     <div class="profile-danger-zone-content">
                         <div class="profile-danger-zone-left">
-                            <!-- <div class="profile-danger-zone-badge">
-                                <span class="profile-danger-zone-dot"></span>
-                                {{ t.danger_zone }}
-                            </div> -->
                             <h4 class="profile-danger-zone-title">Profilni o'chirish</h4>
                             <p class="profile-danger-zone-text">
                                 Bu amal profilingizni va unga bog'liq barcha ma'lumotlarni butunlay o'chiradi.

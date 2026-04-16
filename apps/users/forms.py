@@ -169,7 +169,6 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
 
             profile, _ = UserProfile.objects.get_or_create(user=user)
             profile.birth_date = self.cleaned_data["birth_date"]
-            profile.birth_year = self.cleaned_data["birth_date"].year
             profile.phone_number = self.cleaned_data["phone_number"].strip()
             profile.preferred_genres = self.cleaned_data.get("preferred_genres", [])
             profile.save()
@@ -212,11 +211,12 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ("bio", "birth_year", "profile_photo")
+        fields = ("bio", "birth_date", "phone_number", "profile_photo")
 
     def apply_translations(self):
         self.fields["bio"].label = self.t["bio"]
-        self.fields["birth_year"].label = self.t["birth_year"]
+        self.fields["birth_date"].label = "Tug'ilgan kun"
+        self.fields["phone_number"].label = "Telefon raqam"
         self.fields["profile_photo"].label = self.t["profile_photo"]
         self.fields["preferred_genres"].label = self.t["preferred_genres"]
         self.fields["remove_profile_photo"].label = self.t["remove_profile_photo"]
@@ -230,6 +230,17 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         if self.instance and self.instance.preferred_genres:
             self.fields["preferred_genres"].initial = self.instance.preferred_genres
 
+        self.fields["birth_date"].widget = forms.DateInput(
+            attrs={
+                "class": "form-control",
+                "type": "date",
+                "autocomplete": "bday",
+            }
+        )
+        self.fields["phone_number"].widget.attrs.update({
+            "inputmode": "tel",
+            "autocomplete": "tel",
+        })
         self.fields["profile_photo"].widget = forms.FileInput(
             attrs={
                 "class": "form-control",
@@ -238,11 +249,19 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         )
         self.fields["remove_profile_photo"].widget.attrs["class"] = "form-check-input"
 
-    def clean_birth_year(self):
-        birth_year = self.cleaned_data.get("birth_year")
-        if birth_year is not None and (birth_year < 1900 or birth_year > 2100):
-            raise forms.ValidationError(self.t["birth_year_invalid"])
-        return birth_year
+    def clean_phone_number(self):
+        phone = (self.cleaned_data.get("phone_number") or "").strip()
+        if phone:
+            digits_only = "".join(ch for ch in phone if ch.isdigit())
+            if len(digits_only) < 9:
+                raise forms.ValidationError("Telefon raqam noto'g'ri kiritildi.")
+        return phone
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data.get("birth_date")
+        if birth_date and birth_date > timezone.localdate():
+            raise forms.ValidationError("Tug'ilgan kun bugundan keyin bo'lishi mumkin emas.")
+        return birth_date
 
     def save(self, commit=True):
         profile = super().save(commit=False)
