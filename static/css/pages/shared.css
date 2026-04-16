@@ -143,3 +143,108 @@ body[data-theme="light"] .form-textarea {
         transform: translateY(0)
     }
 }
+
+/* =========================
+   AUTH PAGE IMPROVEMENTS
+   register/login
+   ========================= */
+
+.auth-required-mark {
+    color: #ff8ba7;
+    font-weight: 800;
+}
+
+.auth-password-shell {
+    position: relative;
+}
+
+.auth-password-shell .form-control {
+    padding-right: 112px !important;
+}
+
+.auth-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    min-width: 92px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 92, 255, 0.26);
+    background: rgba(124, 92, 255, 0.10);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-password-toggle:hover {
+    background: rgba(124, 92, 255, 0.18);
+    border-color: rgba(124, 92, 255, 0.40);
+}
+
+.auth-genre-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.auth-genre-grid .profile-genre-option {
+    position: relative;
+}
+
+.auth-genre-grid .profile-genre-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.auth-genre-grid .profile-genre-option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.auth-genre-grid .profile-genre-option span:hover {
+    border-color: rgba(124, 92, 255, 0.35);
+    background: rgba(124, 92, 255, 0.08);
+}
+
+.auth-genre-grid .profile-genre-option input:checked + span {
+    border-color: rgba(124, 92, 255, 0.55);
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(76, 201, 240, 0.18));
+    color: var(--text);
+}
+
+.auth-genre-error {
+    min-height: 20px;
+    margin-top: 8px;
+}
+
+.auth-shell.auth-shell-wide {
+    grid-template-columns: 0.92fr 1.08fr;
+}
+
+@media (max-width: 991px) {
+    .auth-password-shell .form-control {
+        padding-right: 100px !important;
+    }
+
+    .auth-password-toggle {
+        min-width: 84px;
+        font-size: 0.78rem;
+    }
+}

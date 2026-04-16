@@ -8,15 +8,15 @@
         <div class="auth-shell">
             <div class="auth-brand-panel fade-up">
                 <span class="hero-kicker">{{ t.site_name }}</span>
-                <h1>{{ t.hero_title }}</h1>
-                <p>{{ t.hero_subtitle }}</p>
+                <h1>Kino olamiga qayting</h1>
+                <p>Saqlangan filmlar, reytinglar va shaxsiy tavsiyalaringizga kirish uchun akkauntingizni oching.</p>
             </div>
 
             <div class="auth-form-panel fade-up">
                 <div class="auth-card">
                     <h2>{{ t.login }}</h2>
 
-                    <form method="post" novalidate>
+                    <form method="post">
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
@@ -31,7 +31,12 @@
 
                         <div class="mb-3">
                             <label class="form-label">{{ form.password.label }}</label>
-                            {{ form.password }}
+                            <div class="auth-password-shell">
+                                {{ form.password }}
+                                <button type="button" class="auth-password-toggle" data-toggle-password="id_password">
+                                    Ko'rsatish
+                                </button>
+                            </div>
                             <div class="text-danger small">{{ form.password.errors }}</div>
                         </div>
 
@@ -47,4 +52,20 @@
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    document.querySelectorAll("[data-toggle-password]").forEach((btn) => {
+        btn.addEventListener("click", function () {
+            const inputId = this.dataset.togglePassword;
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const isPassword = input.type === "password";
+            input.type = isPassword ? "text" : "password";
+            this.textContent = isPassword ? "Yashirish" : "Ko'rsatish";
+        });
+    });
+})();
+</script>
 {% endblock %}

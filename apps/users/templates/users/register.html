@@ -5,18 +5,18 @@
 {% block content %}
 <section class="auth-page">
     <div class="container">
-        <div class="auth-shell">
+        <div class="auth-shell auth-shell-wide">
             <div class="auth-brand-panel fade-up">
                 <span class="hero-kicker">{{ t.site_name }}</span>
-                <h1>{{ t.hero_title }}</h1>
-                <p>{{ t.hero_subtitle }}</p>
+                <h1>O'zingizga mos kino profili yarating</h1>
+                <p>Akkaunt oching, sevimli janrlaringizni tanlang va sizga mos tavsiyalarni darhol oling.</p>
             </div>
 
             <div class="auth-form-panel fade-up">
                 <div class="auth-card">
                     <h2>{{ t.create_account }}</h2>
 
-                    <form method="post" novalidate>
+                    <form method="post" id="registerForm">
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
@@ -24,39 +24,77 @@
                         {% endif %}
 
                         <div class="mb-3">
-                            <label class="form-label">{{ form.username.label }}</label>
+                            <label class="form-label">{{ form.username.label }} <span class="auth-required-mark">*</span></label>
                             {{ form.username }}
                             <div class="text-danger small">{{ form.username.errors }}</div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">{{ form.email.label }}</label>
+                            <label class="form-label">{{ form.email.label }} <span class="auth-required-mark">*</span></label>
                             {{ form.email }}
                             <div class="text-danger small">{{ form.email.errors }}</div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.first_name.label }}</label>
+                                <label class="form-label">{{ form.first_name.label }} <span class="auth-required-mark">*</span></label>
                                 {{ form.first_name }}
                                 <div class="text-danger small">{{ form.first_name.errors }}</div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.last_name.label }}</label>
+                                <label class="form-label">{{ form.last_name.label }} <span class="auth-required-mark">*</span></label>
                                 {{ form.last_name }}
                                 <div class="text-danger small">{{ form.last_name.errors }}</div>
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.birth_date.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.birth_date }}
+                                <div class="text-danger small">{{ form.birth_date.errors }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.phone_number.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.phone_number }}
+                                <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
-                            <label class="form-label">{{ form.password1.label }}</label>
-                            {{ form.password1 }}
+                            <label class="form-label">{{ form.preferred_genres.label }} <span class="auth-required-mark">*</span></label>
+                            <div class="auth-genre-grid">
+                                {% for checkbox in form.preferred_genres %}
+                                    <label class="profile-genre-option">
+                                        {{ checkbox.tag }}
+                                        <span>{{ checkbox.choice_label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <div class="text-danger small auth-genre-error" id="registerGenreError">
+                                {{ form.preferred_genres.errors }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.password1.label }} <span class="auth-required-mark">*</span></label>
+                            <div class="auth-password-shell">
+                                {{ form.password1 }}
+                                <button type="button" class="auth-password-toggle" data-toggle-password="id_password1">
+                                    Ko'rsatish
+                                </button>
+                            </div>
                             <div class="text-danger small">{{ form.password1.errors }}</div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label">{{ form.password2.label }}</label>
-                            {{ form.password2 }}
+                            <label class="form-label">{{ form.password2.label }} <span class="auth-required-mark">*</span></label>
+                            <div class="auth-password-shell">
+                                {{ form.password2 }}
+                                <button type="button" class="auth-password-toggle" data-toggle-password="id_password2">
+                                    Ko'rsatish
+                                </button>
+                            </div>
                             <div class="text-danger small">{{ form.password2.errors }}</div>
                         </div>
 
@@ -68,4 +106,50 @@
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const form = document.getElementById("registerForm");
+    const genreError = document.getElementById("registerGenreError");
+    const genreInputs = Array.from(document.querySelectorAll('.auth-genre-grid input[type="checkbox"]'));
+
+    document.querySelectorAll("[data-toggle-password]").forEach((btn) => {
+        btn.addEventListener("click", function () {
+            const inputId = this.dataset.togglePassword;
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const isPassword = input.type === "password";
+            input.type = isPassword ? "text" : "password";
+            this.textContent = isPassword ? "Yashirish" : "Ko'rsatish";
+        });
+    });
+
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            const hasCheckedGenre = genreInputs.some((input) => input.checked);
+
+            if (!hasCheckedGenre) {
+                event.preventDefault();
+                if (genreError) {
+                    genreError.textContent = "Kamida bitta sevimli janr tanlang.";
+                }
+                return;
+            }
+
+            if (genreError) {
+                genreError.textContent = "";
+            }
+        });
+    }
+
+    genreInputs.forEach((input) => {
+        input.addEventListener("change", function () {
+            if (this.checked && genreError) {
+                genreError.textContent = "";
+            }
+        });
+    });
+})();
+</script>
 {% endblock %}

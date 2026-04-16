@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from apps.movies.models import Genre
 from apps.users.models import UserProfile
@@ -42,6 +43,9 @@ class StyledFormMixin:
             if css_class:
                 widget.attrs["class"] = f"{existing_class} {css_class}".strip()
 
+            if field.required and not isinstance(widget, (forms.CheckboxInput, forms.CheckboxSelectMultiple)):
+                widget.attrs["required"] = "required"
+
             if not isinstance(widget, (forms.CheckboxInput, forms.CheckboxSelectMultiple)):
                 widget.attrs.setdefault("placeholder", field.label or field_name.replace("_", " ").title())
 
@@ -67,8 +71,17 @@ class LoginForm(StyledFormMixin, AuthenticationForm):
 
 class RegisterForm(StyledFormMixin, UserCreationForm):
     email = forms.EmailField(required=True)
-    first_name = forms.CharField(max_length=150, required=False)
-    last_name = forms.CharField(max_length=150, required=False)
+    first_name = forms.CharField(max_length=150, required=True)
+    last_name = forms.CharField(max_length=150, required=True)
+    birth_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={"type": "date"}),
+    )
+    phone_number = forms.CharField(max_length=20, required=True)
+    preferred_genres = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+    )
 
     class Meta:
         model = User
@@ -77,15 +90,36 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
             "email",
             "first_name",
             "last_name",
+            "birth_date",
+            "phone_number",
+            "preferred_genres",
             "password1",
             "password2",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        genre_names = list(Genre.objects.order_by("name").values_list("name", flat=True))
+        self.fields["preferred_genres"].choices = [(name, name) for name in genre_names]
+
+        self.fields["phone_number"].widget.attrs.update({
+            "inputmode": "tel",
+            "autocomplete": "tel",
+        })
+
+        self.fields["birth_date"].widget.attrs.update({
+            "autocomplete": "bday",
+        })
 
     def apply_translations(self):
         self.fields["username"].label = self.t["username"]
         self.fields["email"].label = self.t["email"]
         self.fields["first_name"].label = self.t["first_name"]
         self.fields["last_name"].label = self.t["last_name"]
+        self.fields["birth_date"].label = "Tug'ilgan kun"
+        self.fields["phone_number"].label = "Telefon raqam"
+        self.fields["preferred_genres"].label = self.t["preferred_genres"]
         self.fields["password1"].label = self.t["password"]
         self.fields["password2"].label = self.t["confirm_password"]
 
@@ -98,13 +132,48 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
             raise forms.ValidationError(self.t["email_already_registered"])
         return email
 
+    def clean_phone_number(self):
+        phone = self.cleaned_data["phone_number"].strip()
+        digits_only = "".join(ch for ch in phone if ch.isdigit())
+        if len(digits_only) < 9:
+            raise forms.ValidationError("Telefon raqam noto'g'ri kiritildi.")
+        return phone
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data["birth_date"]
+        today = timezone.localdate()
+
+        if birth_date > today:
+            raise forms.ValidationError("Tug'ilgan kun bugundan keyin bo'lishi mumkin emas.")
+
+        age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+        if age < 10:
+            raise forms.ValidationError("Ro'yxatdan o'tish uchun yosh kamida 10 bo'lishi kerak.")
+
+        return birth_date
+
+    def clean_preferred_genres(self):
+        genres = self.cleaned_data.get("preferred_genres") or []
+        if not genres:
+            raise forms.ValidationError("Kamida bitta sevimli janr tanlang.")
+        return genres
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"].strip().lower()
         user.first_name = self.cleaned_data.get("first_name", "").strip()
         user.last_name = self.cleaned_data.get("last_name", "").strip()
+
         if commit:
             user.save()
+
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile.birth_date = self.cleaned_data["birth_date"]
+            profile.birth_year = self.cleaned_data["birth_date"].year
+            profile.phone_number = self.cleaned_data["phone_number"].strip()
+            profile.preferred_genres = self.cleaned_data.get("preferred_genres", [])
+            profile.save()
+
         return user
 
 

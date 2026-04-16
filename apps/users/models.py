@@ -12,6 +12,8 @@ class UserProfile(models.Model):
     preferred_genres = models.JSONField(default=list, blank=True)
     bio = models.TextField(blank=True)
     birth_year = models.PositiveIntegerField(null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
     profile_photo = models.ImageField(upload_to="profiles/photos/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -24,6 +26,9 @@ class UserProfile(models.Model):
 
     def save(self, *args, **kwargs):
         old_photo_name = ""
+
+        if self.birth_date:
+            self.birth_year = self.birth_date.year
 
         if self.pk:
             try:
