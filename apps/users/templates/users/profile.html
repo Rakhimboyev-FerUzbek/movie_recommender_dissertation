@@ -4,7 +4,68 @@
 
 {% block content %}
 <section class="profile-page">
-<div class="container py-4">
+<div class="container">
+
+<div class="glass-card profile-activity-section fade-up mb-2">
+    <div class="profile-activity-head">
+        <div>
+            <h3>Foydalanuvchi faoliyati</h3>
+            <p>Saqlangan filmlar, berilgan reytinglar va ko'rilgan filmlar tarixi.</p>
+        </div>
+        <span class="profile-activity-head-badge">Kartani bosing — bo'lim ochiladi</span>
+    </div>
+    <div class="profile-activity-grid">
+        <a href="{% url 'favorites_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">♥</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Favorites</span>
+                        <strong class="profile-activity-count">{{ favorites_count }}</strong>
+                    </div>
+                    <p>Saqlab qo'yilgan sevimli filmlar bo'limi.</p>
+                    <div class="profile-activity-tags"><span>Saqlanganlar</span><span>Tez kirish</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+        <a href="{% url 'ratings_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">★</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Ratings</span>
+                        <strong class="profile-activity-count">{{ ratings_count }}</strong>
+                    </div>
+                    <p>Berilgan baholarni ko'rish va nazorat qilish.</p>
+                    <div class="profile-activity-tags"><span>Baholar</span><span>Faoliyat</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+        <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">▶</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Watch History</span>
+                        <strong class="profile-activity-count">{{ watch_history_count }}</strong>
+                    </div>
+                    <p>Ko'rilgan filmlar va ko'rish tarixi.</p>
+                    <div class="profile-activity-tags"><span>Tarix</span><span>Ko'rilganlar</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+    </div>
+</div>
+
 
 <form id="profileForm" method="post" enctype="multipart/form-data" novalidate action="{% url 'profile' %}">
 {% csrf_token %}
@@ -100,13 +161,12 @@
                 </div>
                 {% endif %}
 
-                {# Name + email #}
+                {# Name only (no email) #}
                 <h3 class="profile-display-name">
                     {{ request.user.get_full_name|default:request.user.username }}
                 </h3>
-                <p class="profile-email-line">{{ request.user.email|default:t.no_email }}</p>
 
-                {# Side stats #}
+                {# Side stats — non-editable info only #}
                 <div class="profile-side-stats">
                     <div class="profile-stat-card">
                         <span>{{ t.member_since }}</span>
@@ -117,16 +177,8 @@
                         <strong class="prf-username-val">{{ request.user.username }}</strong>
                     </div>
                     <div class="profile-stat-card">
-                        <span>Telefon</span>
-                        <strong>{{ profile.phone_number|default:"—" }}</strong>
-                    </div>
-                    <div class="profile-stat-card">
-                        <span>Jinsi</span>
-                        <strong>{{ profile.get_gender_display|default:"—" }}</strong>
-                    </div>
-                    <div class="profile-stat-card">
-                        <span>Tug'ilgan kun</span>
-                        <strong>{{ profile.birth_date|date:"d.m.Y"|default:"—" }}</strong>
+                        <span>Oxirgi kirish</span>
+                        <strong>{{ request.user.last_login|date:"d.m.Y H:i"|default:"—" }}</strong>
                     </div>
                     <div class="profile-stat-card prf-stat-activity">
                         <span>Faollik</span>
@@ -141,7 +193,7 @@
                 {# Edit button in view mode #}
                 {% if not is_edit_mode %}
                 <a href="{% url 'profile' %}?edit=1"
-                   class="btn btn-primary-gradient w-100 mt-3">
+                   class="btn btn-primary-gradient w-100 mt-3 prf-edit-btn-sm">
                     ✏️ {{ t.edit_profile|default:"Tahrirlash" }}
                 </a>
                 {% endif %}
@@ -152,7 +204,7 @@
         <div class="profile-main">
         <div class="profile-overview-stack">
 
-            {# Account info card #}
+            {# Account info card — includes: name, email, birthday, phone, gender, genres, bio #}
             <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
 
                 <div class="profile-card-head">
@@ -184,7 +236,7 @@
                     </div>
                 </div>
 
-                <div class="profile-info-grid profile-info-grid--two mt-3">
+                <div class="profile-info-grid profile-info-grid--two mt-2">
                     <div class="profile-info-item">
                         <span>{{ t.email }}</span>
                         {% if is_edit_mode %}
@@ -209,7 +261,7 @@
                     </div>
                 </div>
 
-                <div class="profile-info-grid profile-info-grid--two mt-3">
+                <div class="profile-info-grid profile-info-grid--two mt-2">
                     <div class="profile-info-item">
                         <span>Telefon raqam</span>
                         {% if is_edit_mode %}
@@ -234,19 +286,8 @@
                     </div>
                 </div>
 
-                <div class="profile-info-grid profile-info-grid--two mt-3">
-                    <div class="profile-info-item">
-                        <span>{{ t.username }}</span>
-                        <strong class="prf-username-val">{{ request.user.username }}</strong>
-                    </div>
-                    <div class="profile-info-item">
-                        <span>Oxirgi kirish</span>
-                        <strong>{{ request.user.last_login|date:"d.m.Y H:i"|default:"—" }}</strong>
-                    </div>
-                </div>
-
                 {# Genres #}
-                <div class="profile-card-head mt-3">
+                <div class="profile-card-head mt-2">
                     <h4>{{ t.favorite_genres }}</h4>
                 </div>
                 <div class="profile-info-item full">
@@ -274,24 +315,24 @@
                     {% endif %}
                 </div>
 
-            </div>{# /account card #}
-
-            {# Bio card #}
-            <div class="glass-card profile-unified-card profile-bio-wide-card mt-3">
-                <div class="profile-card-head">
+                {# Bio — inside account card #}
+                <div class="profile-card-head mt-2">
                     <h4>{{ t.bio }}</h4>
                 </div>
-                {% if is_edit_mode %}
-                <div class="profile-bio-edit-wrap">
-                    {{ profile_form.bio }}
+                <div class="profile-info-item full profile-bio-item">
+                    {% if is_edit_mode %}
+                    <div class="profile-bio-edit-wrap">
+                        {{ profile_form.bio }}
+                    </div>
+                    {% if profile_form.bio.errors %}
+                        <div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
+                    {% endif %}
                 </div>
-                {% if profile_form.bio.errors %}
-                    <div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>
-                {% endif %}
-                {% else %}
-                <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
-                {% endif %}
-            </div>
+
+            </div>{# /account card #}
 
         </div>{# /overview-stack #}
         </div>{# /profile-main #}
@@ -299,70 +340,9 @@
     </div>{# /prf-body #}
 </div>{# /prf-shell #}
 
-</form>{# /profileForm — enctype="multipart/form-data" #}
+</form>{# /profileForm #}
 
-
-<div class="glass-card profile-activity-section fade-up mt-4">
-    <div class="profile-activity-head">
-        <div>
-            <h3>Foydalanuvchi faoliyati</h3>
-            <p>Saqlangan filmlar, berilgan reytinglar va ko'rilgan filmlar tarixi.</p>
-        </div>
-        <span class="profile-activity-head-badge">Kartani bosing — bo'lim ochiladi</span>
-    </div>
-    <div class="profile-activity-grid">
-        <a href="{% url 'favorites_list' %}" class="profile-activity-card">
-            <div class="profile-activity-card-top">
-                <div class="profile-activity-icon">♥</div>
-                <div class="profile-activity-content">
-                    <div class="profile-activity-topline">
-                        <span class="profile-activity-label">Favorites</span>
-                        <strong class="profile-activity-count">{{ favorites_count }}</strong>
-                    </div>
-                    <p>Saqlab qo'yilgan sevimli filmlar bo'limi.</p>
-                    <div class="profile-activity-tags"><span>Saqlanganlar</span><span>Tez kirish</span></div>
-                </div>
-            </div>
-            <div class="profile-activity-footer">
-                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
-            </div>
-        </a>
-        <a href="{% url 'ratings_list' %}" class="profile-activity-card">
-            <div class="profile-activity-card-top">
-                <div class="profile-activity-icon">★</div>
-                <div class="profile-activity-content">
-                    <div class="profile-activity-topline">
-                        <span class="profile-activity-label">Ratings</span>
-                        <strong class="profile-activity-count">{{ ratings_count }}</strong>
-                    </div>
-                    <p>Berilgan baholarni ko'rish va nazorat qilish.</p>
-                    <div class="profile-activity-tags"><span>Baholar</span><span>Faoliyat</span></div>
-                </div>
-            </div>
-            <div class="profile-activity-footer">
-                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
-            </div>
-        </a>
-        <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
-            <div class="profile-activity-card-top">
-                <div class="profile-activity-icon">▶</div>
-                <div class="profile-activity-content">
-                    <div class="profile-activity-topline">
-                        <span class="profile-activity-label">Watch History</span>
-                        <strong class="profile-activity-count">{{ watch_history_count }}</strong>
-                    </div>
-                    <p>Ko'rilgan filmlar va ko'rish tarixi.</p>
-                    <div class="profile-activity-tags"><span>Tarix</span><span>Ko'rilganlar</span></div>
-                </div>
-            </div>
-            <div class="profile-activity-footer">
-                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
-            </div>
-        </a>
-    </div>
-</div>
-
-<div class="glass-card prf-pw-card fade-up mt-4">
+<div class="glass-card prf-pw-card fade-up mt-3">
     <div class="prf-pw-header" id="pwToggleBtn" onclick="togglePasswordSection()" role="button" tabindex="0"
          onkeydown="if(event.key==='Enter'||event.key===' ')togglePasswordSection()">
         <div class="prf-pw-header-left">
@@ -423,7 +403,7 @@
 </div>
 
 
-<div class="glass-card profile-danger-zone-wide fade-up mt-4 mb-4">
+<div class="glass-card profile-danger-zone-wide fade-up mt-3">
     <div class="profile-danger-zone-content">
         <div class="profile-danger-zone-left">
             <div class="profile-danger-zone-badge">
@@ -439,7 +419,7 @@
         </div>
         <div class="profile-danger-zone-right">
             <button type="button"
-                    class="profile-danger-btn"
+                    class="profile-danger-btn profile-danger-btn--sm"
                     data-delete-modal-open>
                 Profilni o'chirish
             </button>
