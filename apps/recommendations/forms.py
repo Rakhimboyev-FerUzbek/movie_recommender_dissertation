@@ -21,7 +21,7 @@ SCENARIO_CHOICES = [
 
 
 class RecommendationLabForm(forms.Form):
-    user_id = forms.IntegerField(required=False, label="Target user ID")
+    user_id = forms.ChoiceField(required=False, label="Target user")
     model = forms.ChoiceField(choices=MODEL_CHOICES, initial="hybrid", label="Model")
     scenario = forms.ChoiceField(choices=SCENARIO_CHOICES, initial="normal", label="Scenario")
     top_k = forms.IntegerField(required=False, min_value=1, initial=10, label="Top-K")
@@ -30,12 +30,12 @@ class RecommendationLabForm(forms.Form):
         current_user = kwargs.pop("current_user", None)
         super().__init__(*args, **kwargs)
 
-        self.fields["user_id"].widget.attrs.update(
-            {
-                "class": "form-control",
-                "placeholder": "Masalan: 1",
-            }
-        )
+        user_choices = []
+        for user in User.objects.order_by("username").only("id", "username"):
+            user_choices.append((str(user.id), user.username))
+
+        self.fields["user_id"].choices = user_choices
+        self.fields["user_id"].widget.attrs.update({"class": "form-select"})
         self.fields["model"].widget.attrs.update({"class": "form-select"})
         self.fields["scenario"].widget.attrs.update({"class": "form-select"})
         self.fields["top_k"].widget.attrs.update(
@@ -47,7 +47,7 @@ class RecommendationLabForm(forms.Form):
         )
 
         if current_user and not self.is_bound:
-            self.initial.setdefault("user_id", current_user.id)
+            self.initial.setdefault("user_id", str(current_user.id))
 
     def clean_user_id(self):
         user_id = self.cleaned_data.get("user_id")

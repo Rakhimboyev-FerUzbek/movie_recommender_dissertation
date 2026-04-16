@@ -5,13 +5,69 @@
 {% block content %}
 <section class="content-section lab-page">
     <div class="container">
+        <div class="glass-card lab-user-summary-card mb-4" id="labUserSummaryCard">
+            <div class="lab-user-summary__main">
+                <div class="lab-user-summary__avatar-wrap" id="labUserAvatarWrap">
+                    {% if selected_user_summary.photo_url %}
+                        <img src="{{ selected_user_summary.photo_url }}" alt="{{ selected_user_summary.display_name }}" class="lab-user-summary__avatar-img">
+                    {% else %}
+                        <div class="lab-user-summary__avatar-fallback">{{ selected_user_summary.initial|default:"U" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="lab-user-summary__meta">
+                    <div class="lab-user-summary__heading-row">
+                        <div>
+                            <span class="lab-user-summary__eyebrow">Tanlangan foydalanuvchi</span>
+                            <h3 class="lab-user-summary__title" id="labUserDisplayName">{{ selected_user_summary.display_name|default:selected_user.username }}</h3>
+                        </div>
+                        <div class="lab-user-summary__username" id="labUserUsername">@{{ selected_user_summary.username|default:selected_user.username }}</div>
+                    </div>
+
+                    <div class="lab-user-summary__facts">
+                        <span class="lab-user-summary__fact" id="labUserGender">Jinsi: {{ selected_user_summary.gender|default:"Kiritilmagan" }}</span>
+                        <span class="lab-user-summary__fact" id="labUserBirthDate">Tug'ilgan kun: {{ selected_user_summary.birth_date|default:"Kiritilmagan" }}</span>
+                        <span class="lab-user-summary__fact" id="labUserPhone">Telefon: {{ selected_user_summary.phone_number|default:"Kiritilmagan" }}</span>
+                    </div>
+
+                    <div class="lab-user-summary__genres" id="labUserGenres">
+                        {% if selected_user_summary.preferred_genres %}
+                            {% for genre in selected_user_summary.preferred_genres|slice:":4" %}
+                                <span class="genre-chip">{{ genre }}</span>
+                            {% endfor %}
+                            {% if selected_user_summary.preferred_genres|length > 4 %}
+                                <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-4" }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="lab-user-summary__empty">Sevimli janrlar kiritilmagan</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="lab-user-summary__stats">
+                <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-user-stat-card" id="labUserRatingsLink">
+                    <span class="lab-user-stat-card__label">Reytinglar</span>
+                    <strong class="lab-user-stat-card__value" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
+                </a>
+                <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-user-stat-card" id="labUserFavoritesLink">
+                    <span class="lab-user-stat-card__label">Favorites</span>
+                    <strong class="lab-user-stat-card__value" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
+                </a>
+                <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-user-stat-card" id="labUserHistoryLink">
+                    <span class="lab-user-stat-card__label">Watch history</span>
+                    <strong class="lab-user-stat-card__value" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
+                </a>
+            </div>
+        </div>
+
         <div class="glass-card lab-hero mb-4">
             <div class="lab-hero__layout">
                 <div class="lab-hero__copy">
                     <span class="hero-kicker">Selectable Recommendation</span>
                     <h1 class="mb-2">Recommendation Lab</h1>
                     <p class="text-muted mb-0">
-                        Bu sahifa dasturni Test qilsh va Eksperimental tahlil uchun mo‘ljallangan.
+                        Bu sahifa dasturni Test qilish va eksperimental tahlil uchun mo‘ljallangan.
                         Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli
                         stsenariylar bo‘yicha natijalarni taqqoslash mumkin.
                     </p>
@@ -67,7 +123,7 @@
                     <form method="get" class="lab-control-form">
                         <div class="lab-control-grid">
                             <div class="lab-control-item">
-                                <label class="form-label">Target user ID</label>
+                                <label class="form-label">Username</label>
                                 {{ form.user_id }}
                                 <div class="text-danger small mt-2">{{ form.user_id.errors }}</div>
                             </div>
@@ -105,7 +161,7 @@
                             <h5 class="mb-0">Experiment summary</h5>
                         </div>
                         <ul class="list-unstyled mt-3 mb-0 small lab-summary-list">
-                            <li><strong>User:</strong> {{ selected_user.username }} (ID={{ selected_user.id }})</li>
+                            <li><strong>User:</strong> {{ selected_user.username }}</li>
                             <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
                             <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
                             <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
@@ -226,6 +282,8 @@
         {% endif %}
     </div>
 </section>
+
+{{ lab_user_summaries|json_script:"labUserSummaries" }}
 
 <script>
 (function () {
@@ -398,6 +456,86 @@
 
     syncSortUi();
     applyLabFilters(true);
+})();
+</script>
+
+<script>
+(function () {
+    const userSelect = document.getElementById("id_user_id");
+    const raw = document.getElementById("labUserSummaries");
+    if (!userSelect || !raw) return;
+
+    const summaries = JSON.parse(raw.textContent || "{}");
+
+    const avatarWrap = document.getElementById("labUserAvatarWrap");
+    const displayNameEl = document.getElementById("labUserDisplayName");
+    const usernameEl = document.getElementById("labUserUsername");
+    const genderEl = document.getElementById("labUserGender");
+    const birthDateEl = document.getElementById("labUserBirthDate");
+    const phoneEl = document.getElementById("labUserPhone");
+    const genresEl = document.getElementById("labUserGenres");
+    const ratingsCountEl = document.getElementById("labUserRatingsCount");
+    const favoritesCountEl = document.getElementById("labUserFavoritesCount");
+    const historyCountEl = document.getElementById("labUserHistoryCount");
+    const ratingsLinkEl = document.getElementById("labUserRatingsLink");
+    const favoritesLinkEl = document.getElementById("labUserFavoritesLink");
+    const historyLinkEl = document.getElementById("labUserHistoryLink");
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function buildGenres(genres) {
+        if (!genres || !genres.length) {
+            return '<span class="lab-user-summary__empty">Sevimli janrlar kiritilmagan</span>';
+        }
+
+        const visibleGenres = genres.slice(0, 4)
+            .map((genre) => `<span class="genre-chip">${escapeHtml(genre)}</span>`)
+            .join("");
+
+        const extra = genres.length > 4
+            ? `<span class="genre-chip">+${genres.length - 4}</span>`
+            : "";
+
+        return `${visibleGenres}${extra}`;
+    }
+
+    function buildAvatar(data) {
+        if (data.photo_url) {
+            return `<img src="${escapeHtml(data.photo_url)}" alt="${escapeHtml(data.display_name)}" class="lab-user-summary__avatar-img">`;
+        }
+        return `<div class="lab-user-summary__avatar-fallback">${escapeHtml(data.initial || "U")}</div>`;
+    }
+
+    function updateSummaryCard(userId) {
+        const data = summaries[String(userId)];
+        if (!data) return;
+
+        avatarWrap.innerHTML = buildAvatar(data);
+        displayNameEl.textContent = data.display_name || data.username || "User";
+        usernameEl.textContent = `@${data.username || "user"}`;
+        genderEl.textContent = `Jinsi: ${data.gender || "Kiritilmagan"}`;
+        birthDateEl.textContent = `Tug'ilgan kun: ${data.birth_date || "Kiritilmagan"}`;
+        phoneEl.textContent = `Telefon: ${data.phone_number || "Kiritilmagan"}`;
+        genresEl.innerHTML = buildGenres(data.preferred_genres || []);
+
+        ratingsCountEl.textContent = data.ratings_count ?? 0;
+        favoritesCountEl.textContent = data.favorites_count ?? 0;
+        historyCountEl.textContent = data.watch_history_count ?? 0;
+
+        ratingsLinkEl.href = data.ratings_url || "#";
+        favoritesLinkEl.href = data.favorites_url || "#";
+        historyLinkEl.href = data.watch_history_url || "#";
+    }
+
+    userSelect.addEventListener("change", function () {
+        updateSummaryCard(this.value);
+    });
+
+    updateSummaryCard(userSelect.value);
 })();
 </script>
 {% endblock %}
