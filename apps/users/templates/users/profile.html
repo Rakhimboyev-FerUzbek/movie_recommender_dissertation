@@ -1,352 +1,631 @@
 {% extends "base.html" %}
 
-{% block title %}{{ t.profile }}{% endblock %}
+{% block title %}{{ t.profile }} — {{ request.user.get_full_name|default:request.user.username }}{% endblock %}
 
 {% block content %}
 <section class="profile-page">
-    <div class="container">
+<div class="container py-4">
 
-        <div class="glass-card profile-activity-section fade-up mb-3">
-            <div class="profile-activity-head">
-                <div>
-                    <h3>Foydalanuvchi faoliyati</h3>
-                    <p>Saqlangan filmlar, berilgan reytinglar va ko'rilgan filmlar tarixi.</p>
-                </div>
-                <span class="profile-activity-head-badge">Kartani bosing — bo'lim ochiladi</span>
-            </div>
-            <div class="profile-activity-grid">
-                <a href="{% url 'favorites_list' %}" class="profile-activity-card">
-                    <div class="profile-activity-card-top">
-                        <div class="profile-activity-icon">♥</div>
-                        <div class="profile-activity-content">
-                            <div class="profile-activity-topline">
-                                <span class="profile-activity-label">Favorites</span>
-                                <strong class="profile-activity-count">{{ favorites_count }}</strong>
-                            </div>
-                            <p>Saqlab qo'yilgan sevimli filmlar bo'limi.</p>
-                            <div class="profile-activity-tags"><span>Saqlanganlar</span><span>Tez kirish</span></div>
-                        </div>
-                    </div>
-                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
-                </a>
-                <a href="{% url 'ratings_list' %}" class="profile-activity-card">
-                    <div class="profile-activity-card-top">
-                        <div class="profile-activity-icon">★</div>
-                        <div class="profile-activity-content">
-                            <div class="profile-activity-topline">
-                                <span class="profile-activity-label">Ratings</span>
-                                <strong class="profile-activity-count">{{ ratings_count }}</strong>
-                            </div>
-                            <p>Berilgan baholarni ko'rish va nazorat qilish.</p>
-                            <div class="profile-activity-tags"><span>Baholar</span><span>Faoliyat</span></div>
-                        </div>
-                    </div>
-                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
-                </a>
-                <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
-                    <div class="profile-activity-card-top">
-                        <div class="profile-activity-icon">▶</div>
-                        <div class="profile-activity-content">
-                            <div class="profile-activity-topline">
-                                <span class="profile-activity-label">Watch History</span>
-                                <strong class="profile-activity-count">{{ watch_history_count }}</strong>
-                            </div>
-                            <p>Ko'rilgan filmlar va ko'rish tarixi.</p>
-                            <div class="profile-activity-tags"><span>Tarix</span><span>Ko'rilganlar</span></div>
-                        </div>
-                    </div>
-                    <div class="profile-activity-footer"><span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span></div>
-                </a>
-            </div>
+<form id="profileForm" method="post" enctype="multipart/form-data" novalidate action="{% url 'profile' %}">
+{% csrf_token %}
+
+<div class="prf-shell glass-card fade-up">
+
+    {% if is_edit_mode %}
+    <div class="prf-edit-topbar">
+        <div class="prf-edit-topbar-title">
+            <span class="prf-edit-dot"></span>
+            Profilni tahrirlash
         </div>
-
-        <div class="glass-card profile-top-shell-card fade-up">
-
-            {% if is_edit_mode %}
-            <form method="post" enctype="multipart/form-data" novalidate class="profile-shell-edit-form">
-                {% csrf_token %}
-
-                <div class="profile-grid profile-grid--inside-shell profile-grid--top">
-                    <aside class="profile-sidebar">
-                        <div class="glass-card profile-showcase-card profile-inner-card">
-                            <div class="profile-photo-shell">
-                                {% if profile.profile_photo %}
-                                    <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview">
-                                {% else %}
-                                    <div class="avatar-circle profile-avatar-large">{{ request.user.username|slice:":1"|upper }}</div>
-                                {% endif %}
-                            </div>
-                            <h3 class="profile-display-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
-                            <p class="profile-email-line">{{ request.user.email|default:t.no_email }}</p>
-                            <div class="profile-side-stats">
-                                <div class="profile-stat-card">
-                                    <span>{{ t.member_since }}</span>
-                                    <strong>{{ request.user.date_joined|date:"Y-m-d" }}</strong>
-                                </div>
-                                <div class="profile-stat-card">
-                                    <span>{{ t.username }}</span>
-                                    <strong>{{ request.user.username }}</strong>
-                                </div>
-                                <div class="profile-stat-card">
-                                    <span>Telefon</span>
-                                    <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
-
-                    <div class="profile-main">
-                        <div class="profile-main-stack">
-                            <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
-                                <div class="profile-card-head"><h4>{{ t.account_information }}</h4></div>
-
-                                <div class="profile-info-grid profile-info-grid--two">
-                                    <div class="profile-info-item">
-                                        <span>{{ t.first_name }}</span>
-                                        {{ user_form.first_name }}
-                                        {% if user_form.first_name.errors %}<div class="text-danger small profile-field-error">{{ user_form.first_name.errors }}</div>{% endif %}
-                                    </div>
-                                    <div class="profile-info-item">
-                                        <span>{{ t.last_name }}</span>
-                                        {{ user_form.last_name }}
-                                        {% if user_form.last_name.errors %}<div class="text-danger small profile-field-error">{{ user_form.last_name.errors }}</div>{% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="profile-info-grid profile-info-grid--two mt-3">
-                                    <div class="profile-info-item">
-                                        <span>{{ t.email }}</span>
-                                        {{ user_form.email }}
-                                        {% if user_form.email.errors %}<div class="text-danger small profile-field-error">{{ user_form.email.errors }}</div>{% endif %}
-                                    </div>
-                                    <div class="profile-info-item">
-                                        <span>Tug'ilgan kun</span>
-                                        {{ profile_form.birth_date }}
-                                        {% if profile_form.birth_date.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_date.errors }}</div>{% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="profile-info-grid profile-info-grid--two mt-3">
-                                    <div class="profile-info-item">
-                                        <span>Telefon raqam</span>
-                                        {{ profile_form.phone_number }}
-                                        {% if profile_form.phone_number.errors %}<div class="text-danger small profile-field-error">{{ profile_form.phone_number.errors }}</div>{% endif %}
-                                    </div>
-                                    <div class="profile-info-item">
-                                        <span>Jinsi</span>
-                                        {{ profile_form.gender }}
-                                        {% if profile_form.gender.errors %}<div class="text-danger small profile-field-error">{{ profile_form.gender.errors }}</div>{% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="profile-info-grid profile-info-grid--two mt-3">
-                                    <div class="profile-info-item">
-                                        <span>{{ t.username }}</span>
-                                        <input type="text" class="form-control" value="{{ request.user.username }}" disabled>
-                                    </div>
-                                </div>
-
-                                <div class="profile-card-head mt-3"><h4>{{ t.favorite_genres }}</h4></div>
-                                <div class="profile-info-item full">
-                                    <div class="profile-genre-grid mt-1">
-                                        {% for value, label in genre_choices %}
-                                        <label class="profile-genre-option">
-                                            <input type="checkbox" name="preferred_genres" value="{{ value }}" {% if value in selected_profile_genres %}checked{% endif %}>
-                                            <span>{{ label }}</span>
-                                        </label>
-                                        {% endfor %}
-                                    </div>
-                                    {% if profile_form.preferred_genres.errors %}<div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>{% endif %}
-                                </div>
-                            </div>
-
-                            <div class="glass-card profile-unified-card">
-                                <div class="profile-card-head"><h4>{{ t.profile_photo }}</h4></div>
-                                <div class="profile-photo-edit-row">
-                                    <div class="profile-photo-mini-preview">
-                                        {% if profile.profile_photo %}
-                                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview small">
-                                        {% else %}
-                                            <div class="avatar-circle profile-avatar-small">{{ request.user.username|slice:":1"|upper }}</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="profile-photo-fields">
-                                        <label class="form-label mb-2">{{ t.profile_photo }}</label>
-                                        {{ profile_form.profile_photo }}
-                                        {% if profile_form.profile_photo.errors %}<div class="text-danger small mt-2">{{ profile_form.profile_photo.errors }}</div>{% endif %}
-                                        <div class="form-check mt-3">
-                                            {{ profile_form.remove_profile_photo }}
-                                            <label class="form-check-label" for="{{ profile_form.remove_profile_photo.id_for_label }}">{{ t.remove_profile_photo }}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card profile-unified-card profile-bio-wide-card mt-3">
-                    <div class="profile-card-head"><h4>{{ t.bio }}</h4></div>
-                    <div class="profile-bio-edit-wrap">{{ profile_form.bio }}</div>
-                    {% if profile_form.bio.errors %}<div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>{% endif %}
-                </div>
-
-                <div class="profile-bottom-actions-row mt-3">
-                    <div class="glass-card profile-danger-zone-inline">
-                        <div class="profile-danger-zone-content">
-                            <div class="profile-danger-zone-left">
-                                <div class="profile-danger-zone-badge">
-                                    <span class="profile-danger-zone-dot"></span>
-                                    {{ t.danger_zone }}
-                                </div>
-                                <h4 class="profile-danger-zone-title">Profilni o'chirish</h4>
-                                <p class="profile-danger-zone-text">
-                                    Bu amal profilingizni va unga bog'liq barcha ma'lumotlarni butunlay o'chiradi.
-                                    Reytinglar, saqlangan filmlar, ko'rish tarixi va foydalanuvchi bilan bog'liq
-                                    boshqa yozuvlar bazadan olib tashlanadi.
-                                </p>
-                            </div>
-                            <div class="profile-danger-zone-right">
-                                <button type="button" class="profile-danger-btn"
-                                    onclick="if(confirm('Haqiqatan ham profilingizni o‘chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
-                                    Profilni o'chirish
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="profile-top-actions profile-top-actions--inline-right">
-                        <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
-                        <a href="{% url 'profile' %}" class="btn btn-outline-soft">{{ t.cancel_edit }}</a>
-                    </div>
-                </div>
-            </form>
-
-            {% else %}
-            <div class="profile-grid profile-grid--inside-shell profile-grid--top">
-                <aside class="profile-sidebar">
-                    <div class="glass-card profile-showcase-card profile-inner-card">
-                        <div class="profile-photo-shell">
-                            {% if profile.profile_photo %}
-                                <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}" class="profile-photo-preview">
-                            {% else %}
-                                <div class="avatar-circle profile-avatar-large">{{ request.user.username|slice:":1"|upper }}</div>
-                            {% endif %}
-                        </div>
-                        <h3 class="profile-display-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
-                        <p class="profile-email-line">{{ request.user.email|default:t.no_email }}</p>
-                        <div class="profile-side-stats">
-                            <div class="profile-stat-card">
-                                <span>{{ t.member_since }}</span>
-                                <strong>{{ request.user.date_joined|date:"Y-m-d" }}</strong>
-                            </div>
-                            <div class="profile-stat-card">
-                                <span>{{ t.username }}</span>
-                                <strong>{{ request.user.username }}</strong>
-                            </div>
-                            <div class="profile-stat-card">
-                                <span>Telefon</span>
-                                <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
-                <div class="profile-main">
-                    <div class="profile-main-stack">
-                        <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
-                            <div class="profile-card-head"><h4>{{ t.account_information }}</h4></div>
-
-                            <div class="profile-info-grid profile-info-grid--two">
-                                <div class="profile-info-item">
-                                    <span>{{ t.first_name }}</span>
-                                    <strong>{{ request.user.first_name|default:"—" }}</strong>
-                                </div>
-                                <div class="profile-info-item">
-                                    <span>{{ t.last_name }}</span>
-                                    <strong>{{ request.user.last_name|default:"—" }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="profile-info-grid profile-info-grid--two mt-3">
-                                <div class="profile-info-item">
-                                    <span>{{ t.email }}</span>
-                                    <strong>{{ request.user.email|default:t.no_email }}</strong>
-                                </div>
-                                <div class="profile-info-item">
-                                    <span>Tug'ilgan kun</span>
-                                    <strong>{{ profile.birth_date|date:"Y-m-d"|default:"Kiritilmagan" }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="profile-info-grid profile-info-grid--two mt-3">
-                                <div class="profile-info-item">
-                                    <span>Telefon raqam</span>
-                                    <strong>{{ profile.phone_number|default:"Kiritilmagan" }}</strong>
-                                </div>
-                                <div class="profile-info-item">
-                                    <span>Jinsi</span>
-                                    <strong>{{ profile.get_gender_display|default:"Kiritilmagan" }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="profile-info-grid profile-info-grid--two mt-3">
-                                <div class="profile-info-item">
-                                    <span>{{ t.username }}</span>
-                                    <strong>{{ request.user.username }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="profile-card-head mt-3"><h4>{{ t.favorite_genres }}</h4></div>
-                            <div class="profile-info-item full">
-                                <div class="genre-chip-wrap mt-1">
-                                    {% for genre in profile.preferred_genres %}
-                                        <span class="genre-chip">{{ genre }}</span>
-                                    {% empty %}
-                                        <span class="text-muted">{{ t.no_preferred_genres }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card profile-unified-card profile-bio-wide-card mt-3">
-                <div class="profile-card-head"><h4>{{ t.bio }}</h4></div>
-                <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
-            </div>
-
-            <div class="profile-bottom-row-fixed mt-3">
-                <div class="glass-card profile-danger-inline-card">
-                    <div class="profile-danger-zone-content">
-                        <div class="profile-danger-zone-left">
-                            <h4 class="profile-danger-zone-title">Profilni o'chirish</h4>
-                            <p class="profile-danger-zone-text">
-                                Bu amal profilingizni va unga bog'liq barcha ma'lumotlarni butunlay o'chiradi.
-                                Reytinglar, saqlangan filmlar, ko'rish tarixi va foydalanuvchi bilan bog'liq
-                                boshqa yozuvlar bazadan olib tashlanadi.
-                            </p>
-                        </div>
-                        <div class="profile-danger-zone-right">
-                            <button type="button" class="profile-danger-btn"
-                                onclick="if(confirm('Haqiqatan ham profilingizni o‘chirmoqchimisiz? Bu amal ortga qaytarilmaydi.')) { document.getElementById('deleteAccountForm').submit(); }">
-                                Profilni o'chirish
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-inline-actions">
-                    <a href="{% url 'profile' %}?edit=1" class="btn btn-primary-gradient">{{ t.edit_profile|default:"Tahrirlash" }}</a>
-                </div>
-            </div>
-
-            {% endif %}
-
-            <form id="deleteAccountForm" method="post" action="{% url 'delete_account' %}" style="display:none;">{% csrf_token %}</form>
+        <div class="prf-edit-topbar-actions">
+            <button type="submit" class="btn btn-primary-gradient">
+                {{ t.save_changes }}
+            </button>
+            <a href="{% url 'profile' %}" class="btn btn-outline-soft">
+                {{ t.cancel_edit }}
+            </a>
         </div>
-
     </div>
+    {% endif %}
+
+    <div class="prf-body profile-grid profile-grid--inside-shell">
+
+        <aside class="profile-sidebar">
+            <div class="glass-card profile-showcase-card profile-inner-card prf-sidebar-card">
+
+                {# Photo area #}
+                {% if is_edit_mode %}
+                {# --- Edit: nice upload zone --- #}
+                <div class="prf-photo-upload-zone" id="photoUploadZone">
+                    <div class="prf-photo-upload-circle"
+                         id="photoUploadCircle"
+                         title="Rasm yuklash uchun bosing"
+                         onclick="document.getElementById('id_profile_photo').click()">
+                        {% if profile.profile_photo %}
+                            <img src="{{ profile.profile_photo.url }}"
+                                 alt="{{ request.user.username }}"
+                                 class="prf-photo-upload-img"
+                                 id="photoPreviewImg">
+                        {% else %}
+                            <div class="avatar-circle profile-avatar-large prf-photo-upload-avatar"
+                                 id="photoPreviewAvatar">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                        <div class="prf-photo-upload-overlay">
+                            <span>📷</span>
+                            <small>Rasm yuklash</small>
+                        </div>
+                    </div>
+
+                    {# Hidden real file input — styled via the circle above #}
+                    <div style="display:none;">
+                        {{ profile_form.profile_photo }}
+                    </div>
+
+                    <div class="prf-photo-upload-actions">
+                        <button type="button"
+                                class="prf-photo-pick-btn"
+                                onclick="document.getElementById('id_profile_photo').click()">
+                            📷 Rasm tanlash
+                        </button>
+                        {% if profile.profile_photo %}
+                        <label class="prf-photo-remove-label">
+                            {{ profile_form.remove_profile_photo }}
+                            <span>{{ t.remove_profile_photo }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+                    <div class="prf-photo-upload-hint">JPG, PNG, WEBP &middot; max 10 MB</div>
+
+                    {% if profile_form.profile_photo.errors %}
+                    <div class="text-danger small mt-1">{{ profile_form.profile_photo.errors }}</div>
+                    {% endif %}
+                </div>
+
+                {% else %}
+                {# --- View: clickable lightbox photo --- #}
+                <div class="profile-photo-shell">
+                    {% if profile.profile_photo %}
+                        <img src="{{ profile.profile_photo.url }}"
+                             alt="{{ request.user.username }}"
+                             class="profile-photo-preview prf-photo-clickable"
+                             id="profilePhotoThumb"
+                             title="Kattaroq ko'rish uchun bosing">
+                    {% else %}
+                        <div class="avatar-circle profile-avatar-large">
+                            {{ request.user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {# Name + email #}
+                <h3 class="profile-display-name">
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </h3>
+                <p class="profile-email-line">{{ request.user.email|default:t.no_email }}</p>
+
+                {# Side stats #}
+                <div class="profile-side-stats">
+                    <div class="profile-stat-card">
+                        <span>{{ t.member_since }}</span>
+                        <strong>{{ request.user.date_joined|date:"d.m.Y" }}</strong>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span>{{ t.username }}</span>
+                        <strong class="prf-username-val">{{ request.user.username }}</strong>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span>Telefon</span>
+                        <strong>{{ profile.phone_number|default:"—" }}</strong>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span>Jinsi</span>
+                        <strong>{{ profile.get_gender_display|default:"—" }}</strong>
+                    </div>
+                    <div class="profile-stat-card">
+                        <span>Tug'ilgan kun</span>
+                        <strong>{{ profile.birth_date|date:"d.m.Y"|default:"—" }}</strong>
+                    </div>
+                    <div class="profile-stat-card prf-stat-activity">
+                        <span>Faollik</span>
+                        <div class="prf-activity-mini">
+                            <span title="Sevimlilar">♥ {{ favorites_count }}</span>
+                            <span title="Baholar">★ {{ ratings_count }}</span>
+                            <span title="Ko'rilganlar">▶ {{ watch_history_count }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Edit button in view mode #}
+                {% if not is_edit_mode %}
+                <a href="{% url 'profile' %}?edit=1"
+                   class="btn btn-primary-gradient w-100 mt-3">
+                    ✏️ {{ t.edit_profile|default:"Tahrirlash" }}
+                </a>
+                {% endif %}
+
+            </div>{# /sidebar card #}
+        </aside>{# /sidebar #}
+
+        <div class="profile-main">
+        <div class="profile-overview-stack">
+
+            {# Account info card #}
+            <div class="glass-card profile-unified-card profile-account-card-compact profile-genres-card">
+
+                <div class="profile-card-head">
+                    <h4>{{ t.account_information }}</h4>
+                </div>
+
+                <div class="profile-info-grid profile-info-grid--two">
+                    <div class="profile-info-item">
+                        <span>{{ t.first_name }}</span>
+                        {% if is_edit_mode %}
+                            {{ user_form.first_name }}
+                            {% if user_form.first_name.errors %}
+                                <div class="text-danger small profile-field-error">{{ user_form.first_name.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong>{{ request.user.first_name|default:"—" }}</strong>
+                        {% endif %}
+                    </div>
+                    <div class="profile-info-item">
+                        <span>{{ t.last_name }}</span>
+                        {% if is_edit_mode %}
+                            {{ user_form.last_name }}
+                            {% if user_form.last_name.errors %}
+                                <div class="text-danger small profile-field-error">{{ user_form.last_name.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong>{{ request.user.last_name|default:"—" }}</strong>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="profile-info-grid profile-info-grid--two mt-3">
+                    <div class="profile-info-item">
+                        <span>{{ t.email }}</span>
+                        {% if is_edit_mode %}
+                            {{ user_form.email }}
+                            {% if user_form.email.errors %}
+                                <div class="text-danger small profile-field-error">{{ user_form.email.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong class="prf-break-word">{{ request.user.email|default:t.no_email }}</strong>
+                        {% endif %}
+                    </div>
+                    <div class="profile-info-item">
+                        <span>Tug'ilgan kun</span>
+                        {% if is_edit_mode %}
+                            {{ profile_form.birth_date }}
+                            {% if profile_form.birth_date.errors %}
+                                <div class="text-danger small profile-field-error">{{ profile_form.birth_date.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong>{{ profile.birth_date|date:"d.m.Y"|default:"—" }}</strong>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="profile-info-grid profile-info-grid--two mt-3">
+                    <div class="profile-info-item">
+                        <span>Telefon raqam</span>
+                        {% if is_edit_mode %}
+                            {{ profile_form.phone_number }}
+                            {% if profile_form.phone_number.errors %}
+                                <div class="text-danger small profile-field-error">{{ profile_form.phone_number.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong>{{ profile.phone_number|default:"—" }}</strong>
+                        {% endif %}
+                    </div>
+                    <div class="profile-info-item">
+                        <span>Jinsi</span>
+                        {% if is_edit_mode %}
+                            {{ profile_form.gender }}
+                            {% if profile_form.gender.errors %}
+                                <div class="text-danger small profile-field-error">{{ profile_form.gender.errors }}</div>
+                            {% endif %}
+                        {% else %}
+                            <strong>{{ profile.get_gender_display|default:"—" }}</strong>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="profile-info-grid profile-info-grid--two mt-3">
+                    <div class="profile-info-item">
+                        <span>{{ t.username }}</span>
+                        <strong class="prf-username-val">{{ request.user.username }}</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span>Oxirgi kirish</span>
+                        <strong>{{ request.user.last_login|date:"d.m.Y H:i"|default:"—" }}</strong>
+                    </div>
+                </div>
+
+                {# Genres #}
+                <div class="profile-card-head mt-3">
+                    <h4>{{ t.favorite_genres }}</h4>
+                </div>
+                <div class="profile-info-item full">
+                    {% if is_edit_mode %}
+                    <div class="profile-genre-grid mt-1">
+                        {% for value, label in genre_choices %}
+                        <label class="profile-genre-option">
+                            <input type="checkbox" name="preferred_genres" value="{{ value }}"
+                                {% if value in selected_profile_genres %}checked{% endif %}>
+                            <span>{{ label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% if profile_form.preferred_genres.errors %}
+                        <div class="text-danger small mt-2">{{ profile_form.preferred_genres.errors }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div class="genre-chip-wrap mt-1">
+                        {% for genre in profile.preferred_genres %}
+                            <span class="genre-chip">{{ genre }}</span>
+                        {% empty %}
+                            <span class="text-muted">{{ t.no_preferred_genres }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>{# /account card #}
+
+            {# Bio card #}
+            <div class="glass-card profile-unified-card profile-bio-wide-card mt-3">
+                <div class="profile-card-head">
+                    <h4>{{ t.bio }}</h4>
+                </div>
+                {% if is_edit_mode %}
+                <div class="profile-bio-edit-wrap">
+                    {{ profile_form.bio }}
+                </div>
+                {% if profile_form.bio.errors %}
+                    <div class="text-danger small mt-2">{{ profile_form.bio.errors }}</div>
+                {% endif %}
+                {% else %}
+                <div class="profile-bio-view">{{ profile.bio|default:t.no_bio }}</div>
+                {% endif %}
+            </div>
+
+        </div>{# /overview-stack #}
+        </div>{# /profile-main #}
+
+    </div>{# /prf-body #}
+</div>{# /prf-shell #}
+
+</form>{# /profileForm — enctype="multipart/form-data" #}
+
+
+<div class="glass-card profile-activity-section fade-up mt-4">
+    <div class="profile-activity-head">
+        <div>
+            <h3>Foydalanuvchi faoliyati</h3>
+            <p>Saqlangan filmlar, berilgan reytinglar va ko'rilgan filmlar tarixi.</p>
+        </div>
+        <span class="profile-activity-head-badge">Kartani bosing — bo'lim ochiladi</span>
+    </div>
+    <div class="profile-activity-grid">
+        <a href="{% url 'favorites_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">♥</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Favorites</span>
+                        <strong class="profile-activity-count">{{ favorites_count }}</strong>
+                    </div>
+                    <p>Saqlab qo'yilgan sevimli filmlar bo'limi.</p>
+                    <div class="profile-activity-tags"><span>Saqlanganlar</span><span>Tez kirish</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+        <a href="{% url 'ratings_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">★</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Ratings</span>
+                        <strong class="profile-activity-count">{{ ratings_count }}</strong>
+                    </div>
+                    <p>Berilgan baholarni ko'rish va nazorat qilish.</p>
+                    <div class="profile-activity-tags"><span>Baholar</span><span>Faoliyat</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+        <a href="{% url 'watch_history_list' %}" class="profile-activity-card">
+            <div class="profile-activity-card-top">
+                <div class="profile-activity-icon">▶</div>
+                <div class="profile-activity-content">
+                    <div class="profile-activity-topline">
+                        <span class="profile-activity-label">Watch History</span>
+                        <strong class="profile-activity-count">{{ watch_history_count }}</strong>
+                    </div>
+                    <p>Ko'rilgan filmlar va ko'rish tarixi.</p>
+                    <div class="profile-activity-tags"><span>Tarix</span><span>Ko'rilganlar</span></div>
+                </div>
+            </div>
+            <div class="profile-activity-footer">
+                <span class="profile-activity-cta">Batafsil ko'rish <span aria-hidden="true">→</span></span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="glass-card prf-pw-card fade-up mt-4">
+    <div class="prf-pw-header" id="pwToggleBtn" onclick="togglePasswordSection()" role="button" tabindex="0"
+         onkeydown="if(event.key==='Enter'||event.key===' ')togglePasswordSection()">
+        <div class="prf-pw-header-left">
+            <div class="prf-pw-icon">🔐</div>
+            <div>
+                <h4>Parolni o'zgartirish</h4>
+                <p>Hisob xavfsizligini kuchaytirish uchun parolingizni yangilang</p>
+            </div>
+        </div>
+        <div class="prf-pw-chevron" id="pwChevron">▼</div>
+    </div>
+
+    <div class="prf-pw-body" id="pwBody" hidden>
+        <form method="post" action="{% url 'change_password' %}" novalidate id="pwChangeForm">
+            {% csrf_token %}
+            <div class="prf-pw-fields">
+                <div class="profile-info-item">
+                    <label class="form-label prf-field-label" for="id_old_password">Joriy parol</label>
+                    <input type="password"
+                           name="old_password"
+                           id="id_old_password"
+                           class="form-control"
+                           autocomplete="current-password"
+                           placeholder="Joriy parolingizni kiriting"
+                           required>
+                </div>
+                <div class="profile-info-item">
+                    <label class="form-label prf-field-label" for="id_new_password1">Yangi parol</label>
+                    <input type="password"
+                           name="new_password1"
+                           id="id_new_password1"
+                           class="form-control"
+                           autocomplete="new-password"
+                           placeholder="Yangi parolni kiriting"
+                           required>
+                </div>
+                <div class="profile-info-item">
+                    <label class="form-label prf-field-label" for="id_new_password2">Yangi parolni tasdiqlang</label>
+                    <input type="password"
+                           name="new_password2"
+                           id="id_new_password2"
+                           class="form-control"
+                           autocomplete="new-password"
+                           placeholder="Yangi parolni qayta kiriting"
+                           required>
+                </div>
+            </div>
+            <div class="prf-pw-actions">
+                <button type="submit" class="btn btn-primary-gradient">
+                    🔒 Parolni yangilash
+                </button>
+                <small class="text-muted prf-pw-note">
+                    Parolni o'zgartirgandan so'ng hisobdan chiqarilmaysiz.
+                </small>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="glass-card profile-danger-zone-wide fade-up mt-4 mb-4">
+    <div class="profile-danger-zone-content">
+        <div class="profile-danger-zone-left">
+            <div class="profile-danger-zone-badge">
+                <span class="profile-danger-zone-dot"></span>
+                {{ t.danger_zone }}
+            </div>
+            <h4 class="profile-danger-zone-title">Profilni o'chirish</h4>
+            <p class="profile-danger-zone-text">
+                Bu amal profilingizni va unga bog'liq barcha ma'lumotlarni butunlay o'chiradi.
+                Reytinglar, saqlangan filmlar, ko'rish tarixi va foydalanuvchi bilan bog'liq
+                boshqa yozuvlar bazadan olib tashlanadi. Bu amalni ortga qaytarib bo'lmaydi.
+            </p>
+        </div>
+        <div class="profile-danger-zone-right">
+            <button type="button"
+                    class="profile-danger-btn"
+                    data-delete-modal-open>
+                Profilni o'chirish
+            </button>
+        </div>
+    </div>
+</div>
+
+    <form id="deleteAccountForm"
+      method="post"
+      action="{% url 'delete_account' %}"
+      style="display:none;">
+    {% csrf_token %}
+</form>
+
+<div data-delete-modal-backdrop
+     class="delete-account-modal-overlay"
+     hidden
+     aria-hidden="true"></div>
+
+<div data-delete-modal
+     class="delete-account-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="deleteModalTitle">
+    <div class="delete-account-modal-card">
+        <div class="delete-account-modal-icon">⚠️</div>
+        <h3 id="deleteModalTitle">Profilni o'chirmoqchimisiz?</h3>
+        <p>
+            Barcha ma'lumotlaringiz, reytinglar va sevimlilar ro'yxati butunlay o'chib ketadi.
+            Bu amalni ortga qaytarib bo'lmaydi.
+        </p>
+        <div class="delete-account-modal-actions">
+            <button type="button"
+                    class="delete-account-cancel-btn"
+                    data-delete-modal-close>
+                Bekor qilish
+            </button>
+            <button type="button"
+                    class="btn btn-primary-gradient delete-account-confirm-btn prf-danger-confirm"
+                    onclick="document.getElementById('deleteAccountForm').submit()">
+                Ha, o'chirish
+            </button>
+        </div>
+    </div>
+</div>
+
+{% if profile.profile_photo and not is_edit_mode %}
+<div class="prf-lightbox-backdrop" id="lightboxBackdrop"></div>
+<div class="prf-lightbox-modal" id="lightboxModal" hidden aria-modal="true" role="dialog">
+    <div class="prf-lightbox-content">
+        <img src="{{ profile.profile_photo.url }}"
+             alt="{{ request.user.username }}"
+             class="prf-lightbox-img"
+             id="lightboxImg">
+    </div>
+    <button class="prf-lightbox-close" id="lightboxClose" aria-label="Yopish">✕</button>
+</div>
+{% endif %}
+
+</div>{# /container #}
 </section>
+
+<script>
+/* ── Photo Lightbox ────────────────────────────────────────── */
+(function () {
+    const thumb      = document.getElementById('profilePhotoThumb');
+    const backdrop   = document.getElementById('lightboxBackdrop');
+    const modal      = document.getElementById('lightboxModal');
+    const closeBtn   = document.getElementById('lightboxClose');
+    if (!thumb || !modal) return;
+
+    function openLightbox() {
+        modal.hidden = false;
+        requestAnimationFrame(() => {
+            backdrop && backdrop.classList.add('is-open');
+            modal.classList.add('is-open');
+        });
+        document.body.classList.add('modal-open');
+    }
+
+    function closeLightbox() {
+        backdrop && backdrop.classList.remove('is-open');
+        modal.classList.remove('is-open');
+        setTimeout(() => {
+            modal.hidden = true;
+            document.body.classList.remove('modal-open');
+        }, 250);
+    }
+
+    thumb.addEventListener('click', openLightbox);
+    closeBtn && closeBtn.addEventListener('click', closeLightbox);
+    backdrop && backdrop.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+})();
+
+/* ── Photo upload: instant preview ────────────────────────── */
+(function () {
+    const input      = document.getElementById('id_profile_photo');
+    const previewImg = document.getElementById('photoPreviewImg');
+    const previewAv  = document.getElementById('photoPreviewAvatar');
+    const zone       = document.getElementById('photoUploadZone');
+    if (!input) return;
+
+    input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            if (previewImg) {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+            } else if (previewAv) {
+                // Create img, hide avatar
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'prf-photo-upload-img';
+                img.id = 'photoPreviewImg';
+                previewAv.parentNode.insertBefore(img, previewAv);
+                previewAv.style.display = 'none';
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Drag-and-drop
+    if (zone) {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
+        });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    // Remove checkbox — clear preview when checked
+    const removeCb = document.querySelector('input[name="remove_profile_photo"]');
+    if (removeCb) {
+        removeCb.addEventListener('change', function () {
+            if (this.checked) {
+                if (previewImg) previewImg.style.opacity = '0.35';
+            } else {
+                if (previewImg) previewImg.style.opacity = '1';
+            }
+        });
+    }
+})();
+
+/* ── Password section toggle ───────────────────────────────── */
+function togglePasswordSection() {
+    const body    = document.getElementById('pwBody');
+    const chevron = document.getElementById('pwChevron');
+    if (!body) return;
+    const isHidden = body.hidden;
+    body.hidden = !isHidden;
+    if (chevron) chevron.textContent = isHidden ? '▲' : '▼';
+}
+
+/* ── Auto-open password section if there are error messages ── */
+document.addEventListener('DOMContentLoaded', function () {
+    const alerts = document.querySelectorAll('.alert-pill.alert-error, .alert-pill.alert-danger');
+    if (alerts.length > 0) {
+        // Check if any error relates to password change
+        for (const alert of alerts) {
+            const txt = alert.textContent.toLowerCase();
+            if (txt.includes('parol') || txt.includes('password')) {
+                const body = document.getElementById('pwBody');
+                const chevron = document.getElementById('pwChevron');
+                if (body) { body.hidden = false; }
+                if (chevron) { chevron.textContent = '▲'; }
+                break;
+            }
+        }
+    }
+});
+</script>
 {% endblock %}

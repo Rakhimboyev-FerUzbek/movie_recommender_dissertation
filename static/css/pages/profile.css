@@ -1643,4 +1643,455 @@ body[data-theme="light"] .profile-danger-btn:hover {
     }
 }
 
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  PROFILE PAGE — NEW COMPONENTS  (appended)                 ║
+   ╚══════════════════════════════════════════════════════════════╝ */
 
+/* ── prf-shell ─────────────────────────────────────────────── */
+.prf-shell {
+    padding: 0;
+    overflow: hidden;
+}
+
+.prf-body {
+    padding: 24px;
+}
+
+/* ── Edit-mode top bar ─────────────────────────────────────── */
+.prf-edit-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(124, 92, 255, 0.06);
+}
+
+.prf-edit-topbar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.prf-edit-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--primary, #7c5cff);
+    box-shadow: 0 0 0 5px rgba(124, 92, 255, 0.18);
+    flex-shrink: 0;
+}
+
+.prf-edit-topbar-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ── Sidebar card ──────────────────────────────────────────── */
+.prf-sidebar-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.prf-activity-mini {
+    display: flex;
+    gap: 12px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2px;
+}
+
+.prf-activity-mini span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.prf-stat-activity span:first-child {
+    margin-bottom: 4px;
+}
+
+.prf-username-val {
+    word-break: break-all;
+    font-size: 0.95rem;
+}
+
+.prf-break-word {
+    word-break: break-all;
+    font-size: 0.95rem;
+}
+
+/* ── Clickable profile photo (view mode) ───────────────────── */
+.prf-photo-clickable {
+    cursor: zoom-in;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.prf-photo-clickable:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.45), var(--shadow);
+}
+
+/* ── Photo upload zone (edit mode) ────────────────────────── */
+.prf-photo-upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 16px 16px;
+    border-radius: 18px;
+    border: 2px dashed var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 16px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.prf-photo-upload-zone.drag-over {
+    border-color: rgba(124, 92, 255, 0.55);
+    background: rgba(124, 92, 255, 0.06);
+}
+
+body[data-theme="light"] .prf-photo-upload-zone {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.prf-photo-upload-circle {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    border: 3px solid rgba(124, 92, 255, 0.3);
+    flex-shrink: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.prf-photo-upload-circle:hover {
+    border-color: rgba(124, 92, 255, 0.65);
+    box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.15);
+}
+
+.prf-photo-upload-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    transition: opacity 0.2s;
+}
+
+.prf-photo-upload-avatar {
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 2.5rem !important;
+    border-radius: 50% !important;
+}
+
+.prf-photo-upload-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.prf-photo-upload-circle:hover .prf-photo-upload-overlay {
+    opacity: 1;
+}
+
+.prf-photo-upload-overlay span:first-child {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.prf-photo-upload-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.prf-photo-pick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 92, 255, 0.35);
+    background: rgba(124, 92, 255, 0.1);
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.prf-photo-pick-btn:hover {
+    background: rgba(124, 92, 255, 0.18);
+    border-color: rgba(124, 92, 255, 0.55);
+    transform: translateY(-1px);
+}
+
+.prf-photo-remove-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #ff8aa2;
+    font-size: 0.83rem;
+    font-weight: 500;
+}
+
+.prf-photo-remove-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #ff5a73;
+    cursor: pointer;
+}
+
+.prf-photo-upload-hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* ── Password change card ──────────────────────────────────── */
+.prf-pw-card {
+    overflow: hidden;
+}
+
+.prf-pw-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    border-radius: inherit;
+}
+
+.prf-pw-header:hover {
+    background: rgba(124, 92, 255, 0.05);
+}
+
+.prf-pw-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.prf-pw-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(124, 92, 255, 0.1);
+    border: 1px solid rgba(124, 92, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.prf-pw-header h4 {
+    margin: 0 0 3px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.prf-pw-header p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.prf-pw-chevron {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.prf-pw-body {
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+}
+
+.prf-pw-fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 20px;
+    margin-bottom: 18px;
+}
+
+.prf-field-label {
+    font-size: 0.82rem !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+    font-weight: 500 !important;
+}
+
+.prf-pw-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.prf-pw-note {
+    font-size: 0.8rem;
+}
+
+/* ── Lightbox ──────────────────────────────────────────────── */
+.prf-lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 5, 12, 0);
+    backdrop-filter: blur(0px);
+    z-index: 9998;
+    transition: background 0.25s ease, backdrop-filter 0.25s ease;
+    pointer-events: none;
+}
+
+.prf-lightbox-backdrop.is-open {
+    background: rgba(3, 5, 12, 0.88);
+    backdrop-filter: blur(14px);
+    pointer-events: all;
+    cursor: zoom-out;
+}
+
+.prf-lightbox-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.prf-lightbox-modal.is-open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.prf-lightbox-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prf-lightbox-img {
+    width: min(420px, 80vw);
+    height: min(420px, 80vw);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(124, 92, 255, 0.5);
+    box-shadow: 0 0 80px rgba(124, 92, 255, 0.3), 0 0 0 1px rgba(255,255,255,0.06);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(.34, 1.4, .64, 1);
+    display: block;
+}
+
+.prf-lightbox-modal.is-open .prf-lightbox-img {
+    transform: scale(1);
+}
+
+.prf-lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+}
+
+.prf-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+    transform: scale(1.1);
+}
+
+/* ── Danger confirm button color ───────────────────────────── */
+.prf-danger-confirm {
+    background: linear-gradient(135deg, #ff5a73, #d4364f) !important;
+    border: none !important;
+    box-shadow: 0 6px 20px rgba(255, 90, 115, 0.4) !important;
+}
+
+.prf-danger-confirm:hover {
+    background: linear-gradient(135deg, #ff6e84, #e0435e) !important;
+    box-shadow: 0 10px 28px rgba(255, 90, 115, 0.55) !important;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 991px) {
+    .prf-pw-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .prf-edit-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .prf-edit-topbar-actions {
+        width: 100%;
+    }
+
+    .prf-edit-topbar-actions .btn {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .prf-pw-header-left {
+        gap: 12px;
+    }
+
+    .prf-pw-body {
+        padding: 0 16px 16px;
+    }
+
+    .prf-photo-upload-zone {
+        padding: 16px 12px;
+    }
+}
