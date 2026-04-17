@@ -1,10 +1,4 @@
-"""Thin facade.
-
-Tashqi import yo'li o'zgarmaydi:
-from apps.recommendations.services import RecommendationService
-"""
-
-from apps.recommendations.engines import (
+from apps.recommendations.engines.constants import (
     MODEL_AUTO,
     MODEL_CONTENT,
     MODEL_HYBRID,
@@ -15,8 +9,8 @@ from apps.recommendations.engines import (
     SCENARIO_LABELS,
     SCENARIO_NEW_USER,
     SCENARIO_NORMAL,
-    RecommendationService,
 )
+from apps.recommendations.engines.service import RecommendationService
 
 __all__ = [
     "MODEL_AUTO",

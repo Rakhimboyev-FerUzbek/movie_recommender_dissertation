@@ -1,1 +1,0 @@
-Bu papkada dissertation uchun diagramma, screenshot va qo'shimcha izohlar saqlanadi.

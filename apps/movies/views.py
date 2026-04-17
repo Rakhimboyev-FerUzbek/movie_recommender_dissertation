@@ -1,20 +1,26 @@
+from urllib.parse import parse_qs, urlparse
+
+from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from apps.interactions.forms import CommentForm, RatingForm
-from apps.interactions.models import Comment, CommentLike, Rating
+from apps.interactions.models import (
+    Comment,
+    CommentLike,
+    Favorite,
+    Rating,
+    WatchHistory,
+)
 from apps.movies.forms import MovieFilterForm
 from apps.movies.models import Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 from apps.recommendations.services import RecommendationService
-from django.db.models import Count, F, Q
-from django.utils import timezone
 
-from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
-from urllib.parse import parse_qs, urlparse
 
 def home_view(request):
     available_movies = (
@@ -75,7 +81,6 @@ def apply_genre_and_filter(queryset, genre_ids):
     if not genre_ids:
         return queryset
 
-    # AND semantics: tanlangan barcha janrlar filmda bo‘lishi kerak
     for genre_id in genre_ids:
         queryset = queryset.filter(genres__id=genre_id)
 
@@ -154,6 +159,106 @@ def movie_list_view(request):
     return render(request, "movies/movie_list.html", context)
 
 
+def _build_recommendation_reason(
+    *,
+    request,
+    movie,
+    next_url: str,
+):
+    if not request.user.is_authenticated or not next_url:
+        return None
+
+    recommendation_prefixes = (
+        reverse("recommend_for_you"),
+        reverse("recommendation_lab"),
+    )
+    if not next_url.startswith(recommendation_prefixes):
+        return None
+
+    parsed_next = urlparse(next_url)
+    query_params = parse_qs(parsed_next.query)
+
+    requested_model = "auto"
+    scenario_key = "normal"
+    target_user = request.user
+    top_k = None
+
+    if parsed_next.path.startswith(reverse("recommendation_lab")):
+        requested_model = query_params.get("model", ["auto"])[0] or "auto"
+        scenario_key = query_params.get("scenario", ["normal"])[0] or "normal"
+        target_user_id = query_params.get("user_id", [""])[0]
+        top_k_raw = query_params.get("top_k", [""])[0]
+
+        if target_user_id and str(target_user_id).isdigit():
+            User = get_user_model()
+            target_user = User.objects.filter(pk=int(target_user_id)).first() or request.user
+
+        if top_k_raw and str(top_k_raw).isdigit():
+            top_k = int(top_k_raw)
+
+    service = RecommendationService()
+
+    # Yangi service metodi bo'lsa, shuni ishlatamiz
+    if hasattr(service, "explain_movie_for_user"):
+        explanation = service.explain_movie_for_user(
+            user=target_user,
+            movie=movie,
+            requested_model=requested_model,
+            scenario=scenario_key,
+            top_k=top_k,
+        )
+        if explanation:
+            return explanation
+
+    # Fallback: eski logika
+    reason_result = service.recommend_for_user(
+        user=target_user,
+        model_key=requested_model,
+        top_k=top_k,
+        scenario=scenario_key,
+    )
+
+    current_item = next(
+        (item for item in reason_result["recommendations"] if item["movie"].id == movie.id),
+        None,
+    )
+
+    if current_item is None:
+        fallback_result = service.recommend_for_user(
+            user=target_user,
+            model_key=requested_model,
+            top_k=None,
+            scenario=scenario_key,
+        )
+        current_item = next(
+            (item for item in fallback_result["recommendations"] if item["movie"].id == movie.id),
+            None,
+        )
+        if current_item is not None:
+            reason_result = fallback_result
+
+    if current_item is None:
+        return None
+
+    payload = current_item.get("explanation_payload", {})
+
+    return {
+        "text": payload.get("text", current_item.get("explanation", "")),
+        "score": current_item.get("score", 0),
+        "requested_model": reason_result.get("requested_model"),
+        "resolved_model_label": reason_result.get("resolved_model_label"),
+        "scenario_label": reason_result.get("scenario_label"),
+        "user_rating_count": reason_result.get("user_rating_count", 0),
+        "preferred_genres": reason_result.get("preferred_genres", []),
+        "weights": reason_result.get("weights") or {},
+        "matched_genres": payload.get("matched_genres", []),
+        "reference_titles": payload.get("reference_titles", []),
+        "evidence": payload.get("evidence", []),
+        "score_breakdown": payload.get("score_breakdown", []),
+        "score_formula": payload.get("score_formula", ""),
+    }
+
+
 def movie_detail_view(request, slug):
     movie = get_object_or_404(
         Movie.objects.prefetch_related("genres"),
@@ -181,77 +286,17 @@ def movie_detail_view(request, slug):
 
     back_url = next_url or reverse("movie_list")
 
-    is_from_recommendations = False
-    recommendation_reason = None
+    recommendation_prefixes = (
+        reverse("recommend_for_you"),
+        reverse("recommendation_lab"),
+    )
+    is_from_recommendations = bool(next_url) and next_url.startswith(recommendation_prefixes)
 
-    if next_url:
-        recommendation_prefixes = (
-            reverse("recommend_for_you"),
-            reverse("recommendation_lab"),
-        )
-        is_from_recommendations = next_url.startswith(recommendation_prefixes)
-
-        if is_from_recommendations and request.user.is_authenticated:
-            parsed_next = urlparse(next_url)
-            query_params = parse_qs(parsed_next.query)
-
-            requested_model = "auto"
-            scenario_key = "normal"
-            target_user = request.user
-            top_k = None
-
-            if parsed_next.path.startswith(reverse("recommendation_lab")):
-                requested_model = query_params.get("model", ["auto"])[0] or "auto"
-                scenario_key = query_params.get("scenario", ["normal"])[0] or "normal"
-                target_user_id = query_params.get("user_id", [""])[0]
-                top_k_raw = query_params.get("top_k", [""])[0]
-
-                if target_user_id and str(target_user_id).isdigit():
-                    from django.contrib.auth import get_user_model
-                    User = get_user_model()
-                    target_user = User.objects.filter(pk=int(target_user_id)).first() or request.user
-
-                if top_k_raw and str(top_k_raw).isdigit():
-                    top_k = int(top_k_raw)
-
-            service = RecommendationService()
-            reason_result = service.recommend_for_user(
-                user=target_user,
-                model_key=requested_model,
-                top_k=top_k,
-                scenario=scenario_key,
-            )
-
-            current_item = next(
-                (item for item in reason_result["recommendations"] if item["movie"].id == movie.id),
-                None,
-            )
-
-            if current_item is None:
-                fallback_result = service.recommend_for_user(
-                    user=target_user,
-                    model_key=requested_model,
-                    top_k=None,
-                    scenario=scenario_key,
-                )
-                current_item = next(
-                    (item for item in fallback_result["recommendations"] if item["movie"].id == movie.id),
-                    None,
-                )
-                if current_item is not None:
-                    reason_result = fallback_result
-
-            if current_item is not None:
-                recommendation_reason = {
-                    "text": current_item["explanation"],
-                    "score": current_item.get("score", 0),
-                    "requested_model": reason_result.get("requested_model"),
-                    "resolved_model_label": reason_result.get("resolved_model_label"),
-                    "scenario_label": reason_result.get("scenario_label"),
-                    "user_rating_count": reason_result.get("user_rating_count", 0),
-                    "preferred_genres": reason_result.get("preferred_genres", []),
-                    "weights": reason_result.get("weights") or {},
-                }
+    recommendation_reason = _build_recommendation_reason(
+        request=request,
+        movie=movie,
+        next_url=next_url,
+    )
 
     existing_rating = None
     is_favorite = False

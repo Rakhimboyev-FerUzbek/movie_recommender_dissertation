@@ -13,3 +13,12 @@ DATABASES = {
         "PORT": config("DB_PORT", default="5434"),
     }
 }
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
