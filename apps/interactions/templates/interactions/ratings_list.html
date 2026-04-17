@@ -94,21 +94,30 @@
                             </a>
                         </div>
                         <div class="favorite-card-content">
-                            <div class="favorite-card-head">
-                                <div>
-                                    <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="interaction-title-link">{{ item.movie.title }}</a>
-                                    <div class="interaction-meta-line">
-                                        {% if item.movie.release_year %}<span>{{ item.movie.release_year }}</span>{% endif %}
-                                        <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="interaction-rating-badge">★ {{ item.rating|floatformat:1 }}</a>
-                                        <span>{{ item.movie.rating_count }} ta baho</span>
-                                    </div>
-                                </div>
-                                <span class="interaction-chip">Yangilangan: {{ item.updated_at|date:"Y-m-d H:i" }}</span>
+                            <div class="frc-header">
+                                <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="interaction-title-link">{{ item.movie.title }}</a>
+                            </div>
+                            <div class="frc-meta">
+                                {% if item.movie.release_year %}<span class="frc-year">{{ item.movie.release_year }}</span>{% endif %}
+                                <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="frc-rating-badge">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    {{ item.rating|floatformat:1 }}
+                                </a>
+                                <span class="frc-count-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                    {{ item.movie.rating_count }} ta baho
+                                </span>
                             </div>
                             <p class="interaction-overview">{{ item.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
                             {% if item.review %}
                                 <div class="interaction-user-review">{{ item.review }}</div>
                             {% endif %}
+                            <div class="frc-footer">
+                                <span class="frc-chip">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    {{ item.updated_at|date:"Y-m-d H:i" }}
+                                </span>
+                            </div>
                         </div>
                     </article>
                 {% empty %}

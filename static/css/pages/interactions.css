@@ -1005,3 +1005,170 @@ body[data-theme="light"] .interaction-click-card:hover {
         transform: translateY(-4px);
     }
 }
+
+.frc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.interaction-title-link {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.frc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+}
+
+.frc-year {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.frc-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 8px;
+    background: rgba(255, 196, 70, 0.1);
+    border: 1px solid rgba(255, 196, 70, 0.22);
+    color: #ffc446;
+    font-weight: 700;
+    font-size: 0.83rem;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+    line-height: 1;
+}
+
+.frc-rating-badge:hover {
+    background: rgba(255, 196, 70, 0.2);
+    border-color: rgba(255, 196, 70, 0.4);
+    color: #ffc446;
+}
+
+.frc-rating-badge svg {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+}
+
+.frc-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.frc-count-badge svg {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+    opacity: 0.55;
+}
+
+.frc-watch-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 8px;
+    background: rgba(76, 201, 240, 0.08);
+    border: 1px solid rgba(76, 201, 240, 0.2);
+    color: rgba(76, 201, 240, 0.9);
+    font-weight: 700;
+    font-size: 0.83rem;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.frc-watch-badge svg {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+}
+
+.interaction-overview {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.frc-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 2px;
+}
+
+.frc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.frc-chip svg {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+.frc-genre-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    line-height: 1;
+}
+
+body[data-theme="light"] .frc-chip {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+body[data-theme="light"] .frc-genre-chip {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="light"] .frc-watch-badge {
+    background: rgba(12, 164, 207, 0.08);
+    border-color: rgba(12, 164, 207, 0.18);
+    color: rgba(12, 164, 207, 0.9);
+}
+
+/* Tighten card inner gap for new layout */
+.favorite-card-content {
+    gap: 8px !important;
+}
