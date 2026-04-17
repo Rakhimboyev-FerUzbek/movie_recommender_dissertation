@@ -5,67 +5,195 @@
 {% block content %}
 <section class="auth-page">
     <div class="container">
-        <div class="auth-shell">
+        <div class="auth-shell auth-shell-wide auth-shell-register">
             <div class="auth-brand-panel fade-up">
                 <span class="hero-kicker">{{ t.site_name }}</span>
-                <h1>{{ t.hero_title }}</h1>
-                <p>{{ t.hero_subtitle }}</p>
+                <h1>O'zingizga mos kino profili yarating</h1>
+                <p>Akkaunt oching, sevimli janrlaringizni tanlang va sizga mos tavsiyalarni darhol oling.</p>
             </div>
 
             <div class="auth-form-panel fade-up">
-                <div class="auth-card">
+                <div class="auth-card auth-card--register-compact">
                     <h2>{{ t.create_account }}</h2>
 
-                    <form method="post" novalidate>
+                    <form method="post" id="registerForm">
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
-                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                            <div class="alert alert-danger auth-form-field--span-2">{{ form.non_field_errors }}</div>
                         {% endif %}
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.username.label }}</label>
-                            {{ form.username }}
-                            <div class="text-danger small">{{ form.username.errors }}</div>
-                        </div>
+                        <div class="auth-form-grid">
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.username.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.username }}
+                                <div class="text-danger small">{{ form.username.errors }}</div>
+                            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.email.label }}</label>
-                            {{ form.email }}
-                            <div class="text-danger small">{{ form.email.errors }}</div>
-                        </div>
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.email.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.email }}
+                                <div class="text-danger small">{{ form.email.errors }}</div>
+                            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.first_name.label }}</label>
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.first_name.label }} <span class="auth-required-mark">*</span></label>
                                 {{ form.first_name }}
                                 <div class="text-danger small">{{ form.first_name.errors }}</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.last_name.label }}</label>
+
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.last_name.label }} <span class="auth-required-mark">*</span></label>
                                 {{ form.last_name }}
                                 <div class="text-danger small">{{ form.last_name.errors }}</div>
                             </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.password1.label }}</label>
-                            {{ form.password1 }}
-                            <div class="text-danger small">{{ form.password1.errors }}</div>
-                        </div>
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.birth_date.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.birth_date }}
+                                <div class="text-danger small">{{ form.birth_date.errors }}</div>
+                            </div>
 
-                        <div class="mb-4">
-                            <label class="form-label">{{ form.password2.label }}</label>
-                            {{ form.password2 }}
-                            <div class="text-danger small">{{ form.password2.errors }}</div>
-                        </div>
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.phone_number.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.phone_number }}
+                                <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                            </div>
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.gender.label }} <span class="auth-required-mark">*</span></label>
+                                {{ form.gender }}
+                                <div class="text-danger small">{{ form.gender.errors }}</div>
+                            </div>
 
-                        <button type="submit" class="btn btn-primary-gradient w-100 mb-3">{{ t.register }}</button>
-                        <a href="{% url 'login' %}" class="btn btn-outline-light w-100">{{ t.have_account }}</a>
+                            <div class="auth-form-field auth-form-field--span-2">
+                                <label class="form-label">{{ form.preferred_genres.label }} <span class="auth-required-mark">*</span></label>
+                                <div class="auth-genre-grid">
+                                    {% for checkbox in form.preferred_genres %}
+                                        <label class="profile-genre-option">
+                                            {{ checkbox.tag }}
+                                            <span>{{ checkbox.choice_label }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="text-danger small auth-genre-error" id="registerGenreError">
+                                    {{ form.preferred_genres.errors }}
+                                </div>
+                            </div>
+
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.password1.label }} <span class="auth-required-mark">*</span></label>
+                                <div class="auth-password-shell">
+                                    {{ form.password1 }}
+                                    <button
+                                        type="button"
+                                        class="auth-password-toggle"
+                                        data-toggle-password="id_password1"
+                                        aria-label="Parolni ko'rsatish"
+                                        aria-pressed="false"
+                                    >
+                                        <svg class="auth-password-icon auth-password-icon--show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+                                        </svg>
+                                        <svg class="auth-password-icon auth-password-icon--hide" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                            <path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                            <path d="M9.88 5.09A11.2 11.2 0 0 1 12 5c6.4 0 10 7 10 7a18.78 18.78 0 0 1-3.04 3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M6.61 6.62C4.05 8.26 2 12 2 12a18.7 18.7 0 0 0 6.74 5.55A10.7 10.7 0 0 0 12 18c1.2 0 2.33-.17 3.37-.48" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="text-danger small">{{ form.password1.errors }}</div>
+                            </div>
+
+                            <div class="auth-form-field">
+                                <label class="form-label">{{ form.password2.label }} <span class="auth-required-mark">*</span></label>
+                                <div class="auth-password-shell">
+                                    {{ form.password2 }}
+                                    <button
+                                        type="button"
+                                        class="auth-password-toggle"
+                                        data-toggle-password="id_password2"
+                                        aria-label="Parolni ko'rsatish"
+                                        aria-pressed="false"
+                                    >
+                                        <svg class="auth-password-icon auth-password-icon--show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+                                        </svg>
+                                        <svg class="auth-password-icon auth-password-icon--hide" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                            <path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                            <path d="M9.88 5.09A11.2 11.2 0 0 1 12 5c6.4 0 10 7 10 7a18.78 18.78 0 0 1-3.04 3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M6.61 6.62C4.05 8.26 2 12 2 12a18.7 18.7 0 0 0 6.74 5.55A10.7 10.7 0 0 0 12 18c1.2 0 2.33-.17 3.37-.48" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="text-danger small">{{ form.password2.errors }}</div>
+                            </div>
+
+                            <div class="auth-form-actions auth-form-field--span-2">
+                                <button type="submit" class="btn btn-primary-gradient w-100">{{ t.register }}</button>
+                                <a href="{% url 'login' %}" class="btn btn-outline-light w-100">{{ t.have_account }}</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const form = document.getElementById("registerForm");
+    const genreError = document.getElementById("registerGenreError");
+    const genreInputs = Array.from(document.querySelectorAll('.auth-genre-grid input[type="checkbox"]'));
+
+    function bindPasswordToggles() {
+        document.querySelectorAll("[data-toggle-password]").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const inputId = this.dataset.togglePassword;
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                const makeVisible = input.type === "password";
+                input.type = makeVisible ? "text" : "password";
+
+                this.classList.toggle("is-visible", makeVisible);
+                this.setAttribute("aria-pressed", makeVisible ? "true" : "false");
+                this.setAttribute("aria-label", makeVisible ? "Parolni yashirish" : "Parolni ko'rsatish");
+            });
+        });
+    }
+
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            const hasCheckedGenre = genreInputs.some((input) => input.checked);
+
+            if (!hasCheckedGenre) {
+                event.preventDefault();
+                if (genreError) {
+                    genreError.textContent = "Kamida bitta sevimli janr tanlang.";
+                }
+                return;
+            }
+
+            if (genreError) {
+                genreError.textContent = "";
+            }
+        });
+    }
+
+    genreInputs.forEach((input) => {
+        input.addEventListener("change", function () {
+            if (this.checked && genreError) {
+                genreError.textContent = "";
+            }
+        });
+    });
+
+    bindPasswordToggles();
+})();
+</script>
 {% endblock %}

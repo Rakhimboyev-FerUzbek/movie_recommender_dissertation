@@ -20,6 +20,8 @@ from apps.interactions.forms import (
 from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
 from apps.movies.models import Movie
 
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -55,6 +57,33 @@ def _redirect_to_movie_detail(request, slug: str, next_url: str = "", anchor: st
 def _is_ajax(request) -> bool:
     return request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
+def _resolve_interaction_target_user(request):
+    """
+    Default: foydalanuvchi faqat o'zining interactionlarini ko'radi.
+    Agar URL da user_id kelsa:
+      - o'zi bilan bir xil bo'lsa: ruxsat
+      - boshqa user bo'lsa: faqat superuser ko'ra oladi
+      - aks holda: 403
+    """
+    target_user = request.user
+    requested_user_id = (request.GET.get("user_id") or "").strip()
+
+    if not requested_user_id:
+        return target_user
+
+    if not requested_user_id.isdigit():
+        raise PermissionDenied("Noto'g'ri user_id.")
+
+    requested_user_id = int(requested_user_id)
+
+    if requested_user_id == request.user.id:
+        return request.user
+
+    if not request.user.is_superuser:
+        raise PermissionDenied("Siz boshqa foydalanuvchining interaction ma'lumotlarini ko'ra olmaysiz.")
+
+    User = get_user_model()
+    return get_object_or_404(User, pk=requested_user_id)
 
 def _favorite_ordering(sort_key: str):
     return {
@@ -293,8 +322,10 @@ def toggle_favorite_view(request, slug):
 
 @login_required
 def favorites_list_view(request):
+    target_user = _resolve_interaction_target_user(request)
+
     form = FavoriteFilterForm(request.GET or None)
-    qs = Favorite.objects.filter(user=request.user).select_related("movie").prefetch_related("movie__genres")
+    qs = Favorite.objects.filter(user=target_user).select_related("movie").prefetch_related("movie__genres")
 
     q = request.GET.get("q", "").strip()
     sort = request.GET.get("sort", "recent").strip() or "recent"
@@ -322,13 +353,16 @@ def favorites_list_view(request):
         "pagination_query": current_params.urlencode(),
         "selected_query": q,
         "selected_sort": sort,
+        "target_user": target_user,
     })
 
 
 @login_required
 def ratings_list_view(request):
+    target_user = _resolve_interaction_target_user(request)
+
     form = UserRatingFilterForm(request.GET or None)
-    qs = Rating.objects.filter(user=request.user).select_related("movie").prefetch_related("movie__genres")
+    qs = Rating.objects.filter(user=target_user).select_related("movie").prefetch_related("movie__genres")
 
     q = request.GET.get("q", "").strip()
     sort = request.GET.get("sort", "recent").strip() or "recent"
@@ -356,13 +390,16 @@ def ratings_list_view(request):
         "pagination_query": current_params.urlencode(),
         "selected_query": q,
         "selected_sort": sort,
+        "target_user": target_user,
     })
 
 
 @login_required
 def watch_history_list_view(request):
+    target_user = _resolve_interaction_target_user(request)
+
     form = WatchHistoryFilterForm(request.GET or None)
-    qs = WatchHistory.objects.filter(user=request.user).select_related("movie")
+    qs = WatchHistory.objects.filter(user=target_user).select_related("movie")
 
     q = request.GET.get("q", "").strip()
     sort = request.GET.get("sort", "recent").strip() or "recent"
@@ -390,4 +427,5 @@ def watch_history_list_view(request):
         "pagination_query": current_params.urlencode(),
         "selected_query": q,
         "selected_sort": sort,
+        "target_user": target_user,
     })

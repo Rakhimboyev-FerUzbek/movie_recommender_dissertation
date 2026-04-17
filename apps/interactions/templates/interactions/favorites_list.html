@@ -77,7 +77,13 @@
         <div id="interactionResults">
             <div class="interaction-two-col-grid fade-up" id="favoritesGrid">
                 {% for favorite in favorites %}
-                <article class="glass-card favorite-row-card" id="favorite-card-{{ favorite.movie.slug }}">
+                <article
+                    class="glass-card favorite-row-card interaction-click-card"
+                    id="favorite-card-{{ favorite.movie.slug }}"
+                    data-href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
+                    tabindex="0"
+                    role="link"
+                >
                     <div class="favorite-card-media">
                         <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
                         <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
@@ -92,19 +98,9 @@
                     </div>
 
                     <div class="favorite-card-content">
-                        <div class="favorite-card-head">
-                            <div>
-                                <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
-                                   class="interaction-title-link">{{ favorite.movie.title }}</a>
-                                <div class="interaction-meta-line">
-                                    {% if favorite.movie.release_year %}
-                                        <span>{{ favorite.movie.release_year }}</span>
-                                    {% endif %}
-                                    <span>★ {{ favorite.movie.avg_rating|floatformat:1 }}</span>
-                                    <span>{{ favorite.movie.rating_count }} ta baho</span>
-                                </div>
-                            </div>
-
+                        <div class="frc-header">
+                            <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
+                               class="interaction-title-link">{{ favorite.movie.title }}</a>
                             <form method="post"
                                   action="{% url 'favorite_toggle' favorite.movie.slug %}"
                                   class="favorite-toggle-form"
@@ -113,19 +109,31 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                 <button type="submit" class="favorite-remove-btn" title="Remove from favorites">
-                                    ♥
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                                 </button>
                             </form>
                         </div>
-
+                        <div class="frc-meta">
+                            {% if favorite.movie.release_year %}<span class="frc-year">{{ favorite.movie.release_year }}</span>{% endif %}
+                            <span class="frc-rating-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                {{ favorite.movie.avg_rating|floatformat:1 }}
+                            </span>
+                            <span class="frc-count-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                {{ favorite.movie.rating_count }} ta baho
+                            </span>
+                        </div>
                         <p class="interaction-overview">
                             {{ favorite.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}
                         </p>
-
-                        <div class="interaction-chip-row">
-                            <span class="interaction-chip">Qo'shilgan: {{ favorite.created_at|date:"Y-m-d H:i" }}</span>
+                        <div class="frc-footer">
+                            <span class="frc-chip">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                {{ favorite.created_at|date:"Y-m-d H:i" }}
+                            </span>
                             {% for genre in favorite.movie.genres.all|slice:":3" %}
-                                <span class="genre-chip">{{ genre.name }}</span>
+                                <span class="frc-genre-chip">{{ genre.name }}</span>
                             {% endfor %}
                         </div>
                     </div>
@@ -138,7 +146,12 @@
                 {% endfor %}
             </div>
 
-            {% include "includes/pagination.html" with page_obj=page_obj page_sequence=page_sequence pagination_query=pagination_query %}
+            <div
+                id="interactionPagerMeta"
+                class="interaction-hidden-pager"
+                data-next-url="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}{% endif %}">
+            </div>
+            <div id="interactionInfiniteSentinel" class="interaction-infinite-sentinel" aria-hidden="true"></div>
         </div>
 
         <div id="favoritesSnackbarStack" class="favorites-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
@@ -165,6 +178,8 @@
 
     let timer = null;
     let controller = null;
+    let infiniteObserver = null;
+    let isLoadingMore = false;
 
     const FIELD_LABELS = {
         date: "Qo'shilgan sana",
@@ -228,6 +243,30 @@
         return params.toString();
     }
 
+    function getPagerMeta() {
+        return document.getElementById("interactionPagerMeta");
+    }
+
+    function getGrid() {
+        return document.getElementById("favoritesGrid");
+    }
+
+    function getSentinel() {
+        return document.getElementById("interactionInfiniteSentinel");
+    }
+
+    function getNextUrl() {
+        const pagerMeta = getPagerMeta();
+        return pagerMeta ? (pagerMeta.dataset.nextUrl || "") : "";
+    }
+
+    function updateNextUrl(value) {
+        const pagerMeta = getPagerMeta();
+        if (pagerMeta) {
+            pagerMeta.dataset.nextUrl = value || "";
+        }
+    }
+
     async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
         const activeElement = document.activeElement;
         const isSearchFocused = preserveCaret && activeElement === searchInput;
@@ -269,9 +308,75 @@
                     searchInput.setSelectionRange(start, end);
                 }
             }
+
+            setupInfiniteScroll();
         } catch (error) {
             if (error.name !== "AbortError") console.error(error);
         }
+    }
+
+    async function loadMoreResults() {
+        const nextUrl = getNextUrl();
+        const grid = getGrid();
+        if (!nextUrl || !grid || isLoadingMore) return;
+
+        isLoadingMore = true;
+
+        try {
+            const response = await fetch(nextUrl, {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextGrid = doc.getElementById("favoritesGrid");
+            const nextPagerMeta = doc.getElementById("interactionPagerMeta");
+
+            if (!nextGrid || !nextPagerMeta) return;
+
+            grid.insertAdjacentHTML("beforeend", nextGrid.innerHTML);
+            updateNextUrl(nextPagerMeta.dataset.nextUrl || "");
+            setupInfiniteScroll();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            isLoadingMore = false;
+        }
+    }
+
+    function setupInfiniteScroll() {
+        if (infiniteObserver) {
+            infiniteObserver.disconnect();
+            infiniteObserver = null;
+        }
+
+        const sentinel = getSentinel();
+        const nextUrl = getNextUrl();
+
+        if (!sentinel) return;
+
+        if (!nextUrl) {
+            sentinel.hidden = true;
+            return;
+        }
+
+        sentinel.hidden = false;
+
+        infiniteObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreResults();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        infiniteObserver.observe(sentinel);
     }
 
     function escapeHtml(text) {
@@ -332,7 +437,7 @@
     }
 
     function ensureEmptyState() {
-        const grid = document.getElementById("favoritesGrid");
+        const grid = getGrid();
         if (!grid) return;
 
         const cards = grid.querySelectorAll(".favorite-row-card");
@@ -394,16 +499,6 @@
         fetchAndReplaceResults(true, false);
     });
 
-    document.addEventListener("click", function (event) {
-        const link = event.target.closest("#interactionResults .pagination a");
-        if (!link) return;
-
-        event.preventDefault();
-        const href = link.getAttribute("href");
-        if (!href) return;
-        fetchAndReplaceResults(true, false, href);
-    });
-
     document.addEventListener("submit", async function (event) {
         const formEl = event.target.closest(".favorite-toggle-form");
         if (!formEl) return;
@@ -430,7 +525,42 @@
         }
     });
 
+    document.addEventListener("click", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (
+            event.target.closest("a, button, form, input, textarea, select, label")
+        ) {
+            return;
+        }
+
+        const href = card.dataset.href;
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (event.key === "Enter" || event.key === " ") {
+            if (
+                event.target.closest("a, button, form, input, textarea, select, label")
+            ) {
+                return;
+            }
+            event.preventDefault();
+            const href = card.dataset.href;
+            if (href) {
+                window.location.href = href;
+            }
+        }
+    });
+
     syncSortUi();
+    setupInfiniteScroll();
 })();
 </script>
 {% endblock %}

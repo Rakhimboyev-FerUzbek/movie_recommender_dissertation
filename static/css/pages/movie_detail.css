@@ -816,3 +816,233 @@ body[data-theme="light"] .detail-favorite-icon-btn.is-active .favorite-heart-ico
         transform: translateY(110%);
     }
 }
+
+/* =========================
+   DETAIL EXPLAINABILITY BLOCK
+   ========================= */
+
+.detail-v4-reason-card {
+    overflow: hidden;
+}
+
+.detail-v4-reason-head {
+    padding: 18px 22px;
+    font-size: 1.02rem;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.42), rgba(93, 170, 255, 0.28));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-v4-reason-body {
+    padding: 18px 22px 20px;
+}
+
+.detail-v4-reason-text {
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.detail-v4-reason-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.detail-v4-reason-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.detail-v4-reason-pill--primary {
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.18), rgba(93, 170, 255, 0.18));
+    border-color: rgba(124, 92, 255, 0.28);
+}
+
+.detail-v4-reason-subblock {
+    margin-top: 18px;
+}
+
+.detail-v4-reason-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.detail-v4-reason-weights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.detail-v4-reason-weight {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-reason-head,
+    .detail-v4-reason-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .detail-v4-reason-meta,
+    .detail-v4-reason-weights {
+        gap: 8px;
+    }
+}
+
+/* =========================
+   MOVIE DETAIL
+   Review input = 1 qator
+   Add + Edit (pencil) uchun
+   ========================= */
+
+.detail-v4-review-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: start;
+}
+
+.detail-v4-review-row textarea,
+.detail-v4-review-row .form-control,
+#reviewEditorWrap textarea,
+#reviewEditorWrap .form-control {
+    min-height: 46px !important;
+    height: 46px !important;
+    max-height: 46px !important;
+    resize: none !important;
+    overflow-y: auto !important;
+    line-height: 1.35 !important;
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+    white-space: nowrap !important;
+}
+
+.detail-v4-review-row .btn,
+#reviewEditorWrap .btn {
+    min-height: 46px !important;
+    height: 46px !important;
+    align-self: stretch !important;
+}
+
+.detail-v4-review-counter {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+@media (max-width: 767px) {
+    .detail-v4-review-row {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-v4-review-row .btn,
+    #reviewEditorWrap .btn {
+        width: 100%;
+    }
+}
+/* =========================
+   FILMS PAGE SORT - COMPACT SIZE
+   ========================= */
+
+.catalog-filter-card .catalog-sort-row {
+    grid-template-columns: minmax(0, 1fr) 64px !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+}
+
+.catalog-filter-card .catalog-sort-select__trigger {
+    min-height: 46px !important;
+    height: 46px !important;
+    padding: 0 14px !important;
+    border-radius: 12px !important;
+    font-size: 0.95rem !important;
+    box-shadow: none !important;
+}
+
+.catalog-filter-card .catalog-sort-direction {
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    min-height: 46px !important;
+    height: 46px !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+}
+
+.catalog-filter-card .catalog-sort-direction__icon {
+    font-size: 1rem !important;
+}
+
+.catalog-filter-card .catalog-sort-select__menu {
+    top: calc(100% + 5px) !important;
+    border-radius: 12px !important;
+    padding: 5px !important;
+    max-height: 210px !important;
+}
+
+.catalog-filter-card .catalog-sort-select__option {
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    font-size: 0.94rem !important;
+    border-radius: 8px !important;
+}
+
+/* open holatda ortiqcha "katta" ko'rinish bermasin */
+.catalog-filter-card .catalog-sort-select.is-open .catalog-sort-select__trigger {
+    box-shadow: none !important;
+}
+
+/* mobil uchun */
+@media (max-width: 767px) {
+    .catalog-filter-card .catalog-sort-row {
+        grid-template-columns: minmax(0, 1fr) 58px !important;
+        gap: 7px !important;
+    }
+
+    .catalog-filter-card .catalog-sort-select__trigger {
+        min-height: 42px !important;
+        height: 42px !important;
+        padding: 0 12px !important;
+        font-size: 0.92rem !important;
+    }
+
+    .catalog-filter-card .catalog-sort-direction {
+        width: 58px !important;
+        min-width: 58px !important;
+        max-width: 58px !important;
+        min-height: 42px !important;
+        height: 42px !important;
+    }
+
+    .catalog-filter-card .catalog-sort-select__option {
+        min-height: 34px !important;
+        padding: 7px 9px !important;
+        font-size: 0.9rem !important;
+    }
+}

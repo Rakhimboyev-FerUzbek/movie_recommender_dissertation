@@ -8,7 +8,6 @@
         <div class="glass-card auto-rec-hero mb-4">
             <div class="auto-rec-hero__layout">
                 <div class="auto-rec-hero__copy">
-                    <span class="hero-kicker">Personalized Picks</span>
                     <h1 class="mb-2">Shaxsiy tavsiyalar</h1>
                     <p class="text-muted mb-0">
                         Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.
@@ -33,7 +32,6 @@
 
                             <div class="auto-rec-sort-row">
                                 <select id="autoRecSortField" class="form-select auto-rec-native-select">
-                                    <option value="default">Standart</option>
                                     <option value="rating">Reyting</option>
                                     <option value="year">Yil</option>
                                     <option value="count">Baho soni</option>
@@ -48,18 +46,18 @@
                                     aria-label="Saralash yo‘nalishini almashtirish"
                                     title="Saralash yo‘nalishini almashtirish"
                                 >
-                                    <span class="auto-rec-sort-direction__icon">↓</span>
-                                    <span class="auto-rec-sort-direction__text">Kamayish</span>
+                                    <span class="auto-rec-sort-direction__icon"></span>
+                                    <span class="auto-rec-sort-direction__text">Nom</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="auto-rec-hero__foot">
+                    <!-- <div class="auto-rec-hero__foot">
                         <div class="auto-rec-results-info">
                             Jami tavsiyalar: <strong id="autoRecVisibleCount">{{ total_recommendations }}</strong>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -124,7 +122,7 @@
                                     <span class="auto-rec-pill">{{ item.movie.release_year }}</span>
                                 {% endif %}
 
-                                <span class="auto-rec-pill auto-rec-pill--rating">
+                                <span class="rating-star auto-rec-pill auto-rec-pill--rating">
                                     ★ {{ item.avg_rating|floatformat:1 }}
                                 </span>
 
@@ -184,7 +182,6 @@
 
     function defaultDirectionFor(field) {
         if (field === "title") return false;
-        if (field === "default") return true;
         return true;
     }
 
@@ -195,24 +192,13 @@
     function syncDirectionButton() {
         const field = sortField.value;
         const desc = isDescending();
-        const isDefault = field === "default";
+        const isRelevance = field === "relevance";
 
-        sortDirectionBtn.disabled = isDefault;
-        sortDirectionBtn.classList.toggle("is-disabled", isDefault);
+        sortDirectionBtn.disabled = isRelevance;
+        sortDirectionBtn.classList.toggle("is-disabled", isRelevance);
 
-        if (isDefault) {
-            sortDirectionIcon.textContent = "•";
-            sortDirectionText.textContent = "Standart";
-            return;
-        }
-
-        if (desc) {
-            sortDirectionIcon.textContent = "↓";
-            sortDirectionText.textContent = "";
-        } else {
-            sortDirectionIcon.textContent = "↑";
-            sortDirectionText.textContent = "";
-        }
+        sortDirectionIcon.textContent = desc ? "↓" : "↑";
+        sortDirectionText.textContent = desc ? "" : "";
     }
 
     function showSnackbar(movieTitle, variant) {
@@ -262,7 +248,7 @@
         const field = sortField.value;
         const desc = isDescending();
 
-        if (field === "default") {
+        if (field === "relevance") {
             return [...filteredCards].sort((a, b) => {
                 return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
             });
@@ -400,7 +386,6 @@
 
             btn.addEventListener("click", () => {
                 selectEl.value = option.value;
-
                 sortDirectionBtn.dataset.desc = String(defaultDirectionFor(option.value));
                 syncDirectionButton();
                 syncValue();
@@ -501,7 +486,7 @@
 
     searchInput.addEventListener("input", () => applyFilters(true));
     sortDirectionBtn.addEventListener("click", () => {
-        if (sortField.value === "default") return;
+        if (sortField.value === "relevance") return;
         sortDirectionBtn.dataset.desc = String(!isDescending());
         syncDirectionButton();
         applyFilters(true);

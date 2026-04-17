@@ -1,0 +1,79 @@
+<article class="auto-rec-card home-reco-card">
+    <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}" class="auto-rec-card__poster-link">
+        <div class="auto-rec-card__poster-wrap">
+            {% if movie.poster_url %}
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="auto-rec-card__poster">
+            {% else %}
+                <div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
+                    <span>{{ movie.title|slice:":1" }}</span>
+                </div>
+            {% endif %}
+        </div>
+    </a>
+
+    <div class="auto-rec-card__body">
+        <div class="auto-rec-card__title-row">
+            <h5 class="auto-rec-card__title">
+                <a href="{% url 'movie_detail' movie.slug %}?next={{ next_url|default:request.get_full_path|urlencode }}">
+                    {{ movie.title }}
+                </a>
+            </h5>
+
+            {% if show_favorite_button %}
+                {% if user.is_authenticated %}
+                    <form
+                        method="post"
+                        action="{% url 'favorite_toggle' movie.slug %}"
+                        class="auto-rec-fav-form home-fav-form"
+                        data-movie-title="{{ movie.title|escape }}"
+                    >
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next_url|default:request.get_full_path }}">
+                        <button
+                            type="submit"
+                            class="auto-rec-fav-btn {% if movie.id in favorite_movie_ids %}is-active{% endif %}"
+                            aria-label="Favorites"
+                            aria-pressed="{% if movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
+                            title="Favorites"
+                        >
+                            <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
+                        </button>
+                    </form>
+                {% else %}
+                    <a
+                        href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
+                        class="auto-rec-fav-btn"
+                        aria-label="Favorites"
+                        title="Favorites"
+                    >
+                        <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="auto-rec-card__country">
+            {{ movie.country|default:"Noma'lum davlat" }}
+        </div>
+
+        <div class="auto-rec-card__stats">
+            {% if movie.release_year %}
+                <span class="auto-rec-pill">{{ movie.release_year }}</span>
+            {% endif %}
+
+            <span class="auto-rec-pill auto-rec-pill--rating">
+                ★ {{ movie.avg_rating|floatformat:1 }}
+            </span>
+
+            <span class="auto-rec-pill">
+                {{ movie.rating_count }} ta baho
+            </span>
+        </div>
+
+        <div class="auto-rec-card__genres">
+            {% for genre in movie.genres.all|slice:":2" %}
+                <span class="genre-chip">{{ genre.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</article>

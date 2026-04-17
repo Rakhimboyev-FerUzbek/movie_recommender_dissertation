@@ -184,3 +184,16 @@ from apps.interactions.models import Rating
 for r in Rating.objects.exclude(review="").order_by("id")[:20]:
     print(r.id, r.review, len(r.review))
 --------------------------------------------------------------------------------------------------------------------------------
+SELECT *
+FROM public.movies_movie
+ORDER BY CHAR_LENGTH(title) Desc;
+--------------------------------------------------------------------------------------------------------------------------------
+py manage.py fill_random_profile_data
+py manage.py fill_random_profile_data --limit 20
+py manage.py fill_random_profile_data --overwrite
+py manage.py fill_random_profile_data --usernames admin1 user1 user2
+py manage.py fill_random_profile_data --include-superusers
+py manage.py fill_random_profile_data --dry-run
+py manage.py fill_random_profile_data --dry-run --limit 10
+--------------------------------------------------------------------------------------------------------------------------------
+
