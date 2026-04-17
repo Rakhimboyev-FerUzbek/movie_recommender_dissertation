@@ -1,0 +1,15 @@
+flowchart TD
+    A[User tanlandi] --> B[RuntimeRepository.load]
+    B --> C[movies_df va ratings_df]
+    C --> D[user_item_matrix]
+    C --> E[content profiles]
+    C --> F[item similarity]
+    C --> G[svd predictions]
+    D --> H[Model selection]
+    E --> H
+    F --> H
+    G --> H
+    H --> I[Scoring]
+    I --> J[materialize_items]
+    J --> K[build_explanation_payload]
+    K --> L[Recommendation UI]

@@ -1,10 +1,16 @@
-from django.contrib import admin
-from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
 
-from config.ui_views import set_language_view
 from apps.movies.views import home_view
+from config.error_views import (
+    custom_404_view,
+    custom_500_view,
+    preview_404,
+    preview_500,
+)
+from config.ui_views import set_language_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -17,4 +23,11 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    urlpatterns += [
+        path("__preview__/404/", preview_404, name="preview_404"),
+        path("__preview__/500/", preview_500, name="preview_500"),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "config.error_views.custom_404_view"
+handler500 = "config.error_views.custom_500_view"

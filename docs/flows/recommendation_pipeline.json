@@ -1,0 +1,19 @@
+{
+  "name": "recommendation_pipeline",
+  "description": "Runtime recommendation generation flow.",
+  "steps": [
+    {"order": 1, "action": "load_movies_and_ratings_from_database"},
+    {"order": 2, "action": "build_movies_dataframe"},
+    {"order": 3, "action": "build_ratings_dataframe"},
+    {"order": 4, "action": "build_user_item_matrix"},
+    {"order": 5, "action": "build_content_similarity_profiles"},
+    {"order": 6, "action": "build_item_similarity_matrix"},
+    {"order": 7, "action": "build_svd_prediction_dataframe"},
+    {"order": 8, "action": "resolve_model_or_auto_strategy"},
+    {"order": 9, "action": "score_candidates"},
+    {"order": 10, "action": "merge_with_fallback_if_needed"},
+    {"order": 11, "action": "materialize_movie_objects"},
+    {"order": 12, "action": "build_explainability_payload"},
+    {"order": 13, "action": "return_ranked_recommendations_to_view"}
+  ]
+}
