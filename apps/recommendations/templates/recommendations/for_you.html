@@ -75,8 +75,8 @@
                     >
                         <a href="{% url 'movie_detail' item.movie.slug %}?next={{ request.get_full_path|urlencode }}" class="auto-rec-card__poster-link">
                             <div class="auto-rec-card__poster-wrap">
-                                {% if item.movie.poster_url %}
-                                    <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}" class="auto-rec-card__poster">
+                            {% if item.movie.poster_src %}
+                                <img src="{{ item.movie.poster_src }}" alt="{{ item.movie.title }}" class="auto-rec-card__poster">
                                 {% else %}
                                     <div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
                                         <span>{{ item.movie.title|slice:":1" }}</span>

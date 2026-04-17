@@ -23,6 +23,7 @@ class Movie(models.Model):
     release_year = models.PositiveIntegerField(null=True, blank=True)
     duration_minutes = models.PositiveIntegerField(null=True, blank=True)
     poster_url = models.URLField(blank=True)
+    poster_image = models.ImageField(upload_to="movies/posters/", blank=True, null=True)
 
     imdb_id = models.CharField(max_length=50, blank=True)
     imdb_url = models.URLField(blank=True)
@@ -32,7 +33,7 @@ class Movie(models.Model):
     country = models.CharField(max_length=255, blank=True)
     director = models.CharField(max_length=255, blank=True)
     cast_names = models.JSONField(default=list, blank=True)
-    
+
     trailer_url = models.URLField(blank=True)
     trailer_site = models.CharField(max_length=32, blank=True)
     full_video_file = models.FileField(upload_to="movies/full/", blank=True, null=True)
@@ -59,6 +60,15 @@ class Movie(models.Model):
         if self.release_year:
             return f"{self.title} ({self.release_year})"
         return self.title
+
+    @property
+    def poster_src(self) -> str:
+        if self.poster_image:
+            try:
+                return self.poster_image.url
+            except ValueError:
+                pass
+        return self.poster_url
 
     def save(self, *args, **kwargs):
         if not self.slug:

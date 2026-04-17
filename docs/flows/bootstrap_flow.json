@@ -1,19 +1,51 @@
 {
   "name": "bootstrap_flow",
-  "description": "Fresh repository setup and local environment bootstrap.",
+  "description": "Recommended local bootstrap sequence for reproducing the project with seeded data, TMDB enrichment, trailer sync and poster cache.",
   "steps": [
-    {"order": 1, "action": "clone_repository"},
-    {"order": 2, "action": "create_virtual_environment"},
-    {"order": 3, "action": "install_dependencies"},
-    {"order": 4, "action": "create_env_file"},
-    {"order": 5, "action": "prepare_postgresql_database"},
-    {"order": 6, "action": "run_migrations"},
-    {"order": 7, "action": "seed_movielens_dataset"},
-    {"order": 8, "action": "enrich_movies_from_tmdb"},
-    {"order": 9, "action": "fetch_trailer_urls"},
-    {"order": 10, "action": "seed_rating_reviews"},
-    {"order": 11, "action": "fill_random_profile_data"},
-    {"order": 12, "action": "create_admin_user"},
-    {"order": 13, "action": "run_development_server"}
+    {
+      "order": 1,
+      "command": "python manage.py migrate",
+      "purpose": "Apply Django migrations and create database schema."
+    },
+    {
+      "order": 2,
+      "command": "python manage.py seed_movielens --path=ml-100k",
+      "purpose": "Import MovieLens 100K movies, genres, synthetic users and ratings."
+    },
+    {
+      "order": 3,
+      "command": "python manage.py enrich_tmdb_movies",
+      "purpose": "Enrich movies with TMDB metadata and save poster_url."
+    },
+    {
+      "order": 4,
+      "command": "python manage.py fetch_all_trailer_urls",
+      "purpose": "Fetch trailer URLs and trailer site values."
+    },
+    {
+      "order": 5,
+      "command": "python manage.py seed_rating_reviews",
+      "purpose": "Generate short demo reviews for ratings."
+    },
+    {
+      "order": 6,
+      "command": "python manage.py fill_random_profile_data",
+      "purpose": "Fill demo profile data for existing users."
+    },
+    {
+      "order": 7,
+      "command": "python manage.py create_admin admin1 --password test12345 --email admin1@example.com --activate",
+      "purpose": "Create a staff admin account for management and demo."
+    },
+    {
+      "order": 8,
+      "command": "python manage.py cache_movie_posters",
+      "purpose": "Download poster files from poster_url into local media storage."
+    },
+    {
+      "order": 9,
+      "command": "python manage.py runserver",
+      "purpose": "Start the local development server."
+    }
   ]
 }

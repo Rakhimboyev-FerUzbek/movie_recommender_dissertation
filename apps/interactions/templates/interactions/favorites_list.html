@@ -88,8 +88,8 @@
                         <span class="favorite-rank-badge">#{{ forloop.counter0|add:page_obj.start_index }}</span>
                         <a href="{% url 'movie_detail' favorite.movie.slug %}?next={{ request.get_full_path|urlencode }}"
                            class="favorite-poster-link">
-                            {% if favorite.movie.poster_url %}
-                                <img src="{{ favorite.movie.poster_url }}" alt="{{ favorite.movie.title }}"
+                            {% if favorite.movie.poster_src %}
+                                <img src="{{ favorite.movie.poster_src }}" alt="{{ favorite.movie.title }}"
                                      class="favorite-poster-img">
                             {% else %}
                                 <div class="favorite-poster-placeholder">{{ favorite.movie.title|slice:":1" }}</div>

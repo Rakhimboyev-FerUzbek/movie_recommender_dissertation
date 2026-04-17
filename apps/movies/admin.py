@@ -65,6 +65,7 @@ class MovieAdmin(admin.ModelAdmin):
                     "genres",
                     ("release_year", "duration_minutes"),
                     "poster_url",
+                    "poster_image",
                     "is_active",
                 )
             },
