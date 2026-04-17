@@ -15,7 +15,7 @@ Bu loyiha foydalanuvchiga quyidagi imkoniyatlarni beradi:
 - favorite va watch history yuritish;
 - foydalanuvchi profilini boshqarish;
 - AI-based recommendation natijalarini ko'rish;
-- staff foydalanuvchilar uchun recommendation laboratory orqali turli model va scenario'larni solishtirish.
+- admin foydalanuvchilar uchun recommendation laboratory orqali turli model va scenario'larni solishtirish.
 
 ## 2. Texnologik stack
 
