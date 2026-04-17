@@ -1,0 +1,8 @@
+flowchart LR
+    A[Push to GitHub] --> B[GitHub Actions CI]
+    B --> C[check]
+    C --> D[makemigrations --check]
+    D --> E[migrate]
+    E --> F[collectstatic]
+    F --> G[Render build]
+    G --> H[gunicorn start]

@@ -177,59 +177,115 @@
             </div>
         </div>
 
-    {% if show_recommendation_reason %}
-    <div class="glass-card detail-v4-reason-card mt-4">
-        <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
+        {% if show_recommendation_reason %}
+        <div class="glass-card detail-v4-reason-card mt-4">
+            <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
 
-        {% if recommendation_reason %}
-            <div class="detail-v4-reason-body">
-                <p class="detail-v4-reason-text mb-0">{{ recommendation_reason.text }}</p>
+            {% if recommendation_reason %}
+                <div class="detail-v4-reason-body">
+                    <p class="detail-v4-reason-text mb-0">{{ recommendation_reason.text }}</p>
 
-                <div class="detail-v4-reason-meta">
-                    <span class="detail-v4-reason-pill detail-v4-reason-pill--primary">
-                        Model: {{ recommendation_reason.resolved_model_label }}
-                    </span>
-                    <span class="detail-v4-reason-pill">
-                        Scenario: {{ recommendation_reason.scenario_label }}
-                    </span>
-                    <span class="detail-v4-reason-pill">
-                        Score: {{ recommendation_reason.score|floatformat:3 }}
-                    </span>
-                    <span class="detail-v4-reason-pill">
-                        Reytinglar soni: {{ recommendation_reason.user_rating_count }}
-                    </span>
-                </div>
-
-                {% if recommendation_reason.preferred_genres %}
-                <div class="detail-v4-reason-subblock">
-                    <div class="detail-v4-reason-subtitle">Profil janrlari</div>
-                    <div class="genre-chip-wrap mt-2">
-                        {% for genre_name in recommendation_reason.preferred_genres %}
-                            <span class="genre-chip">{{ genre_name }}</span>
-                        {% endfor %}
+                    <div class="detail-v4-reason-meta">
+                        <span class="detail-v4-reason-pill detail-v4-reason-pill--primary">
+                            Model: {{ recommendation_reason.resolved_model_label }}
+                        </span>
+                        <span class="detail-v4-reason-pill">
+                            Scenario: {{ recommendation_reason.scenario_label }}
+                        </span>
+                        <span class="detail-v4-reason-pill">
+                            Score: {{ recommendation_reason.score|floatformat:4 }}
+                        </span>
+                        <span class="detail-v4-reason-pill">
+                            Reytinglar soni: {{ recommendation_reason.user_rating_count }}
+                        </span>
                     </div>
-                </div>
-                {% endif %}
 
-                {% if recommendation_reason.resolved_model_label == "Hybrid" or recommendation_reason.resolved_model_label == "Hybrid (Weighted)" or recommendation_reason.weights %}
-                <div class="detail-v4-reason-subblock">
-                    <div class="detail-v4-reason-subtitle">Hybrid vaznlari</div>
-                    <div class="detail-v4-reason-weights">
-                        <span class="detail-v4-reason-weight">Content: {{ recommendation_reason.weights.content|default:0|floatformat:2 }}</span>
-                        <span class="detail-v4-reason-weight">Item: {{ recommendation_reason.weights.item|default:0|floatformat:2 }}</span>
-                        <span class="detail-v4-reason-weight">SVD: {{ recommendation_reason.weights.svd|default:0|floatformat:2 }}</span>
-                        <span class="detail-v4-reason-weight">Popularity: {{ recommendation_reason.weights.popularity|default:0|floatformat:2 }}</span>
+                    {% if recommendation_reason.score_formula %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Score formulasi</div>
+                        <div class="detail-v4-reason-formula">
+                            {{ recommendation_reason.score_formula }}
+                        </div>
                     </div>
+                    {% endif %}
+
+                    {% if recommendation_reason.score_breakdown %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Score breakdown</div>
+                        <div class="detail-v4-reason-breakdown">
+                            {% for row in recommendation_reason.score_breakdown %}
+                                <div class="detail-v4-reason-break-card">
+                                    <div class="detail-v4-reason-break-card__title">{{ row.label }}</div>
+                                    <div class="detail-v4-reason-break-card__grid">
+                                        <span>Raw: <strong>{{ row.raw|floatformat:4 }}</strong></span>
+                                        <span>Normalized: <strong>{{ row.normalized|floatformat:4 }}</strong></span>
+                                        <span>Weight: <strong>{{ row.weight|floatformat:2 }}</strong></span>
+                                        <span>Contribution: <strong>{{ row.contribution|floatformat:4 }}</strong></span>
+                                    </div>
+                                    <div class="detail-v4-reason-break-card__formula">
+                                        {{ row.formula }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if recommendation_reason.evidence %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Asosiy dalillar</div>
+                        <div class="detail-v4-reason-evidence">
+                            {% for ev in recommendation_reason.evidence %}
+                                <div class="detail-v4-reason-evidence-item">
+                                    <span class="detail-v4-reason-evidence-item__label">{{ ev.label }}</span>
+                                    <strong class="detail-v4-reason-evidence-item__value">{{ ev.value }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if recommendation_reason.matched_genres %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Mos janrlar</div>
+                        <div class="genre-chip-wrap mt-2">
+                            {% for genre_name in recommendation_reason.matched_genres %}
+                                <span class="genre-chip">{{ genre_name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if recommendation_reason.reference_titles %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Tayanilgan filmlar</div>
+                        <div class="genre-chip-wrap mt-2">
+                            {% for title in recommendation_reason.reference_titles %}
+                                <span class="detail-v4-reason-weight">{{ title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if recommendation_reason.weights %}
+                    <div class="detail-v4-reason-subblock">
+                        <div class="detail-v4-reason-subtitle">Hybrid vaznlari</div>
+                        <div class="detail-v4-reason-weights">
+                            <span class="detail-v4-reason-weight">Content: {{ recommendation_reason.weights.content|default:0|floatformat:2 }}</span>
+                            <span class="detail-v4-reason-weight">Item: {{ recommendation_reason.weights.item|default:0|floatformat:2 }}</span>
+                            <span class="detail-v4-reason-weight">SVD: {{ recommendation_reason.weights.svd|default:0|floatformat:2 }}</span>
+                            <span class="detail-v4-reason-weight">Popularity: {{ recommendation_reason.weights.popularity|default:0|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-            </div>
-        {% else %}
-            <div class="detail-v4-reason-body">
-                Bu film tavsiyalar oqimidan ochilgan, lekin ayni sessiya uchun explainability matni topilmadi.
-            </div>
+            {% else %}
+                <div class="detail-v4-reason-body">
+                    Bu film tavsiyalar oqimidan ochilgan, lekin explainability topilmadi.
+                </div>
+            {% endif %}
+        </div>
         {% endif %}
-    </div>
-    {% endif %}
 
         <div class="detail-v4-engagement-grid mt-4">
             <div class="glass-card detail-v4-media-card">

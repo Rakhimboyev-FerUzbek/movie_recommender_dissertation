@@ -1,0 +1,16 @@
+flowchart TD
+    U[User / Browser] --> T[Django Templates UI]
+    T --> V1[apps.users.views]
+    T --> V2[apps.movies.views]
+    T --> V3[apps.interactions.views]
+    T --> V4[apps.recommendations.views]
+    V1 --> DB[(PostgreSQL)]
+    V2 --> DB
+    V3 --> DB
+    V4 --> S[RecommendationService]
+    S --> R[RuntimeRepository]
+    R --> DB
+    R --> C[Django Cache]
+    V2 --> TMDB[TMDB API]
+    GH[GitHub Repository] --> CI[GitHub Actions]
+    CI --> RD[Render]
