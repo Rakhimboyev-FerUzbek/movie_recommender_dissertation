@@ -351,6 +351,11 @@ def movie_detail_view(request, slug):
     for comment in comments:
         comment.is_liked = comment.id in liked_ids
         comment.is_own = request.user.is_authenticated and comment.user_id == request.user.id
+        delta_seconds = abs((comment.updated_at - comment.created_at).total_seconds()) if comment.updated_at and comment.created_at else 0
+        if delta_seconds >= 1:
+            comment.display_time = f"Tahrirlandi: {timezone.localtime(comment.updated_at).strftime('%Y-%m-%d %H:%M:%S')}"
+        else:
+            comment.display_time = timezone.localtime(comment.created_at).strftime('%Y-%m-%d %H:%M:%S')
 
     context = {
         "movie": movie,

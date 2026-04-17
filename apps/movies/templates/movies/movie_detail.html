@@ -401,7 +401,7 @@
 
                 <div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
                     {% for comment in comments %}
-                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% else %}is-other{% endif %}">
+                    <article class="detail-v4-comment-card {% if comment.is_own %}is-own{% else %}is-other{% endif %}" id="comment-card-{{ comment.id }}">
                         <div class="detail-v4-comment-top">
                             <div class="detail-v4-comment-user">
                                 <span class="detail-v4-comment-author">
@@ -434,7 +434,7 @@
                             <form method="post" action="{% url 'comment_edit' comment.id %}" class="comment-edit-form is-hidden" id="edit-form-{{ comment.id }}" data-comment-id="{{ comment.id }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <textarea name="body" class="form-control" rows="3" maxlength="1000">{{ comment.body }}</textarea>
+                                <textarea name="body" class="form-control" rows="3" maxlength="2000">{{ comment.body }}</textarea>
                                 <div class="comment-edit-form-actions">
                                     <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
                                     <button
@@ -450,19 +450,38 @@
                         {% endif %}
 
                         <div class="detail-v4-comment-footer">
-                         <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% else %}is-other{% endif %}">
-                            {{ comment.created_at|date:"Y-m-d H:i:s" }}
-                        </div>
+                            <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% else %}is-other{% endif %}" id="comment-time-{{ comment.id }}">
+                                {{ comment.display_time }}
+                            </div>
 
                             {% if user.is_authenticated and comment.is_own %}
-                                <button
-                                    type="button"
-                                    class="comment-edit-btn bottom-edit-btn"
-                                    data-edit-target="edit-form-{{ comment.id }}"
-                                    data-display-target="display-body-{{ comment.id }}"
-                                >
-                                    ✎
-                                </button>
+                                <div class="detail-v4-comment-footer-actions">
+                                    <button
+                                        type="button"
+                                        class="comment-edit-btn bottom-edit-btn"
+                                        data-edit-target="edit-form-{{ comment.id }}"
+                                        data-display-target="display-body-{{ comment.id }}"
+                                        title="Tahrirlash"
+                                        aria-label="Kommentariyani tahrirlash"
+                                    >
+                                        ✎
+                                    </button>
+
+                                    <form method="post" action="{% url 'comment_delete' comment.id %}" class="comment-delete-form" data-comment-id="{{ comment.id }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <button
+                                            type="submit"
+                                            class="comment-delete-btn"
+                                            title="O'chirish"
+                                            aria-label="Kommentariyani o'chirish"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                                <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
                             {% endif %}
                         </div>
                     </article>
@@ -503,10 +522,43 @@
     const commentsList = document.getElementById("commentsList");
     const commentErrors = document.getElementById("commentCreateErrors");
 
+    const snackbar = document.getElementById("kc-snackbar");
+    const snackIcon = document.getElementById("kc-snackbar-icon");
+    const snackMsg = document.getElementById("kc-snackbar-msg");
+    const snackClose = document.getElementById("kc-snackbar-close");
+    let snackTimer = null;
+
     function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text || "";
         return div.innerHTML;
+    }
+
+    function showSnackbar(message, type = "success") {
+        if (!snackbar) return;
+        clearTimeout(snackTimer);
+
+        snackbar.className = `kc-snackbar kc-snackbar--${type} kc-snackbar--visible`;
+        snackIcon.textContent = type === "success" ? "✓" : "✕";
+        snackMsg.textContent = message;
+
+        snackTimer = setTimeout(hideSnackbar, 3500);
+    }
+
+    function hideSnackbar() {
+        if (!snackbar) return;
+        snackbar.classList.remove("kc-snackbar--visible");
+        snackbar.classList.add("kc-snackbar--hiding");
+        setTimeout(() => {
+            snackbar.classList.remove("kc-snackbar--hiding");
+        }, 350);
+    }
+
+    if (snackClose) {
+        snackClose.addEventListener("click", function () {
+            clearTimeout(snackTimer);
+            hideSnackbar();
+        });
     }
 
     async function postFormAjax(form) {
@@ -565,6 +617,9 @@
 
     function buildOwnCommentCard(comment, csrfToken) {
         const safeBody = escapeHtml(comment.body).replace(/\n/g, "<br>");
+        const likeUrl = comment.urls?.like || "#";
+        const editUrl = comment.urls?.edit || "#";
+        const deleteUrl = comment.urls?.delete || "#";
 
         return `
             <article class="detail-v4-comment-card is-own" id="comment-card-${comment.id}">
@@ -574,11 +629,11 @@
                     </div>
 
                     <div class="detail-v4-comment-actions">
-                        <form method="post" action="/movies/comments/${comment.id}/like/" class="comment-like-form" data-comment-id="${comment.id}">
+                        <form method="post" action="${likeUrl}" class="comment-like-form" data-comment-id="${comment.id}">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                             <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
                             <button type="submit" class="comment-like-btn compact-like-btn" id="comment-like-btn-${comment.id}">
-                                ♥ <span class="comment-like-count" id="comment-like-count-${comment.id}">${comment.like_count}</span>
+                                ♥ <span class="comment-like-count" id="comment-like-count-${comment.id}">${comment.like_count ?? 0}</span>
                             </button>
                         </form>
                     </div>
@@ -588,10 +643,10 @@
                     ${safeBody}
                 </div>
 
-                <form method="post" action="/movies/comments/${comment.id}/edit/" class="comment-edit-form is-hidden" id="edit-form-${comment.id}" data-comment-id="${comment.id}">
+                <form method="post" action="${editUrl}" class="comment-edit-form is-hidden" id="edit-form-${comment.id}" data-comment-id="${comment.id}">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                     <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
-                    <textarea name="body" class="form-control" rows="3" maxlength="1000">${escapeHtml(comment.body)}</textarea>
+                    <textarea name="body" class="form-control" rows="3" maxlength="2000">${escapeHtml(comment.body)}</textarea>
                     <div class="comment-edit-form-actions">
                         <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
                         <button
@@ -606,18 +661,49 @@
                 </form>
 
                 <div class="detail-v4-comment-footer">
-                    <div class="detail-v4-comment-time" id="comment-time-${comment.id}">${escapeHtml(comment.created_at)}</div>
-                    <button
-                        type="button"
-                        class="comment-edit-btn bottom-edit-btn"
-                        data-edit-target="edit-form-${comment.id}"
-                        data-display-target="display-body-${comment.id}"
-                    >
-                        ✎
-                    </button>
+                    <div class="detail-v4-comment-time" id="comment-time-${comment.id}">${escapeHtml(comment.display_time || comment.created_at || "")}</div>
+                    <div class="detail-v4-comment-footer-actions">
+                        <button
+                            type="button"
+                            class="comment-edit-btn bottom-edit-btn"
+                            data-edit-target="edit-form-${comment.id}"
+                            data-display-target="display-body-${comment.id}"
+                            title="Tahrirlash"
+                            aria-label="Kommentariyani tahrirlash"
+                        >
+                            ✎
+                        </button>
+
+                        <form method="post" action="${deleteUrl}" class="comment-delete-form" data-comment-id="${comment.id}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                            <button type="submit" class="comment-delete-btn" title="O'chirish" aria-label="Kommentariyani o'chirish">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </article>
         `;
+    }
+
+    function ensureEmptyState() {
+        if (!commentsList) return;
+        const cards = commentsList.querySelectorAll(".detail-v4-comment-card");
+        let emptyState = document.getElementById("commentsEmptyState");
+
+        if (cards.length === 0 && !emptyState) {
+            commentsList.insertAdjacentHTML("beforeend", `
+                <div class="media-empty-state compact" id="commentsEmptyState">
+                    <h5>Hozircha kommentariya yo‘q</h5>
+                    <p>Birinchi bo‘lib fikr qoldiring.</p>
+                </div>
+            `);
+        } else if (cards.length > 0 && emptyState) {
+            emptyState.remove();
+        }
     }
 
     if (ratingInput && starButtons.length) {
@@ -728,8 +814,10 @@
                 }
 
                 commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment, csrfToken));
+                showSnackbar(data.message || "Kommentariya qo'shildi.", "success");
             } catch (error) {
                 console.error(error);
+                showSnackbar("Kommentariyani yuborishda xatolik yuz berdi.", "error");
             }
         });
     }
@@ -742,7 +830,10 @@
 
         try {
             const { response, data } = await postFormAjax(likeForm);
-            if (!response.ok || !data.ok) return;
+            if (!response.ok || !data.ok) {
+                showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
+                return;
+            }
 
             const commentId = data.comment_id;
             const countEl = document.getElementById(`comment-like-count-${commentId}`);
@@ -757,6 +848,7 @@
             }
         } catch (error) {
             console.error(error);
+            showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
         }
     });
 
@@ -795,93 +887,97 @@
 
         try {
             const { response, data } = await postFormAjax(editForm);
-            if (!response.ok || !data.ok) return;
+            if (!response.ok || !data.ok) {
+                showSnackbar("Kommentariyani saqlashda xatolik yuz berdi.", "error");
+                return;
+            }
 
             const commentId = editForm.dataset.commentId;
             const bodyEl = document.getElementById(`display-body-${commentId}`);
             const timeEl = document.getElementById(`comment-time-${commentId}`);
+            const textarea = editForm.querySelector('textarea[name="body"]');
 
             if (bodyEl) {
                 bodyEl.innerHTML = escapeHtml(data.comment.body).replace(/\n/g, "<br>");
                 bodyEl.classList.remove("is-hidden", "d-none");
             }
 
-            if (timeEl && data.comment.updated_at) {
-                timeEl.textContent = data.comment.updated_at;
+            if (textarea) {
+                textarea.value = data.comment.body;
+            }
+
+            if (timeEl) {
+                timeEl.textContent = data.comment.display_time || data.comment.updated_at;
             }
 
             editForm.classList.add("is-hidden");
+            showSnackbar(data.message || "Kommentariya tahrirlandi.", "success");
         } catch (error) {
             console.error(error);
+            showSnackbar("Kommentariyani saqlashda xatolik yuz berdi.", "error");
         }
     });
-})();
 
-(function () {
-    // ── Snackbar ──────────────────────────────────────────────
-    const snackbar   = document.getElementById("kc-snackbar");
-    const snackIcon  = document.getElementById("kc-snackbar-icon");
-    const snackMsg   = document.getElementById("kc-snackbar-msg");
-    const snackClose = document.getElementById("kc-snackbar-close");
-    let snackTimer   = null;
+    document.addEventListener("submit", async function (event) {
+        const deleteForm = event.target.closest(".comment-delete-form");
+        if (!deleteForm) return;
 
-    function showSnackbar(message, type) {
-        if (!snackbar) return;
-        clearTimeout(snackTimer);
-
-        snackbar.className = "kc-snackbar kc-snackbar--" + type + " kc-snackbar--visible";
-        snackIcon.textContent  = type === "success" ? "✓" : "✕";
-        snackMsg.textContent   = message;
-
-        snackTimer = setTimeout(hideSnackbar, 3500);
-    }
-
-    function hideSnackbar() {
-        if (!snackbar) return;
-        snackbar.classList.remove("kc-snackbar--visible");
-        snackbar.classList.add("kc-snackbar--hiding");
-        setTimeout(() => {
-            snackbar.classList.remove("kc-snackbar--hiding");
-        }, 350);
-    }
-
-    if (snackClose) {
-        snackClose.addEventListener("click", function () {
-            clearTimeout(snackTimer);
-            hideSnackbar();
-        });
-    }
-
-    // ── Favorite Toggle ───────────────────────────────────────
-    const favoriteForm   = document.getElementById("favoriteToggleForm");
-    const favoriteButton = document.getElementById("favoriteToggleButton");
-    if (!favoriteForm || !favoriteButton) return;
-
-    favoriteForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
+        const confirmed = window.confirm("Kommentariyani o‘chirmoqchimisiz?");
+        if (!confirmed) return;
+
         try {
-            const response = await fetch(favoriteForm.action, {
-                method: "POST",
-                body: new FormData(favoriteForm),
-                headers: {"X-Requested-With": "XMLHttpRequest"}
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data.ok) return;
-
-            favoriteButton.classList.toggle("is-active", data.is_favorite);
-            favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
-
-            if (data.is_favorite) {
-                showSnackbar("Film sevimlilarga qo'shildi ♥", "success");
-            } else {
-                showSnackbar("Film sevimlilardan olib tashlandi", "error");
+            const { response, data } = await postFormAjax(deleteForm);
+            if (!response.ok || !data.ok) {
+                showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
+                return;
             }
+
+            const commentId = deleteForm.dataset.commentId || data.comment_id;
+            const card = document.getElementById(`comment-card-${commentId}`);
+            if (card) {
+                card.remove();
+            }
+
+            ensureEmptyState();
+            showSnackbar(data.message || "Kommentariya o'chirildi.", "success");
         } catch (error) {
             console.error(error);
+            showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
         }
     });
+
+    const favoriteForm = document.getElementById("favoriteToggleForm");
+    const favoriteButton = document.getElementById("favoriteToggleButton");
+
+    if (favoriteForm && favoriteButton) {
+        favoriteForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            try {
+                const response = await fetch(favoriteForm.action, {
+                    method: "POST",
+                    body: new FormData(favoriteForm),
+                    headers: {"X-Requested-With": "XMLHttpRequest"}
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.ok) return;
+
+                favoriteButton.classList.toggle("is-active", data.is_favorite);
+                favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+                if (data.is_favorite) {
+                    showSnackbar("Film sevimlilarga qo'shildi ♥", "success");
+                } else {
+                    showSnackbar("Film sevimlilardan olib tashlandi", "error");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
 })();
 </script>
 {% endblock %}
