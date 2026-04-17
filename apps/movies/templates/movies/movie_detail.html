@@ -13,8 +13,8 @@
         <div class="detail-v4-top-area fade-up">
             <div class="detail-v4-poster-col">
                 <div class="detail-v4-poster-card">
-                    {% if movie.poster_url %}
-                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
+                {% if movie.poster_src %}
+                    <img src="{{ movie.poster_src }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
                     {% else %}
                         <div class="detail-v4-poster-placeholder">
                             <span>{{ movie.title|slice:":1" }}</span>

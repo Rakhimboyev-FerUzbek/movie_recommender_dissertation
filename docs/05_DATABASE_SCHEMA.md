@@ -41,7 +41,12 @@ Janr nomlarini saqlaydi.
 
 ### `movies_movie`
 
-Asosiy movie jadvali. Title, slug, overview, release_year, duration, poster, TMDB/IMDb ID va aggregate metrikalarni saqlaydi.
+Asosiy movie jadvali. Title, slug, overview, release_year, duration, poster URL, lokal poster fayli, TMDB/IMDb ID va aggregate metrikalarni saqlaydi.
+
+Muhim poster maydonlari:
+
+- `poster_url` — TMDB yoki tashqi image URL
+- `poster_image` — lokal media storage'ga yuklab olingan poster fayli
 
 ### `interactions_rating`
 
@@ -119,6 +124,7 @@ erDiagram
         int release_year
         int duration_minutes
         string poster_url
+        string poster_image
         string imdb_id
         string imdb_url
         string tmdb_id
@@ -197,7 +203,21 @@ erDiagram
 - comment like alohida jadval orqali saqlanadi;
 - rating, favorite, watch history uchun `(user, movie)` unique cheklovlari mavjud.
 
-## 5.5. Recommendation DB nega alohida jadvalga yozmaydi?
+## 5.5. Poster cache DB nuqtai nazaridan qanday ishlaydi?
+
+Poster cache tizimi ikkita darajali modeldan foydalanadi:
+
+1. `poster_url` — tashqi manbaga ishora qiluvchi URL.
+2. `poster_image` — lokal yuklab olingan poster fayli.
+
+Frontend `poster_src` property orqali poster manbasini tanlaydi:
+
+- avval `poster_image` tekshiriladi;
+- u bo'lmasa `poster_url` ishlatiladi.
+
+Bu yondashuv fallback xavfsizligini saqlaydi va posterlarni bosqichma-bosqich lokal storage'ga o'tkazishga imkon beradi.
+
+## 5.6. Recommendation DB nega alohida jadvalga yozmaydi?
 
 Bu loyiha tavsiyalarni oldindan persist qilish o'rniga, runtime vaqtida hisoblaydi. Buning sabablari:
 

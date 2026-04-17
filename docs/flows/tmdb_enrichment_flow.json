@@ -1,12 +1,46 @@
 {
   "name": "tmdb_enrichment_flow",
-  "description": "Movie metadata enrichment from TMDB API.",
+  "description": "TMDB-based metadata enrichment and poster caching pipeline.",
   "steps": [
-    {"order": 1, "action": "load_active_movies_from_database"},
-    {"order": 2, "action": "resolve_tmdb_id"},
-    {"order": 3, "action": "fetch_movie_details"},
-    {"order": 4, "action": "extract_overview_runtime_language_country_director_cast"},
-    {"order": 5, "action": "build_poster_url"},
-    {"order": 6, "action": "save_enriched_fields_to_database"}
+    {
+      "order": 1,
+      "component": "enrich_tmdb_movies",
+      "input": "Movie title, release_year, imdb_id, existing tmdb_id",
+      "output": [
+        "tmdb_id",
+        "overview",
+        "duration_minutes",
+        "language",
+        "country",
+        "director",
+        "cast_names",
+        "poster_url",
+        "release_year"
+      ]
+    },
+    {
+      "order": 2,
+      "component": "fetch_all_trailer_urls",
+      "input": "tmdb_id or resolvable movie metadata",
+      "output": [
+        "trailer_url",
+        "trailer_site"
+      ]
+    },
+    {
+      "order": 3,
+      "component": "cache_movie_posters",
+      "input": "poster_url",
+      "output": [
+        "poster_image local file",
+        "updated media storage"
+      ]
+    },
+    {
+      "order": 4,
+      "component": "template poster_src",
+      "input": "poster_image, poster_url",
+      "output": "Resolved poster source with local-first fallback"
+    }
   ]
 }

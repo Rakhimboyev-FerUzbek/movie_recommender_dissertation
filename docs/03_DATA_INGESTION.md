@@ -95,70 +95,77 @@ Bor ma'lumotni qayta yozish bilan:
 python manage.py enrich_tmdb_movies --overwrite
 ```
 
-## 3.6. `sync_tmdb_posters` command
+## 3.6. `fetch_all_trailer_urls` command
 
-Agar sizga faqat posterlarni yangilash kerak bo'lsa:
+Fayl: `apps/movies/management/commands/fetch_all_trailer_urls.py`
 
-```bash
-python manage.py sync_tmdb_posters
-```
+Bu command TMDB'dan trailer URL va trailer source ma'lumotlarini olib keladi.
 
-Hammasini qayta ko'rib chiqish uchun:
-
-```bash
-python manage.py sync_tmdb_posters --all
-```
-
-Limit bilan:
-
-```bash
-python manage.py sync_tmdb_posters --limit=50
-```
-
-## 3.7. `fetch_all_trailer_urls` command
-
-Movie detail sahifasidagi trailer blokini oldindan boyitish uchun ishlatiladi.
+### Ishga tushirish
 
 ```bash
 python manage.py fetch_all_trailer_urls
 ```
 
-Limit bilan:
+Variantlar:
 
 ```bash
 python manage.py fetch_all_trailer_urls --limit=20
-```
-
-Mavjud qiymatlarni qayta yozish bilan:
-
-```bash
 python manage.py fetch_all_trailer_urls --overwrite
+python manage.py fetch_all_trailer_urls --language=en-US
 ```
 
-## 3.8. Qo'shimcha demo ma'lumotlar
+## 3.7. Poster cache pipeline
 
-### Rating review'larni to'ldirish
+Posterlar ikki qatlamli usul bilan boshqariladi:
+
+### 1-bosqich: `poster_url` ni tayyorlash
+
+Bu ish `enrich_tmdb_movies` ichida bajariladi. Ya'ni TMDB'dan poster path olinadi va `movies_movie.poster_url` maydoniga yoziladi.
+
+### 2-bosqich: poster faylini lokalga yuklab olish
+
+Bu ish `cache_movie_posters` command orqali bajariladi.
+
+Fayl: `apps/movies/management/commands/cache_movie_posters.py`
+
+Command quyidagilarni qiladi:
+
+- `poster_url` mavjud movie'larni tanlaydi;
+- rasm faylini URL bo'yicha yuklab oladi;
+- poster faylini `media/movies/posters/` ichiga saqlaydi;
+- `poster_image` maydoniga local file path'ni yozadi.
+
+### Ishga tushirish
 
 ```bash
-python manage.py seed_rating_reviews
+python manage.py cache_movie_posters
 ```
 
-### Random profile data to'ldirish
+Sinov uchun kichik limit bilan:
 
 ```bash
-python manage.py fill_random_profile_data
+python manage.py cache_movie_posters --limit=20
 ```
 
-Yoki:
+Qayta yuklash uchun:
 
 ```bash
-python manage.py fill_random_profile_data --limit 20
-python manage.py fill_random_profile_data --overwrite
-python manage.py fill_random_profile_data --include-superusers
-python manage.py fill_random_profile_data --dry-run
+python manage.py cache_movie_posters --overwrite
 ```
 
-## 3.9. Tavsiya etilgan to'liq bootstrap ketma-ketligi
+## 3.8. `sync_tmdb_posters` haqida muhim izoh
+
+Repository ichida `sync_tmdb_posters` command ham mavjud. U poster URL va `tmdb_id` ni yangilash uchun yozilgan yengilroq command.
+
+Lekin hozirgi arxitekturada:
+
+- `enrich_tmdb_movies` allaqachon `poster_url` ni to'ldiradi;
+- `cache_movie_posters` esa shu URL bo'yicha poster faylini lokalga olib keladi.
+
+Shu sababli **asosiy bootstrap pipeline uchun `sync_tmdb_posters` majburiy emas**. Uni faqat alohida poster URL refresh kerak bo'lganda ishlatish mumkin.
+
+## 3.9. Tavsiya etilgan to'liq data bootstrap oqimi
 
 ```bash
 python manage.py migrate
@@ -168,5 +175,16 @@ python manage.py fetch_all_trailer_urls
 python manage.py seed_rating_reviews
 python manage.py fill_random_profile_data
 python manage.py create_admin admin1 --password test12345 --email admin1@example.com --activate
-python manage.py runserver
+python manage.py cache_movie_posters
 ```
+
+## 3.10. Bu pipeline yakunida nima bo'ladi?
+
+Yakuniy holatda:
+
+- MovieLens dataset bazaga tushadi;
+- TMDB metadata maydonlari boyitiladi;
+- trailer URL'lar saqlanadi;
+- rating review matnlari to'ldiriladi;
+- profile demo ma'lumotlari yaratiladi;
+- posterlar lokal media storage'ga cache qilinadi.
