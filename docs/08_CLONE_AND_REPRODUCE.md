@@ -21,7 +21,7 @@ Bu holatda sayt ishlaydi, lekin movie katalog bo'sh bo'lishi mumkin.
 
 ## 8.3. Muallif loyihasiga yaqin holat
 
-Agar maqsad movie, interaction, trailer va metadata bilan to'ldirilgan holatga yaqinlashish bo'lsa:
+Agar maqsad movie, interaction, trailer, metadata va poster cache bilan to'ldirilgan holatga yaqinlashish bo'lsa:
 
 ```bash
 py -3.11 -m venv .venv
@@ -35,6 +35,7 @@ python manage.py fetch_all_trailer_urls
 python manage.py seed_rating_reviews
 python manage.py fill_random_profile_data
 python manage.py create_admin admin1 --password test12345 --email admin1@example.com --activate
+python manage.py cache_movie_posters
 python manage.py runserver
 ```
 
@@ -67,7 +68,19 @@ for u in User.objects.filter(username__startswith="ml100k_user_"):
     u.save()
 ```
 
-## 8.6. Reproducibility checklist
+## 8.6. Poster cache bo'yicha muhim eslatma
+
+`enrich_tmdb_movies` poster URL'ni tayyorlaydi, lekin rasm faylini lokalga ko'chirmaydi.
+
+Agar siz muallif kompyuteridagi holatga yaqinlashmoqchi bo'lsangiz va sahifalar posterlarni lokal media storage'dan olishini istasangiz, albatta quyidagini ham bajaring:
+
+```bash
+python manage.py cache_movie_posters
+```
+
+Shundan keyin posterlar `media/movies/posters/` ichiga tushadi va `poster_image` maydoni to'ldiriladi.
+
+## 8.7. Reproducibility checklist
 
 Repository clone qilgan odam quyidagilarni tekshirishi kerak:
 
@@ -78,8 +91,9 @@ Repository clone qilgan odam quyidagilarni tekshirishi kerak:
 - `python manage.py migrate` muvaffaqiyatli o'tdimi?
 - `seed_movielens` dataset path to'g'rimi?
 - `enrich_tmdb_movies` va `fetch_all_trailer_urls` TMDB token bilan ishlayaptimi?
+- `cache_movie_posters` poster fayllarni saqlayaptimi?
 - admin account yaratildimi?
 
-## 8.7. Qachon SQL dump kerak bo'ladi?
+## 8.8. Qachon SQL dump kerak bo'ladi?
 
-Agar sizga seed + enrichment emas, balki aynan oldingi DB snapshot kerak bo'lsa, SQL dump/import ishlatiladi. Lekin bu repository ichida dump fayli mavjud emas. Shu sababli hozirgi repository bo'yicha eng to'g'ri reproducible yo'l — migration + seed + TMDB enrichment ketma-ketligidir.
+Agar sizga seed + enrichment emas, balki aynan oldingi DB snapshot kerak bo'lsa, SQL dump/import ishlatiladi. Lekin bu repository ichida dump fayli mavjud emas. Shu sababli hozirgi repository bo'yicha eng to'g'ri reproducible yo'l — migration + seed + TMDB enrichment + poster cache ketma-ketligidir.

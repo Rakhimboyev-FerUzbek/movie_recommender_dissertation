@@ -19,14 +19,16 @@ flowchart TD
     R --> DB
     R --> C[Django Cache]
 
-    V2 --> TMDB[TMDB API]
+    V2 --> M[MEDIA_ROOT / media files]
+
     CMD1[seed_movielens] --> DB
-    CMD2[enrich_tmdb_movies] --> TMDB
+    CMD2[enrich_tmdb_movies] --> TMDB[TMDB API]
     CMD2 --> DB
     CMD3[fetch_all_trailer_urls] --> TMDB
     CMD3 --> DB
-    CMD4[sync_tmdb_posters] --> TMDB
-    CMD4 --> DB
+    CMD4[cache_movie_posters] --> DB
+    CMD4 --> IMG[TMDB Image CDN]
+    CMD4 --> M
 
     GH[GitHub Repository] --> CI[GitHub Actions CI]
     CI --> RD[Render Deploy]
@@ -104,10 +106,25 @@ flowchart TD
     H --> I[seed_rating_reviews]
     I --> J[fill_random_profile_data]
     J --> K[create_admin]
-    K --> L[runserver]
+    K --> L[cache_movie_posters]
+    L --> M[runserver]
 ```
 
-## 7.5. Deploy / CI flow
+## 7.5. Poster pipeline flow
+
+```mermaid
+flowchart LR
+    A[Movie record] --> B[enrich_tmdb_movies]
+    B --> C[poster_url saved in DB]
+    C --> D[cache_movie_posters]
+    D --> E[download image file]
+    E --> F[save to media/movies/posters]
+    F --> G[poster_image saved in DB]
+    G --> H[template uses poster_src]
+    C --> H
+```
+
+## 7.6. Deploy / CI flow
 
 ```mermaid
 flowchart LR
@@ -125,10 +142,11 @@ flowchart LR
     L --> M[gunicorn config.wsgi:application]
 ```
 
-## 7.6. Nega shu arxitektura tanlangan?
+## 7.7. Nega shu arxitektura tanlangan?
 
 - Django Templates kichik va o'rta hajmdagi BMI loyihasi uchun sodda va tez integratsiya qiladi.
 - PostgreSQL relational interaction datasi uchun mos.
 - Recommendation engine'ni app ichida alohida modulga ajratish maintainability beradi.
 - TMDB API movie metadata va trailer/poster kabi boyituvchi ma'lumotlarni beradi.
+- Poster cache qatlamı tashqi image host'ga bog'liqlikni kamaytiradi.
 - GitHub Actions va Render bilan deploy pipeline soddalashtirilgan.

@@ -95,7 +95,7 @@ CREATE DATABASE movie_db;
 python manage.py migrate
 ```
 
-## 2.8. Development server
+## 2.8. Minimal run
 
 ```bash
 python manage.py runserver
@@ -107,7 +107,35 @@ Brauzerda:
 http://127.0.0.1:8000/
 ```
 
-## 2.9. Muammolar va tez tekshiruv
+## 2.9. Demo uchun tavsiya etilgan bootstrap
+
+Agar saytni movie, trailer va posterlar bilan ko'rmoqchi bo'lsangiz, quyidagi ketma-ketlik tavsiya qilinadi:
+
+```bash
+python manage.py migrate
+python manage.py seed_movielens --path=ml-100k
+python manage.py enrich_tmdb_movies
+python manage.py fetch_all_trailer_urls
+python manage.py seed_rating_reviews
+python manage.py fill_random_profile_data
+python manage.py create_admin admin1 --password test12345 --email admin1@example.com --activate
+python manage.py cache_movie_posters
+python manage.py runserver
+```
+
+## 2.10. Poster cache haqida eslatma
+
+Agar siz `cache_movie_posters` command'ni ishlatsangiz, posterlar `media/movies/posters/` ichiga saqlanadi.
+
+Demak lokal muhitda quyidagilar to'g'ri ishlashi kerak:
+
+- `MEDIA_URL`
+- `MEDIA_ROOT`
+- `config/urls.py` ichidagi media serving
+
+Bu loyiha ichida development uchun media serving allaqachon sozlangan.
+
+## 2.11. Muammolar va tez tekshiruv
 
 ### Django import error bo'lsa
 
@@ -115,6 +143,10 @@ http://127.0.0.1:8000/
 python -m pip install --upgrade pip
 pip install -r requirements/dev.txt
 ```
+
+### TMDB ishlamasa
+
+`.env` ichida `TMDB_API_READ_TOKEN` borligini tekshiring.
 
 ### Settings qaysi fayldan olinadi?
 
