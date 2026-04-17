@@ -5,211 +5,196 @@
 {% block content %}
 <section class="content-section lab-page">
     <div class="container">
-        <div class="glass-card lab-user-summary-card mb-4" id="labUserSummaryCard">
-            <div class="lab-user-summary__main">
-                <div class="lab-user-summary__avatar-wrap" id="labUserAvatarWrap">
-                    {% if selected_user_summary.photo_url %}
-                        <img src="{{ selected_user_summary.photo_url }}" alt="{{ selected_user_summary.display_name }}" class="lab-user-summary__avatar-img">
-                    {% else %}
-                        <div class="lab-user-summary__avatar-fallback">{{ selected_user_summary.initial|default:"U" }}</div>
-                    {% endif %}
-                </div>
 
-                <div class="lab-user-summary__meta">
-                    <div class="lab-user-summary__heading-row">
-                        <div>
-                            <span class="lab-user-summary__eyebrow">Tanlangan foydalanuvchi</span>
-                            <h3 class="lab-user-summary__title" id="labUserDisplayName">{{ selected_user_summary.display_name|default:selected_user.username }}</h3>
+        <div class="lab-top-grid mb-4">
+            <div class="glass-card lab-top-card lab-param-card">
+                <form method="get" class="lab-param-form">
+                    <div class="lab-param-grid">
+                        <div class="lab-param-item">
+                            <label class="form-label">Username</label>
+                            {{ form.user_id }}
+                            <div class="text-danger small mt-2">{{ form.user_id.errors }}</div>
                         </div>
-                        <div class="lab-user-summary__username" id="labUserUsername">@{{ selected_user_summary.username|default:selected_user.username }}</div>
+
+                        <div class="lab-param-item">
+                            <label class="form-label">Top-K</label>
+                            {{ form.top_k }}
+                            <div class="text-danger small mt-2">{{ form.top_k.errors }}</div>
+                        </div>
+
+                        <div class="lab-param-item">
+                            <label class="form-label">Model</label>
+                            {{ form.model }}
+                        </div>
+
+                        <div class="lab-param-item">
+                            <label class="form-label">Scenario</label>
+                            {{ form.scenario }}
+                        </div>
                     </div>
 
-                    <div class="lab-user-summary__facts">
-                        <span class="lab-user-summary__fact" id="labUserGender">Jinsi: {{ selected_user_summary.gender|default:"Kiritilmagan" }}</span>
-                        <span class="lab-user-summary__fact" id="labUserBirthDate">Tug'ilgan kun: {{ selected_user_summary.birth_date|default:"Kiritilmagan" }}</span>
-                        <span class="lab-user-summary__fact" id="labUserPhone">Telefon: {{ selected_user_summary.phone_number|default:"Kiritilmagan" }}</span>
+                    <div class="lab-param-actions">
+                        <button type="submit" class="btn btn-primary-gradient">Run Lab</button>
                     </div>
+                </form>
+            </div>
 
-                    <div class="lab-user-summary__genres" id="labUserGenres">
-                        {% if selected_user_summary.preferred_genres %}
-                            {% for genre in selected_user_summary.preferred_genres|slice:":4" %}
-                                <span class="genre-chip">{{ genre }}</span>
-                            {% endfor %}
-                            {% if selected_user_summary.preferred_genres|length > 4 %}
-                                <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-4" }}</span>
-                            {% endif %}
+            <div class="glass-card lab-top-card lab-user-top-card" id="labUserSummaryCard">
+                <div class="lab-user-main">
+                    <!-- <div class="lab-user-avatar" id="labUserAvatarWrap">
+                        {% if selected_user_summary.photo_url %}
+                            <img src="{{ selected_user_summary.photo_url }}" alt="{{ selected_user_summary.display_name }}" class="lab-user-avatar-img">
                         {% else %}
-                            <span class="lab-user-summary__empty">Sevimli janrlar kiritilmagan</span>
+                            <div class="lab-user-avatar-fallback">{{ selected_user_summary.initial|default:"U" }}</div>
                         {% endif %}
+                    </div> -->
+
+                    <div class="lab-user-meta">
+                        <div class="lab-user-topline">
+                            <span class="lab-user-kicker">Tanlangan foydalanuvchi:</span>
+                            <span class="lab-user-username" id="labUserUsername">@{{ selected_user_summary.username|default:selected_user.username }}</span>
+                        </div>
+
+                        <div class="lab-user-headline-row">
+                            <h3 class="lab-user-name" id="labUserDisplayName">{{ selected_user_summary.display_name|default:selected_user.username }}</h3>
+
+                            <div class="lab-user-stats">
+                                <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-user-stat" id="labUserRatingsLink">
+                                    <span class="lab-user-stat__label">Reytinglar</span>
+                                    <strong class="lab-user-stat__value" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
+                                </a>
+
+                                <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-user-stat" id="labUserFavoritesLink">
+                                    <span class="lab-user-stat__label">Favorites</span>
+                                    <strong class="lab-user-stat__value" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
+                                </a>
+
+                                <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-user-stat" id="labUserHistoryLink">
+                                    <span class="lab-user-stat__label">Watch history</span>
+                                    <strong class="lab-user-stat__value" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="lab-user-facts">
+                            <span class="lab-user-fact" id="labUserGender">Jinsi: {{ selected_user_summary.gender|default:"Kiritilmagan" }}</span>
+                            <span class="lab-user-fact" id="labUserBirthDate">Tug'ilgan kun: {{ selected_user_summary.birth_date|default:"Kiritilmagan" }}</span>
+                            <span class="lab-user-fact" id="labUserPhone">Telefon: {{ selected_user_summary.phone_number|default:"Kiritilmagan" }}</span>
+                        </div>
+
+                        <div class="lab-user-genres" id="labUserGenres">
+                            {% if selected_user_summary.preferred_genres %}
+                                {% for genre in selected_user_summary.preferred_genres|slice:":4" %}
+                                    <span class="genre-chip">{{ genre }}</span>
+                                {% endfor %}
+                                {% if selected_user_summary.preferred_genres|length > 4 %}
+                                    <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-4" }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="lab-user-empty">Sevimli janrlar kiritilmagan</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="lab-user-summary__stats">
-                <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-user-stat-card" id="labUserRatingsLink">
-                    <span class="lab-user-stat-card__label">Reytinglar</span>
-                    <strong class="lab-user-stat-card__value" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
-                </a>
-                <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-user-stat-card" id="labUserFavoritesLink">
-                    <span class="lab-user-stat-card__label">Favorites</span>
-                    <strong class="lab-user-stat-card__value" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
-                </a>
-                <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-user-stat-card" id="labUserHistoryLink">
-                    <span class="lab-user-stat-card__label">Watch history</span>
-                    <strong class="lab-user-stat-card__value" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
-                </a>
-            </div>
+            {% if result %}
+                <div class="glass-card lab-top-card lab-summary-top-card">
+                    <h5>Experiment summary</h5>
+                    <ul class="list-unstyled mb-0 lab-summary-list">
+                        <li><strong>User:</strong> {{ selected_user.username }}</li>
+                        <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
+                        <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
+                        <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
+                        <li><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
+                        <li>
+                            <strong>Preferred genres:</strong>
+                            {% if result.preferred_genres %}
+                                {{ result.preferred_genres|join:", " }}
+                            {% else %}
+                                kiritilmagan
+                            {% endif %}
+                        </li>
+                        {% if result.weights %}
+                            <li>
+                                <strong>Hybrid weights:</strong><br>
+                                content={{ result.weights.content|floatformat:2 }},
+                                item={{ result.weights.item|floatformat:2 }},
+                                svd={{ result.weights.svd|floatformat:2 }},
+                                popularity={{ result.weights.popularity|floatformat:2 }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="glass-card lab-top-card lab-summary-top-card">
+                    <h5>Experiment summary</h5>
+                    <p class="mb-0 text-muted">
+                        User, model va scenario tanlab <strong>Run Lab</strong> tugmasini bosing.
+                    </p>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="glass-card lab-hero mb-4">
-            <div class="lab-hero__layout">
-                <div class="lab-hero__copy">
-                    <span class="hero-kicker">Selectable Recommendation</span>
+        <div class="glass-card lab-hero-shell mb-4">
+            <div class="lab-hero-layout">
+                <div class="lab-hero-copy">
                     <h1 class="mb-2">Recommendation Lab</h1>
                     <p class="text-muted mb-0">
-                        Bu sahifa dasturni Test qilish va eksperimental tahlil uchun mo‘ljallangan.
+                        Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan.
                         Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli
                         stsenariylar bo‘yicha natijalarni taqqoslash mumkin.
                     </p>
+                </div>
 
-                    <div class="glass-card lab-inline-filter-card">
-                        <div class="lab-inline-filter-grid">
-                            <div class="lab-inline-filter-item">
-                                <label class="form-label">Qidiruv</label>
-                                <input
-                                    type="text"
-                                    id="labResultSearch"
-                                    class="form-control"
-                                    placeholder="Film nomi bo'yicha qidiring..."
-                                    autocomplete="off"
-                                >
-                            </div>
+                <div class="glass-card lab-filter-card">
+                    <div class="lab-filter-grid">
+                        <div class="lab-filter-item">
+                            <label class="form-label">Qidiruv</label>
+                            <input
+                                type="text"
+                                id="labResultSearch"
+                                class="form-control"
+                                placeholder="Film nomi bo'yicha qidiring..."
+                                autocomplete="off"
+                            >
+                        </div>
 
-                            <div class="lab-inline-filter-item">
-                                <label class="form-label">Saralash</label>
-                                <div class="lab-sort-row">
-                                    <div class="lab-sort-select" id="labSortSelect">
-                                        <button type="button" class="lab-sort-select__trigger" id="labSortTrigger">
-                                            <span id="labSortTriggerLabel">Score</span>
-                                            <span class="lab-sort-select__chevron"></span>
-                                        </button>
-
-                                        <div class="lab-sort-select__menu" id="labSortMenu">
-                                            <button type="button" class="lab-sort-select__option is-active" data-sort-field="score">Score</button>
-                                            <button type="button" class="lab-sort-select__option" data-sort-field="rating">Reyting</button>
-                                            <button type="button" class="lab-sort-select__option" data-sort-field="year">Yil</button>
-                                            <button type="button" class="lab-sort-select__option" data-sort-field="title">Nom</button>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        id="labSortDirection"
-                                        class="lab-sort-direction"
-                                        data-desc="true"
-                                        title="Saralash yo'nalishi"
-                                        aria-label="Saralash yo'nalishi"
-                                    >
-                                        <span class="lab-sort-direction__icon">↓</span>
-                                        <span class="lab-sort-direction__text">Kamayish</span>
+                        <div class="lab-filter-item">
+                            <label class="form-label">Saralash</label>
+                            <div class="labx-sort-row">
+                                <div class="labx-sort-select" id="labSortSelect">
+                                    <button type="button" class="labx-sort-trigger" id="labSortTrigger">
+                                        <span id="labSortTriggerLabel">Score</span>
+                                        <span class="labx-sort-chevron"></span>
                                     </button>
+
+                                    <div class="labx-sort-menu" id="labSortMenu">
+                                        <button type="button" class="labx-sort-option is-active" data-sort-field="score">Score</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="rating">Reyting</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="year">Yil</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="title">Nom</button>
+                                    </div>
                                 </div>
+
+                                <button
+                                    type="button"
+                                    id="labSortDirection"
+                                    class="labx-sort-direction"
+                                    data-desc="true"
+                                    title="Saralash yo'nalishi"
+                                    aria-label="Saralash yo'nalishi"
+                                >
+                                    <span class="labx-sort-direction__icon">↓</span>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="lab-control-card">
-                    <form method="get" class="lab-control-form">
-                        <div class="lab-control-grid">
-                            <div class="lab-control-item">
-                                <label class="form-label">Username</label>
-                                {{ form.user_id }}
-                                <div class="text-danger small mt-2">{{ form.user_id.errors }}</div>
-                            </div>
-
-                            <div class="lab-control-item">
-                                <label class="form-label">Top-K</label>
-                                {{ form.top_k }}
-                                <div class="text-danger small mt-2">{{ form.top_k.errors }}</div>
-                            </div>
-
-                            <div class="lab-control-item">
-                                <label class="form-label">Model</label>
-                                {{ form.model }}
-                            </div>
-
-                            <div class="lab-control-item">
-                                <label class="form-label">Scenario</label>
-                                {{ form.scenario }}
-                            </div>
-                        </div>
-
-                        <div class="lab-control-actions">
-                            <button type="submit" class="btn btn-primary-gradient">Run Lab</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
 
         {% if result %}
-            <div class="row g-4 mb-4">
-                <div class="col-lg-4">
-                    <div class="glass-card h-100 lab-meta-card">
-                        <div class="profile-card-head">
-                            <h5 class="mb-0">Experiment summary</h5>
-                        </div>
-                        <ul class="list-unstyled mt-3 mb-0 small lab-summary-list">
-                            <li><strong>User:</strong> {{ selected_user.username }}</li>
-                            <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
-                            <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
-                            <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
-                            <li><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
-                            <li>
-                                <strong>Preferred genres:</strong>
-                                {% if result.preferred_genres %}
-                                    {{ result.preferred_genres|join:", " }}
-                                {% else %}
-                                    kiritilmagan
-                                {% endif %}
-                            </li>
-                            {% if result.weights %}
-                                <li>
-                                    <strong>Hybrid weights:</strong><br>
-                                    content={{ result.weights.content|floatformat:2 }},
-                                    item={{ result.weights.item|floatformat:2 }},
-                                    svd={{ result.weights.svd|floatformat:2 }},
-                                    popularity={{ result.weights.popularity|floatformat:2 }}
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-8">
-                    <div class="glass-card h-100 lab-meta-card">
-                        <div class="profile-card-head">
-                            <h5 class="mb-0">Natija va metodologik izoh</h5>
-                        </div>
-                        <div class="mt-3 small text-muted">
-                            <p class="mb-2">
-                                Selectable mode production default rejim emas. Bu sahifa alohida request bo‘yicha
-                                modelni tanlaydi, shu sabab tizimning Auto Recommendation oqimi buzilmaydi.
-                            </p>
-                            <p class="mb-2">
-                                Cold start stsenariysida tizim tarixiy reytinglardan foydalanishni cheklab,
-                                profil janrlari va popularity signalini kuchaytiradi.
-                            </p>
-                            <p class="mb-0">
-                                Quyidagi natijalar frontend ichida qidiruv va qayta saralash bilan ko‘riladi.
-                                Kartalar esa scroll qilingani sari bosqichma-bosqich ko‘rsatiladi.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {% if result.recommendations %}
                 <div id="labResultsGrid" class="auto-rec-grid lab-results-grid">
                     {% for item in result.recommendations %}
@@ -250,11 +235,9 @@
                                     {% if item.movie.release_year %}
                                         <span class="auto-rec-pill">{{ item.movie.release_year }}</span>
                                     {% endif %}
-
                                     <span class="auto-rec-pill auto-rec-pill--rating">
                                         ★ {{ item.avg_rating|floatformat:1 }}
                                     </span>
-
                                     <span class="auto-rec-pill">
                                         Score {{ item.score|floatformat:3 }}
                                     </span>
@@ -279,6 +262,8 @@
             {% else %}
                 <div class="empty-state-card">Tanlangan konfiguratsiya bo‘yicha tavsiya qaytmadi.</div>
             {% endif %}
+        {% else %}
+            <div class="empty-state-card">User, model va scenario tanlab Run Lab tugmasini bosing.</div>
         {% endif %}
     </div>
 </section>
@@ -294,8 +279,7 @@
     const sortMenu = document.getElementById("labSortMenu");
     const sortLabel = document.getElementById("labSortTriggerLabel");
     const sortDirectionBtn = document.getElementById("labSortDirection");
-    const sortDirectionIcon = sortDirectionBtn.querySelector(".lab-sort-direction__icon");
-    const sortDirectionText = sortDirectionBtn.querySelector(".lab-sort-direction__text");
+    const sortDirectionIcon = sortDirectionBtn ? sortDirectionBtn.querySelector(".labx-sort-direction__icon") : null;
     const sentinel = document.getElementById("labResultsSentinel");
 
     let currentField = "score";
@@ -316,8 +300,7 @@
     };
 
     function defaultDirectionFor(field) {
-        if (field === "title") return false;
-        return true;
+        return field !== "title";
     }
 
     function closeAll() {
@@ -325,12 +308,13 @@
     }
 
     function syncSortUi() {
+        if (!sortLabel || !sortMenu || !sortDirectionIcon) return;
+
         sortLabel.textContent = FIELD_LABELS[currentField] || "Score";
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
         });
         sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
-        sortDirectionText.textContent = currentDesc ? "" : "";
     }
 
     function sortCards(filteredCards) {
@@ -345,16 +329,10 @@
             const scoreB = parseFloat(b.dataset.score || "0");
 
             let result = 0;
-
-            if (currentField === "title") {
-                result = titleA.localeCompare(titleB);
-            } else if (currentField === "year") {
-                result = yearA - yearB;
-            } else if (currentField === "rating") {
-                result = ratingA - ratingB;
-            } else if (currentField === "score") {
-                result = scoreA - scoreB;
-            }
+            if (currentField === "title") result = titleA.localeCompare(titleB);
+            else if (currentField === "year") result = yearA - yearB;
+            else if (currentField === "rating") result = ratingA - ratingB;
+            else result = scoreA - scoreB;
 
             return currentDesc ? -result : result;
         });
@@ -380,76 +358,73 @@
     function applyLabFilters(resetLimit = true) {
         if (!grid) return;
 
-        const query = (searchInput.value || "").trim().toLowerCase();
+        const query = (searchInput?.value || "").trim().toLowerCase();
 
-        let filtered = cards.filter((card) => {
+        const filtered = cards.filter((card) => {
             const title = card.dataset.title || "";
             return !query || title.includes(query);
         });
 
         currentFiltered = sortCards(filtered);
 
-        if (resetLimit) {
-            currentLimit = INITIAL_BATCH;
-        }
-
+        if (resetLimit) currentLimit = INITIAL_BATCH;
         renderVisibleCards();
     }
 
     function loadMoreCards() {
-        if (!grid) return;
-        if (currentLimit >= currentFiltered.length) return;
-
+        if (!grid || currentLimit >= currentFiltered.length) return;
         currentLimit += NEXT_BATCH;
         renderVisibleCards();
     }
 
-    sortTrigger.addEventListener("click", function () {
-        sortRoot.classList.toggle("is-open");
-    });
+    if (sortTrigger && sortRoot) {
+        sortTrigger.addEventListener("click", function () {
+            sortRoot.classList.toggle("is-open");
+        });
+    }
 
-    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
-        option.addEventListener("click", function () {
-            currentField = this.dataset.sortField || "score";
-            currentDesc = defaultDirectionFor(currentField);
-            closeAll();
+    if (sortMenu) {
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+            option.addEventListener("click", function () {
+                currentField = this.dataset.sortField || "score";
+                currentDesc = defaultDirectionFor(currentField);
+                closeAll();
+                syncSortUi();
+                applyLabFilters(true);
+            });
+        });
+    }
+
+    if (sortDirectionBtn) {
+        sortDirectionBtn.addEventListener("click", function () {
+            currentDesc = !currentDesc;
             syncSortUi();
             applyLabFilters(true);
         });
-    });
-
-    sortDirectionBtn.addEventListener("click", function () {
-        currentDesc = !currentDesc;
-        syncSortUi();
-        applyLabFilters(true);
-    });
+    }
 
     document.addEventListener("click", function (event) {
-        if (!event.target.closest(".lab-sort-select")) {
+        if (!event.target.closest(".labx-sort-select")) {
             closeAll();
         }
     });
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            closeAll();
-        }
+        if (event.key === "Escape") closeAll();
     });
 
-    searchInput.addEventListener("input", function () {
-        applyLabFilters(true);
-    });
+    if (searchInput) {
+        searchInput.addEventListener("input", function () {
+            applyLabFilters(true);
+        });
+    }
 
     if (sentinel && grid) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    loadMoreCards();
-                }
+                if (entry.isIntersecting) loadMoreCards();
             });
-        }, {
-            rootMargin: "220px 0px"
-        });
+        }, { rootMargin: "220px 0px" });
 
         observer.observe(sentinel);
     }
@@ -489,7 +464,7 @@
 
     function buildGenres(genres) {
         if (!genres || !genres.length) {
-            return '<span class="lab-user-summary__empty">Sevimli janrlar kiritilmagan</span>';
+            return '<span class="lab-user-empty">Sevimli janrlar kiritilmagan</span>';
         }
 
         const visibleGenres = genres.slice(0, 4)
@@ -505,9 +480,9 @@
 
     function buildAvatar(data) {
         if (data.photo_url) {
-            return `<img src="${escapeHtml(data.photo_url)}" alt="${escapeHtml(data.display_name)}" class="lab-user-summary__avatar-img">`;
+            return `<img src="${escapeHtml(data.photo_url)}" alt="${escapeHtml(data.display_name)}" class="lab-user-avatar-img">`;
         }
-        return `<div class="lab-user-summary__avatar-fallback">${escapeHtml(data.initial || "U")}</div>`;
+        return `<div class="lab-user-avatar-fallback">${escapeHtml(data.initial || "U")}</div>`;
     }
 
     function updateSummaryCard(userId) {

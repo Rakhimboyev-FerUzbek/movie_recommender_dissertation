@@ -24,7 +24,7 @@ class RecommendationLabForm(forms.Form):
     user_id = forms.ChoiceField(required=False, label="Target user")
     model = forms.ChoiceField(choices=MODEL_CHOICES, initial="hybrid", label="Model")
     scenario = forms.ChoiceField(choices=SCENARIO_CHOICES, initial="normal", label="Scenario")
-    top_k = forms.IntegerField(required=False, min_value=1, initial=10, label="Top-K")
+    top_k = forms.IntegerField(required=False, min_value=1, initial=30, label="Top-K")
 
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop("current_user", None)
