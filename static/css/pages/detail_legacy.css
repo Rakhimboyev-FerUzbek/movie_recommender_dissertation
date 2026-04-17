@@ -2728,3 +2728,39 @@ body[data-theme="light"] .catalog-ui-select__menu::-webkit-scrollbar-thumb {
 .detail-v4-comment-card.is-other .comment-edit-form {
     align-self: stretch !important
 }
+
+.detail-v4-comment-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.comment-delete-form {
+    margin: 0;
+}
+
+.comment-delete-btn {
+    border: 0;
+    background: transparent;
+    color: #ff8c96;
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.comment-delete-btn:hover {
+    color: #ff5f6d;
+    transform: translateY(-1px);
+}
+
+.comment-delete-btn svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+}

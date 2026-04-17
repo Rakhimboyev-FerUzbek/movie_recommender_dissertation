@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.interactions.views import (
+    delete_comment_view,
     edit_comment_view,
     favorites_list_view,
     ratings_list_view,
@@ -20,4 +21,5 @@ urlpatterns = [
     path("movies/<slug:slug>/rate/", submit_rating_view, name="movie_rate"),
     path("comments/<int:comment_id>/like/", toggle_comment_like_view, name="comment_like"),
     path("comments/<int:comment_id>/edit/", edit_comment_view, name="comment_edit"),
+    path("comments/<int:comment_id>/delete/", delete_comment_view, name="comment_delete"),
 ]
