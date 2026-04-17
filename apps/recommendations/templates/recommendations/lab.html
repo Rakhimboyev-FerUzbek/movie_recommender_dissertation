@@ -5,7 +5,6 @@
 {% block content %}
 <section class="content-section lab-page">
     <div class="container">
-
         <div class="lab-top-grid mb-4">
             <div class="glass-card lab-top-card lab-param-card">
                 <form method="get" class="lab-param-form">
@@ -41,13 +40,13 @@
 
             <div class="glass-card lab-top-card lab-user-top-card" id="labUserSummaryCard">
                 <div class="lab-user-main">
-                    <!-- <div class="lab-user-avatar" id="labUserAvatarWrap">
+                    <div class="lab-user-avatar" id="labUserAvatarWrap">
                         {% if selected_user_summary.photo_url %}
                             <img src="{{ selected_user_summary.photo_url }}" alt="{{ selected_user_summary.display_name }}" class="lab-user-avatar-img">
                         {% else %}
                             <div class="lab-user-avatar-fallback">{{ selected_user_summary.initial|default:"U" }}</div>
                         {% endif %}
-                    </div> -->
+                    </div>
 
                     <div class="lab-user-meta">
                         <div class="lab-user-topline">
@@ -225,6 +224,25 @@
                                             {{ item.movie.title }}
                                         </a>
                                     </h5>
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'favorite_toggle' item.movie.slug %}"
+                                        class="auto-rec-fav-form"
+                                        data-movie-title="{{ item.movie.title|escape }}"
+                                    >
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <button
+                                            type="submit"
+                                            class="auto-rec-fav-btn {% if item.movie.id in favorite_movie_ids %}is-active{% endif %}"
+                                            aria-label="Favorites"
+                                            aria-pressed="{% if item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
+                                            title="Favorites"
+                                        >
+                                            <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
+                                        </button>
+                                    </form>
                                 </div>
 
                                 <div class="auto-rec-card__country">
@@ -235,11 +253,13 @@
                                     {% if item.movie.release_year %}
                                         <span class="auto-rec-pill">{{ item.movie.release_year }}</span>
                                     {% endif %}
+
                                     <span class="auto-rec-pill auto-rec-pill--rating">
                                         ★ {{ item.avg_rating|floatformat:1 }}
                                     </span>
+
                                     <span class="auto-rec-pill">
-                                        Score {{ item.score|floatformat:3 }}
+                                        {{ item.rating_count }} ta baho
                                     </span>
                                 </div>
 
@@ -247,11 +267,6 @@
                                     {% for genre in item.movie.genres.all|slice:":2" %}
                                         <span class="genre-chip">{{ genre.name }}</span>
                                     {% endfor %}
-                                </div>
-
-                                <div class="lab-explain-box">
-                                    <small class="lab-explain-box__label">Explainability</small>
-                                    <p class="mb-0">{{ item.explanation }}</p>
                                 </div>
                             </div>
                         </article>
@@ -265,6 +280,8 @@
         {% else %}
             <div class="empty-state-card">User, model va scenario tanlab Run Lab tugmasini bosing.</div>
         {% endif %}
+
+        <div id="labSnackbarStack" class="auto-rec-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
     </div>
 </section>
 
@@ -281,12 +298,13 @@
     const sortDirectionBtn = document.getElementById("labSortDirection");
     const sortDirectionIcon = sortDirectionBtn ? sortDirectionBtn.querySelector(".labx-sort-direction__icon") : null;
     const sentinel = document.getElementById("labResultsSentinel");
+    const snackbarStack = document.getElementById("labSnackbarStack");
 
     let currentField = "score";
     let currentDesc = true;
 
     const INITIAL_BATCH = 12;
-    const NEXT_BATCH = 9;
+    const NEXT_BATCH = 8;
 
     const cards = grid ? Array.from(grid.querySelectorAll(".lab-result-card")) : [];
     let currentFiltered = [];
@@ -298,6 +316,57 @@
         year: "Yil",
         title: "Nom",
     };
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function showSnackbar(movieTitle, variant) {
+        if (!snackbarStack) return;
+
+        const item = document.createElement("div");
+        item.className = `auto-rec-snackbar auto-rec-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const text = variant === "success"
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilarga qo'shildi.`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilardan olib tashlandi.`;
+
+        item.innerHTML = `
+            <div class="auto-rec-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="auto-rec-snackbar__content">
+                <div class="auto-rec-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="auto-rec-snackbar__text">${text}</div>
+            </div>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
+
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timer = setTimeout(removeItem, 3200);
+
+        item.querySelector(".auto-rec-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timer);
+            removeItem();
+        });
+    }
 
     function defaultDirectionFor(field) {
         return field !== "title";
@@ -377,6 +446,23 @@
         renderVisibleCards();
     }
 
+    async function toggleFavorite(form, button) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) return;
+
+        button.classList.toggle("is-active", data.is_favorite);
+        button.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+        const movieTitle = data.movie_title || form.dataset.movieTitle || "Film";
+        showSnackbar(movieTitle, data.is_favorite ? "success" : "error");
+    }
+
     if (sortTrigger && sortRoot) {
         sortTrigger.addEventListener("click", function () {
             sortRoot.classList.toggle("is-open");
@@ -418,6 +504,22 @@
             applyLabFilters(true);
         });
     }
+
+    document.addEventListener("submit", async function (event) {
+        const form = event.target.closest(".auto-rec-fav-form");
+        if (!form) return;
+
+        event.preventDefault();
+
+        const button = form.querySelector(".auto-rec-fav-btn");
+        if (!button) return;
+
+        try {
+            await toggleFavorite(form, button);
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
     if (sentinel && grid) {
         const observer = new IntersectionObserver((entries) => {
@@ -489,21 +591,21 @@
         const data = summaries[String(userId)];
         if (!data) return;
 
-        avatarWrap.innerHTML = buildAvatar(data);
-        displayNameEl.textContent = data.display_name || data.username || "User";
-        usernameEl.textContent = `@${data.username || "user"}`;
-        genderEl.textContent = `Jinsi: ${data.gender || "Kiritilmagan"}`;
-        birthDateEl.textContent = `Tug'ilgan kun: ${data.birth_date || "Kiritilmagan"}`;
-        phoneEl.textContent = `Telefon: ${data.phone_number || "Kiritilmagan"}`;
-        genresEl.innerHTML = buildGenres(data.preferred_genres || []);
+        if (avatarWrap) avatarWrap.innerHTML = buildAvatar(data);
+        if (displayNameEl) displayNameEl.textContent = data.display_name || data.username || "User";
+        if (usernameEl) usernameEl.textContent = `@${data.username || "user"}`;
+        if (genderEl) genderEl.textContent = `Jinsi: ${data.gender || "Kiritilmagan"}`;
+        if (birthDateEl) birthDateEl.textContent = `Tug'ilgan kun: ${data.birth_date || "Kiritilmagan"}`;
+        if (phoneEl) phoneEl.textContent = `Telefon: ${data.phone_number || "Kiritilmagan"}`;
+        if (genresEl) genresEl.innerHTML = buildGenres(data.preferred_genres || []);
 
-        ratingsCountEl.textContent = data.ratings_count ?? 0;
-        favoritesCountEl.textContent = data.favorites_count ?? 0;
-        historyCountEl.textContent = data.watch_history_count ?? 0;
+        if (ratingsCountEl) ratingsCountEl.textContent = data.ratings_count ?? 0;
+        if (favoritesCountEl) favoritesCountEl.textContent = data.favorites_count ?? 0;
+        if (historyCountEl) historyCountEl.textContent = data.watch_history_count ?? 0;
 
-        ratingsLinkEl.href = data.ratings_url || "#";
-        favoritesLinkEl.href = data.favorites_url || "#";
-        historyLinkEl.href = data.watch_history_url || "#";
+        if (ratingsLinkEl) ratingsLinkEl.href = data.ratings_url || "#";
+        if (favoritesLinkEl) favoritesLinkEl.href = data.favorites_url || "#";
+        if (historyLinkEl) historyLinkEl.href = data.watch_history_url || "#";
     }
 
     userSelect.addEventListener("change", function () {

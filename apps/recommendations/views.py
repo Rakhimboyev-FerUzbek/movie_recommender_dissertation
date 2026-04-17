@@ -54,23 +54,36 @@ def recommendation_lab_view(request):
         .order_by("username")
     )
 
+    service = RecommendationService()
     form = RecommendationLabForm(request.GET or None, current_user=request.user)
-    selected_user = request.user
-    result = None
 
-    if form.is_valid():
-        target_user_id = form.cleaned_data.get("user_id") or request.user.id
-        selected_user = next((user for user in annotated_users if user.id == target_user_id), None) or request.user
+    default_model = str(form.fields["model"].initial or "hybrid")
+    default_scenario = str(form.fields["scenario"].initial or "normal")
+    default_top_k = int(form.fields["top_k"].initial or 30)
 
-        service = RecommendationService()
-        result = service.recommend_for_user(
-            user=selected_user,
-            model_key=form.cleaned_data["model"],
-            top_k=form.cleaned_data["top_k"],
-            scenario=form.cleaned_data["scenario"],
-        )
-    else:
-        selected_user = next((user for user in annotated_users if user.id == request.user.id), None) or request.user
+    selected_user = next((user for user in annotated_users if user.id == request.user.id), None) or request.user
+    model_key = default_model
+    scenario = default_scenario
+    top_k = default_top_k
+
+    if request.GET:
+        if form.is_valid():
+            target_user_id = form.cleaned_data.get("user_id") or request.user.id
+            selected_user = next((user for user in annotated_users if user.id == target_user_id), None) or selected_user
+            model_key = form.cleaned_data["model"]
+            scenario = form.cleaned_data["scenario"]
+            top_k = form.cleaned_data["top_k"] or default_top_k
+    result = service.recommend_for_user(
+        user=selected_user,
+        model_key=model_key,
+        top_k=top_k,
+        scenario=scenario,
+    )
+
+    favorite_movie_ids = set(
+        Favorite.objects.filter(user=request.user, movie__is_active=True)
+        .values_list("movie_id", flat=True)
+    )
 
     lab_user_summaries = {}
     for user in annotated_users:
@@ -89,13 +102,11 @@ def recommendation_lab_view(request):
             "id": user.id,
             "username": user.username,
             "display_name": display_name,
-            "first_name": user.first_name or "",
-            "last_name": user.last_name or "",
             "photo_url": photo_url,
             "initial": (display_name[:1] or user.username[:1] or "U").upper(),
-            "gender": profile.get_gender_display() if profile and profile.gender else "Kiritilmagan",
-            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and profile.birth_date else "Kiritilmagan",
-            "phone_number": profile.phone_number if profile and profile.phone_number else "Kiritilmagan",
+            "gender": profile.get_gender_display() if profile and getattr(profile, "gender", None) else "Kiritilmagan",
+            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and getattr(profile, "birth_date", None) else "Kiritilmagan",
+            "phone_number": profile.phone_number if profile and getattr(profile, "phone_number", None) else "Kiritilmagan",
             "preferred_genres": preferred_genres,
             "ratings_count": getattr(user, "ratings_count", 0),
             "favorites_count": getattr(user, "favorites_count", 0),
@@ -113,5 +124,6 @@ def recommendation_lab_view(request):
         "selected_user_summary": selected_user_summary,
         "result": result,
         "lab_user_summaries": lab_user_summaries,
+        "favorite_movie_ids": favorite_movie_ids,
     }
     return render(request, "recommendations/lab.html", context)
