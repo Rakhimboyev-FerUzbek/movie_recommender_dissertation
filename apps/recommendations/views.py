@@ -54,25 +54,27 @@ def recommendation_lab_view(request):
         .order_by("username")
     )
 
-    service = RecommendationService()
     form = RecommendationLabForm(request.GET or None, current_user=request.user)
 
-    default_model = str(form.fields["model"].initial or "hybrid")
-    default_scenario = str(form.fields["scenario"].initial or "normal")
-    default_top_k = int(form.fields["top_k"].initial or 30)
+    default_user_id = int(form.initial.get("user_id") or request.user.id)
+    default_model = form.initial.get("model") or form.fields["model"].initial or "hybrid"
+    default_scenario = form.initial.get("scenario") or form.fields["scenario"].initial or "normal"
+    default_top_k = form.initial.get("top_k") or form.fields["top_k"].initial or 10
 
-    selected_user = next((user for user in annotated_users if user.id == request.user.id), None) or request.user
-    model_key = default_model
-    scenario = default_scenario
-    top_k = default_top_k
+    if form.is_valid():
+        target_user_id = form.cleaned_data.get("user_id") or request.user.id
+        model_key = form.cleaned_data.get("model") or default_model
+        scenario = form.cleaned_data.get("scenario") or default_scenario
+        top_k = form.cleaned_data.get("top_k") or default_top_k
+    else:
+        target_user_id = default_user_id
+        model_key = default_model
+        scenario = default_scenario
+        top_k = default_top_k
 
-    if request.GET:
-        if form.is_valid():
-            target_user_id = form.cleaned_data.get("user_id") or request.user.id
-            selected_user = next((user for user in annotated_users if user.id == target_user_id), None) or selected_user
-            model_key = form.cleaned_data["model"]
-            scenario = form.cleaned_data["scenario"]
-            top_k = form.cleaned_data["top_k"] or default_top_k
+    selected_user = next((user for user in annotated_users if user.id == target_user_id), None) or request.user
+
+    service = RecommendationService()
     result = service.recommend_for_user(
         user=selected_user,
         model_key=model_key,
@@ -104,9 +106,9 @@ def recommendation_lab_view(request):
             "display_name": display_name,
             "photo_url": photo_url,
             "initial": (display_name[:1] or user.username[:1] or "U").upper(),
-            "gender": profile.get_gender_display() if profile and getattr(profile, "gender", None) else "Kiritilmagan",
-            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and getattr(profile, "birth_date", None) else "Kiritilmagan",
-            "phone_number": profile.phone_number if profile and getattr(profile, "phone_number", None) else "Kiritilmagan",
+            "gender": profile.get_gender_display() if profile and profile.gender else "Kiritilmagan",
+            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and profile.birth_date else "Kiritilmagan",
+            "phone_number": profile.phone_number if profile and profile.phone_number else "Kiritilmagan",
             "preferred_genres": preferred_genres,
             "ratings_count": getattr(user, "ratings_count", 0),
             "favorites_count": getattr(user, "favorites_count", 0),

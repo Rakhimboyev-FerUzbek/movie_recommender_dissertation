@@ -105,15 +105,7 @@
                         <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
                         <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
                         <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
-                        <li><strong>User rating count:</strong> {{ result.user_rating_count }}</li>
-                        <li>
-                            <strong>Preferred genres:</strong>
-                            {% if result.preferred_genres %}
-                                {{ result.preferred_genres|join:", " }}
-                            {% else %}
-                                kiritilmagan
-                            {% endif %}
-                        </li>
+
                         {% if result.weights %}
                             <li>
                                 <strong>Hybrid weights:</strong><br>
