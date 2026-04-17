@@ -867,3 +867,120 @@
     .home-cta-banner { padding: 36px 28px; }
     .home-cta-title { font-size: 1.8rem; }
 }
+
+/* =========================
+   HOME RECOMMENDATION SECTIONS
+   ========================= */
+
+.home-section {
+    padding: 48px 0 12px;
+}
+
+.home-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.home-section-kicker {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 92, 255, 0.28);
+    background: rgba(124, 92, 255, 0.10);
+    color: #cfc6ff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+}
+
+.home-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    margin: 0;
+}
+
+.home-section-sub {
+    margin: 4px 0 0;
+    color: var(--text-muted, #a8b0c7);
+    font-size: 0.92rem;
+}
+
+.home-section-link--plain {
+    gap: 0 !important;
+    color: var(--primary, #7c5cff);
+}
+
+.home-section-link--plain:hover {
+    gap: 0 !important;
+    color: var(--primary, #7c5cff);
+    opacity: 0.92;
+}
+
+.home-rec-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+.home-reco-card {
+    height: 100%;
+}
+
+.home-full-span-card {
+    grid-column: 1 / -1;
+}
+
+.home-personalized-cta {
+    margin: 0;
+}
+
+.home-rec-grid .auto-rec-card__poster-wrap {
+    height: 255px;
+}
+
+.home-rec-grid .auto-rec-card__body {
+    min-height: 150px;
+}
+
+.home-rec-grid .auto-rec-card__title {
+    font-size: 1.18rem;
+}
+
+.home-rec-grid .auto-rec-card__country {
+    min-height: 38px;
+}
+
+@media (max-width: 1400px) {
+    .home-rec-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .home-rec-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .home-section-header {
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .home-rec-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-rec-grid .auto-rec-card__poster-wrap {
+        height: 220px;
+    }
+}

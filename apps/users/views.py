@@ -1,6 +1,7 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
@@ -52,6 +53,8 @@ def profile_view(request):
             profile_form.save()
             messages.success(request, t["profile_updated"])
             return redirect("profile")
+        else:
+            is_edit_mode = True
     else:
         user_form = UserUpdateForm(instance=request.user, lang=lang)
         profile_form = UserProfileForm(instance=profile, lang=lang)
@@ -85,10 +88,14 @@ def profile_view(request):
         .order_by("-watched_at")[:3]
     )
 
+    # Build empty password change form for display
+    pw_form = PasswordChangeForm(request.user)
+
     context = {
         "t": t,
         "user_form": user_form,
         "profile_form": profile_form,
+        "pw_form": pw_form,
         "profile": profile,
         "is_edit_mode": is_edit_mode,
         "genre_choices": genre_choices,
@@ -101,6 +108,25 @@ def profile_view(request):
         "recent_watch_history": recent_watch_history,
     }
     return render(request, "users/profile.html", context)
+
+
+@login_required
+@require_POST
+def change_password_view(request):
+    lang = request.session.get("site_language", "uz")
+
+    form = PasswordChangeForm(request.user, request.POST)
+    if form.is_valid():
+        user = form.save()
+        # Keep the user logged in after password change
+        update_session_auth_hash(request, user)
+        messages.success(request, "Parol muvaffaqiyatli o'zgartirildi.")
+    else:
+        for field_errors in form.errors.values():
+            for error in field_errors:
+                messages.error(request, error)
+
+    return redirect("profile")
 
 
 @login_required
