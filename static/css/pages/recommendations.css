@@ -1321,3 +1321,362 @@ body[data-theme="light"] .auto-rec-toolbar .auto-rec-sort-row button.auto-rec-so
         min-height: auto !important;
     }
 }
+/* ================================================================
+   LAB PAGE — REDESIGNED TOP CARDS (equal height, compact, no avatar)
+   ================================================================ */
+
+/* Override: equal height for all 3 top cards */
+.lab-top-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(0, 1.2fr) minmax(240px, 0.85fr);
+    gap: 16px;
+    align-items: stretch !important; /* <-- equal height */
+}
+
+.lab-top-card {
+    padding: 16px 18px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Card label (eyebrow) */
+.lab-card-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+/* ── Card 1: Parameters ─────────────────────────────────── */
+.lab-param-card {
+    justify-content: space-between;
+}
+
+.lab-param-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.lab-param-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    flex: 1;
+}
+
+.lab-param-item {
+    min-width: 0;
+}
+
+.lab-param-item .form-label {
+    margin-bottom: 3px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: block;
+}
+
+.lab-param-card .form-select,
+.lab-param-card .form-control {
+    min-height: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 0.88rem;
+    box-shadow: none;
+    padding: 0 10px;
+}
+
+.lab-param-card .form-select:focus,
+.lab-param-card .form-control:focus {
+    border-color: rgba(124, 92, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.12);
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text);
+}
+
+.lab-param-card .form-select option { background: #131a2b; color: #eef2ff; }
+
+body[data-theme="light"] .lab-param-card .form-select,
+body[data-theme="light"] .lab-param-card .form-control {
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--text);
+}
+
+.lab-param-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.lab-run-btn {
+    min-height: 38px;
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* ── Card 2: User (no avatar) ───────────────────────────── */
+.lab-user-top-card {
+    justify-content: flex-start;
+}
+
+.lab-user-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.lab-user-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.lab-user-username-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.lab-user-name-text {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.15;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Stat pills row */
+.lab-user-stats-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.lab-stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: border-color 0.18s, background 0.18s, transform 0.18s;
+    white-space: nowrap;
+}
+
+.lab-stat-pill:hover {
+    border-color: rgba(124, 92, 255, 0.35);
+    background: rgba(124, 92, 255, 0.08);
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.lab-stat-pill__icon {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.lab-stat-pill__label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.lab-stat-pill__val {
+    font-weight: 900;
+    font-size: 0.9rem;
+}
+
+/* Facts grid */
+.lab-user-facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.lab-user-fact-item {
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    min-width: 0;
+    overflow: hidden;
+}
+
+.lab-fact-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lab-fact-val {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lab-user-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.lab-user-empty {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+/* ── Card 3: Experiment summary ─────────────────────────── */
+.lab-summary-top-card {
+    justify-content: flex-start;
+}
+
+.lab-summary-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.lab-summary-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px;
+    align-items: baseline;
+    min-width: 0;
+}
+
+.lab-summary-row--full {
+    grid-template-columns: 1fr;
+    gap: 3px;
+}
+
+.lab-sum-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.lab-sum-val {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lab-summary-row--full .lab-sum-val {
+    white-space: normal;
+    word-break: break-all;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.lab-weights-val {
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.5;
+}
+
+/* Summary empty state */
+.lab-summary-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.lab-summary-empty-icon {
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+.lab-summary-empty p {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ── Responsive overrides ───────────────────────────────── */
+@media (max-width: 1400px) {
+    .lab-top-grid {
+        grid-template-columns: minmax(300px, 1fr) minmax(0, 1.15fr) minmax(220px, 0.82fr);
+    }
+}
+
+@media (max-width: 1100px) {
+    .lab-top-grid {
+        grid-template-columns: 1fr;
+        align-items: start !important;
+    }
+
+    .lab-user-facts-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .lab-param-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lab-user-facts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lab-run-btn {
+        width: 100%;
+    }
+
+    .lab-param-actions {
+        justify-content: stretch;
+    }
+}

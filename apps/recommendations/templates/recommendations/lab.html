@@ -5,136 +5,158 @@
 {% block content %}
 <section class="content-section lab-page">
     <div class="container">
+
         <div class="lab-top-grid mb-4">
+
+            {# Card 1: Parameters #}
             <div class="glass-card lab-top-card lab-param-card">
+                <div class="lab-card-label">⚙️ Parametrlar</div>
                 <form method="get" class="lab-param-form">
                     <div class="lab-param-grid">
                         <div class="lab-param-item">
                             <label class="form-label">Username</label>
                             {{ form.user_id }}
-                            <div class="text-danger small mt-2">{{ form.user_id.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.user_id.errors }}</div>
                         </div>
-
                         <div class="lab-param-item">
                             <label class="form-label">Top-K</label>
                             {{ form.top_k }}
-                            <div class="text-danger small mt-2">{{ form.top_k.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.top_k.errors }}</div>
                         </div>
-
                         <div class="lab-param-item">
                             <label class="form-label">Model</label>
                             {{ form.model }}
                         </div>
-
                         <div class="lab-param-item">
                             <label class="form-label">Scenario</label>
                             {{ form.scenario }}
                         </div>
                     </div>
-
                     <div class="lab-param-actions">
-                        <button type="submit" class="btn btn-primary-gradient">Run Lab</button>
+                        <button type="submit" class="btn btn-primary-gradient lab-run-btn">
+                            ▶ Run Lab
+                        </button>
                     </div>
                 </form>
             </div>
 
+            {# Card 2: User summary — NO PHOTO #}
             <div class="glass-card lab-top-card lab-user-top-card" id="labUserSummaryCard">
-                <div class="lab-user-main">
-                    <div class="lab-user-avatar" id="labUserAvatarWrap">
-                        {% if selected_user_summary.photo_url %}
-                            <img src="{{ selected_user_summary.photo_url }}" alt="{{ selected_user_summary.display_name }}" class="lab-user-avatar-img">
+                <div class="lab-card-label">👤 Foydalanuvchi ma'lumoti</div>
+                <div class="lab-user-compact">
+
+                    <div class="lab-user-header">
+                        <div class="lab-user-username-badge" id="labUserUsername">
+                            @{{ selected_user_summary.username|default:selected_user.username }}
+                        </div>
+                        <div class="lab-user-name-text" id="labUserDisplayName">
+                            {{ selected_user_summary.display_name|default:selected_user.username }}
+                        </div>
+                    </div>
+
+                    <div class="lab-user-stats-row">
+                        <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-stat-pill" id="labUserRatingsLink">
+                            <span class="lab-stat-pill__icon">★</span>
+                            <span class="lab-stat-pill__label">Reytinglar</span>
+                            <strong class="lab-stat-pill__val" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
+                        </a>
+                        <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-stat-pill" id="labUserFavoritesLink">
+                            <span class="lab-stat-pill__icon">♥</span>
+                            <span class="lab-stat-pill__label">Favorites</span>
+                            <strong class="lab-stat-pill__val" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
+                        </a>
+                        <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-stat-pill" id="labUserHistoryLink">
+                            <span class="lab-stat-pill__icon">▶</span>
+                            <span class="lab-stat-pill__label">Tarix</span>
+                            <strong class="lab-stat-pill__val" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
+                        </a>
+                    </div>
+
+                    <div class="lab-user-facts-grid">
+                        <div class="lab-user-fact-item">
+                            <span class="lab-fact-label">Jinsi</span>
+                            <span class="lab-fact-val" id="labUserGender">{{ selected_user_summary.gender|default:"—" }}</span>
+                        </div>
+                        <div class="lab-user-fact-item">
+                            <span class="lab-fact-label">Tug'ilgan kun</span>
+                            <span class="lab-fact-val" id="labUserBirthDate">{{ selected_user_summary.birth_date|default:"—" }}</span>
+                        </div>
+                        <div class="lab-user-fact-item">
+                            <span class="lab-fact-label">Telefon</span>
+                            <span class="lab-fact-val" id="labUserPhone">{{ selected_user_summary.phone_number|default:"—" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-user-genres" id="labUserGenres">
+                        {% if selected_user_summary.preferred_genres %}
+                            {% for genre in selected_user_summary.preferred_genres|slice:":5" %}
+                                <span class="genre-chip">{{ genre }}</span>
+                            {% endfor %}
+                            {% if selected_user_summary.preferred_genres|length > 5 %}
+                                <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-5" }}</span>
+                            {% endif %}
                         {% else %}
-                            <div class="lab-user-avatar-fallback">{{ selected_user_summary.initial|default:"U" }}</div>
+                            <span class="lab-user-empty">Janrlar kiritilmagan</span>
                         {% endif %}
                     </div>
 
-                    <div class="lab-user-meta">
-                        <div class="lab-user-topline">
-                            <span class="lab-user-kicker">Tanlangan foydalanuvchi:</span>
-                            <span class="lab-user-username" id="labUserUsername">@{{ selected_user_summary.username|default:selected_user.username }}</span>
-                        </div>
-
-                        <div class="lab-user-headline-row">
-                            <h3 class="lab-user-name" id="labUserDisplayName">{{ selected_user_summary.display_name|default:selected_user.username }}</h3>
-
-                            <div class="lab-user-stats">
-                                <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-user-stat" id="labUserRatingsLink">
-                                    <span class="lab-user-stat__label">Reytinglar</span>
-                                    <strong class="lab-user-stat__value" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
-                                </a>
-
-                                <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-user-stat" id="labUserFavoritesLink">
-                                    <span class="lab-user-stat__label">Favorites</span>
-                                    <strong class="lab-user-stat__value" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
-                                </a>
-
-                                <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-user-stat" id="labUserHistoryLink">
-                                    <span class="lab-user-stat__label">Watch history</span>
-                                    <strong class="lab-user-stat__value" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="lab-user-facts">
-                            <span class="lab-user-fact" id="labUserGender">Jinsi: {{ selected_user_summary.gender|default:"Kiritilmagan" }}</span>
-                            <span class="lab-user-fact" id="labUserBirthDate">Tug'ilgan kun: {{ selected_user_summary.birth_date|default:"Kiritilmagan" }}</span>
-                            <span class="lab-user-fact" id="labUserPhone">Telefon: {{ selected_user_summary.phone_number|default:"Kiritilmagan" }}</span>
-                        </div>
-
-                        <div class="lab-user-genres" id="labUserGenres">
-                            {% if selected_user_summary.preferred_genres %}
-                                {% for genre in selected_user_summary.preferred_genres|slice:":4" %}
-                                    <span class="genre-chip">{{ genre }}</span>
-                                {% endfor %}
-                                {% if selected_user_summary.preferred_genres|length > 4 %}
-                                    <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-4" }}</span>
-                                {% endif %}
-                            {% else %}
-                                <span class="lab-user-empty">Sevimli janrlar kiritilmagan</span>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
             </div>
 
+            {# Card 3: Experiment summary #}
             {% if result %}
-                <div class="glass-card lab-top-card lab-summary-top-card">
-                    <h5>Experiment summary</h5>
-                    <ul class="list-unstyled mb-0 lab-summary-list">
-                        <li><strong>User:</strong> {{ selected_user.username }}</li>
-                        <li><strong>Requested model:</strong> {{ result.requested_model }}</li>
-                        <li><strong>Resolved model:</strong> {{ result.resolved_model_label }}</li>
-                        <li><strong>Scenario:</strong> {{ result.scenario_label }}</li>
-
-                        {% if result.weights %}
-                            <li>
-                                <strong>Hybrid weights:</strong><br>
-                                content={{ result.weights.content|floatformat:2 }},
-                                item={{ result.weights.item|floatformat:2 }},
-                                svd={{ result.weights.svd|floatformat:2 }},
-                                popularity={{ result.weights.popularity|floatformat:2 }}
-                            </li>
-                        {% endif %}
-                    </ul>
+            <div class="glass-card lab-top-card lab-summary-top-card">
+                <div class="lab-card-label">🧪 Natija xulosasi</div>
+                <div class="lab-summary-grid">
+                    <div class="lab-summary-row">
+                        <span class="lab-sum-label">Foydalanuvchi</span>
+                        <span class="lab-sum-val">{{ selected_user.username }}</span>
+                    </div>
+                    <div class="lab-summary-row">
+                        <span class="lab-sum-label">So'ralgan model</span>
+                        <span class="lab-sum-val">{{ result.requested_model }}</span>
+                    </div>
+                    <div class="lab-summary-row">
+                        <span class="lab-sum-label">Ishlatilgan model</span>
+                        <span class="lab-sum-val">{{ result.resolved_model_label }}</span>
+                    </div>
+                    <div class="lab-summary-row">
+                        <span class="lab-sum-label">Stsenariy</span>
+                        <span class="lab-sum-val">{{ result.scenario_label }}</span>
+                    </div>
+                    {% if result.weights %}
+                    <div class="lab-summary-row lab-summary-row--full">
+                        <span class="lab-sum-label">Hybrid weights</span>
+                        <span class="lab-sum-val lab-weights-val">
+                            content={{ result.weights.content|floatformat:2 }},
+                            item={{ result.weights.item|floatformat:2 }},
+                            svd={{ result.weights.svd|floatformat:2 }},
+                            pop={{ result.weights.popularity|floatformat:2 }}
+                        </span>
+                    </div>
+                    {% endif %}
                 </div>
+            </div>
             {% else %}
-                <div class="glass-card lab-top-card lab-summary-top-card">
-                    <h5>Experiment summary</h5>
-                    <p class="mb-0 text-muted">
-                        User, model va scenario tanlab <strong>Run Lab</strong> tugmasini bosing.
-                    </p>
+            <div class="glass-card lab-top-card lab-summary-top-card">
+                <div class="lab-card-label">🧪 Natija xulosasi</div>
+                <div class="lab-summary-empty">
+                    <div class="lab-summary-empty-icon">⚗️</div>
+                    <p>User, model va scenario tanlab <strong>Run Lab</strong> tugmasini bosing.</p>
                 </div>
+            </div>
             {% endif %}
-        </div>
+
+        </div>{# /lab-top-grid #}
 
         <div class="glass-card lab-hero-shell mb-4">
             <div class="lab-hero-layout">
                 <div class="lab-hero-copy">
                     <h1 class="mb-2">Recommendation Lab</h1>
                     <p class="text-muted mb-0">
-                        Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan.
-                        Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli
-                        stsenariylar bo‘yicha natijalarni taqqoslash mumkin.
+                        Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo'ljallangan.
+                        Bu yerda tavsiya modelini qo'lda tanlab, turli foydalanuvchilar va turli
+                        stsenariylar bo'yicha natijalarni taqqoslash mumkin.
                     </p>
                 </div>
 
@@ -267,7 +289,7 @@
 
                 <div id="labResultsSentinel" class="lab-results-sentinel" aria-hidden="true"></div>
             {% else %}
-                <div class="empty-state-card">Tanlangan konfiguratsiya bo‘yicha tavsiya qaytmadi.</div>
+                <div class="empty-state-card">Tanlangan konfiguratsiya bo'yicha tavsiya qaytmadi.</div>
             {% endif %}
         {% else %}
             <div class="empty-state-card">User, model va scenario tanlab Run Lab tugmasini bosing.</div>
@@ -342,9 +364,7 @@
 
         snackbarStack.appendChild(item);
 
-        requestAnimationFrame(() => {
-            item.classList.add("is-visible");
-        });
+        requestAnimationFrame(() => { item.classList.add("is-visible"); });
 
         const removeItem = () => {
             item.classList.remove("is-visible");
@@ -353,26 +373,19 @@
         };
 
         const timer = setTimeout(removeItem, 3200);
-
         item.querySelector(".auto-rec-snackbar__close").addEventListener("click", () => {
             clearTimeout(timer);
             removeItem();
         });
     }
 
-    function defaultDirectionFor(field) {
-        return field !== "title";
-    }
-
-    function closeAll() {
-        if (sortRoot) sortRoot.classList.remove("is-open");
-    }
+    function defaultDirectionFor(field) { return field !== "title"; }
+    function closeAll() { if (sortRoot) sortRoot.classList.remove("is-open"); }
 
     function syncSortUi() {
         if (!sortLabel || !sortMenu || !sortDirectionIcon) return;
-
         sortLabel.textContent = FIELD_LABELS[currentField] || "Score";
-        sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
+        sortMenu.querySelectorAll("[data-sort-field]").forEach(btn => {
             btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
         });
         sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
@@ -380,20 +393,20 @@
 
     function sortCards(filteredCards) {
         return [...filteredCards].sort((a, b) => {
-            const titleA = a.dataset.title || "";
-            const titleB = b.dataset.title || "";
-            const yearA = parseInt(a.dataset.year || "0", 10);
-            const yearB = parseInt(b.dataset.year || "0", 10);
+            const titleA  = a.dataset.title  || "";
+            const titleB  = b.dataset.title  || "";
+            const yearA   = parseInt(a.dataset.year   || "0", 10);
+            const yearB   = parseInt(b.dataset.year   || "0", 10);
             const ratingA = parseFloat(a.dataset.rating || "0");
             const ratingB = parseFloat(b.dataset.rating || "0");
-            const scoreA = parseFloat(a.dataset.score || "0");
-            const scoreB = parseFloat(b.dataset.score || "0");
+            const scoreA  = parseFloat(a.dataset.score  || "0");
+            const scoreB  = parseFloat(b.dataset.score  || "0");
 
             let result = 0;
-            if (currentField === "title") result = titleA.localeCompare(titleB);
-            else if (currentField === "year") result = yearA - yearB;
+            if      (currentField === "title")  result = titleA.localeCompare(titleB);
+            else if (currentField === "year")   result = yearA - yearB;
             else if (currentField === "rating") result = ratingA - ratingB;
-            else result = scoreA - scoreB;
+            else                                result = scoreA - scoreB;
 
             return currentDesc ? -result : result;
         });
@@ -401,33 +414,22 @@
 
     function renderVisibleCards() {
         if (!grid) return;
-
-        cards.forEach((card) => {
-            card.hidden = true;
-        });
-
-        currentFiltered.slice(0, currentLimit).forEach((card) => {
+        cards.forEach(card => { card.hidden = true; });
+        currentFiltered.slice(0, currentLimit).forEach(card => {
             card.hidden = false;
             grid.appendChild(card);
         });
-
-        if (sentinel) {
-            sentinel.hidden = currentLimit >= currentFiltered.length;
-        }
+        if (sentinel) sentinel.hidden = currentLimit >= currentFiltered.length;
     }
 
     function applyLabFilters(resetLimit = true) {
         if (!grid) return;
-
         const query = (searchInput?.value || "").trim().toLowerCase();
-
-        const filtered = cards.filter((card) => {
+        const filtered = cards.filter(card => {
             const title = card.dataset.title || "";
             return !query || title.includes(query);
         });
-
         currentFiltered = sortCards(filtered);
-
         if (resetLimit) currentLimit = INITIAL_BATCH;
         renderVisibleCards();
     }
@@ -444,7 +446,6 @@
             body: new FormData(form),
             headers: { "X-Requested-With": "XMLHttpRequest" }
         });
-
         const data = await response.json();
         if (!response.ok || !data.ok) return;
 
@@ -456,13 +457,11 @@
     }
 
     if (sortTrigger && sortRoot) {
-        sortTrigger.addEventListener("click", function () {
-            sortRoot.classList.toggle("is-open");
-        });
+        sortTrigger.addEventListener("click", () => sortRoot.classList.toggle("is-open"));
     }
 
     if (sortMenu) {
-        sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+        sortMenu.querySelectorAll("[data-sort-field]").forEach(option => {
             option.addEventListener("click", function () {
                 currentField = this.dataset.sortField || "score";
                 currentDesc = defaultDirectionFor(currentField);
@@ -474,52 +473,35 @@
     }
 
     if (sortDirectionBtn) {
-        sortDirectionBtn.addEventListener("click", function () {
+        sortDirectionBtn.addEventListener("click", () => {
             currentDesc = !currentDesc;
             syncSortUi();
             applyLabFilters(true);
         });
     }
 
-    document.addEventListener("click", function (event) {
-        if (!event.target.closest(".labx-sort-select")) {
-            closeAll();
-        }
+    document.addEventListener("click", e => {
+        if (!e.target.closest(".labx-sort-select")) closeAll();
     });
-
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") closeAll();
-    });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
 
     if (searchInput) {
-        searchInput.addEventListener("input", function () {
-            applyLabFilters(true);
-        });
+        searchInput.addEventListener("input", () => applyLabFilters(true));
     }
 
     document.addEventListener("submit", async function (event) {
         const form = event.target.closest(".auto-rec-fav-form");
         if (!form) return;
-
         event.preventDefault();
-
         const button = form.querySelector(".auto-rec-fav-btn");
         if (!button) return;
-
-        try {
-            await toggleFavorite(form, button);
-        } catch (error) {
-            console.error(error);
-        }
+        try { await toggleFavorite(form, button); } catch (err) { console.error(err); }
     });
 
     if (sentinel && grid) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) loadMoreCards();
-            });
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) loadMoreCards(); });
         }, { rootMargin: "220px 0px" });
-
         observer.observe(sentinel);
     }
 
@@ -536,19 +518,18 @@
 
     const summaries = JSON.parse(raw.textContent || "{}");
 
-    const avatarWrap = document.getElementById("labUserAvatarWrap");
-    const displayNameEl = document.getElementById("labUserDisplayName");
-    const usernameEl = document.getElementById("labUserUsername");
-    const genderEl = document.getElementById("labUserGender");
-    const birthDateEl = document.getElementById("labUserBirthDate");
-    const phoneEl = document.getElementById("labUserPhone");
-    const genresEl = document.getElementById("labUserGenres");
-    const ratingsCountEl = document.getElementById("labUserRatingsCount");
-    const favoritesCountEl = document.getElementById("labUserFavoritesCount");
-    const historyCountEl = document.getElementById("labUserHistoryCount");
-    const ratingsLinkEl = document.getElementById("labUserRatingsLink");
-    const favoritesLinkEl = document.getElementById("labUserFavoritesLink");
-    const historyLinkEl = document.getElementById("labUserHistoryLink");
+    const displayNameEl   = document.getElementById("labUserDisplayName");
+    const usernameEl      = document.getElementById("labUserUsername");
+    const genderEl        = document.getElementById("labUserGender");
+    const birthDateEl     = document.getElementById("labUserBirthDate");
+    const phoneEl         = document.getElementById("labUserPhone");
+    const genresEl        = document.getElementById("labUserGenres");
+    const ratingsCountEl  = document.getElementById("labUserRatingsCount");
+    const favCountEl      = document.getElementById("labUserFavoritesCount");
+    const historyCountEl  = document.getElementById("labUserHistoryCount");
+    const ratingsLinkEl   = document.getElementById("labUserRatingsLink");
+    const favLinkEl       = document.getElementById("labUserFavoritesLink");
+    const historyLinkEl   = document.getElementById("labUserHistoryLink");
 
     function escapeHtml(text) {
         const div = document.createElement("div");
@@ -558,52 +539,36 @@
 
     function buildGenres(genres) {
         if (!genres || !genres.length) {
-            return '<span class="lab-user-empty">Sevimli janrlar kiritilmagan</span>';
+            return '<span class="lab-user-empty">Janrlar kiritilmagan</span>';
         }
-
-        const visibleGenres = genres.slice(0, 4)
-            .map((genre) => `<span class="genre-chip">${escapeHtml(genre)}</span>`)
+        const visible = genres.slice(0, 5)
+            .map(g => `<span class="genre-chip">${escapeHtml(g)}</span>`)
             .join("");
-
-        const extra = genres.length > 4
-            ? `<span class="genre-chip">+${genres.length - 4}</span>`
+        const extra = genres.length > 5
+            ? `<span class="genre-chip">+${genres.length - 5}</span>`
             : "";
-
-        return `${visibleGenres}${extra}`;
-    }
-
-    function buildAvatar(data) {
-        if (data.photo_url) {
-            return `<img src="${escapeHtml(data.photo_url)}" alt="${escapeHtml(data.display_name)}" class="lab-user-avatar-img">`;
-        }
-        return `<div class="lab-user-avatar-fallback">${escapeHtml(data.initial || "U")}</div>`;
+        return `${visible}${extra}`;
     }
 
     function updateSummaryCard(userId) {
         const data = summaries[String(userId)];
         if (!data) return;
 
-        if (avatarWrap) avatarWrap.innerHTML = buildAvatar(data);
-        if (displayNameEl) displayNameEl.textContent = data.display_name || data.username || "User";
-        if (usernameEl) usernameEl.textContent = `@${data.username || "user"}`;
-        if (genderEl) genderEl.textContent = `Jinsi: ${data.gender || "Kiritilmagan"}`;
-        if (birthDateEl) birthDateEl.textContent = `Tug'ilgan kun: ${data.birth_date || "Kiritilmagan"}`;
-        if (phoneEl) phoneEl.textContent = `Telefon: ${data.phone_number || "Kiritilmagan"}`;
-        if (genresEl) genresEl.innerHTML = buildGenres(data.preferred_genres || []);
-
-        if (ratingsCountEl) ratingsCountEl.textContent = data.ratings_count ?? 0;
-        if (favoritesCountEl) favoritesCountEl.textContent = data.favorites_count ?? 0;
-        if (historyCountEl) historyCountEl.textContent = data.watch_history_count ?? 0;
-
-        if (ratingsLinkEl) ratingsLinkEl.href = data.ratings_url || "#";
-        if (favoritesLinkEl) favoritesLinkEl.href = data.favorites_url || "#";
-        if (historyLinkEl) historyLinkEl.href = data.watch_history_url || "#";
+        if (displayNameEl) displayNameEl.textContent   = data.display_name || data.username || "User";
+        if (usernameEl)    usernameEl.textContent       = `@${data.username || "user"}`;
+        if (genderEl)      genderEl.textContent         = data.gender        || "—";
+        if (birthDateEl)   birthDateEl.textContent      = data.birth_date    || "—";
+        if (phoneEl)       phoneEl.textContent          = data.phone_number  || "—";
+        if (genresEl)      genresEl.innerHTML           = buildGenres(data.preferred_genres || []);
+        if (ratingsCountEl)  ratingsCountEl.textContent = data.ratings_count ?? 0;
+        if (favCountEl)      favCountEl.textContent     = data.favorites_count ?? 0;
+        if (historyCountEl)  historyCountEl.textContent = data.watch_history_count ?? 0;
+        if (ratingsLinkEl)   ratingsLinkEl.href         = data.ratings_url     || "#";
+        if (favLinkEl)       favLinkEl.href             = data.favorites_url   || "#";
+        if (historyLinkEl)   historyLinkEl.href         = data.watch_history_url || "#";
     }
 
-    userSelect.addEventListener("change", function () {
-        updateSummaryCard(this.value);
-    });
-
+    userSelect.addEventListener("change", function () { updateSummaryCard(this.value); });
     updateSummaryCard(userSelect.value);
 })();
 </script>
