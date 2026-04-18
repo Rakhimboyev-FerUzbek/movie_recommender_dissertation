@@ -51,7 +51,7 @@ def recommendation_lab_view(request):
             favorites_count=Count("favorites", distinct=True),
             watch_history_count=Count("watch_history", distinct=True),
         )
-        .order_by("username")
+        .order_by("date_joined", "id")
     )
 
     form = RecommendationLabForm(request.GET or None, current_user=request.user)
