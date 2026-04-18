@@ -180,6 +180,8 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
             profile.preferred_genres = self.cleaned_data.get("preferred_genres", [])
             profile.save()
 
+            user.profile = profile
+
         return user
 
 
