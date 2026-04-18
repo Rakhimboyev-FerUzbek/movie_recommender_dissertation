@@ -41,7 +41,11 @@
             </div>
 
             {# Card 2: User summary — NO PHOTO #}
-            <div class="glass-card lab-top-card lab-user-top-card" id="labUserSummaryCard">
+            <div
+                class="glass-card lab-top-card lab-user-top-card"
+                id="labUserSummaryCard"
+                data-selected-user-id="{{ selected_user.id }}"
+            >
                 <div class="lab-card-label">👤 Foydalanuvchi ma'lumoti</div>
                 <div class="lab-user-compact">
 
@@ -514,7 +518,8 @@
 (function () {
     const userSelect = document.getElementById("id_user_id");
     const raw = document.getElementById("labUserSummaries");
-    if (!userSelect || !raw) return;
+    const summaryCard = document.getElementById("labUserSummaryCard");
+    if (!userSelect || !raw || !summaryCard) return;
 
     const summaries = JSON.parse(raw.textContent || "{}");
 
@@ -541,35 +546,197 @@
         if (!genres || !genres.length) {
             return '<span class="lab-user-empty">Janrlar kiritilmagan</span>';
         }
+
         const visible = genres.slice(0, 5)
             .map(g => `<span class="genre-chip">${escapeHtml(g)}</span>`)
             .join("");
+
         const extra = genres.length > 5
             ? `<span class="genre-chip">+${genres.length - 5}</span>`
             : "";
+
         return `${visible}${extra}`;
     }
 
-    function updateSummaryCard(userId) {
-        const data = summaries[String(userId)];
+    function renderSummary(userId) {
+        const normalizedId = String(userId || "");
+        const data = summaries[normalizedId];
         if (!data) return;
 
         if (displayNameEl) displayNameEl.textContent   = data.display_name || data.username || "User";
-        if (usernameEl)    usernameEl.textContent       = `@${data.username || "user"}`;
-        if (genderEl)      genderEl.textContent         = data.gender        || "—";
-        if (birthDateEl)   birthDateEl.textContent      = data.birth_date    || "—";
-        if (phoneEl)       phoneEl.textContent          = data.phone_number  || "—";
-        if (genresEl)      genresEl.innerHTML           = buildGenres(data.preferred_genres || []);
-        if (ratingsCountEl)  ratingsCountEl.textContent = data.ratings_count ?? 0;
-        if (favCountEl)      favCountEl.textContent     = data.favorites_count ?? 0;
-        if (historyCountEl)  historyCountEl.textContent = data.watch_history_count ?? 0;
-        if (ratingsLinkEl)   ratingsLinkEl.href         = data.ratings_url     || "#";
-        if (favLinkEl)       favLinkEl.href             = data.favorites_url   || "#";
-        if (historyLinkEl)   historyLinkEl.href         = data.watch_history_url || "#";
+        if (usernameEl)    usernameEl.textContent      = `@${data.username || "user"}`;
+        if (genderEl)      genderEl.textContent        = data.gender || "—";
+        if (birthDateEl)   birthDateEl.textContent     = data.birth_date || "—";
+        if (phoneEl)       phoneEl.textContent         = data.phone_number || "—";
+        if (genresEl)      genresEl.innerHTML          = buildGenres(data.preferred_genres || []);
+        if (ratingsCountEl) ratingsCountEl.textContent = data.ratings_count ?? 0;
+        if (favCountEl)     favCountEl.textContent     = data.favorites_count ?? 0;
+        if (historyCountEl) historyCountEl.textContent = data.watch_history_count ?? 0;
+        if (ratingsLinkEl)  ratingsLinkEl.href         = data.ratings_url || "#";
+        if (favLinkEl)      favLinkEl.href             = data.favorites_url || "#";
+        if (historyLinkEl)  historyLinkEl.href         = data.watch_history_url || "#";
     }
 
-    userSelect.addEventListener("change", function () { updateSummaryCard(this.value); });
-    updateSummaryCard(userSelect.value);
+    const initialSelectedUserId =
+        String(
+            summaryCard.dataset.selectedUserId ||
+            userSelect.value ||
+            userSelect.options[userSelect.selectedIndex]?.value ||
+            ""
+        );
+
+    const options = Array.from(userSelect.options)
+        .filter(option => option.value && option.value.trim() !== "");
+
+    if (!options.length) {
+        renderSummary(initialSelectedUserId);
+        return;
+    }
+
+    let committedUserId = initialSelectedUserId || String(options[0].value);
+    let previewUserId = committedUserId;
+
+    userSelect.classList.add("lab-user-select-native--hidden");
+
+    const pickerRoot = document.createElement("div");
+    pickerRoot.className = "lab-user-hover-picker";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "lab-user-hover-trigger";
+    trigger.innerHTML = `
+        <span class="lab-user-hover-trigger__label"></span>
+        <span class="lab-user-hover-trigger__chevron"></span>
+    `;
+
+    const triggerLabel = trigger.querySelector(".lab-user-hover-trigger__label");
+
+    const menu = document.createElement("div");
+    menu.className = "lab-user-hover-menu";
+
+    options.forEach(option => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "lab-user-hover-option";
+        item.dataset.value = String(option.value);
+        item.textContent = option.textContent.trim();
+
+        item.addEventListener("mouseenter", function () {
+            previewUserId = this.dataset.value;
+            renderSummary(previewUserId);
+            markPreview();
+        });
+
+        item.addEventListener("focus", function () {
+            previewUserId = this.dataset.value;
+            renderSummary(previewUserId);
+            markPreview();
+        });
+
+        item.addEventListener("click", function () {
+            committedUserId = this.dataset.value;
+            previewUserId = committedUserId;
+            userSelect.value = committedUserId;
+            updateTriggerLabel();
+            markSelected();
+            markPreview();
+            renderSummary(committedUserId);
+            closeMenu();
+        });
+
+        menu.appendChild(item);
+    });
+
+    pickerRoot.appendChild(trigger);
+    pickerRoot.appendChild(menu);
+    userSelect.insertAdjacentElement("afterend", pickerRoot);
+
+    function getSelectedOptionText(value) {
+        const match = options.find(opt => String(opt.value) === String(value));
+        return match ? match.textContent.trim() : "User tanlang";
+    }
+
+    function updateTriggerLabel() {
+        if (triggerLabel) {
+            triggerLabel.textContent = getSelectedOptionText(committedUserId);
+        }
+    }
+
+    function markSelected() {
+        menu.querySelectorAll(".lab-user-hover-option").forEach(btn => {
+            btn.classList.toggle("is-selected", btn.dataset.value === String(committedUserId));
+        });
+    }
+
+    function markPreview() {
+        menu.querySelectorAll(".lab-user-hover-option").forEach(btn => {
+            btn.classList.toggle("is-preview", btn.dataset.value === String(previewUserId));
+        });
+    }
+
+    function openMenu() {
+        menu.classList.add("is-open");
+        trigger.classList.add("is-open");
+    }
+
+    function closeMenu(resetPreview = true) {
+        menu.classList.remove("is-open");
+        trigger.classList.remove("is-open");
+
+        if (resetPreview) {
+            previewUserId = committedUserId;
+            renderSummary(committedUserId);
+            markPreview();
+        }
+    }
+
+    trigger.addEventListener("click", function () {
+        if (menu.classList.contains("is-open")) {
+            closeMenu(false);
+        } else {
+            openMenu();
+            markSelected();
+            markPreview();
+        }
+    });
+
+    menu.addEventListener("mouseleave", function () {
+        previewUserId = committedUserId;
+        renderSummary(committedUserId);
+        markPreview();
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!pickerRoot.contains(event.target)) {
+            closeMenu(true);
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeMenu(true);
+        }
+    });
+
+    userSelect.addEventListener("change", function () {
+        committedUserId = String(this.value || "");
+        previewUserId = committedUserId;
+        updateTriggerLabel();
+        markSelected();
+        markPreview();
+        renderSummary(committedUserId);
+    });
+
+    if (!committedUserId) {
+        committedUserId = String(options[0].value);
+        previewUserId = committedUserId;
+        userSelect.value = committedUserId;
+    }
+
+    updateTriggerLabel();
+    markSelected();
+    markPreview();
+    renderSummary(committedUserId);
 })();
 </script>
 {% endblock %}

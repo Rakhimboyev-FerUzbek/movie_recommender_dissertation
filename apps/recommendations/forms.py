@@ -31,7 +31,7 @@ class RecommendationLabForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         user_choices = []
-        for user in User.objects.order_by("username").only("id", "username"):
+        for user in User.objects.order_by("date_joined", "id").only("id", "username", "date_joined"):
             user_choices.append((str(user.id), user.username))
 
         self.fields["user_id"].choices = user_choices
