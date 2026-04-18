@@ -1307,7 +1307,7 @@ body.modal-open {
 }
 
 .prf-pw-field-shell .form-control {
-    padding-right: 108px !important;
+    padding-right: 58px !important;
 }
 
 .prf-pw-toggle {
@@ -1315,21 +1315,67 @@ body.modal-open {
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    min-width: 88px;
-    height: 32px;
-    border-radius: 999px;
-    border: 1px solid rgba(124, 92, 255, 0.26);
-    background: rgba(124, 92, 255, 0.10);
-    color: var(--text);
-    font-size: 0.8rem;
-    font-weight: 700;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(124, 92, 255, 0.26) !important;
+    background: rgba(124, 92, 255, 0.10) !important;
+    color: var(--text) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
     cursor: pointer;
     transition: all 0.2s ease;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    flex: 0 0 36px !important;
 }
 
 .prf-pw-toggle:hover {
-    background: rgba(124, 92, 255, 0.18);
-    border-color: rgba(124, 92, 255, 0.40);
+    background: rgba(124, 92, 255, 0.18) !important;
+    border-color: rgba(124, 92, 255, 0.40) !important;
+}
+
+.prf-pw-toggle__icon {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0 !important;
+    flex: 0 0 18px !important;
+}
+
+.prf-pw-toggle__icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+}
+
+.prf-pw-toggle__icon--show {
+    display: inline-flex !important;
+}
+
+.prf-pw-toggle__icon--hide {
+    display: none !important;
+}
+
+.prf-pw-toggle.is-visible .prf-pw-toggle__icon--show {
+    display: none !important;
+}
+
+.prf-pw-toggle.is-visible .prf-pw-toggle__icon--hide {
+    display: inline-flex !important;
 }
 
 .prf-pw-actions {
@@ -1416,13 +1462,26 @@ body.modal-open {
 
 @media (max-width: 767px) {
     .prf-pw-field-shell .form-control {
-        padding-right: 92px !important;
+        padding-right: 54px !important;
     }
 
     .prf-pw-toggle {
-        min-width: 76px;
-        height: 30px;
-        font-size: 0.75rem;
+        width: 34px !important;
+        min-width: 34px !important;
+        max-width: 34px !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        max-height: 34px !important;
+        right: 8px !important;
+        flex: 0 0 34px !important;
+    }
+
+    .prf-pw-toggle__icon,
+    .prf-pw-toggle__icon svg {
+        width: 17px !important;
+        height: 17px !important;
+        min-width: 17px !important;
+        min-height: 17px !important;
     }
 
     .prf-snackbar {
@@ -1432,4 +1491,123 @@ body.modal-open {
         max-width: none;
         min-width: 0;
     }
+}
+
+/* ── Profile edit snackbar ───────────────────────────── */
+.prf-edit-snackbar {
+    position: fixed;
+    top: 88px;
+    right: 18px;
+    z-index: 9999;
+    min-width: 320px;
+    max-width: min(420px, calc(100vw - 28px));
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    color: #fff;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+    transform: translateX(24px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.prf-edit-snackbar.is-visible {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.prf-edit-snackbar--success {
+    background: linear-gradient(135deg, #51b96d, #77c67e);
+}
+
+.prf-edit-snackbar--error {
+    background: linear-gradient(135deg, #d85067, #e16678);
+}
+
+.prf-edit-snackbar__icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.prf-edit-snackbar__msg {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.prf-edit-snackbar__close {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.95;
+    padding: 0;
+}
+
+.prf-edit-snackbar__close:hover {
+    opacity: 1;
+}
+
+@media (max-width: 767px) {
+    .prf-edit-snackbar {
+        top: 76px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
+        min-width: 0;
+    }
+}
+
+/* ===== Profile edit mode: Gender select light/dark fix ===== */
+.profile-account-card-compact select,
+.profile-main-edit-form select,
+.profile-info-item select,
+select[name="gender"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+    background-image: none;
+}
+
+body[data-theme="dark"] .profile-account-card-compact select,
+body[data-theme="dark"] .profile-main-edit-form select,
+body[data-theme="dark"] .profile-info-item select,
+body[data-theme="dark"] select[name="gender"] {
+    color-scheme: dark;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+body[data-theme="dark"] .profile-account-card-compact select option,
+body[data-theme="dark"] .profile-main-edit-form select option,
+body[data-theme="dark"] .profile-info-item select option,
+body[data-theme="dark"] select[name="gender"] option {
+    background: #1b2036 !important;
+    color: #eef2ff !important;
+}
+
+body[data-theme="light"] .profile-account-card-compact select,
+body[data-theme="light"] .profile-main-edit-form select,
+body[data-theme="light"] .profile-info-item select,
+body[data-theme="light"] select[name="gender"] {
+    color-scheme: light;
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    color: #0f172a !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+body[data-theme="light"] .profile-account-card-compact select option,
+body[data-theme="light"] .profile-main-edit-form select option,
+body[data-theme="light"] .profile-info-item select option,
+body[data-theme="light"] select[name="gender"] option {
+    background: #ffffff !important;
+    color: #0f172a !important;
 }

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
@@ -53,7 +54,7 @@ def profile_view(request):
             user_form.save()
             profile_form.save()
             messages.success(request, t["profile_updated"])
-            return redirect("profile")
+            return redirect(f"{reverse('profile')}?updated=1")
         else:
             is_edit_mode = True
     else:

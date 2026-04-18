@@ -473,3 +473,44 @@ body[data-theme="light"] .auth-page input[type="date"]::-webkit-calendar-picker-
         padding: 18px 18px 14px !important;
     }
 }
+
+/* ===== Register page: Gender select light/dark fix ===== */
+.auth-page select.form-control,
+.auth-page .auth-form-grid select,
+.auth-page select[name="gender"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+    background-image: none;
+}
+
+body[data-theme="dark"] .auth-page select.form-control,
+body[data-theme="dark"] .auth-page .auth-form-grid select,
+body[data-theme="dark"] .auth-page select[name="gender"] {
+    color-scheme: dark;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+body[data-theme="dark"] .auth-page select.form-control option,
+body[data-theme="dark"] .auth-page .auth-form-grid select option,
+body[data-theme="dark"] .auth-page select[name="gender"] option {
+    background: #1b2036 !important;
+    color: #eef2ff !important;
+}
+
+body[data-theme="light"] .auth-page select.form-control,
+body[data-theme="light"] .auth-page .auth-form-grid select,
+body[data-theme="light"] .auth-page select[name="gender"] {
+    color-scheme: light;
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    color: #0f172a !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+body[data-theme="light"] .auth-page select.form-control option,
+body[data-theme="light"] .auth-page .auth-form-grid select option,
+body[data-theme="light"] .auth-page select[name="gender"] option {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
