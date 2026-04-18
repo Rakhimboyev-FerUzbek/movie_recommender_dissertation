@@ -410,6 +410,23 @@
                             </div>
 
                             <div class="detail-v4-comment-actions">
+                                {% if user.is_authenticated and comment.is_own %}
+                                    <form method="post" action="{% url 'comment_delete' comment.id %}" class="comment-delete-form comment-delete-form--inline" data-comment-id="{{ comment.id }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <button
+                                            type="submit"
+                                            class="comment-delete-btn"
+                                            title="O'chirish"
+                                            aria-label="Kommentariyani o'chirish"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                                <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                {% endif %}
+
                                 {% if user.is_authenticated %}
                                     <form method="post" action="{% url 'comment_like' comment.id %}" class="comment-like-form" data-comment-id="{{ comment.id }}">
                                         {% csrf_token %}
@@ -449,13 +466,9 @@
                             </form>
                         {% endif %}
 
-                        <div class="detail-v4-comment-footer">
-                            <div class="detail-v4-comment-time {% if comment.is_own %}is-own{% else %}is-other{% endif %}" id="comment-time-{{ comment.id }}">
-                                {{ comment.display_time }}
-                            </div>
-
-                            {% if user.is_authenticated and comment.is_own %}
-                                <div class="detail-v4-comment-footer-actions">
+                        {% if user.is_authenticated and comment.is_own %}
+                            <div class="detail-v4-comment-footer detail-v4-comment-footer--own">
+                                <div class="detail-v4-comment-own-meta">
                                     <button
                                         type="button"
                                         class="comment-edit-btn bottom-edit-btn"
@@ -466,24 +479,18 @@
                                     >
                                         ✎
                                     </button>
-
-                                    <form method="post" action="{% url 'comment_delete' comment.id %}" class="comment-delete-form" data-comment-id="{{ comment.id }}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button
-                                            type="submit"
-                                            class="comment-delete-btn"
-                                            title="O'chirish"
-                                            aria-label="Kommentariyani o'chirish"
-                                        >
-                                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                                <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    <div class="detail-v4-comment-time is-own" id="comment-time-{{ comment.id }}">
+                                        {{ comment.display_time }}
+                                    </div>
                                 </div>
+                            </div>
+                            {% else %}
+                            <div class="detail-v4-comment-footer">
+                                <div class="detail-v4-comment-time is-other" id="comment-time-{{ comment.id }}">
+                                    {{ comment.display_time }}
+                                </div>
+                            </div>
                             {% endif %}
-                        </div>
                     </article>
                     {% empty %}
                     <div class="media-empty-state compact" id="commentsEmptyState">
@@ -502,6 +509,33 @@
     <span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
     <span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
     <button class="kc-snackbar-close" id="kc-snackbar-close" aria-label="Yopish">×</button>
+</div>
+
+<div id="commentDeleteModal" class="comment-delete-modal" aria-hidden="true">
+    <div class="comment-delete-modal__backdrop"></div>
+
+    <div class="comment-delete-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="commentDeleteModalTitle">
+        <div class="comment-delete-modal__icon-wrap">
+            <div class="comment-delete-modal__icon">!</div>
+        </div>
+
+        <h3 class="comment-delete-modal__title" id="commentDeleteModalTitle">
+            Kommentariyani o‘chirmoqchimisiz?
+        </h3>
+
+        <p class="comment-delete-modal__text">
+            Ushbu kommentariya butunlay o‘chib ketadi. Bu amalni ortga qaytarib bo‘lmaydi.
+        </p>
+
+        <div class="comment-delete-modal__actions">
+            <button type="button" class="comment-delete-modal__btn comment-delete-modal__btn--cancel" id="commentDeleteCancelBtn">
+                Bekor qilish
+            </button>
+            <button type="button" class="comment-delete-modal__btn comment-delete-modal__btn--confirm" id="commentDeleteConfirmBtn">
+                Ha, o‘chirish
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -526,7 +560,14 @@
     const snackIcon = document.getElementById("kc-snackbar-icon");
     const snackMsg = document.getElementById("kc-snackbar-msg");
     const snackClose = document.getElementById("kc-snackbar-close");
+
+    const deleteModal = document.getElementById("commentDeleteModal");
+    const deleteModalBackdrop = deleteModal ? deleteModal.querySelector(".comment-delete-modal__backdrop") : null;
+    const deleteConfirmBtn = document.getElementById("commentDeleteConfirmBtn");
+    const deleteCancelBtn = document.getElementById("commentDeleteCancelBtn");
+
     let snackTimer = null;
+    let pendingDeleteForm = null;
 
     function escapeHtml(text) {
         const div = document.createElement("div");
@@ -558,6 +599,80 @@
         snackClose.addEventListener("click", function () {
             clearTimeout(snackTimer);
             hideSnackbar();
+        });
+    }
+
+    function openDeleteModal(form) {
+        pendingDeleteForm = form;
+        if (!deleteModal) return;
+
+        deleteModal.classList.add("is-open");
+        deleteModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+    }
+
+    function closeDeleteModal(showCancelSnackbar = false) {
+        if (!deleteModal) return;
+
+        deleteModal.classList.remove("is-open");
+        deleteModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        pendingDeleteForm = null;
+
+        if (showCancelSnackbar) {
+            showSnackbar("Kommentariyani o‘chirish bekor qilindi.", "error");
+        }
+    }
+
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener("click", function () {
+            closeDeleteModal(true);
+        });
+    }
+
+    if (deleteModalBackdrop) {
+        deleteModalBackdrop.addEventListener("click", function () {
+            closeDeleteModal(true);
+        });
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && deleteModal && deleteModal.classList.contains("is-open")) {
+            closeDeleteModal(true);
+        }
+    });
+
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener("click", async function () {
+            if (!pendingDeleteForm) return;
+
+            const activeForm = pendingDeleteForm;
+            deleteConfirmBtn.disabled = true;
+
+            try {
+                const { response, data } = await postFormAjax(activeForm);
+
+                if (!response.ok || !data.ok) {
+                    showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
+                    return;
+                }
+
+                const commentId = activeForm.dataset.commentId || data.comment_id;
+                const card = document.getElementById(`comment-card-${commentId}`);
+
+                if (card) {
+                    card.remove();
+                }
+
+                ensureEmptyState();
+                closeDeleteModal(false);
+                showSnackbar(data.message || "Kommentariya o'chirildi.", "success");
+            } catch (error) {
+                console.error(error);
+                showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
+            } finally {
+                deleteConfirmBtn.disabled = false;
+            }
         });
     }
 
@@ -629,6 +744,16 @@
                     </div>
 
                     <div class="detail-v4-comment-actions">
+                        <form method="post" action="${deleteUrl}" class="comment-delete-form comment-delete-form--inline" data-comment-id="${comment.id}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                            <button type="submit" class="comment-delete-btn" title="O'chirish" aria-label="Kommentariyani o'chirish">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </form>
+
                         <form method="post" action="${likeUrl}" class="comment-like-form" data-comment-id="${comment.id}">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                             <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
@@ -660,9 +785,8 @@
                     </div>
                 </form>
 
-                <div class="detail-v4-comment-footer">
-                    <div class="detail-v4-comment-time" id="comment-time-${comment.id}">${escapeHtml(comment.display_time || comment.created_at || "")}</div>
-                    <div class="detail-v4-comment-footer-actions">
+                <div class="detail-v4-comment-footer detail-v4-comment-footer--own">
+                    <div class="detail-v4-comment-own-meta">
                         <button
                             type="button"
                             class="comment-edit-btn bottom-edit-btn"
@@ -673,22 +797,13 @@
                         >
                             ✎
                         </button>
-
-                        <form method="post" action="${deleteUrl}" class="comment-delete-form" data-comment-id="${comment.id}">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
-                            <button type="submit" class="comment-delete-btn" title="O'chirish" aria-label="Kommentariyani o'chirish">
-                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
-                                </svg>
-                            </button>
-                        </form>
+                        <div class="detail-v4-comment-time is-own" id="comment-time-${comment.id}">${escapeHtml(comment.display_time || comment.created_at || "")}</div>
                     </div>
                 </div>
             </article>
         `;
     }
-
+    
     function ensureEmptyState() {
         if (!commentsList) return;
         const cards = commentsList.querySelectorAll(".detail-v4-comment-card");
@@ -865,6 +980,7 @@
 
             if (editForm) editForm.classList.remove("is-hidden");
             if (displayBody) displayBody.classList.add("is-hidden");
+            return;
         }
 
         if (cancelBtn) {
@@ -876,6 +992,9 @@
 
             if (editForm) editForm.classList.add("is-hidden");
             if (displayBody) displayBody.classList.remove("is-hidden");
+
+            showSnackbar("Kommentariya tahrirlash bekor qilindi.", "error");
+            return;
         }
     });
 
@@ -887,8 +1006,9 @@
 
         try {
             const { response, data } = await postFormAjax(editForm);
+
             if (!response.ok || !data.ok) {
-                showSnackbar("Kommentariyani saqlashda xatolik yuz berdi.", "error");
+                showSnackbar(data.message || "Kommentariyani saqlashda xatolik yuz berdi.", "error");
                 return;
             }
 
@@ -907,7 +1027,11 @@
             }
 
             if (timeEl) {
-                timeEl.textContent = data.comment.display_time || data.comment.updated_at;
+                if (data.comment.display_time) {
+                    timeEl.textContent = data.comment.display_time;
+                } else if (data.comment.updated_at) {
+                    timeEl.textContent = `Tahrirlandi: ${data.comment.updated_at}`;
+                }
             }
 
             editForm.classList.add("is-hidden");
@@ -918,34 +1042,12 @@
         }
     });
 
-    document.addEventListener("submit", async function (event) {
+    document.addEventListener("submit", function (event) {
         const deleteForm = event.target.closest(".comment-delete-form");
         if (!deleteForm) return;
 
         event.preventDefault();
-
-        const confirmed = window.confirm("Kommentariyani o‘chirmoqchimisiz?");
-        if (!confirmed) return;
-
-        try {
-            const { response, data } = await postFormAjax(deleteForm);
-            if (!response.ok || !data.ok) {
-                showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
-                return;
-            }
-
-            const commentId = deleteForm.dataset.commentId || data.comment_id;
-            const card = document.getElementById(`comment-card-${commentId}`);
-            if (card) {
-                card.remove();
-            }
-
-            ensureEmptyState();
-            showSnackbar(data.message || "Kommentariya o'chirildi.", "success");
-        } catch (error) {
-            console.error(error);
-            showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
-        }
+        openDeleteModal(deleteForm);
     });
 
     const favoriteForm = document.getElementById("favoriteToggleForm");
