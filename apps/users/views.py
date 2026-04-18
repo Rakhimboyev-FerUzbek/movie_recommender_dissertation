@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
 from django.shortcuts import redirect, render
+from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 from apps.users.forms import RegisterForm, UserProfileForm, UserUpdateForm
@@ -24,9 +25,6 @@ def register_view(request):
         form = RegisterForm(request.POST, lang=lang)
         if form.is_valid():
             user = form.save()
-            user.refresh_from_db()
-            if hasattr(user, "profile"):
-                user.profile.refresh_from_db()
             login(request, user)
             messages.success(request, t["registration_success"])
             return redirect("profile")
@@ -41,8 +39,9 @@ def profile_view(request):
     lang = request.session.get("site_language", "uz")
     t = get_translation(lang)
 
-    profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    profile.refresh_from_db()
+    profile = getattr(request.user, "profile", None)
+    if profile is None:
+        profile = UserProfile.objects.create(user=request.user)
 
     is_edit_mode = request.method == "POST" or request.GET.get("edit") == "1"
 
@@ -90,7 +89,6 @@ def profile_view(request):
         .order_by("-watched_at")[:3]
     )
 
-    # Build empty password change form for display
     pw_form = PasswordChangeForm(request.user)
 
     context = {
@@ -112,21 +110,43 @@ def profile_view(request):
     return render(request, "users/profile.html", context)
 
 
+def _is_ajax(request):
+    return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
 @login_required
 @require_POST
 def change_password_view(request):
-    lang = request.session.get("site_language", "uz")
-
     form = PasswordChangeForm(request.user, request.POST)
+
     if form.is_valid():
         user = form.save()
-        # Keep the user logged in after password change
         update_session_auth_hash(request, user)
-        messages.success(request, "Parol muvaffaqiyatli o'zgartirildi.")
-    else:
-        for field_errors in form.errors.values():
-            for error in field_errors:
-                messages.error(request, error)
+        message = "Parol muvaffaqiyatli o'zgartirildi."
+
+        if _is_ajax(request):
+            return JsonResponse({"ok": True, "message": message})
+
+        messages.success(request, message)
+        return redirect("profile")
+
+    errors = {field: [str(error) for error in field_errors] for field, field_errors in form.errors.items()}
+    fallback_message = "Parolni yangilashda xatolik yuz berdi."
+    first_error = next((field_errors[0] for field_errors in errors.values() if field_errors), fallback_message)
+
+    if _is_ajax(request):
+        return JsonResponse(
+            {
+                "ok": False,
+                "message": first_error,
+                "errors": errors,
+            },
+            status=400,
+        )
+
+    for field_errors in form.errors.values():
+        for error in field_errors:
+            messages.error(request, error)
 
     return redirect("profile")
 
