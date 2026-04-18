@@ -10,15 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const openModal = () => {
         modal.hidden = false;
         backdrop.hidden = false;
+        requestAnimationFrame(() => {
+            modal.classList.add("is-active");
+            backdrop.classList.add("is-active");
+        });
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
     };
 
     const closeModal = () => {
-        modal.hidden = true;
-        backdrop.hidden = true;
+        modal.classList.remove("is-active");
+        backdrop.classList.remove("is-active");
         modal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("modal-open");
+        setTimeout(() => {
+            modal.hidden = true;
+            backdrop.hidden = true;
+        }, 230);
     };
 
     openBtn.addEventListener("click", openModal);
@@ -173,15 +181,23 @@ document.addEventListener("DOMContentLoaded", function () {
     function openModal() {
         modal.hidden = false;
         backdrop.hidden = false;
+        requestAnimationFrame(function() {
+            modal.classList.add("is-active");
+            backdrop.classList.add("is-active");
+        });
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
     }
 
     function closeModal() {
-        modal.hidden = true;
-        backdrop.hidden = true;
+        modal.classList.remove("is-active");
+        backdrop.classList.remove("is-active");
         modal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("modal-open");
+        setTimeout(function() {
+            modal.hidden = true;
+            backdrop.hidden = true;
+        }, 230);
     }
 
     openBtn.addEventListener("click", openModal);

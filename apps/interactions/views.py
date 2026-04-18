@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
@@ -56,6 +57,51 @@ def _redirect_to_movie_detail(request, slug: str, next_url: str = "", anchor: st
 
 def _is_ajax(request) -> bool:
     return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
+def _format_comment_timestamp(value):
+    return timezone.localtime(value).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _comment_display_time(comment, *, force_updated: bool = False) -> str:
+    if force_updated:
+        return f"Tahrirlandi: {_format_comment_timestamp(comment.updated_at)}"
+
+    if comment.updated_at and comment.created_at:
+        delta_seconds = abs((comment.updated_at - comment.created_at).total_seconds())
+        if delta_seconds >= 1:
+            return f"Tahrirlandi: {_format_comment_timestamp(comment.updated_at)}"
+
+    return _format_comment_timestamp(comment.created_at)
+
+
+def _serialize_comment(comment, request_user=None, *, force_updated: bool = False):
+    author = comment.user.get_full_name().strip() or comment.user.username
+    like_count = getattr(comment, "like_count", None)
+    if like_count is None:
+        like_count = comment.likes.count()
+
+    is_own = bool(
+        request_user
+        and getattr(request_user, "is_authenticated", False)
+        and comment.user_id == request_user.id
+    )
+
+    return {
+        "id": comment.id,
+        "body": comment.body,
+        "author": author,
+        "created_at": _format_comment_timestamp(comment.created_at),
+        "updated_at": _format_comment_timestamp(comment.updated_at),
+        "display_time": _comment_display_time(comment, force_updated=force_updated),
+        "like_count": like_count,
+        "is_own": is_own,
+        "urls": {
+            "like": reverse("comment_like", kwargs={"comment_id": comment.id}),
+            "edit": reverse("comment_edit", kwargs={"comment_id": comment.id}),
+            "delete": reverse("comment_delete", kwargs={"comment_id": comment.id}),
+        },
+    }
 
 def _resolve_interaction_target_user(request):
     """
@@ -181,16 +227,10 @@ def submit_comment_view(request, slug):
         )
 
         if _is_ajax(request):
-            author = request.user.get_full_name().strip() or request.user.username
             return JsonResponse({
                 "ok": True,
-                "comment": {
-                    "id": comment.id,
-                    "body": comment.body,
-                    "author": author,
-                    "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    "like_count": 0,
-                },
+                "message": "Kommentariya qo'shildi.",
+                "comment": _serialize_comment(comment, request.user),
             })
 
         messages.success(request, "Kommentariya qo'shildi.")
@@ -244,17 +284,50 @@ def edit_comment_view(request, comment_id):
     if _is_ajax(request):
         return JsonResponse({
             "ok": True,
-            "comment": {
-                "id": comment.id,
-                "body": comment.body,
-                "updated_at": comment.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-            },
+            "message": "Kommentariya tahrirlandi.",
+            "comment": _serialize_comment(comment, request.user, force_updated=True),
         })
 
     messages.success(request, "Kommentariya tahrirlandi.")
     return _redirect_to_movie_detail(
         request,
         slug=comment.movie.slug,
+        next_url=request.POST.get("next", ""),
+        anchor="comments-section",
+    )
+
+
+@login_required
+@require_POST
+def delete_comment_view(request, comment_id):
+    comment = get_object_or_404(Comment.objects.select_related("movie", "user"), pk=comment_id)
+
+    if comment.user_id != request.user.id:
+        if _is_ajax(request):
+            return JsonResponse({"ok": False, "error": "Forbidden"}, status=403)
+        messages.error(request, "Siz faqat o'zingizning kommentariyangizni o'chira olasiz.")
+        return _redirect_to_movie_detail(
+            request,
+            slug=comment.movie.slug,
+            next_url=request.POST.get("next", ""),
+            anchor="comments-section",
+        )
+
+    movie_slug = comment.movie.slug
+    comment_id_value = comment.id
+    comment.delete()
+
+    if _is_ajax(request):
+        return JsonResponse({
+            "ok": True,
+            "message": "Kommentariya o'chirildi.",
+            "comment_id": comment_id_value,
+        })
+
+    messages.success(request, "Kommentariya o'chirildi.")
+    return _redirect_to_movie_detail(
+        request,
+        slug=movie_slug,
         next_url=request.POST.get("next", ""),
         anchor="comments-section",
     )
