@@ -24,6 +24,9 @@ def register_view(request):
         form = RegisterForm(request.POST, lang=lang)
         if form.is_valid():
             user = form.save()
+            user.refresh_from_db()
+            if hasattr(user, "profile"):
+                user.profile.refresh_from_db()
             login(request, user)
             messages.success(request, t["registration_success"])
             return redirect("profile")
@@ -38,9 +41,8 @@ def profile_view(request):
     lang = request.session.get("site_language", "uz")
     t = get_translation(lang)
 
-    profile = getattr(request.user, "profile", None)
-    if profile is None:
-        profile = UserProfile.objects.create(user=request.user)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile.refresh_from_db()
 
     is_edit_mode = request.method == "POST" or request.GET.get("edit") == "1"
 
