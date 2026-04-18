@@ -2764,3 +2764,199 @@ body[data-theme="light"] .catalog-ui-select__menu::-webkit-scrollbar-thumb {
     height: 15px;
     display: block;
 }
+
+/* ===== Own comment card layout fix ===== */
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .comment-delete-form--inline {
+    margin: 0 18px 0 0 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-footer--own {
+    justify-content: flex-start !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-right: auto !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .bottom-edit-btn,
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .comment-edit-btn.bottom-edit-btn {
+    order: 1 !important;
+    margin: 0 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .detail-v4-comment-time {
+    order: 2 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+/* ===== Comment delete modal + own footer layout ===== */
+.comment-delete-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.comment-delete-modal.is-open {
+    display: flex;
+}
+
+.comment-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 10, 24, 0.72);
+    backdrop-filter: blur(7px);
+}
+
+.comment-delete-modal__dialog {
+    position: relative;
+    z-index: 2;
+    width: min(92vw, 550px);
+    padding: 34px 30px 28px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(31, 29, 58, 0.98), rgba(20, 19, 42, 0.98));
+    border: 1px solid rgba(235, 93, 122, 0.25);
+    box-shadow: 0 22px 70px rgba(0, 0, 0, 0.45);
+    text-align: center;
+}
+
+.comment-delete-modal__icon-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.comment-delete-modal__icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffd166;
+    background: linear-gradient(180deg, rgba(255, 124, 124, 0.18), rgba(255, 99, 132, 0.12));
+    border: 1px solid rgba(255, 124, 124, 0.28);
+}
+
+.comment-delete-modal__title {
+    margin: 0 0 12px;
+    color: #f4f6ff;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.comment-delete-modal__text {
+    margin: 0;
+    color: rgba(231, 235, 255, 0.78);
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.comment-delete-modal__actions {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.comment-delete-modal__btn {
+    min-width: 168px;
+    border: 0;
+    border-radius: 18px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+
+.comment-delete-modal__btn:hover {
+    transform: translateY(-1px);
+}
+
+.comment-delete-modal__btn:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+.comment-delete-modal__btn--cancel {
+    color: #eef2ff;
+    background: linear-gradient(180deg, rgba(66, 66, 96, 0.95), rgba(47, 46, 79, 0.95));
+    border: 1px solid rgba(166, 174, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.comment-delete-modal__btn--confirm {
+    color: #fff;
+    background: linear-gradient(180deg, #ff6f86, #e4546b);
+    box-shadow: 0 10px 26px rgba(228, 84, 107, 0.35);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* own comment: time left, edit right */
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-footer,
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-footer--own {
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-time,
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-time.is-own {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    text-align: left !important;
+    order: 1 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .bottom-edit-btn,
+#commentsList .detail-v4-comment-card.is-own .comment-edit-btn.bottom-edit-btn {
+    margin-left: auto !important;
+    order: 2 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .detail-v4-comment-time {
+    margin-right: auto !important;
+    order: 1 !important;
+}
+
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .bottom-edit-btn,
+#commentsList .detail-v4-comment-card.is-own .detail-v4-comment-own-meta .comment-edit-btn.bottom-edit-btn {
+    margin-left: auto !important;
+    order: 2 !important;
+}
+
+
+.compact-comments-scroll,
+.detail-v4-comments-scroll {
+    height: 430px !important;
+    min-height: 430px !important;
+    max-height: 430px !important;
+    overflow-y: auto !important;
+}
