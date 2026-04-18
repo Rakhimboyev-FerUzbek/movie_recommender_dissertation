@@ -23,6 +23,7 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=20, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
     profile_photo = models.ImageField(upload_to="profiles/photos/", blank=True, null=True)
+    previous_last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

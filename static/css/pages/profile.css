@@ -1236,3 +1236,67 @@ body.modal-open {
         padding: 12px 10px
     }
 }
+/* ── Profile danger zone compact (new layout) ──────────── */
+.profile-danger-compact {
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 90, 115, 0.22);
+    background: linear-gradient(180deg, rgba(255, 90, 115, 0.05), rgba(255, 90, 115, 0.02)), var(--surface)
+}
+
+.profile-danger-compact-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap
+}
+
+.profile-danger-compact-inner .profile-danger-zone-badge {
+    margin-bottom: 0;
+    flex-shrink: 0
+}
+
+.profile-danger-compact-inner h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    flex-shrink: 0
+}
+
+.profile-danger-compact-inner p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    flex: 1 1 200px;
+    line-height: 1.5
+}
+
+.profile-danger-compact-inner .profile-danger-btn {
+    flex-shrink: 0;
+    margin-left: auto
+}
+
+@media (max-width: 600px) {
+    .profile-danger-compact-inner .profile-danger-btn {
+        margin-left: 0;
+        width: 100%
+    }
+}
+
+/* ── Edit mode — hero right with photo upload ──────────── */
+.profile-hero-right-edit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%
+}
+
+/* ── Account form card (below hero row) ────────────────── */
+.profile-account-form-card {
+    padding: 0;
+    overflow: hidden
+}
+
+.profile-account-form-body {
+    padding: 16px
+}
