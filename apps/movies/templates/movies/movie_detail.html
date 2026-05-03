@@ -13,8 +13,8 @@
         <div class="detail-v4-top-area fade-up">
             <div class="detail-v4-poster-col">
                 <div class="detail-v4-poster-card">
-                {% if movie.poster_src %}
-                    <img src="{{ movie.poster_src }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
+                    {% if movie.poster_src %}
+                        <img src="{{ movie.poster_src }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
                     {% else %}
                         <div class="detail-v4-poster-placeholder">
                             <span>{{ movie.title|slice:":1" }}</span>
@@ -25,39 +25,39 @@
 
             <div class="detail-v4-top-main">
                 <div class="glass-card detail-v4-header-card">
-                <div class="detail-v4-title-row">
-                    <h1 class="detail-v4-title">{{ movie.title }}</h1>
+                    <div class="detail-v4-title-row">
+                        <h1 class="detail-v4-title">{{ movie.title }}</h1>
 
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-title-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                            <button
-                                type="submit"
-                                class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
-                                id="favoriteToggleButton"
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-title-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button
+                                    type="submit"
+                                    class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
+                                    id="favoriteToggleButton"
+                                    title="Favorites"
+                                    aria-label="Favorites"
+                                    aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
+                                >
+                                    <span class="favorite-heart-icon" aria-hidden="true">♥</span>
+                                </button>
+                            </form>
+                        {% else %}
+                            <a
+                                href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
+                                class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
                                 title="Favorites"
                                 aria-label="Favorites"
-                                aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
                             >
                                 <span class="favorite-heart-icon" aria-hidden="true">♥</span>
-                            </button>
-                        </form>
-                    {% else %}
-                        <a
-                            href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
-                            class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
-                            title="Favorites"
-                            aria-label="Favorites"
-                        >
-                            <span class="favorite-heart-icon" aria-hidden="true">♥</span>
-                        </a>
-                    {% endif %}
-                </div>
+                            </a>
+                        {% endif %}
+                    </div>
 
                     <div class="detail-v4-header-bar">
                         <div class="detail-v4-meta-side">
-                           <div class="detail-v4-meta-row">
+                            <div class="detail-v4-meta-row">
                                 {% if movie.release_year %}
                                     <span class="detail-stat-pill">{{ movie.release_year }}</span>
                                 {% endif %}
@@ -66,7 +66,6 @@
                                 {% endif %}
                                 <span class="detail-stat-pill rating-pill">★ {{ movie.avg_rating|floatformat:1 }}</span>
                                 <span class="detail-stat-pill">{{ movie.rating_count }} ta baho</span>
-                                </span>
                             </div>
 
                             <div class="genre-chip-wrap mt-3">
@@ -74,7 +73,6 @@
                                     <span class="genre-chip">{{ genre.name }}</span>
                                 {% endfor %}
                             </div>
-
                         </div>
 
                         <div class="detail-v4-inline-rating" id="rating-section">
@@ -100,15 +98,11 @@
                                         </span>
                                     </div>
 
-                                    <div
-                                        class="detail-v4-review-inline {% if user_rating and user_rating.review %}is-hidden{% elif selected_rating_str == '0' %}is-hidden{% endif %}"
-                                        id="reviewEditorWrap"
-                                    >
+                                    <div class="detail-v4-review-inline is-hidden" id="reviewEditorWrap">
                                         <div class="detail-v4-review-row">
                                             {{ rating_form.review }}
                                             <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
                                         </div>
-                                        <small id="reviewCounter" class="detail-v4-review-counter">0 / 50</small>
                                         <div class="text-danger small" id="ratingErrors"></div>
                                     </div>
 
@@ -484,13 +478,13 @@
                                     </div>
                                 </div>
                             </div>
-                            {% else %}
+                        {% else %}
                             <div class="detail-v4-comment-footer">
                                 <div class="detail-v4-comment-time is-other" id="comment-time-{{ comment.id }}">
                                     {{ comment.display_time }}
                                 </div>
                             </div>
-                            {% endif %}
+                        {% endif %}
                     </article>
                     {% empty %}
                     <div class="media-empty-state compact" id="commentsEmptyState">
@@ -504,7 +498,6 @@
     </div>
 </section>
 
-<!-- Snackbar / Toast -->
 <div id="kc-snackbar" class="kc-snackbar" role="alert" aria-live="polite" aria-atomic="true">
     <span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
     <span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
@@ -544,7 +537,6 @@
     const ratingValue = document.getElementById("selectedRatingValue");
     const starButtons = Array.from(document.querySelectorAll(".detail-v4-star-btn"));
     const reviewInput = document.getElementById("id_review");
-    const reviewCounter = document.getElementById("reviewCounter");
     const reviewEditorWrap = document.getElementById("reviewEditorWrap");
     const reviewDisplayWrap = document.getElementById("reviewDisplayWrap");
     const reviewDisplayText = document.getElementById("reviewDisplayText");
@@ -568,6 +560,9 @@
 
     let snackTimer = null;
     let pendingDeleteForm = null;
+
+    let committedRatingValue = normalizeRatingValue(ratingInput ? ratingInput.value : "0");
+    let committedReviewValue = reviewInput ? reviewInput.value : "";
 
     function escapeHtml(text) {
         const div = document.createElement("div");
@@ -689,6 +684,16 @@
         return { response, data };
     }
 
+    function normalizeRatingValue(value) {
+        const numeric = parseFloat(value || "0");
+
+        if (!Number.isFinite(numeric) || numeric <= 0) {
+            return "0";
+        }
+
+        return numeric.toFixed(1).replace(".0", "");
+    }
+
     function renderStars(value) {
         const current = parseFloat(value || "0");
 
@@ -716,18 +721,77 @@
         const starNumber = parseInt(button.dataset.star, 10);
         const rect = button.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
+
         return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
     }
 
-    function openReviewEditor() {
-        if (reviewEditorWrap) reviewEditorWrap.classList.remove("is-hidden");
-        if (reviewDisplayWrap) reviewDisplayWrap.classList.add("is-hidden");
-        if (reviewInput) reviewInput.focus();
+    function hasSavedReviewText() {
+        return Boolean(committedReviewValue && committedReviewValue.trim());
     }
 
-    function updateCounter() {
-        if (!reviewInput || !reviewCounter) return;
-        reviewCounter.textContent = `${reviewInput.value.length} / 50`;
+    function resetRatingDraft() {
+        if (ratingInput) {
+            ratingInput.value = committedRatingValue;
+        }
+
+        if (reviewInput) {
+            reviewInput.value = committedReviewValue;
+        }
+
+        if (reviewDisplayText) {
+            reviewDisplayText.textContent = committedReviewValue;
+        }
+
+        if (ratingErrors) {
+            ratingErrors.textContent = "";
+        }
+
+        renderStars(committedRatingValue);
+    }
+
+    function openReviewEditor(shouldFocus = true) {
+        if (reviewEditorWrap) {
+            reviewEditorWrap.classList.remove("is-hidden");
+        }
+
+        if (reviewDisplayWrap) {
+            reviewDisplayWrap.classList.add("is-hidden");
+        }
+
+        if (shouldFocus && reviewInput) {
+            reviewInput.focus();
+        }
+    }
+
+    function closeReviewEditor(resetDraft = true) {
+        if (resetDraft) {
+            resetRatingDraft();
+        }
+
+        if (reviewEditorWrap) {
+            reviewEditorWrap.classList.add("is-hidden");
+        }
+
+        if (reviewDisplayWrap) {
+            if (hasSavedReviewText()) {
+                reviewDisplayWrap.classList.remove("is-hidden");
+            } else {
+                reviewDisplayWrap.classList.add("is-hidden");
+            }
+        }
+
+        if (reviewInput && document.activeElement === reviewInput) {
+            reviewInput.blur();
+        }
+    }
+
+    function isRatingEditorOpen() {
+        return Boolean(reviewEditorWrap && !reviewEditorWrap.classList.contains("is-hidden"));
+    }
+
+    function isInsideRatingArea(target) {
+        const ratingSection = document.getElementById("rating-section");
+        return Boolean(ratingSection && ratingSection.contains(target));
     }
 
     function buildOwnCommentCard(comment, csrfToken) {
@@ -803,7 +867,7 @@
             </article>
         `;
     }
-    
+
     function ensureEmptyState() {
         if (!commentsList) return;
         const cards = commentsList.querySelectorAll(".detail-v4-comment-card");
@@ -836,19 +900,17 @@
                 ratingInput.value = selected.toFixed(1);
                 renderStars(ratingInput.value);
 
-                if (reviewEditorWrap && !reviewDisplayText?.textContent.trim()) {
-                    reviewEditorWrap.classList.remove("is-hidden");
+                if (!hasSavedReviewText()) {
+                    openReviewEditor(false);
                 }
             });
         });
 
-        renderStars(ratingInput.value);
+        renderStars(committedRatingValue);
     }
 
     if (reviewInput) {
         reviewInput.setAttribute("maxlength", "50");
-        updateCounter();
-        reviewInput.addEventListener("input", updateCounter);
     }
 
     if (editReviewBtn) {
@@ -856,6 +918,23 @@
             openReviewEditor();
         });
     }
+
+    document.addEventListener("pointerdown", function (event) {
+        if (!isRatingEditorOpen()) return;
+
+        const target = event.target;
+
+        if (isInsideRatingArea(target)) return;
+
+        closeReviewEditor(true);
+    }, true);
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape") return;
+        if (!isRatingEditorOpen()) return;
+
+        closeReviewEditor(true);
+    });
 
     if (ratingForm) {
         ratingForm.addEventListener("submit", async function (event) {
@@ -875,21 +954,24 @@
                     ratingErrors.textContent = "";
                 }
 
-                if (data.rating) {
-                    ratingInput.value = data.rating;
-                    renderStars(data.rating);
+                committedRatingValue = normalizeRatingValue(data.rating || ratingInput.value || "0");
+                committedReviewValue = data.review || "";
+
+                if (ratingInput) {
+                    ratingInput.value = committedRatingValue;
                 }
+
+                renderStars(committedRatingValue);
 
                 if (reviewDisplayText) {
-                    reviewDisplayText.textContent = data.review || "";
+                    reviewDisplayText.textContent = committedReviewValue;
                 }
 
-                if (data.review) {
+                if (committedReviewValue) {
                     reviewEditorWrap?.classList.add("is-hidden");
                     reviewDisplayWrap?.classList.remove("is-hidden");
                 } else {
-                    reviewEditorWrap?.classList.remove("is-hidden");
-                    reviewDisplayWrap?.classList.add("is-hidden");
+                    closeReviewEditor(false);
                 }
             } catch (error) {
                 console.error(error);
