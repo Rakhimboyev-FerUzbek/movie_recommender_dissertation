@@ -13,8 +13,8 @@
         <div class="detail-v4-top-area fade-up">
             <div class="detail-v4-poster-col">
                 <div class="detail-v4-poster-card">
-                    {% if movie.poster_src %}
-                        <img src="{{ movie.poster_src }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
+                {% if movie.poster_src %}
+                    <img src="{{ movie.poster_src }}" alt="{{ movie.title }}" class="detail-v4-poster-img">
                     {% else %}
                         <div class="detail-v4-poster-placeholder">
                             <span>{{ movie.title|slice:":1" }}</span>
@@ -25,39 +25,39 @@
 
             <div class="detail-v4-top-main">
                 <div class="glass-card detail-v4-header-card">
-                    <div class="detail-v4-title-row">
-                        <h1 class="detail-v4-title">{{ movie.title }}</h1>
+                <div class="detail-v4-title-row">
+                    <h1 class="detail-v4-title">{{ movie.title }}</h1>
 
-                        {% if user.is_authenticated %}
-                            <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-title-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button
-                                    type="submit"
-                                    class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
-                                    id="favoriteToggleButton"
-                                    title="Favorites"
-                                    aria-label="Favorites"
-                                    aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
-                                >
-                                    <span class="favorite-heart-icon" aria-hidden="true">♥</span>
-                                </button>
-                            </form>
-                        {% else %}
-                            <a
-                                href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
-                                class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'favorite_toggle' movie.slug %}" id="favoriteToggleForm" class="detail-favorite-title-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button
+                                type="submit"
+                                class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
+                                id="favoriteToggleButton"
                                 title="Favorites"
                                 aria-label="Favorites"
+                                aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
                             >
                                 <span class="favorite-heart-icon" aria-hidden="true">♥</span>
-                            </a>
-                        {% endif %}
-                    </div>
+                            </button>
+                        </form>
+                    {% else %}
+                        <a
+                            href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
+                            class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
+                            title="Favorites"
+                            aria-label="Favorites"
+                        >
+                            <span class="favorite-heart-icon" aria-hidden="true">♥</span>
+                        </a>
+                    {% endif %}
+                </div>
 
                     <div class="detail-v4-header-bar">
                         <div class="detail-v4-meta-side">
-                            <div class="detail-v4-meta-row">
+                           <div class="detail-v4-meta-row">
                                 {% if movie.release_year %}
                                     <span class="detail-stat-pill">{{ movie.release_year }}</span>
                                 {% endif %}
@@ -66,6 +66,7 @@
                                 {% endif %}
                                 <span class="detail-stat-pill rating-pill">★ {{ movie.avg_rating|floatformat:1 }}</span>
                                 <span class="detail-stat-pill">{{ movie.rating_count }} ta baho</span>
+                                </span>
                             </div>
 
                             <div class="genre-chip-wrap mt-3">
@@ -73,6 +74,7 @@
                                     <span class="genre-chip">{{ genre.name }}</span>
                                 {% endfor %}
                             </div>
+
                         </div>
 
                         <div class="detail-v4-inline-rating" id="rating-section">
@@ -107,7 +109,7 @@
                                     </div>
 
                                     <div
-                                        class="detail-v4-review-display {% if user_rating and user_rating.review %}{% else %}is-hidden{% endif %}"
+                                        class="detail-v4-review-display {% if selected_rating_str != '0' %}{% else %}is-hidden{% endif %}"
                                         id="reviewDisplayWrap"
                                     >
                                         <span id="reviewDisplayText">{{ user_rating.review|default:"" }}</span>
@@ -478,13 +480,13 @@
                                     </div>
                                 </div>
                             </div>
-                        {% else %}
+                            {% else %}
                             <div class="detail-v4-comment-footer">
                                 <div class="detail-v4-comment-time is-other" id="comment-time-{{ comment.id }}">
                                     {{ comment.display_time }}
                                 </div>
                             </div>
-                        {% endif %}
+                            {% endif %}
                     </article>
                     {% empty %}
                     <div class="media-empty-state compact" id="commentsEmptyState">
@@ -498,6 +500,7 @@
     </div>
 </section>
 
+<!-- Snackbar / Toast -->
 <div id="kc-snackbar" class="kc-snackbar" role="alert" aria-live="polite" aria-atomic="true">
     <span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
     <span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
@@ -563,6 +566,7 @@
 
     let committedRatingValue = normalizeRatingValue(ratingInput ? ratingInput.value : "0");
     let committedReviewValue = reviewInput ? reviewInput.value : "";
+    let isRatingEditMode = committedRatingValue === "0";
 
     function escapeHtml(text) {
         const div = document.createElement("div");
@@ -725,8 +729,12 @@
         return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
     }
 
-    function hasSavedReviewText() {
-        return Boolean(committedReviewValue && committedReviewValue.trim());
+    function hasCommittedRating() {
+        return parseFloat(committedRatingValue || "0") > 0;
+    }
+
+    function canChangeRating() {
+        return !hasCommittedRating() || isRatingEditMode;
     }
 
     function resetRatingDraft() {
@@ -750,6 +758,8 @@
     }
 
     function openReviewEditor(shouldFocus = true) {
+        isRatingEditMode = true;
+
         if (reviewEditorWrap) {
             reviewEditorWrap.classList.remove("is-hidden");
         }
@@ -768,12 +778,14 @@
             resetRatingDraft();
         }
 
+        isRatingEditMode = committedRatingValue === "0";
+
         if (reviewEditorWrap) {
             reviewEditorWrap.classList.add("is-hidden");
         }
 
         if (reviewDisplayWrap) {
-            if (hasSavedReviewText()) {
+            if (hasCommittedRating()) {
                 reviewDisplayWrap.classList.remove("is-hidden");
             } else {
                 reviewDisplayWrap.classList.add("is-hidden");
@@ -867,7 +879,7 @@
             </article>
         `;
     }
-
+    
     function ensureEmptyState() {
         if (!commentsList) return;
         const cards = commentsList.querySelectorAll(".detail-v4-comment-card");
@@ -888,6 +900,8 @@
     if (ratingInput && starButtons.length) {
         starButtons.forEach((btn) => {
             btn.addEventListener("mousemove", function (event) {
+                if (!canChangeRating()) return;
+
                 renderStars(getHalfValue(this, event));
             });
 
@@ -896,16 +910,17 @@
             });
 
             btn.addEventListener("click", function (event) {
+                if (!canChangeRating()) return;
+
                 const selected = getHalfValue(this, event);
-                ratingInput.value = selected.toFixed(1);
+                ratingInput.value = normalizeRatingValue(selected);
                 renderStars(ratingInput.value);
 
-                if (!hasSavedReviewText()) {
-                    openReviewEditor(false);
-                }
+                openReviewEditor(false);
             });
         });
 
+        ratingInput.value = committedRatingValue;
         renderStars(committedRatingValue);
     }
 
@@ -915,7 +930,7 @@
 
     if (editReviewBtn) {
         editReviewBtn.addEventListener("click", function () {
-            openReviewEditor();
+            openReviewEditor(true);
         });
     }
 
@@ -956,6 +971,7 @@
 
                 committedRatingValue = normalizeRatingValue(data.rating || ratingInput.value || "0");
                 committedReviewValue = data.review || "";
+                isRatingEditMode = committedRatingValue === "0";
 
                 if (ratingInput) {
                     ratingInput.value = committedRatingValue;
@@ -967,12 +983,7 @@
                     reviewDisplayText.textContent = committedReviewValue;
                 }
 
-                if (committedReviewValue) {
-                    reviewEditorWrap?.classList.add("is-hidden");
-                    reviewDisplayWrap?.classList.remove("is-hidden");
-                } else {
-                    closeReviewEditor(false);
-                }
+                closeReviewEditor(false);
             } catch (error) {
                 console.error(error);
             }
