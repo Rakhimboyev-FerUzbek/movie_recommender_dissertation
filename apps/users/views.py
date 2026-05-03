@@ -3,16 +3,15 @@ from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
+from apps.interactions.models import Favorite, Rating, WatchHistory
 from apps.users.forms import RegisterForm, UserProfileForm, UserUpdateForm
 from apps.users.models import UserProfile
 from config.translations import get_translation
-
-from apps.interactions.models import Favorite, Rating, WatchHistory
 
 
 def register_view(request):
@@ -24,6 +23,7 @@ def register_view(request):
 
     if request.method == "POST":
         form = RegisterForm(request.POST, lang=lang)
+
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -32,7 +32,14 @@ def register_view(request):
     else:
         form = RegisterForm(lang=lang)
 
-    return render(request, "users/register.html", {"form": form})
+    return render(
+        request,
+        "users/register.html",
+        {
+            "form": form,
+            "t": t,
+        },
+    )
 
 
 @login_required
@@ -55,8 +62,8 @@ def profile_view(request):
             profile_form.save()
             messages.success(request, t["profile_updated"])
             return redirect(f"{reverse('profile')}?updated=1")
-        else:
-            is_edit_mode = True
+
+        is_edit_mode = True
     else:
         user_form = UserUpdateForm(instance=request.user, lang=lang)
         profile_form = UserProfileForm(instance=profile, lang=lang)
@@ -118,12 +125,16 @@ def _is_ajax(request):
 @login_required
 @require_POST
 def change_password_view(request):
+    lang = request.session.get("site_language", "uz")
+    t = get_translation(lang)
+
     form = PasswordChangeForm(request.user, request.POST)
 
     if form.is_valid():
         user = form.save()
         update_session_auth_hash(request, user)
-        message = "Parol muvaffaqiyatli o'zgartirildi."
+
+        message = t["password_changed"]
 
         if _is_ajax(request):
             return JsonResponse({"ok": True, "message": message})
@@ -131,9 +142,16 @@ def change_password_view(request):
         messages.success(request, message)
         return redirect("profile")
 
-    errors = {field: [str(error) for error in field_errors] for field, field_errors in form.errors.items()}
-    fallback_message = "Parolni yangilashda xatolik yuz berdi."
-    first_error = next((field_errors[0] for field_errors in errors.values() if field_errors), fallback_message)
+    errors = {
+        field: [str(error) for error in field_errors]
+        for field, field_errors in form.errors.items()
+    }
+
+    fallback_message = t["password_change_error"]
+    first_error = next(
+        (field_errors[0] for field_errors in errors.values() if field_errors),
+        fallback_message,
+    )
 
     if _is_ajax(request):
         return JsonResponse(

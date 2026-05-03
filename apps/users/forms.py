@@ -20,8 +20,14 @@ class StyledFormMixin:
         self.t = get_translation(self.lang)
 
         super().__init__(*args, **kwargs)
+
         self.apply_translations()
         self.apply_bootstrap()
+
+    def tr(self, key, default=None):
+        if default is None:
+            default = key.replace("_", " ").title()
+        return self.t.get(key, default)
 
     def apply_translations(self):
         pass
@@ -51,22 +57,27 @@ class StyledFormMixin:
 
         if "password" in self.fields:
             self.fields["password"].widget.attrs["autocomplete"] = "current-password"
+
         if "password1" in self.fields:
             self.fields["password1"].widget.attrs["autocomplete"] = "new-password"
+
         if "password2" in self.fields:
             self.fields["password2"].widget.attrs["autocomplete"] = "new-password"
 
 
 class LoginForm(StyledFormMixin, AuthenticationForm):
     def apply_translations(self):
-        self.fields["username"].label = self.t["username"]
-        self.fields["password"].label = self.t["password"]
+        username_label = self.tr("username", "Username")
+        password_label = self.tr("password", "Password")
 
-        self.fields["username"].widget.attrs["placeholder"] = self.t["username"]
-        self.fields["password"].widget.attrs["placeholder"] = self.t["password"]
+        self.fields["username"].label = username_label
+        self.fields["password"].label = password_label
 
-        self.error_messages["invalid_login"] = self.t["invalid_login"]
-        self.error_messages["inactive"] = self.t["inactive_account"]
+        self.fields["username"].widget.attrs["placeholder"] = username_label
+        self.fields["password"].widget.attrs["placeholder"] = password_label
+
+        self.error_messages["invalid_login"] = self.tr("invalid_login", "Invalid username or password.")
+        self.error_messages["inactive"] = self.tr("inactive_account", "This account is inactive.")
 
 
 class RegisterForm(StyledFormMixin, UserCreationForm):
@@ -118,16 +129,22 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
         })
 
     def apply_translations(self):
-        self.fields["username"].label = self.t["username"]
-        self.fields["email"].label = self.t["email"]
-        self.fields["first_name"].label = self.t["first_name"]
-        self.fields["last_name"].label = self.t["last_name"]
-        self.fields["birth_date"].label = "Tug'ilgan kun"
-        self.fields["phone_number"].label = "Telefon raqam"
-        self.fields["gender"].label = "Jinsi"
-        self.fields["preferred_genres"].label = self.t["preferred_genres"]
-        self.fields["password1"].label = self.t["password"]
-        self.fields["password2"].label = self.t["confirm_password"]
+        self.fields["username"].label = self.tr("username", "Username")
+        self.fields["email"].label = self.tr("email", "Email")
+        self.fields["first_name"].label = self.tr("first_name", "First name")
+        self.fields["last_name"].label = self.tr("last_name", "Last name")
+        self.fields["birth_date"].label = self.tr("birth_date", "Birth date")
+        self.fields["phone_number"].label = self.tr("phone_number", "Phone number")
+        self.fields["gender"].label = self.tr("gender", "Gender")
+
+        self.fields["gender"].choices = [
+            (UserProfile.MALE, self.tr("male", "Male")),
+            (UserProfile.FEMALE, self.tr("female", "Female")),
+        ]
+
+        self.fields["preferred_genres"].label = self.tr("preferred_genres", "Preferred genres")
+        self.fields["password1"].label = self.tr("password", "Password")
+        self.fields["password2"].label = self.tr("confirm_password", "Confirm password")
 
         self.fields["password1"].help_text = ""
         self.fields["password2"].help_text = ""
@@ -135,14 +152,17 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError(self.t["email_already_registered"])
+            raise forms.ValidationError(self.tr("email_already_registered", "This email is already registered."))
         return email
 
     def clean_phone_number(self):
         phone = self.cleaned_data["phone_number"].strip()
         digits_only = "".join(ch for ch in phone if ch.isdigit())
+
         if len(digits_only) < 9:
-            raise forms.ValidationError("Telefon raqam noto'g'ri kiritildi.")
+            raise forms.ValidationError(
+                self.tr("phone_number_invalid", "Phone number is invalid. It must contain at least 9 digits.")
+            )
         return phone
 
     def clean_birth_date(self):
@@ -150,18 +170,24 @@ class RegisterForm(StyledFormMixin, UserCreationForm):
         today = timezone.localdate()
 
         if birth_date > today:
-            raise forms.ValidationError("Tug'ilgan kun bugundan keyin bo'lishi mumkin emas.")
+            raise forms.ValidationError(
+                self.tr("birth_date_future_invalid", "Birth date cannot be in the future.")
+            )
 
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
         if age < 10:
-            raise forms.ValidationError("Ro'yxatdan o'tish uchun yosh kamida 10 bo'lishi kerak.")
+            raise forms.ValidationError(
+                self.tr("minimum_age_invalid", "You must be at least 10 years old to register.")
+            )
 
         return birth_date
 
     def clean_preferred_genres(self):
         genres = self.cleaned_data.get("preferred_genres") or []
         if not genres:
-            raise forms.ValidationError("Kamida bitta sevimli janr tanlang.")
+            raise forms.ValidationError(
+                self.tr("preferred_genres_required", "Select at least one preferred genre.")
+            )
         return genres
 
     def save(self, commit=True):
@@ -197,17 +223,21 @@ class UserUpdateForm(StyledFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def apply_translations(self):
-        self.fields["first_name"].label = self.t["first_name"]
-        self.fields["last_name"].label = self.t["last_name"]
-        self.fields["email"].label = self.t["email"]
+        self.fields["first_name"].label = self.tr("first_name", "First name")
+        self.fields["last_name"].label = self.tr("last_name", "Last name")
+        self.fields["email"].label = self.tr("email", "Email")
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
         qs = User.objects.filter(email__iexact=email)
+
         if self.user_instance:
             qs = qs.exclude(pk=self.user_instance.pk)
+
         if qs.exists():
-            raise forms.ValidationError(self.t["email_already_used"])
+            raise forms.ValidationError(
+                self.tr("email_already_used", "This email is already being used by another user.")
+            )
         return email
 
 
@@ -223,13 +253,13 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         fields = ("bio", "birth_date", "phone_number", "gender", "profile_photo")
 
     def apply_translations(self):
-        self.fields["bio"].label = self.t["bio"]
-        self.fields["birth_date"].label = "Tug'ilgan kun"
-        self.fields["phone_number"].label = "Telefon raqam"
-        self.fields["gender"].label = "Jinsi"
-        self.fields["profile_photo"].label = self.t["profile_photo"]
-        self.fields["preferred_genres"].label = self.t["preferred_genres"]
-        self.fields["remove_profile_photo"].label = self.t["remove_profile_photo"]
+        self.fields["bio"].label = self.tr("bio", "Bio")
+        self.fields["birth_date"].label = self.tr("birth_date", "Birth date")
+        self.fields["phone_number"].label = self.tr("phone_number", "Phone number")
+        self.fields["gender"].label = self.tr("gender", "Gender")
+        self.fields["profile_photo"].label = self.tr("profile_photo", "Profile photo")
+        self.fields["preferred_genres"].label = self.tr("preferred_genres", "Preferred genres")
+        self.fields["remove_profile_photo"].label = self.tr("remove_profile_photo", "Remove profile photo")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -247,16 +277,19 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
                 "autocomplete": "bday",
             }
         )
+
         self.fields["phone_number"].widget.attrs.update({
             "inputmode": "tel",
             "autocomplete": "tel",
         })
+
         self.fields["profile_photo"].widget = forms.FileInput(
             attrs={
                 "class": "form-control",
                 "accept": "image/*",
             }
         )
+
         self.fields["remove_profile_photo"].widget.attrs["class"] = "form-check-input"
 
     def clean_phone_number(self):
@@ -264,13 +297,17 @@ class UserProfileForm(StyledFormMixin, forms.ModelForm):
         if phone:
             digits_only = "".join(ch for ch in phone if ch.isdigit())
             if len(digits_only) < 9:
-                raise forms.ValidationError("Telefon raqam noto'g'ri kiritildi.")
+                raise forms.ValidationError(
+                    self.tr("phone_number_invalid", "Phone number is invalid. It must contain at least 9 digits.")
+                )
         return phone
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get("birth_date")
         if birth_date and birth_date > timezone.localdate():
-            raise forms.ValidationError("Tug'ilgan kun bugundan keyin bo'lishi mumkin emas.")
+            raise forms.ValidationError(
+                self.tr("birth_date_future_invalid", "Birth date cannot be in the future.")
+            )
         return birth_date
 
     def save(self, commit=True):
