@@ -1611,3 +1611,142 @@ body[data-theme="light"] select[name="gender"] option {
     background: #ffffff !important;
     color: #0f172a !important;
 }
+
+/* ─────────────────────────────────────────────
+   Profile danger zone: stable compact layout
+   ───────────────────────────────────────────── */
+
+.profile-danger-compact {
+    width: 100% !important;
+    min-height: 64px !important;
+    height: auto !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    padding: 10px 14px !important;
+    margin: 14px 0 0 0 !important;
+
+    overflow: hidden !important;
+    border-radius: 22px !important;
+}
+
+.profile-danger-compact-inner {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: auto auto !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Badge: Xavfli zona / Опасная зона / Danger Zone */
+.profile-danger-compact .profile-danger-zone-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+
+    padding: 0 13px 0 12px !important;
+    margin: 0 !important;
+
+    font-size: 13px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+
+    border-left: 0 !important;
+    border-radius: 999px !important;
+}
+
+/* Badge ichidagi eski dot elementlar bo‘lsa, yashiramiz */
+.profile-danger-compact .profile-danger-zone-badge .danger-dot,
+.profile-danger-compact .profile-danger-zone-badge .profile-danger-dot,
+.profile-danger-compact .profile-danger-zone-badge .profile-danger-zone-dot,
+.profile-danger-compact .profile-danger-zone-badge .danger-zone-dot,
+.profile-danger-compact .profile-danger-zone-badge .badge-dot,
+.profile-danger-compact .profile-danger-zone-badge .dot,
+.profile-danger-compact .profile-danger-zone-badge > span:first-child:empty {
+    display: none !important;
+}
+
+/* Faqat bitta qizil nuqta */
+.profile-danger-compact .profile-danger-zone-badge::before {
+    content: "" !important;
+    display: inline-block !important;
+    flex: 0 0 8px !important;
+
+    width: 8px !important;
+    height: 8px !important;
+    min-width: 8px !important;
+    min-height: 8px !important;
+    max-width: 8px !important;
+    max-height: 8px !important;
+
+    border-radius: 999px !important;
+    background: #ff5f7a !important;
+    box-shadow: 0 0 0 4px rgba(255, 95, 122, 0.18) !important;
+}
+
+/* Ikkinchi pseudo-dot chiqmasin */
+.profile-danger-compact .profile-danger-zone-badge::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Delete button */
+.profile-danger-compact .profile-danger-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: 100% !important;
+
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+
+    padding: 0 16px !important;
+    margin: 0 !important;
+
+    font-size: 13.5px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+/* Juda tor ekranda pastma-past tushsin */
+@media (max-width: 360px) {
+    .profile-danger-compact {
+        min-height: 0 !important;
+        padding: 12px 14px !important;
+    }
+
+    .profile-danger-compact-inner {
+        grid-template-columns: 1fr !important;
+        justify-content: stretch !important;
+        gap: 10px !important;
+    }
+
+    .profile-danger-compact .profile-danger-zone-badge,
+    .profile-danger-compact .profile-danger-btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+

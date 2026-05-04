@@ -314,9 +314,6 @@
     const sentinel = document.getElementById("labResultsSentinel");
     const snackbarStack = document.getElementById("labSnackbarStack");
 
-    let currentField = "score";
-    let currentDesc = true;
-
     const INITIAL_BATCH = 12;
     const NEXT_BATCH = 8;
 
@@ -324,17 +321,210 @@
     let currentFiltered = [];
     let currentLimit = INITIAL_BATCH;
 
+    let currentField = "score";
+    let currentDesc = true;
+
     const FIELD_LABELS = {
-        score: "{{ t.score|escapejs }}",
-        rating: "{{ t.rating|escapejs }}",
-        year: "{{ t.year|escapejs }}",
-        title: "{{ t.title|escapejs }}",
+        score: "{{ t.score|default:'Score'|escapejs }}",
+        rating: "{{ t.rating|default:'Rating'|escapejs }}",
+        year: "{{ t.year|default:'Year'|escapejs }}",
+        title: "{{ t.title|default:'Title'|escapejs }}"
     };
+
+    cards.forEach((card, index) => {
+        if (!card.dataset.index) {
+            card.dataset.index = String(index);
+        }
+    });
 
     function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text || "";
         return div.innerHTML;
+    }
+
+    function parseNumber(value) {
+        if (value === null || value === undefined || value === "") {
+            return 0;
+        }
+
+        const normalized = String(value)
+            .trim()
+            .replace(",", ".");
+
+        const parsed = Number.parseFloat(normalized);
+
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function getCardValue(card, field) {
+        if (field === "title") {
+            return (card.dataset.title || "").trim().toLowerCase();
+        }
+
+        if (field === "year") {
+            return parseNumber(card.dataset.year);
+        }
+
+        if (field === "rating") {
+            return parseNumber(card.dataset.rating);
+        }
+
+        if (field === "score") {
+            return parseNumber(card.dataset.score);
+        }
+
+        return 0;
+    }
+
+    function compareText(a, b) {
+        return String(a || "").localeCompare(String(b || ""), undefined, {
+            sensitivity: "base",
+            numeric: true
+        });
+    }
+
+    function compareByField(a, b, field) {
+        const valueA = getCardValue(a, field);
+        const valueB = getCardValue(b, field);
+
+        if (field === "title") {
+            return compareText(valueA, valueB);
+        }
+
+        return valueA - valueB;
+    }
+
+    function compareCards(a, b) {
+        const fields = [
+            currentField,
+            "score",
+            "rating",
+            "year",
+            "title"
+        ].filter((field, index, arr) => arr.indexOf(field) === index);
+
+        for (const field of fields) {
+            const result = compareByField(a, b, field);
+
+            if (result !== 0) {
+                return currentDesc ? -result : result;
+            }
+        }
+
+        const indexA = parseNumber(a.dataset.index);
+        const indexB = parseNumber(b.dataset.index);
+        const indexResult = indexA - indexB;
+
+        return currentDesc ? -indexResult : indexResult;
+    }
+
+    function sortCards(filteredCards) {
+        return [...filteredCards].sort(compareCards);
+    }
+
+    function renderVisibleCards() {
+        if (!grid) return;
+
+        const sortedAllCards = currentFiltered;
+        const visibleCards = sortedAllCards.slice(0, currentLimit);
+        const visibleSet = new Set(visibleCards);
+
+        sortedAllCards.forEach((card) => {
+            card.hidden = !visibleSet.has(card);
+            grid.appendChild(card);
+        });
+
+        if (sentinel) {
+            sentinel.hidden = currentLimit >= currentFiltered.length;
+        }
+    }
+
+    function applyLabFilters(resetLimit = true) {
+        if (!grid) return;
+
+        const query = (searchInput?.value || "").trim().toLowerCase();
+
+        const filtered = cards.filter((card) => {
+            const title = card.dataset.title || "";
+            return !query || title.includes(query);
+        });
+
+        currentFiltered = sortCards(filtered);
+
+        if (resetLimit) {
+            currentLimit = INITIAL_BATCH;
+        }
+
+        renderVisibleCards();
+    }
+
+    function loadMoreCards() {
+        if (!grid || currentLimit >= currentFiltered.length) return;
+
+        currentLimit += NEXT_BATCH;
+        renderVisibleCards();
+    }
+
+    function defaultDirectionFor(field) {
+        return field !== "title";
+    }
+
+    function closeAll() {
+        if (sortRoot) {
+            sortRoot.classList.remove("is-open");
+        }
+    }
+
+    function syncSortUi() {
+        if (sortLabel) {
+            sortLabel.textContent = FIELD_LABELS[currentField] || FIELD_LABELS.score || "Score";
+        }
+
+        if (sortMenu) {
+            sortMenu.querySelectorAll("[data-sort-field]").forEach((button) => {
+                button.classList.toggle("is-active", button.dataset.sortField === currentField);
+            });
+        }
+
+        if (sortDirectionBtn) {
+            sortDirectionBtn.dataset.desc = currentDesc ? "true" : "false";
+            sortDirectionBtn.setAttribute("aria-pressed", currentDesc ? "true" : "false");
+            sortDirectionBtn.setAttribute(
+                "title",
+                currentDesc
+                    ? "{{ t.descending|default:'Descending'|escapejs }}"
+                    : "{{ t.ascending|default:'Ascending'|escapejs }}"
+            );
+            sortDirectionBtn.setAttribute(
+                "aria-label",
+                currentDesc
+                    ? "{{ t.descending|default:'Descending'|escapejs }}"
+                    : "{{ t.ascending|default:'Ascending'|escapejs }}"
+            );
+        }
+
+        if (sortDirectionIcon) {
+            sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
+        }
+    }
+
+    function setSortField(field) {
+        if (!field) return;
+
+        currentField = field;
+        currentDesc = defaultDirectionFor(field);
+
+        closeAll();
+        syncSortUi();
+        applyLabFilters(true);
+    }
+
+    function toggleSortDirection() {
+        currentDesc = !currentDesc;
+
+        syncSortUi();
+        applyLabFilters(true);
     }
 
     function showSnackbar(movieTitle, variant) {
@@ -345,8 +535,8 @@
 
         const safeTitle = escapeHtml(movieTitle);
         const text = variant === "success"
-            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_added_to_favorites|escapejs }}`
-            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_removed_from_favorites|escapejs }}`;
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_added_to_favorites|default:'Movie added to favorites'|escapejs }}`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_removed_from_favorites|default:'Movie removed from favorites'|escapejs }}`;
 
         item.innerHTML = `
             <div class="auto-rec-snackbar__icon" aria-hidden="true">
@@ -356,15 +546,22 @@
                 }
             </div>
             <div class="auto-rec-snackbar__content">
-                <div class="auto-rec-snackbar__title">${variant === "success" ? "{{ t.success|escapejs }}" : "{{ t.removed|escapejs }}"}</div>
+                <div class="auto-rec-snackbar__title">
+                    ${variant === "success"
+                        ? "{{ t.success|default:'Success'|escapejs }}"
+                        : "{{ t.removed|default:'Removed'|escapejs }}"
+                    }
+                </div>
                 <div class="auto-rec-snackbar__text">${text}</div>
             </div>
-            <button type="button" class="auto-rec-snackbar__close" aria-label="{{ t.close|escapejs }}">×</button>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="{{ t.close|default:'Close'|escapejs }}">×</button>
         `;
 
         snackbarStack.appendChild(item);
 
-        requestAnimationFrame(() => { item.classList.add("is-visible"); });
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
 
         const removeItem = () => {
             item.classList.remove("is-visible");
@@ -379,75 +576,18 @@
         });
     }
 
-    function defaultDirectionFor(field) { return field !== "title"; }
-    function closeAll() { if (sortRoot) sortRoot.classList.remove("is-open"); }
-
-    function syncSortUi() {
-        if (!sortLabel || !sortMenu || !sortDirectionIcon) return;
-        sortLabel.textContent = FIELD_LABELS[currentField] || "Score";
-        sortMenu.querySelectorAll("[data-sort-field]").forEach(btn => {
-            btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
-        });
-        sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
-    }
-
-    function sortCards(filteredCards) {
-        return [...filteredCards].sort((a, b) => {
-            const titleA  = a.dataset.title  || "";
-            const titleB  = b.dataset.title  || "";
-            const yearA   = parseInt(a.dataset.year   || "0", 10);
-            const yearB   = parseInt(b.dataset.year   || "0", 10);
-            const ratingA = parseFloat(a.dataset.rating || "0");
-            const ratingB = parseFloat(b.dataset.rating || "0");
-            const scoreA  = parseFloat(a.dataset.score  || "0");
-            const scoreB  = parseFloat(b.dataset.score  || "0");
-
-            let result = 0;
-            if      (currentField === "title")  result = titleA.localeCompare(titleB);
-            else if (currentField === "year")   result = yearA - yearB;
-            else if (currentField === "rating") result = ratingA - ratingB;
-            else                                result = scoreA - scoreB;
-
-            return currentDesc ? -result : result;
-        });
-    }
-
-    function renderVisibleCards() {
-        if (!grid) return;
-        cards.forEach(card => { card.hidden = true; });
-        currentFiltered.slice(0, currentLimit).forEach(card => {
-            card.hidden = false;
-            grid.appendChild(card);
-        });
-        if (sentinel) sentinel.hidden = currentLimit >= currentFiltered.length;
-    }
-
-    function applyLabFilters(resetLimit = true) {
-        if (!grid) return;
-        const query = (searchInput?.value || "").trim().toLowerCase();
-        const filtered = cards.filter(card => {
-            const title = card.dataset.title || "";
-            return !query || title.includes(query);
-        });
-        currentFiltered = sortCards(filtered);
-        if (resetLimit) currentLimit = INITIAL_BATCH;
-        renderVisibleCards();
-    }
-
-    function loadMoreCards() {
-        if (!grid || currentLimit >= currentFiltered.length) return;
-        currentLimit += NEXT_BATCH;
-        renderVisibleCards();
-    }
-
     async function toggleFavorite(form, button) {
         const response = await fetch(form.action, {
             method: "POST",
             body: new FormData(form),
             headers: { "X-Requested-With": "XMLHttpRequest" }
         });
+
         const data = await response.json();
-        if (!response.ok || !data.ok) return;
+
+        if (!response.ok || !data.ok) {
+            return;
+        }
 
         button.classList.toggle("is-active", data.is_favorite);
         button.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
@@ -457,56 +597,96 @@
     }
 
     if (sortTrigger && sortRoot) {
-        sortTrigger.addEventListener("click", () => sortRoot.classList.toggle("is-open"));
+        sortTrigger.addEventListener("click", (event) => {
+            event.stopPropagation();
+            sortRoot.classList.toggle("is-open");
+        });
     }
 
     if (sortMenu) {
-        sortMenu.querySelectorAll("[data-sort-field]").forEach(option => {
-            option.addEventListener("click", function () {
-                currentField = this.dataset.sortField || "score";
-                currentDesc = defaultDirectionFor(currentField);
-                closeAll();
-                syncSortUi();
-                applyLabFilters(true);
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+            option.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                setSortField(this.dataset.sortField || "score");
             });
         });
     }
 
     if (sortDirectionBtn) {
-        sortDirectionBtn.addEventListener("click", () => {
-            currentDesc = !currentDesc;
-            syncSortUi();
+        sortDirectionBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleSortDirection();
+        });
+    }
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".labx-sort-select")) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeAll();
+        }
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener("input", () => {
             applyLabFilters(true);
         });
     }
 
-    document.addEventListener("click", e => {
-        if (!e.target.closest(".labx-sort-select")) closeAll();
-    });
-    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
-
-    if (searchInput) {
-        searchInput.addEventListener("input", () => applyLabFilters(true));
-    }
-
     document.addEventListener("submit", async function (event) {
         const form = event.target.closest(".auto-rec-fav-form");
+
         if (!form) return;
+
         event.preventDefault();
+
         const button = form.querySelector(".auto-rec-fav-btn");
+
         if (!button) return;
-        try { await toggleFavorite(form, button); } catch (err) { console.error(err); }
+
+        try {
+            await toggleFavorite(form, button);
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     if (sentinel && grid) {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) loadMoreCards(); });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreCards();
+                }
+            });
         }, { rootMargin: "220px 0px" });
+
         observer.observe(sentinel);
     }
 
     syncSortUi();
     applyLabFilters(true);
+
+    window.debugLabSortState = function () {
+        return {
+            currentField,
+            currentDesc,
+            totalCards: cards.length,
+            filteredCards: currentFiltered.length,
+            firstVisibleCards: currentFiltered.slice(0, Math.min(5, currentFiltered.length)).map((card) => ({
+                title: card.dataset.title,
+                score: card.dataset.score,
+                rating: card.dataset.rating,
+                year: card.dataset.year,
+                index: card.dataset.index
+            }))
+        };
+    };
 })();
 </script>
 
