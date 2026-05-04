@@ -450,7 +450,288 @@
         ["Kommentariya bo'sh bo'lishi mumkin emas.", "Комментарий не может быть пустым.", "Comment cannot be empty."],
         ["Kommentariya bo‘sh bo‘lishi mumkin emas.", "Комментарий не может быть пустым.", "Comment cannot be empty."],
         ["Comment cannot be empty.", "Комментарий не может быть пустым.", "Comment cannot be empty."],
-        ["Tahrirlandi:", "Изменено:", "Edited:"]
+        ["Tahrirlandi:", "Изменено:", "Edited:"],
+
+        // =========================
+        // PERSONAL RECOMMENDATIONS PAGE FIX
+        // =========================
+        ["Shaxsiy tavsiyalar", "Персональные рекомендации", "Personal recommendations"],
+        ["Personal recommendations", "Персональные рекомендации", "Personal recommendations"],
+        ["Персональные рекомендации", "Персональные рекомендации", "Personal recommendations"],
+
+        ["Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.", "Здесь собраны фильмы, близкие к вашим оценкам и интересам.", "Movies close to your ratings and interests are collected here."],
+        ["Sizning baholaringiz va qiziqishlaringizga mos filmlar shu yerda jamlangan.", "Здесь собраны фильмы, подходящие вашим оценкам и интересам.", "Movies that match your ratings and interests are collected here."],
+        ["Movies close to your ratings and interests are collected here.", "Здесь собраны фильмы, близкие к вашим оценкам и интересам.", "Movies close to your ratings and interests are collected here."],
+        ["Здесь собраны фильмы, близкие к вашим оценкам и интересам.", "Здесь собраны фильмы, близкие к вашим оценкам и интересам.", "Movies close to your ratings and interests are collected here."],
+
+        ["Search", "Поиск", "Search"],
+        ["Qidiruv", "Поиск", "Search"],
+        ["Поиск", "Поиск", "Search"],
+
+        ["Search by movie title...", "Искать по названию фильма...", "Search by movie title..."],
+        ["Film nomi bo‘yicha qidiring...", "Искать по названию фильма...", "Search by movie title..."],
+        ["Искать по названию фильма...", "Искать по названию фильма...", "Search by movie title..."],
+
+        ["Sort", "Сортировка", "Sort"],
+        ["Saralash", "Сортировка", "Sort"],
+        ["Сортировка", "Сортировка", "Sort"],
+
+        ["Rating", "Рейтинг", "Rating"],
+        ["Reyting", "Рейтинг", "Rating"],
+        ["Рейтинг", "Рейтинг", "Rating"],
+
+        // =========================
+        // RECOMMENDATION REASON FIX
+        // =========================
+        ["Nega tavsiya qilindi?", "Почему рекомендовано?", "Why recommended?"],
+        ["Почему рекомендовано?", "Почему рекомендовано?", "Why recommended?"],
+        ["Why recommended?", "Почему рекомендовано?", "Why recommended?"],
+
+        ["Model:", "Модель:", "Model:"],
+        ["Модель:", "Модель:", "Model:"],
+
+        ["Scenario:", "Сценарий:", "Scenario:"],
+        ["Ssenariy:", "Сценарий:", "Scenario:"],
+        ["Сценарий:", "Сценарий:", "Scenario:"],
+
+        ["Score:", "Балл:", "Score:"],
+        ["Ball:", "Балл:", "Score:"],
+        ["Балл:", "Балл:", "Score:"],
+
+        ["Reytinglar soni:", "Количество оценок:", "Rating count:"],
+        ["Количество оценок:", "Количество оценок:", "Rating count:"],
+        ["Rating count:", "Количество оценок:", "Rating count:"],
+
+        // =========================
+        // MODEL LAB / RECOMMENDATION LAB PAGE
+        // =========================
+        ["PARAMETRLAR", "ПАРАМЕТРЫ", "PARAMETERS"],
+        ["Parametrlar", "Параметры", "Parameters"],
+        ["Parameters", "Параметры", "Parameters"],
+
+        ["FOYDALANUVCHI MA'LUMOTI", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+        ["FOYDALANUVCHI MA’LUMOTI", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+        ["Foydalanuvchi ma'lumoti", "Данные пользователя", "User information"],
+        ["Foydalanuvchi ma’lumoti", "Данные пользователя", "User information"],
+        ["User information", "Данные пользователя", "User information"],
+
+        ["NATIJA XULOSASI", "ИТОГОВЫЙ РЕЗУЛЬТАТ", "RESULT SUMMARY"],
+        ["Natija xulosasi", "Итоговый результат", "Result summary"],
+        ["Result summary", "Итоговый результат", "Result summary"],
+
+        ["Recommendation Lab", "Лаборатория рекомендаций", "Recommendation Lab"],
+        ["RECOMMENDATION LAB", "ЛАБОРАТОРИЯ РЕКОМЕНДАЦИЙ", "RECOMMENDATION LAB"],
+
+        ["Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo'ljallangan. Bu yerda tavsiya modelini qo'lda tanlab, turli foydalanuvchilar va turli stsenariylar bo'yicha natijalarni taqqoslash mumkin.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is предназначена for testing the system and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+        ["Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan. Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli stsenariylar bo‘yicha natijalarni taqqoslash mumkin.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+        ["This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+
+        ["Model", "Модель", "Model"],
+        ["Scenario", "Сценарий", "Scenario"],
+        ["Scenariо", "Сценарий", "Scenario"],
+
+        ["Normal scenario", "Нормальный сценарий", "Normal scenario"],
+        ["Normal", "Нормальный", "Normal"],
+        ["Cold start", "Холодный старт", "Cold start"],
+        ["Cold-start", "Холодный старт", "Cold-start"],
+        ["Cold start scenario", "Сценарий холодного старта", "Cold-start scenario"],
+
+        ["Run Lab", "Запустить лабораторию", "Run Lab"],
+
+        ["Foydalanuvchi", "Пользователь", "User"],
+        ["User", "Пользователь", "User"],
+
+        ["So'ralgan model", "Запрошенная модель", "Requested model"],
+        ["So‘ralgan model", "Запрошенная модель", "Requested model"],
+        ["Requested model", "Запрошенная модель", "Requested model"],
+
+        ["Ishlatilgan model", "Использованная модель", "Used model"],
+        ["Used model", "Использованная модель", "Used model"],
+
+        ["Stsenariy", "Сценарий", "Scenario"],
+        ["Ssenariy", "Сценарий", "Scenario"],
+
+        ["Vesa gibridnoy modeli", "Веса гибридной модели", "Hybrid model weights"],
+        ["Vesа gibridnoy modeli", "Веса гибридной модели", "Hybrid model weights"],
+        ["Hybrid model weights", "Веса гибридной модели", "Hybrid model weights"],
+
+        ["Telefon", "Телефон", "Phone"],
+        ["Phone", "Телефон", "Phone"],
+
+        ["Reytinglar", "Оценки", "Ratings"],
+        ["Избранное", "Избранное", "Favorites"],
+        ["Istoriya", "История", "History"],
+        ["История", "История", "History"],
+
+        ["unknown", "неизвестно", "unknown"],
+        ["noma'lum", "неизвестно", "unknown"],
+        ["noma’lum", "неизвестно", "unknown"],
+
+        ["Top-K", "Top-K", "Top-K"],
+        ["Hybrid", "Hybrid", "Hybrid"],
+        ["hybrid", "hybrid", "hybrid"],
+        ["Score", "Балл", "Score"],
+
+        // =========================
+        // MODEL LAB - MISSING STRINGS FIX
+        // =========================
+        ["Username", "Имя пользователя", "Username"],
+        ["Имя пользователя", "Имя пользователя", "Username"],
+
+        ["Normal scenario", "Нормальный сценарий", "Normal scenario"],
+        ["Нормальный сценарий", "Нормальный сценарий", "Normal scenario"],
+
+        ["New user cold start", "Холодный старт для нового пользователя", "New user cold start"],
+        ["Холодный старт для нового пользователя", "Холодный старт для нового пользователя", "New user cold start"],
+
+        ["Jinsi", "Пол", "Gender"],
+        ["Пол", "Пол", "Gender"],
+        ["Gender", "Пол", "Gender"],
+
+        ["Tug'ilgan kun", "Дата рождения", "Date of birth"],
+        ["Tug‘ilgan kun", "Дата рождения", "Date of birth"],
+        ["Дата рождения", "Дата рождения", "Date of birth"],
+        ["Date of birth", "Дата рождения", "Date of birth"],
+
+        ["Male", "Мужской", "Male"],
+        ["Мужской", "Мужской", "Male"],
+
+        ["Tarix", "История", "History"],
+        ["History", "История", "History"],
+
+        ["Hybrid weights", "Веса гибридной модели", "Hybrid weights"],
+        ["Веса гибридной модели", "Веса гибридной модели", "Hybrid weights"],
+
+        ["noma'lum", "неизвестно", "unknown"],
+        ["noma’lum", "неизвестно", "unknown"],
+        ["unknown", "неизвестно", "unknown"],
+        ["неизвестно", "неизвестно", "unknown"],
+
+        ["Run Lab", "Запустить лабораторию", "Run Lab"],
+        ["Запустить лабораторию", "Запустить лабораторию", "Run Lab"],
+
+        ["Top-K", "Top-K", "Top-K"],
+        ["Hybrid", "Hybrid", "Hybrid"],
+        ["Normal", "Нормальный", "Normal"],
+
+                // =========================
+        // MODEL LAB / RECOMMENDATION LAB FINAL FIX
+        // =========================
+        ["PARAMETRLAR", "ПАРАМЕТРЫ", "PARAMETERS"],
+        ["Parametrlar", "Параметры", "Parameters"],
+        ["Parameters", "Параметры", "Parameters"],
+        ["ПАРАМЕТРЫ", "ПАРАМЕТРЫ", "PARAMETERS"],
+
+        ["FOYDALANUVCHI MA'LUMOTI", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+        ["FOYDALANUVCHI MA’LUMOTI", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+        ["Foydalanuvchi ma'lumoti", "Данные пользователя", "User information"],
+        ["Foydalanuvchi ma’lumoti", "Данные пользователя", "User information"],
+        ["ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+        ["User information", "Данные пользователя", "User information"],
+        ["USER INFORMATION", "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ", "USER INFORMATION"],
+
+        ["NATIJA XULOSASI", "ИТОГОВЫЙ РЕЗУЛЬТАТ", "RESULT SUMMARY"],
+        ["Natija xulosasi", "Итоговый результат", "Result summary"],
+        ["ИТОГОВЫЙ РЕЗУЛЬТАТ", "ИТОГОВЫЙ РЕЗУЛЬТАТ", "RESULT SUMMARY"],
+        ["Result summary", "Итоговый результат", "Result summary"],
+        ["RESULT SUMMARY", "ИТОГОВЫЙ РЕЗУЛЬТАТ", "RESULT SUMMARY"],
+
+        ["Recommendation Lab", "Лаборатория рекомендаций", "Recommendation Lab"],
+        ["Лаборатория рекомендаций", "Лаборатория рекомендаций", "Recommendation Lab"],
+
+        ["Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo'ljallangan. Bu yerda tavsiya modelini qo'lda tanlab, turli foydalanuvchilar va turli stsenariylar bo'yicha natijalarni taqqoslash mumkin.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+        ["Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan. Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli stsenariylar bo‘yicha natijalarni taqqoslash mumkin.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+        ["Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+        ["This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios.", "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.", "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."],
+
+        ["Username", "Имя пользователя", "Username"],
+        ["Имя пользователя", "Имя пользователя", "Username"],
+
+        ["Top-K", "Top-K", "Top-K"],
+
+        ["Model", "Модель", "Model"],
+        ["Модель", "Модель", "Model"],
+
+        ["Scenario", "Сценарий", "Scenario"],
+        ["Scenariy", "Сценарий", "Scenario"],
+        ["Ssenariy", "Сценарий", "Scenario"],
+        ["Сценарий", "Сценарий", "Scenario"],
+
+        ["Normal scenario", "Нормальный сценарий", "Normal scenario"],
+        ["Нормальный сценарий", "Нормальный сценарий", "Normal scenario"],
+        ["Normal", "Нормальный", "Normal"],
+        ["Нормальный", "Нормальный", "Normal"],
+
+        ["New user cold start", "Холодный старт нового пользователя", "New user cold start"],
+        ["Холодный старт нового пользователя", "Холодный старт нового пользователя", "New user cold start"],
+
+        ["Run Lab", "Запустить", "Run Lab"],
+        ["Запустить лабораторию", "Запустить", "Run Lab"],
+
+        ["User", "Пользователь", "User"],
+        ["Foydalanuvchi", "Пользователь", "User"],
+        ["Пользователь", "Пользователь", "User"],
+
+        ["Requested model", "Запрос", "Requested model"],
+        ["So'ralgan model", "Запрос", "Requested model"],
+        ["So‘ralgan model", "Запрос", "Requested model"],
+        ["Запрошенная модель", "Запрос", "Requested model"],
+
+        ["Used model", "Модель", "Used model"],
+        ["Ishlatilgan model", "Модель", "Used model"],
+        ["Использованная модель", "Модель", "Used model"],
+
+        ["Hybrid weights", "Веса модели", "Hybrid weights"],
+        ["Hybrid model weights", "Веса модели", "Hybrid weights"],
+        ["Vesa gibridnoy modeli", "Веса модели", "Hybrid weights"],
+        ["Веса гибридной модели", "Веса модели", "Hybrid weights"],
+
+        ["Ratings", "Оценки", "Ratings"],
+        ["Reytinglar", "Оценки", "Ratings"],
+        ["Оценки", "Оценки", "Ratings"],
+
+        ["Favorites", "Избранное", "Favorites"],
+        ["Избранное", "Избранное", "Favorites"],
+
+        ["History", "История", "History"],
+        ["Tarix", "История", "History"],
+        ["Istoriya", "История", "History"],
+        ["История", "История", "History"],
+
+        ["Gender", "Пол", "Gender"],
+        ["Jinsi", "Пол", "Gender"],
+        ["Пол", "Пол", "Gender"],
+
+        ["Date of birth", "Дата рождения", "Date of birth"],
+        ["Tug'ilgan kun", "Дата рождения", "Date of birth"],
+        ["Tug‘ilgan kun", "Дата рождения", "Date of birth"],
+        ["Дата рождения", "Дата рождения", "Date of birth"],
+
+        ["Phone", "Телефон", "Phone"],
+        ["Telefon", "Телефон", "Phone"],
+        ["Телефон", "Телефон", "Phone"],
+
+        ["Male", "Мужской", "Male"],
+        ["Erkak", "Мужской", "Male"],
+        ["Мужской", "Мужской", "Male"],
+
+        ["Female", "Женский", "Female"],
+        ["Ayol", "Женский", "Female"],
+        ["Женский", "Женский", "Female"],
+
+        ["unknown", "неизвестно", "unknown"],
+        ["noma'lum", "неизвестно", "unknown"],
+        ["noma’lum", "неизвестно", "unknown"],
+        ["неизвестно", "неизвестно", "unknown"],
+
+        ["Search", "Поиск", "Search"],
+        ["Поиск", "Поиск", "Search"],
+
+        ["Sort", "Сортировка", "Sort"],
+        ["Сортировка", "Сортировка", "Sort"],
+
+        ["Score", "Балл", "Score"],
+        ["Балл", "Балл", "Score"],
     ];
 
     const ATTRIBUTE_NAMES = [
@@ -617,8 +898,219 @@
                 `Фильм '${match[1]}' рекомендован на основе комбинации content, item, SVD и popularity моделей.`,
                 `'${match[1]}' was recommended based on a combination of content, item, SVD, and popularity models.`
             ][langIndex]
+        },
+        {
+            re: /^Hybrid model bo['‘’ʻ`]?yicha ['‘’ʻ`]"?(.+?)['‘’ʻ`]"?\s+bir nechta signal:\s*(.+?)\s+kombinatsiyasi asosida tavsiya qilindi\.?$/i,
+            out: (match) => {
+                const movieTitle = match[1];
+                const rawSignals = match[2];
+
+                const normalizedSignals = rawSignals
+                    .replace(/\bsvd\b/gi, "SVD")
+                    .replace(/\s+va\s+/gi, ", ")
+                    .replace(/\s+and\s+/gi, ", ");
+
+                return [
+                    `Hybrid model bo‘yicha '${movieTitle}' bir nechta signal: ${normalizedSignals} kombinatsiyasi asosida tavsiya qilindi.`,
+                    `Фильм «${movieTitle}» рекомендован гибридной моделью, потому что учитывается комбинация нескольких сигналов: ${normalizedSignals}.`,
+                    `'${movieTitle}' was recommended by the hybrid model because it combines several signals: ${normalizedSignals}.`
+                ][langIndex];
+            }
+        },
+        {
+            re: /^(Model|Модель):\s*(.+)$/i,
+            out: (match) => [
+                `Model: ${match[2]}`,
+                `Модель: ${match[2]}`,
+                `Model: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Scenario|Ssenariy|Сценарий):\s*(.+)$/i,
+            out: (match) => [
+                `Ssenariy: ${match[2]}`,
+                `Сценарий: ${match[2]}`,
+                `Scenario: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Score|Ball|Балл):\s*(.+)$/i,
+            out: (match) => [
+                `Ball: ${match[2]}`,
+                `Балл: ${match[2]}`,
+                `Score: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Reytinglar soni|Количество оценок|Rating count):\s*(.+)$/i,
+            out: (match) => [
+                `Reytinglar soni: ${match[2]}`,
+                `Количество оценок: ${match[2]}`,
+                `Rating count: ${match[2]}`
+            ][langIndex]
+        },
+                {
+            re: /^(Vesa gibridnoy modeli|Веса гибридной модели|Hybrid model weights)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Gibrid model vaznlari: ${match[2]}`,
+                `Веса гибридной модели: ${match[2]}`,
+                `Hybrid model weights: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Telefon|Телефон|Phone)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Telefon: ${match[2]}`,
+                `Телефон: ${match[2]}`,
+                `Phone: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Foydalanuvchi|Пользователь|User)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Foydalanuvchi: ${match[2]}`,
+                `Пользователь: ${match[2]}`,
+                `User: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(So'ralgan model|So‘ralgan model|Запрошенная модель|Requested model)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `So‘ralgan model: ${match[2]}`,
+                `Запрошенная модель: ${match[2]}`,
+                `Requested model: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Ishlatilgan model|Использованная модель|Used model)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Ishlatilgan model: ${match[2]}`,
+                `Использованная модель: ${match[2]}`,
+                `Used model: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Stsenariy|Ssenariy|Сценарий|Scenario)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Ssenariy: ${match[2]}`,
+                `Сценарий: ${match[2]}`,
+                `Scenario: ${match[2]}`
+            ][langIndex]
+        },
+                {
+            re: /^(Username|Имя пользователя)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Username: ${match[2]}`,
+                `Имя пользователя: ${match[2]}`,
+                `Username: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Jinsi|Пол|Gender)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Jinsi: ${match[2]}`,
+                `Пол: ${match[2]}`,
+                `Gender: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Tug'ilgan kun|Tug‘ilgan kun|Дата рождения|Date of birth)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Tug‘ilgan kun: ${match[2]}`,
+                `Дата рождения: ${match[2]}`,
+                `Date of birth: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Telefon|Телефон|Phone)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Telefon: ${match[2]}`,
+                `Телефон: ${match[2]}`,
+                `Phone: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Hybrid weights|Веса гибридной модели)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Gibrid model vaznlari: ${match[2]}`,
+                `Веса гибридной модели: ${match[2]}`,
+                `Hybrid model weights: ${match[2]}`
+            ][langIndex]
+        },
+
+                {
+            re: /^(Username|Имя пользователя)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Username: ${match[2]}`,
+                `Имя пользователя: ${match[2]}`,
+                `Username: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(User|Foydalanuvchi|Пользователь)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Foydalanuvchi: ${match[2]}`,
+                `Пользователь: ${match[2]}`,
+                `User: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Requested model|So'ralgan model|So‘ralgan model|Запрошенная модель|Запрос)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `So‘ralgan model: ${match[2]}`,
+                `Запрос: ${match[2]}`,
+                `Requested model: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Used model|Ishlatilgan model|Использованная модель|Модель)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Ishlatilgan model: ${match[2]}`,
+                `Модель: ${match[2]}`,
+                `Used model: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Scenario|Ssenariy|Stsenariy|Сценарий)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Ssenariy: ${match[2]}`,
+                `Сценарий: ${match[2]}`,
+                `Scenario: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Hybrid weights|Hybrid model weights|Vesa gibridnoy modeli|Веса гибридной модели|Веса модели)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Gibrid model vaznlari: ${match[2]}`,
+                `Веса модели: ${match[2]}`,
+                `Hybrid weights: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Gender|Jinsi|Пол)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Jinsi: ${match[2]}`,
+                `Пол: ${match[2]}`,
+                `Gender: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Date of birth|Tug'ilgan kun|Tug‘ilgan kun|Дата рождения)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Tug‘ilgan kun: ${match[2]}`,
+                `Дата рождения: ${match[2]}`,
+                `Date of birth: ${match[2]}`
+            ][langIndex]
+        },
+        {
+            re: /^(Phone|Telefon|Телефон)\s*:?\s*(.+)$/i,
+            out: (match) => [
+                `Telefon: ${match[2]}`,
+                `Телефон: ${match[2]}`,
+                `Phone: ${match[2]}`
+            ][langIndex]
         }
-    ];
+        ];
 
     function translateValue(value) {
         const original = String(value || "");
@@ -859,3 +1351,904 @@
         init();
     }
 })();
+
+
+/* =========================
+   RECOMMENDATION LAB I18N SCOPED FIX
+   Only affects Recommendation Lab / Model Lab page
+   ========================= */
+(function () {
+    "use strict";
+
+    const rawLang = (
+        document.documentElement.getAttribute("lang") ||
+        document.body.getAttribute("data-lang") ||
+        "uz"
+    ).slice(0, 2).toLowerCase();
+
+    const lang = ["uz", "ru", "en"].includes(rawLang) ? rawLang : "uz";
+    const langIndex = { uz: 0, ru: 1, en: 2 }[lang];
+
+    function normalize(value) {
+        return String(value || "")
+            .replace(/[‘’ʻ`]/g, "'")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    function isRecommendationLabPage() {
+        const pathname = window.location.pathname.toLowerCase();
+
+        if (
+            pathname.includes("recommendation") && pathname.includes("lab") ||
+            pathname.includes("model") && pathname.includes("lab")
+        ) {
+            return true;
+        }
+
+        const titleText = Array.from(document.querySelectorAll("h1, h2, .page-title"))
+            .map((el) => normalize(el.textContent))
+            .join(" | ");
+
+        return /recommendation lab|model lab|tavsiya laboratoriyasi|лаборатория рекомендаций|лаборатория моделей/i.test(titleText);
+    }
+
+    if (!isRecommendationLabPage()) {
+        return;
+    }
+
+    function findLabRoot() {
+        return (
+            document.querySelector(".recommendation-lab-page") ||
+            document.querySelector(".recommendations-lab-page") ||
+            document.querySelector(".model-lab-page") ||
+            document.querySelector("[data-page='recommendation-lab']") ||
+            document.querySelector("[data-page='model-lab']") ||
+            document.querySelector("main") ||
+            document.body
+        );
+    }
+
+    const labRoot = findLabRoot();
+    if (!labRoot) return;
+
+    const rows = [
+        // Page title and description
+        {
+            aliases: ["Recommendation Lab", "Tavsiya laboratoriyasi", "Лаборатория рекомендаций", "Лаборатория моделей", "Model Lab"],
+            values: ["Tavsiya laboratoriyasi", "Лаборатория рекомендаций", "Recommendation Lab"]
+        },
+        {
+            aliases: [
+                "Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo'ljallangan. Bu yerda tavsiya modelini qo'lda tanlab, turli foydalanuvchilar va turli stsenariylar bo'yicha natijalarni taqqoslash mumkin.",
+                "Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan. Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli stsenariylar bo‘yicha natijalarni taqqoslash mumkin.",
+                "Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan. Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli ssenariylar bo‘yicha natijalarni taqqoslash mumkin.",
+                "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.",
+                "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."
+            ],
+            values: [
+                "Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo‘ljallangan. Bu yerda tavsiya modelini qo‘lda tanlab, turli foydalanuvchilar va turli ssenariylar bo‘yicha natijalarni taqqoslash mumkin.",
+                "Эта страница предназначена для тестирования системы и экспериментального анализа. Здесь можно вручную выбрать модель рекомендаций и сравнить результаты для разных пользователей и сценариев.",
+                "This page is intended for system testing and experimental analysis. Here you can manually choose a recommendation model and compare results across different users and scenarios."
+            ]
+        },
+
+        // Card Titles
+        {
+            aliases: ["⚙ PARAMETRLAR", "⚙ Parametrlar", "⚙ ПАРАМЕТРЫ", "⚙ Параметры", "⚙ PARAMETERS", "⚙ Parameters"],
+            values: ["⚙ Parametrlar", "⚙ Параметры", "⚙ Parameters"]
+        },
+        {
+            aliases: ["PARAMETRLAR", "Parametrlar", "ПАРАМЕТРЫ", "Параметры", "PARAMETERS", "Parameters"],
+            values: ["Parametrlar", "Параметры", "Parameters"]
+        },
+        {
+            aliases: [
+                "👤 FOYDALANUVCHI MA'LUMOTI",
+                "👤 FOYDALANUVCHI MA’LUMOTI",
+                "👤 Foydalanuvchi ma'lumoti",
+                "👤 Foydalanuvchi ma’lumoti",
+                "👤 ДАННЫЕ ПОЛЬЗОВАТЕЛЯ",
+                "👤 Данные пользователя",
+                "👤 USER INFORMATION",
+                "👤 User information"
+            ],
+            values: ["👤 Foydalanuvchi ma’lumoti", "👤 Данные пользователя", "👤 User information"]
+        },
+        {
+            aliases: [
+                "FOYDALANUVCHI MA'LUMOTI",
+                "FOYDALANUVCHI MA’LUMOTI",
+                "Foydalanuvchi ma'lumoti",
+                "Foydalanuvchi ma’lumoti",
+                "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ",
+                "Данные пользователя",
+                "USER INFORMATION",
+                "User information"
+            ],
+            values: ["Foydalanuvchi ma’lumoti", "Данные пользователя", "User information"]
+        },
+        {
+            aliases: [
+                "🧪 NATIJA XULOSASI",
+                "🧪 Natija xulosasi",
+                "🧪 ИТОГОВЫЙ РЕЗУЛЬТАТ",
+                "🧪 ИТОГ",
+                "🧪 Итог",
+                "🧪 RESULT SUMMARY",
+                "🧪 Result summary"
+            ],
+            values: ["🧪 Natija xulosasi", "🧪 Итог", "🧪 Result summary"]
+        },
+        {
+            aliases: [
+                "NATIJA XULOSASI",
+                "Natija xulosasi",
+                "ИТОГОВЫЙ РЕЗУЛЬТАТ",
+                "ИТОГ",
+                "Итог",
+                "RESULT SUMMARY",
+                "Result summary"
+            ],
+            values: ["Natija xulosasi", "Итог", "Result summary"]
+        },
+
+        // Parameter card
+        {
+            aliases: ["Username", "Foydalanuvchi nomi", "Имя пользователя"],
+            values: ["Foydalanuvchi nomi", "Имя пользователя", "Username"]
+        },
+        {
+            aliases: ["Top-K"],
+            values: ["Top-K", "Top-K", "Top-K"]
+        },
+        {
+            aliases: ["Model", "Модель"],
+            values: ["Model", "Модель", "Model"]
+        },
+        {
+            aliases: ["Scenario", "Ssenariy", "Stsenariy", "Scenariy", "Сценарий"],
+            values: ["Ssenariy", "Сценарий", "Scenario"]
+        },
+        {
+            aliases: ["Normal scenario", "Normal ssenariy", "Нормальный сценарий", "Normal", "Нормальный"],
+            values: ["Normal ssenariy", "Нормальный сценарий", "Normal scenario"]
+        },
+        {
+            aliases: [
+                "New user cold start",
+                "Yangi foydalanuvchi cold start",
+                "Холодный старт нового пользователя",
+                "Холодный старт для нового пользователя"
+            ],
+            values: ["Yangi foydalanuvchi cold start", "Холодный старт нового пользователя", "New user cold start"]
+        },
+        {
+            aliases: ["Run Lab", "Laboratoriyani ishga tushirish", "Запустить", "Запустить лабораторию"],
+            values: ["Laboratoriyani ishga tushirish", "Запустить", "Run Lab"]
+        },
+
+        // User info card
+        {
+            aliases: ["Ratings", "Reytinglar", "Оценки"],
+            values: ["Reytinglar", "Оценки", "Ratings"]
+        },
+        {
+            aliases: ["Favorites", "Saqlanganlar", "Избранное", "Сохранённые"],
+            values: ["Saqlanganlar", "Избранное", "Favorites"]
+        },
+        {
+            aliases: ["History", "Tarix", "Istoriya", "История"],
+            values: ["Tarix", "История", "History"]
+        },
+        {
+            aliases: ["Gender", "Jinsi", "Пол"],
+            values: ["Jinsi", "Пол", "Gender"]
+        },
+        {
+            aliases: ["Date of birth", "Birth date", "Tug'ilgan kun", "Tug‘ilgan kun", "Дата рождения"],
+            values: ["Tug‘ilgan kun", "Дата рождения", "Date of birth"]
+        },
+        {
+            aliases: ["Phone", "Telefon", "Telefon raqam", "Телефон", "Номер телефона"],
+            values: ["Telefon", "Телефон", "Phone"]
+        },
+        {
+            aliases: ["Male", "Erkak", "Мужской"],
+            values: ["Erkak", "Мужской", "Male"]
+        },
+        {
+            aliases: ["Female", "Ayol", "Женский"],
+            values: ["Ayol", "Женский", "Female"]
+        },
+        {
+            aliases: ["unknown", "Unknown", "noma'lum", "noma’lum", "Noma'lum", "Noma’lum", "неизвестно", "Неизвестно"],
+            values: ["Noma’lum", "Неизвестно", "Unknown"]
+        },
+
+        // Result summary card
+        {
+            aliases: ["User", "Foydalanuvchi", "Пользователь"],
+            values: ["Foydalanuvchi", "Пользователь", "User"]
+        },
+        {
+            aliases: ["Requested model", "So'ralgan model", "So‘ralgan model", "Запрошенная модель", "Запрос"],
+            values: ["So‘ralgan model", "Запрос", "Requested model"]
+        },
+        {
+            aliases: ["Used model", "Ishlatilgan model", "Использованная модель", "Модель"],
+            values: ["Ishlatilgan model", "Модель", "Used model"]
+        },
+        {
+            aliases: ["Hybrid weights", "Hybrid model weights", "Gibrid model vaznlari", "Vesa gibridnoy modeli", "Веса гибридной модели", "Веса модели"],
+            values: ["Gibrid model vaznlari", "Веса модели", "Hybrid weights"]
+        },
+        {
+            aliases: ["Score", "Ball", "Балл"],
+            values: ["Ball", "Балл", "Score"]
+        },
+
+        // Common labels that can appear inside the lab results
+        {
+            aliases: ["Search", "Qidiruv", "Поиск"],
+            values: ["Qidiruv", "Поиск", "Search"]
+        },
+        {
+            aliases: ["Sort", "Saralash", "Сортировка"],
+            values: ["Saralash", "Сортировка", "Sort"]
+        }
+    ];
+
+    const phraseMap = new Map();
+
+    rows.forEach((row) => {
+        const target = row.values[langIndex];
+
+        row.aliases.forEach((alias) => {
+            phraseMap.set(normalize(alias), target);
+        });
+    });
+
+    function preserveWhitespace(original, translated) {
+        const source = String(original || "");
+        const leading = source.match(/^\s*/)[0];
+        const trailing = source.match(/\s*$/)[0];
+
+        return leading + translated + trailing;
+    }
+
+    function isDataLike(value) {
+        const key = normalize(value);
+
+        return (
+            !key ||
+            /^[\w.+-]+@[\w.-]+\.\w+$/.test(key) ||
+            /^@\w+/.test(key) ||
+            /^\+?\d[\d\s().-]{5,}$/.test(key) ||
+            /^\d{2}\.\d{2}\.\d{4}/.test(key) ||
+            /^\d{4}-\d{2}-\d{2}/.test(key) ||
+            /^content\s*=\s*\d/i.test(key) ||
+            /^item\s*=\s*\d/i.test(key) ||
+            /^svd\s*=\s*\d/i.test(key) ||
+            /^pop\s*=\s*\d/i.test(key) ||
+            /^[a-z0-9_.-]{3,}$/i.test(key) && !phraseMap.has(key)
+        );
+    }
+
+    function translateKnownValue(value) {
+        const key = normalize(value);
+
+        if (phraseMap.has(key)) {
+            return phraseMap.get(key);
+        }
+
+        return value;
+    }
+
+    function translateLabelWithValue(value) {
+        const original = String(value || "");
+        const key = normalize(original);
+
+        const labelRules = [
+            /^(Username|Foydalanuvchi nomi|Имя пользователя)\s*:?\s*(.+)$/i,
+            /^(User|Foydalanuvchi|Пользователь)\s*:?\s*(.+)$/i,
+            /^(Requested model|So'ralgan model|So‘ralgan model|Запрошенная модель|Запрос)\s*:?\s*(.+)$/i,
+            /^(Used model|Ishlatilgan model|Использованная модель|Модель)\s*:?\s*(.+)$/i,
+            /^(Scenario|Ssenariy|Stsenariy|Scenariy|Сценарий)\s*:?\s*(.+)$/i,
+            /^(Hybrid weights|Hybrid model weights|Gibrid model vaznlari|Vesa gibridnoy modeli|Веса гибридной модели|Веса модели)\s*:?\s*(.+)$/i,
+            /^(Gender|Jinsi|Пол)\s*:?\s*(.+)$/i,
+            /^(Date of birth|Birth date|Tug'ilgan kun|Tug‘ilgan kun|Дата рождения)\s*:?\s*(.+)$/i,
+            /^(Phone|Telefon|Telefon raqam|Телефон|Номер телефона)\s*:?\s*(.+)$/i
+        ];
+
+        for (const rule of labelRules) {
+            const match = key.match(rule);
+            if (!match) continue;
+
+            const label = translateKnownValue(match[1]);
+            let dataValue = match[2];
+
+            if (!isDataLike(dataValue)) {
+                dataValue = translateKnownValue(dataValue);
+            } else {
+                dataValue = translateKnownValue(dataValue);
+            }
+
+            return preserveWhitespace(original, `${label}: ${dataValue}`);
+        }
+
+        return null;
+    }
+
+    function translateValue(value) {
+        const original = String(value || "");
+        const key = normalize(original);
+
+        if (!key) return value;
+
+        const labelResult = translateLabelWithValue(original);
+        if (labelResult !== null) {
+            return labelResult;
+        }
+
+        if (phraseMap.has(key)) {
+            return preserveWhitespace(original, phraseMap.get(key));
+        }
+
+        return value;
+    }
+
+    function shouldSkipElement(element) {
+        if (!element || !element.closest) return false;
+
+        return Boolean(
+            element.closest("script, style, code, pre, textarea, svg, canvas, video, audio, iframe")
+        );
+    }
+
+    function translateTextNode(node) {
+        if (!node || node.nodeType !== Node.TEXT_NODE) return;
+
+        const parent = node.parentElement;
+        if (!parent || shouldSkipElement(parent)) return;
+
+        const translated = translateValue(node.nodeValue);
+
+        if (translated !== node.nodeValue) {
+            node.nodeValue = translated;
+        }
+    }
+
+    function translateAttributes(element) {
+        if (!element || element.nodeType !== Node.ELEMENT_NODE) return;
+        if (shouldSkipElement(element)) return;
+
+        const attrs = [
+            "placeholder",
+            "title",
+            "aria-label",
+            "data-year-text",
+            "data-label-dark",
+            "data-label-light",
+            "data-show-label",
+            "data-hide-label"
+        ];
+
+        attrs.forEach((attr) => {
+            if (!element.hasAttribute(attr)) return;
+
+            const current = element.getAttribute(attr);
+            const translated = translateValue(current);
+
+            if (translated !== current) {
+                element.setAttribute(attr, translated);
+            }
+        });
+    }
+
+    function translateElement(element) {
+        if (!element || element.nodeType !== Node.ELEMENT_NODE) return;
+        if (shouldSkipElement(element)) return;
+
+        translateAttributes(element);
+    }
+
+    function translateLabTree(root) {
+        if (!root) return;
+
+        if (root.nodeType === Node.TEXT_NODE) {
+            translateTextNode(root);
+            return;
+        }
+
+        if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) {
+            return;
+        }
+
+        if (root.nodeType === Node.ELEMENT_NODE) {
+            translateElement(root);
+        }
+
+        const walker = document.createTreeWalker(
+            root,
+            NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+            {
+                acceptNode(node) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        return shouldSkipElement(node)
+                            ? NodeFilter.FILTER_REJECT
+                            : NodeFilter.FILTER_ACCEPT;
+                    }
+
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        const parent = node.parentElement;
+
+                        return parent && !shouldSkipElement(parent)
+                            ? NodeFilter.FILTER_ACCEPT
+                            : NodeFilter.FILTER_REJECT;
+                    }
+
+                    return NodeFilter.FILTER_REJECT;
+                }
+            }
+        );
+
+        let node;
+
+        while ((node = walker.nextNode())) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                translateTextNode(node);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                translateElement(node);
+            }
+        }
+    }
+
+    function injectLabLayoutFix() {
+        if (document.getElementById("recommendationLabI18nLayoutFix")) return;
+
+        const style = document.createElement("style");
+        style.id = "recommendationLabI18nLayoutFix";
+        style.textContent = `
+            .lab-result-row,
+            .result-summary-row,
+            .recommendation-result-row,
+            .model-lab-summary-row,
+            .lab-summary-row {
+                display: grid !important;
+                grid-template-columns: minmax(125px, 42%) minmax(0, 58%);
+                column-gap: 14px;
+                align-items: start;
+            }
+
+            .lab-result-row > *,
+            .result-summary-row > *,
+            .recommendation-result-row > *,
+            .model-lab-summary-row > *,
+            .lab-summary-row > * {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .lab-result-row span,
+            .result-summary-row span,
+            .recommendation-result-row span,
+            .model-lab-summary-row span,
+            .lab-summary-row span {
+                font-weight: 700;
+                opacity: 0.78;
+            }
+
+            .lab-result-row strong,
+            .result-summary-row strong,
+            .recommendation-result-row strong,
+            .model-lab-summary-row strong,
+            .lab-summary-row strong {
+                font-weight: 800;
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    let scheduled = false;
+    const pending = new Set();
+
+    function flush() {
+        scheduled = false;
+
+        pending.forEach((node) => {
+            if (!node) return;
+
+            if (node.nodeType === Node.TEXT_NODE) {
+                translateTextNode(node);
+                return;
+            }
+
+            if (node.nodeType === Node.ELEMENT_NODE && node.isConnected) {
+                translateLabTree(node);
+            }
+        });
+
+        pending.clear();
+    }
+
+    function schedule(node) {
+        if (!node) return;
+
+        pending.add(node);
+
+        if (!scheduled) {
+            scheduled = true;
+            window.requestAnimationFrame(flush);
+        }
+    }
+
+    function boot() {
+        injectLabLayoutFix();
+        translateLabTree(labRoot);
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "characterData") {
+                    schedule(mutation.target);
+                    return;
+                }
+
+                if (mutation.type === "attributes") {
+                    schedule(mutation.target);
+                    return;
+                }
+
+                mutation.addedNodes.forEach((node) => {
+                    schedule(node);
+                });
+            });
+        });
+
+        observer.observe(labRoot, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: [
+                "placeholder",
+                "title",
+                "aria-label",
+                "data-year-text",
+                "data-label-dark",
+                "data-label-light",
+                "data-show-label",
+                "data-hide-label"
+            ]
+        });
+
+        window.runRecommendationLabI18n = function () {
+            translateLabTree(labRoot);
+        };
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+    } else {
+        boot();
+    }
+})();
+
+/* =========================
+   RECOMMENDATION LAB CARD TITLES FINAL FIX
+   Fixes: PARAMETRLAR / FOYDALANUVCHI MA'LUMOTI / NATIJA XULOSASI
+   Scope: only Recommendation Lab / Model Lab page
+   ========================= */
+(function () {
+    "use strict";
+
+    const rawLang = (
+        document.documentElement.getAttribute("lang") ||
+        document.body.getAttribute("data-lang") ||
+        "uz"
+    ).slice(0, 2).toLowerCase();
+
+    const lang = ["uz", "ru", "en"].includes(rawLang) ? rawLang : "uz";
+    const langIndex = { uz: 0, ru: 1, en: 2 }[lang];
+
+    function normalize(value) {
+        return String(value || "")
+            .replace(/[\u200B-\u200D\uFEFF]/g, "")
+            .replace(/[‘’ʻ`]/g, "'")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    function isRecommendationLabPage() {
+        const pathname = window.location.pathname.toLowerCase();
+
+        if (
+            (pathname.includes("recommendation") && pathname.includes("lab")) ||
+            (pathname.includes("model") && pathname.includes("lab"))
+        ) {
+            return true;
+        }
+
+        const pageText = normalize(document.body ? document.body.textContent : "");
+
+        return /recommendation lab|model lab|tavsiya laboratoriyasi|лаборатория рекомендаций|лаборатория моделей/i.test(pageText);
+    }
+
+    if (!isRecommendationLabPage()) {
+        return;
+    }
+
+    function findLabRoot() {
+        return (
+            document.querySelector(".recommendation-lab-page") ||
+            document.querySelector(".recommendations-lab-page") ||
+            document.querySelector(".model-lab-page") ||
+            document.querySelector("[data-page='recommendation-lab']") ||
+            document.querySelector("[data-page='model-lab']") ||
+            document.querySelector("main") ||
+            document.body
+        );
+    }
+
+    const labRoot = findLabRoot();
+
+    if (!labRoot) {
+        return;
+    }
+
+    const titleRows = [
+        {
+            aliases: [
+                "PARAMETRLAR",
+                "Parametrlar",
+                "ПАРАМЕТРЫ",
+                "Параметры",
+                "PARAMETERS",
+                "Parameters",
+                "⚙ PARAMETRLAR",
+                "⚙ Parametrlar",
+                "⚙ ПАРАМЕТРЫ",
+                "⚙ Параметры",
+                "⚙ PARAMETERS",
+                "⚙ Parameters"
+            ],
+            values: ["Parametrlar", "Параметры", "Parameters"]
+        },
+        {
+            aliases: [
+                "FOYDALANUVCHI MA'LUMOTI",
+                "FOYDALANUVCHI MA’LUMOTI",
+                "Foydalanuvchi ma'lumoti",
+                "Foydalanuvchi ma’lumoti",
+                "ДАННЫЕ ПОЛЬЗОВАТЕЛЯ",
+                "Данные пользователя",
+                "USER INFORMATION",
+                "User information",
+                "👤 FOYDALANUVCHI MA'LUMOTI",
+                "👤 FOYDALANUVCHI MA’LUMOTI",
+                "👤 Foydalanuvchi ma'lumoti",
+                "👤 Foydalanuvchi ma’lumoti",
+                "👤 ДАННЫЕ ПОЛЬЗОВАТЕЛЯ",
+                "👤 Данные пользователя",
+                "👤 USER INFORMATION",
+                "👤 User information"
+            ],
+            values: ["Foydalanuvchi ma’lumoti", "Данные пользователя", "User information"]
+        },
+        {
+            aliases: [
+                "NATIJA XULOSASI",
+                "Natija xulosasi",
+                "ИТОГОВЫЙ РЕЗУЛЬТАТ",
+                "Итоговый результат",
+                "ИТОГ",
+                "Итог",
+                "RESULT SUMMARY",
+                "Result summary",
+                "🧪 NATIJA XULOSASI",
+                "🧪 Natija xulosasi",
+                "🧪 ИТОГОВЫЙ РЕЗУЛЬТАТ",
+                "🧪 Итоговый результат",
+                "🧪 ИТОГ",
+                "🧪 Итог",
+                "🧪 RESULT SUMMARY",
+                "🧪 Result summary"
+            ],
+            values: ["Natija xulosasi", "Итог", "Result summary"]
+        }
+    ];
+
+    const titleMap = new Map();
+
+    titleRows.forEach((row) => {
+        const target = row.values[langIndex];
+
+        row.aliases.forEach((alias) => {
+            titleMap.set(normalize(alias), target);
+        });
+    });
+
+    function stripLeadingIcon(value) {
+        return normalize(value).replace(/^[^A-Za-zА-Яа-яЁёЎўҚқҒғҲҳ0-9]+/, "").trim();
+    }
+
+    function getLeadingIcon(value) {
+        const match = normalize(value).match(/^[^A-Za-zА-Яа-яЁёЎўҚқҒғҲҳ0-9]+/);
+
+        if (!match) {
+            return "";
+        }
+
+        return match[0].trim();
+    }
+
+    function getTitleTranslation(value) {
+        const key = normalize(value);
+
+        if (titleMap.has(key)) {
+            return titleMap.get(key);
+        }
+
+        const withoutIcon = stripLeadingIcon(key);
+
+        if (titleMap.has(withoutIcon)) {
+            return titleMap.get(withoutIcon);
+        }
+
+        return null;
+    }
+
+    function preserveWhitespace(original, translated) {
+        const source = String(original || "");
+        const leading = source.match(/^\s*/)[0];
+        const trailing = source.match(/\s*$/)[0];
+
+        return leading + translated + trailing;
+    }
+
+    function shouldSkipElement(element) {
+        return Boolean(
+            element &&
+            element.closest &&
+            element.closest("script, style, code, pre, textarea, svg, canvas, video, audio, iframe")
+        );
+    }
+
+    function translateTitleElement(element) {
+        if (!element || element.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+
+        if (shouldSkipElement(element)) {
+            return;
+        }
+
+        const fullText = normalize(element.textContent);
+
+        if (!fullText || fullText.length > 80) {
+            return;
+        }
+
+        const translatedFull = getTitleTranslation(fullText);
+
+        if (!translatedFull) {
+            return;
+        }
+
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode(node) {
+                    const value = normalize(node.nodeValue);
+
+                    if (!value) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+
+        let node;
+
+        while ((node = walker.nextNode())) {
+            textNodes.push(node);
+        }
+
+        for (const textNode of textNodes) {
+            const current = normalize(textNode.nodeValue);
+            const translatedCurrent = getTitleTranslation(current);
+
+            if (translatedCurrent) {
+                const icon = getLeadingIcon(current);
+                const finalText = icon ? `${icon} ${translatedCurrent}` : translatedCurrent;
+                textNode.nodeValue = preserveWhitespace(textNode.nodeValue, finalText);
+                return;
+            }
+        }
+
+        const icon = getLeadingIcon(fullText);
+        element.textContent = icon ? `${icon} ${translatedFull}` : translatedFull;
+    }
+
+    function forceLabCardTitles() {
+        const candidates = labRoot.querySelectorAll(
+            [
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                ".card-title",
+                ".lab-card-title",
+                ".model-lab-card-title",
+                ".recommendation-lab-card-title",
+                ".section-title",
+                ".panel-title",
+                ".glass-card-title",
+                ".text-uppercase",
+                "[class*='title']",
+                "[class*='heading']"
+            ].join(",")
+        );
+
+        candidates.forEach(translateTitleElement);
+
+        /*
+         * Fallback: agar title oddiy div ichida bo‘lsa va class nomi title/heading bo‘lmasa,
+         * faqat qisqa textli elementlarni tekshiramiz.
+         */
+        labRoot.querySelectorAll("div, span, strong").forEach((element) => {
+            const text = normalize(element.textContent);
+
+            if (!text || text.length > 80) {
+                return;
+            }
+
+            if (getTitleTranslation(text)) {
+                translateTitleElement(element);
+            }
+        });
+    }
+
+    function run() {
+        forceLabCardTitles();
+
+        if (typeof window.runRecommendationLabI18n === "function") {
+            window.runRecommendationLabI18n();
+            forceLabCardTitles();
+        }
+
+        if (typeof window.translateUiTree === "function") {
+            window.translateUiTree(labRoot);
+            forceLabCardTitles();
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+    } else {
+        run();
+    }
+
+    const observer = new MutationObserver(() => {
+        window.requestAnimationFrame(forceLabCardTitles);
+    });
+
+    observer.observe(labRoot, {
+        childList: true,
+        subtree: true,
+        characterData: true
+    });
+    
+    window.forceRecommendationLabCardTitles = forceLabCardTitles;
+})();
+
+

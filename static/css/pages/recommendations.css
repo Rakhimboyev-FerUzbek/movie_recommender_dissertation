@@ -1849,3 +1849,99 @@ body[data-theme="light"] .lab-param-card .form-control {
     background: rgba(255, 255, 255, 0.96) !important;
     color: var(--text) !important;
 }
+
+/* Model Lab result summary: prevent label/value overlap */
+.lab-summary-row,
+.lab-result-row,
+.recommendation-lab-summary-row,
+.recommendation-result-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 0.9fr) minmax(120px, 1.1fr);
+    gap: 12px;
+    align-items: start;
+}
+
+.lab-summary-row > *,
+.lab-result-row > *,
+.recommendation-lab-summary-row > *,
+.recommendation-result-row > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==============================
+   Recommendation Lab result summary layout fix
+   ============================== */
+
+.recommendation-lab-page .glass-card,
+.recommendations-lab-page .glass-card,
+.model-lab-page .glass-card {
+    min-width: 0;
+}
+
+/* Result summary rows: label/value should never overlap */
+.recommendation-lab-page .glass-card div,
+.recommendations-lab-page .glass-card div,
+.model-lab-page .glass-card div {
+    min-width: 0;
+}
+
+/* Common possible row classes */
+.lab-summary-row,
+.lab-result-row,
+.result-summary-row,
+.recommendation-summary-row,
+.recommendation-result-row,
+.model-lab-summary-row {
+    display: grid !important;
+    grid-template-columns: minmax(118px, 0.9fr) minmax(130px, 1.1fr);
+    column-gap: 14px;
+    align-items: start;
+}
+
+.lab-summary-row > *,
+.lab-result-row > *,
+.result-summary-row > *,
+.recommendation-summary-row > *,
+.recommendation-result-row > *,
+.model-lab-summary-row > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+/* If the template uses plain div rows inside the result card */
+.result-summary-card .d-flex,
+.lab-result-summary-card .d-flex,
+.model-lab-result-card .d-flex,
+.recommendation-result-card .d-flex {
+    display: grid !important;
+    grid-template-columns: minmax(118px, 0.9fr) minmax(130px, 1.1fr);
+    column-gap: 14px;
+    align-items: start;
+}
+
+.result-summary-card .d-flex > *,
+.lab-result-summary-card .d-flex > *,
+.model-lab-result-card .d-flex > *,
+.recommendation-result-card .d-flex > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Compact typography for narrow result card */
+.result-summary-card,
+.lab-result-summary-card,
+.model-lab-result-card,
+.recommendation-result-card {
+    overflow: hidden;
+}
+
+.result-summary-card strong,
+.lab-result-summary-card strong,
+.model-lab-result-card strong,
+.recommendation-result-card strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}   
