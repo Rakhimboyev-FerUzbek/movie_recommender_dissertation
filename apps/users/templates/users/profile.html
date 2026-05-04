@@ -17,7 +17,7 @@
     <div class="prf-edit-topbar">
         <div class="prf-edit-topbar-title">
             <span class="prf-edit-dot"></span>
-            Profilni tahrirlash
+            {{ t.profile_edit_title }}
         </div>
         <div class="prf-edit-topbar-actions">
             <button type="submit" class="btn btn-primary-gradient">{{ t.save_changes }}</button>
@@ -30,7 +30,7 @@
 
         {# ── COL 1: Interaction cards vertical (~30%) ── #}
         <div class="prf3-col prf3-col--interactions">
-            <p class="prf3-col-title">Foydalanuvchi faoliyati</p>
+            <p class="prf3-col-title">{{ t.user_activity }}</p>
             <div class="prf3-act-list">
 
                 <a href="{% url 'favorites_list' %}" class="prf3-act-card">
@@ -38,16 +38,16 @@
                         <div class="prf3-act-icon">♥</div>
                         <div class="prf3-act-meta">
                             <div class="prf3-act-topline">
-                                <span class="prf3-act-label">Favorites</span>
+                                <span class="prf3-act-label">{{ t.favorites }}</span>
                                 <strong class="prf3-act-count">{{ favorites_count }}</strong>
                             </div>
-                            <p class="prf3-act-desc">Saqlab qo'yilgan sevimli filmlar.</p>
+                            <p class="prf3-act-desc">{{ t.favorites_desc }}</p>
                             <div class="prf3-act-tags">
-                                <span>Saqlanganlar</span><span>Tez kirish</span>
+                                <span>{{ t.favorites }}</span><span>{{ t.quick_access }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="prf3-act-cta">Batafsil ko'rish <span>→</span></div>
+                    <div class="prf3-act-cta">{{ t.view_details }} <span>→</span></div>
                 </a>
 
                 <a href="{% url 'ratings_list' %}" class="prf3-act-card">
@@ -55,16 +55,16 @@
                         <div class="prf3-act-icon">★</div>
                         <div class="prf3-act-meta">
                             <div class="prf3-act-topline">
-                                <span class="prf3-act-label">Ratings</span>
+                                <span class="prf3-act-label">{{ t.ratings }}</span>
                                 <strong class="prf3-act-count">{{ ratings_count }}</strong>
                             </div>
-                            <p class="prf3-act-desc">Berilgan baholarni ko'rish va nazorat.</p>
+                            <p class="prf3-act-desc">{{ t.ratings_desc }}</p>
                             <div class="prf3-act-tags">
-                                <span>Baholar</span><span>Faoliyat</span>
+                                <span>{{ t.ratings }}</span><span>{{ t.activity }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="prf3-act-cta">Batafsil ko'rish <span>→</span></div>
+                    <div class="prf3-act-cta">{{ t.view_details }} <span>→</span></div>
                 </a>
 
                 <a href="{% url 'watch_history_list' %}" class="prf3-act-card">
@@ -72,16 +72,16 @@
                         <div class="prf3-act-icon">▶</div>
                         <div class="prf3-act-meta">
                             <div class="prf3-act-topline">
-                                <span class="prf3-act-label">Watch History</span>
+                                <span class="prf3-act-label">{{ t.watch_history }}</span>
                                 <strong class="prf3-act-count">{{ watch_history_count }}</strong>
                             </div>
-                            <p class="prf3-act-desc">Ko'rilgan filmlar va ko'rish tarixi.</p>
+                            <p class="prf3-act-desc">{{ t.watch_history_desc }}</p>
                             <div class="prf3-act-tags">
-                                <span>Tarix</span><span>Ko'rilganlar</span>
+                                <span>{{ t.history }}</span><span>{{ t.watched }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="prf3-act-cta">Batafsil ko'rish <span>→</span></div>
+                    <div class="prf3-act-cta">{{ t.view_details }} <span>→</span></div>
                 </a>
 
             </div>
@@ -110,21 +110,21 @@
                     {% else %}<strong class="prf-break-word">{{ request.user.email|default:t.no_email }}</strong>{% endif %}
                 </div>
                 <div class="profile-info-item">
-                    <span>Tug'ilgan kun</span>
+                    <span>{{ t.date_of_birth }}</span>
                     {% if is_edit_mode %}{{ profile_form.birth_date }}{% if profile_form.birth_date.errors %}<div class="text-danger small profile-field-error">{{ profile_form.birth_date.errors }}</div>{% endif %}
                     {% else %}<strong>{{ profile.birth_date|date:"d.m.Y"|default:"—" }}</strong>{% endif %}
                 </div>
             </div>
             <div class="profile-info-grid profile-info-grid--two mt-2">
                 <div class="profile-info-item">
-                    <span>Telefon raqam</span>
+                    <span>{{ t.phone_number }}</span>
                     {% if is_edit_mode %}{{ profile_form.phone_number }}{% if profile_form.phone_number.errors %}<div class="text-danger small profile-field-error">{{ profile_form.phone_number.errors }}</div>{% endif %}
                     {% else %}<strong>{{ profile.phone_number|default:"—" }}</strong>{% endif %}
                 </div>
                 <div class="profile-info-item">
-                    <span>Jinsi</span>
+                    <span>{{ t.gender }}</span>
                     {% if is_edit_mode %}{{ profile_form.gender }}{% if profile_form.gender.errors %}<div class="text-danger small profile-field-error">{{ profile_form.gender.errors }}</div>{% endif %}
-                    {% else %}<strong>{{ profile.get_gender_display|default:"—" }}</strong>{% endif %}
+                    {% else %}<strong>{% if profile.gender == "male" %}{{ t.male }}{% elif profile.gender == "female" %}{{ t.female }}{% else %}—{% endif %}</strong>{% endif %}
                 </div>
             </div>
 
@@ -166,7 +166,7 @@
             {% if is_edit_mode %}
             <div class="prf-photo-upload-zone" id="photoUploadZone">
                 <div class="prf-photo-upload-circle" id="photoUploadCircle"
-                     title="Rasm yuklash" onclick="document.getElementById('id_profile_photo').click()">
+                     title="{{ t.upload_photo }}" onclick="document.getElementById('id_profile_photo').click()">
                     {% if profile.profile_photo %}
                         <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}"
                              class="prf-photo-upload-img" id="photoPreviewImg">
@@ -175,19 +175,19 @@
                             {{ request.user.username|slice:":1"|upper }}
                         </div>
                     {% endif %}
-                    <div class="prf-photo-upload-overlay"><span>📷</span><small>Rasm yuklash</small></div>
+                    <div class="prf-photo-upload-overlay"><span>📷</span><small>{{ t.upload_photo }}</small></div>
                 </div>
                 <div style="display:none;">{{ profile_form.profile_photo }}</div>
                 <div class="prf-photo-upload-actions">
                     <button type="button" class="prf-photo-pick-btn"
-                            onclick="document.getElementById('id_profile_photo').click()">📷 Rasm tanlash</button>
+                            onclick="document.getElementById('id_profile_photo').click()">📷 {{ t.choose_photo }}</button>
                     {% if profile.profile_photo %}
                     <label class="prf-photo-remove-label">
                         {{ profile_form.remove_profile_photo }}<span>{{ t.remove_profile_photo }}</span>
                     </label>
                     {% endif %}
                 </div>
-                <div class="prf-photo-upload-hint">JPG, PNG, WEBP · max 10 MB</div>
+                <div class="prf-photo-upload-hint">{{ t.photo_help }}</div>
                 {% if profile_form.profile_photo.errors %}<div class="text-danger small mt-1">{{ profile_form.profile_photo.errors }}</div>{% endif %}
             </div>
 
@@ -207,9 +207,9 @@
             <div class="prf3-stats">
                 <div class="prf3-stat"><span>{{ t.member_since }}</span><strong>{{ request.user.date_joined|date:"d.m.Y" }}</strong></div>
                 <div class="prf3-stat"><span>{{ t.username }}</span><strong class="prf-username-val">{{ request.user.username }}</strong></div>
-                <div class="prf3-stat"><span>Oxirgi kirish</span><strong>{{ profile.previous_last_login|date:"d.m.Y H:i"|default:"—" }}</strong></div>
+                <div class="prf3-stat"><span>{{ t.last_login }}</span><strong>{{ profile.previous_last_login|date:"d.m.Y H:i"|default:"—" }}</strong></div>
                 <div class="prf3-stat">
-                    <span>Faollik</span>
+                    <span>{{ t.activity }}</span>
                     <div class="prf-activity-mini">
                         <span>♥ {{ favorites_count }}</span>
                         <span>★ {{ ratings_count }}</span>
@@ -225,7 +225,7 @@
             <div class="glass-card profile-danger-compact fade-up mt-3">
                 <div class="profile-danger-compact-inner">
                     <div class="profile-danger-zone-badge"><span class="profile-danger-zone-dot"></span>{{ t.danger_zone }}</div>
-                    <button type="button" class="profile-danger-btn profile-danger-btn--sm" data-delete-modal-open>Profilni o'chirish</button>
+                    <button type="button" class="profile-danger-btn profile-danger-btn--sm" data-delete-modal-open>{{ t.delete_profile }}</button>
                 </div>
             </div>
             {% endif %}
@@ -243,8 +243,8 @@
         <div class="prf-pw-header-left">
             <div class="prf-pw-icon">🔐</div>
             <div>
-                <h4>Parolni o'zgartirish</h4>
-                <p>Hisob xavfsizligini kuchaytirish uchun parolingizni yangilang</p>
+                <h4>{{ t.password_change }}</h4>
+                <p>{{ t.password_change_help }}</p>
             </div>
         </div>
         <div class="prf-pw-chevron" id="pwChevron">▼</div>
@@ -254,11 +254,11 @@
             {% csrf_token %}
             <div class="prf-pw-fields">
                 <div class="profile-info-item">
-                    <label class="form-label prf-field-label" for="id_old_password">Joriy parol</label>
+                    <label class="form-label prf-field-label" for="id_old_password">{{ t.current_password }}</label>
                     <div class="prf-pw-field-shell">
                         <input type="password" name="old_password" id="id_old_password"
                                class="form-control" autocomplete="current-password"
-                               placeholder="Joriy parolingizni kiriting" required>
+                               placeholder="{{ t.current_password }}ingizni kiriting" required>
                         <button type="button" class="prf-pw-toggle" data-toggle-password="id_old_password" aria-label="Parolni ko'rsatish" title="Ko'rsatish">
                             <span class="prf-pw-toggle__icon prf-pw-toggle__icon--show" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none">
@@ -280,11 +280,11 @@
                 </div>
 
                 <div class="profile-info-item">
-                    <label class="form-label prf-field-label" for="id_new_password1">Yangi parol</label>
+                    <label class="form-label prf-field-label" for="id_new_password1">{{ t.new_password }}</label>
                     <div class="prf-pw-field-shell">
                         <input type="password" name="new_password1" id="id_new_password1"
                                class="form-control" autocomplete="new-password"
-                               placeholder="Yangi parolni kiriting" required>
+                               placeholder="{{ t.new_password }}ni kiriting" required>
                         <button type="button" class="prf-pw-toggle" data-toggle-password="id_new_password1" aria-label="Parolni ko'rsatish" title="Ko'rsatish">
                             <span class="prf-pw-toggle__icon prf-pw-toggle__icon--show" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none">
@@ -306,11 +306,11 @@
                 </div>
 
                 <div class="profile-info-item">
-                    <label class="form-label prf-field-label" for="id_new_password2">Yangi parolni tasdiqlang</label>
+                    <label class="form-label prf-field-label" for="id_new_password2">{{ t.new_password }}ni tasdiqlang</label>
                     <div class="prf-pw-field-shell">
                         <input type="password" name="new_password2" id="id_new_password2"
                                class="form-control" autocomplete="new-password"
-                               placeholder="Yangi parolni qayta kiriting" required>
+                               placeholder="{{ t.new_password }}ni qayta kiriting" required>
                         <button type="button" class="prf-pw-toggle" data-toggle-password="id_new_password2" aria-label="Parolni ko'rsatish" title="Ko'rsatish">
                             <span class="prf-pw-toggle__icon prf-pw-toggle__icon--show" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none">
@@ -333,7 +333,7 @@
             </div>
 
             <div class="prf-pw-actions">
-                <button type="submit" class="btn btn-primary-gradient">🔒 Parolni yangilash</button>
+                <button type="submit" class="btn btn-primary-gradient">🔒 {{ t.update_password }}</button>
             </div>
         </form>
     </div>
@@ -351,12 +351,12 @@
 <div data-delete-modal class="delete-account-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
     <div class="delete-account-modal-card">
         <div class="delete-account-modal-icon">⚠️</div>
-        <h3 id="deleteModalTitle">Profilni o'chirmoqchimisiz?</h3>
-        <p>Barcha ma'lumotlaringiz, reytinglar va sevimlilar ro'yxati butunlay o'chib ketadi. Bu amalni ortga qaytarib bo'lmaydi.</p>
+        <h3 id="deleteModalTitle">{{ t.delete_profile_confirm }}</h3>
+        <p>{{ t.delete_profile_warning }}</p>
         <div class="delete-account-modal-actions">
-            <button type="button" class="delete-account-cancel-btn" data-delete-modal-close>Bekor qilish</button>
+            <button type="button" class="delete-account-cancel-btn" data-delete-modal-close>{{ t.cancel }}</button>
             <button type="button" class="btn btn-primary-gradient delete-account-confirm-btn prf-danger-confirm"
-                    onclick="document.getElementById('deleteAccountForm').submit()">Ha, o'chirish</button>
+                    onclick="document.getElementById('deleteAccountForm').submit()">{{ t.yes_delete }}</button>
         </div>
     </div>
 </div>
@@ -550,11 +550,11 @@ function togglePasswordSection() {
         if (!pw1 || !pw2 || !err) return true;
 
         if (pw2.value && pw1.value !== pw2.value) {
-            err.textContent = "Yangi parollar bir-biriga mos kelmadi.";
+            err.textContent = "{{ t.password_mismatch|escapejs }}";
             return false;
         }
 
-        if (err.textContent === "Yangi parollar bir-biriga mos kelmadi.") {
+        if (err.textContent === "{{ t.password_mismatch|escapejs }}") {
             err.textContent = '';
         }
         return true;
@@ -570,8 +570,8 @@ function togglePasswordSection() {
             input.type = makeVisible ? 'text' : 'password';
 
             this.classList.toggle('is-visible', makeVisible);
-            this.setAttribute('aria-label', makeVisible ? 'Parolni yashirish' : "Parolni ko'rsatish");
-            this.setAttribute('title', makeVisible ? 'Yashirish' : "Ko'rsatish");
+            this.setAttribute('aria-label', makeVisible ? '{{ t.hide_password|escapejs }}' : '{{ t.show_password|escapejs }}');
+            this.setAttribute('title', makeVisible ? '{{ t.hide_password|escapejs }}' : '{{ t.show_password|escapejs }}');
         });
     });
     var pw1 = document.getElementById('id_new_password1');
@@ -586,7 +586,7 @@ function togglePasswordSection() {
             openPasswordSection();
 
             if (!validatePasswordMatch()) {
-                showSnackbar("Yangi parollar bir-biriga mos kelmadi.", 'error');
+                showSnackbar("{{ t.password_mismatch|escapejs }}", 'error');
                 return;
             }
 
@@ -610,16 +610,16 @@ function togglePasswordSection() {
                             if (errors.length) setPasswordError(field, errors[0]);
                         });
                     }
-                    showSnackbar(data.message || 'Parolni yangilashda xatolik yuz berdi.', 'error');
+                    showSnackbar(data.message || "{{ t.password_change_error|escapejs }}", 'error');
                     return;
                 }
 
                 form.reset();
                 clearPasswordErrors();
-                showSnackbar(data.message || "Parol muvaffaqiyatli o'zgartirildi.", 'success');
+                showSnackbar(data.message || "{{ t.password_changed|escapejs }}", 'success');
             } catch (error) {
                 console.error(error);
-                showSnackbar('Parolni yangilashda xatolik yuz berdi.', 'error');
+                showSnackbar("{{ t.password_change_error|escapejs }}", 'error');
             }
         });
     }
@@ -669,10 +669,10 @@ function togglePasswordSection() {
     const isCancelled = params.get("cancelled") === "1";
 
     if (isUpdated) {
-        showEditSnackbar("Profil ma'lumotlari muvaffaqiyatli saqlandi.", "success");
+        showEditSnackbar("{{ t.profile_updated|escapejs }}", "success");
         params.delete("updated");
     } else if (isCancelled) {
-        showEditSnackbar("Tahrirlash bekor qilindi.", "error");
+        showEditSnackbar("{{ t.edit_cancelled|default:'Tahrirlash bekor qilindi.'|escapejs }}", "error");
         params.delete("cancelled");
     }
 

@@ -24,7 +24,7 @@
                                 name="q"
                                 id="id_q"
                                 class="form-control"
-                                placeholder="{{ t.search_placeholder|default:"Film nomi bo'yicha qidiring..." }}"
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 value="{{ selected_query }}"
                                 autocomplete="off"
                             >
@@ -171,50 +171,19 @@
 
     if (!form || !searchInput || !resultsContainer) return;
 
-    const pageLang = (document.documentElement.getAttribute("lang") || "uz").slice(0, 2).toLowerCase();
-    const lang = ["uz", "ru", "en"].includes(pageLang) ? pageLang : "uz";
-
     const UI = {
-        uz: {
-            rating: "Reyting",
-            year: "Yil",
-            count: "Baho soni",
-            title: "Nom",
-            descending: "Kamayish",
-            ascending: "O‘sish",
-            success: "Muvaffaqiyatli",
-            removed: "Olib tashlandi",
-            close: "Yopish",
-            favoriteAdded: "sevimlilarga qo‘shildi.",
-            favoriteRemoved: "sevimlilardan olib tashlandi.",
-        },
-        ru: {
-            rating: "Рейтинг",
-            year: "Год",
-            count: "Количество оценок",
-            title: "Название",
-            descending: "По убыванию",
-            ascending: "По возрастанию",
-            success: "Успешно",
-            removed: "Удалено",
-            close: "Закрыть",
-            favoriteAdded: "добавлен в избранное.",
-            favoriteRemoved: "удалён из избранного.",
-        },
-        en: {
-            rating: "Rating",
-            year: "Year",
-            count: "Rating count",
-            title: "Title",
-            descending: "Descending",
-            ascending: "Ascending",
-            success: "Success",
-            removed: "Removed",
-            close: "Close",
-            favoriteAdded: "added to favorites.",
-            favoriteRemoved: "removed from favorites.",
-        },
-    }[lang];
+        rating: "{{ t.rating|escapejs }}",
+        year: "{{ t.year|escapejs }}",
+        count: "{{ t.rating_count|escapejs }}",
+        title: "{{ t.title|escapejs }}",
+        descending: "{{ t.descending|escapejs }}",
+        ascending: "{{ t.ascending|escapejs }}",
+        success: "{{ t.success|escapejs }}",
+        removed: "{{ t.removed|escapejs }}",
+        close: "{{ t.close|escapejs }}",
+        favoriteAdded: "{{ t.movie_added_to_favorites|escapejs }}",
+        favoriteRemoved: "{{ t.movie_removed_from_favorites|escapejs }}",
+    };
 
     let timer = null;
     let controller = null;
@@ -340,12 +309,6 @@
         return params.toString();
     }
 
-    function translateNewResults() {
-        if (window.translateUiTree && typeof window.translateUiTree === "function") {
-            window.translateUiTree(resultsContainer);
-        }
-    }
-
     async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
         const requestId = ++requestSequence;
         const activeElement = document.activeElement;
@@ -388,7 +351,6 @@
             if (!nextResults) return;
 
             resultsContainer.innerHTML = nextResults.innerHTML;
-            translateNewResults();
 
             if (pushUrl) {
                 window.history.replaceState({}, "", targetUrl);

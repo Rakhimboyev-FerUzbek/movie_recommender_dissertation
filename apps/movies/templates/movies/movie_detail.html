@@ -7,7 +7,7 @@
 <section class="movie-detail-page detail-v4-page">
     <div class="container">
         <a href="{{ back_url }}" class="back-link mb-3 d-inline-block">
-            ← Filmga qaytish
+            ← {{ t.back_to_movies }}
         </a>
 
         <div class="detail-v4-top-area fade-up">
@@ -36,8 +36,8 @@
                                 type="submit"
                                 class="detail-favorite-icon-btn detail-favorite-icon-btn--title {% if is_favorite %}is-active{% endif %}"
                                 id="favoriteToggleButton"
-                                title="Favorites"
-                                aria-label="Favorites"
+                                title="{{ t.favorite }}"
+                                aria-label="{{ t.favorite }}"
                                 aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
                             >
                                 <span class="favorite-heart-icon" aria-hidden="true">♥</span>
@@ -47,8 +47,8 @@
                         <a
                             href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"
                             class="detail-favorite-icon-btn detail-favorite-icon-btn--title"
-                            title="Favorites"
-                            aria-label="Favorites"
+                            title="{{ t.favorite }}"
+                            aria-label="{{ t.favorite }}"
                         >
                             <span class="favorite-heart-icon" aria-hidden="true">♥</span>
                         </a>
@@ -65,7 +65,7 @@
                                     <span class="detail-stat-pill">{{ movie.duration_minutes|format_runtime }}</span>
                                 {% endif %}
                                 <span class="detail-stat-pill rating-pill">★ {{ movie.avg_rating|floatformat:1 }}</span>
-                                <span class="detail-stat-pill">{{ movie.rating_count }} ta baho</span>
+                                <span class="detail-stat-pill">{{ movie.rating_count }} {{ t.ratings_count_suffix }}</span>
                                 </span>
                             </div>
 
@@ -79,7 +79,7 @@
 
                         <div class="detail-v4-inline-rating" id="rating-section">
                             {% if user.is_authenticated %}
-                                <div class="detail-v4-inline-rating-head">Reyting berish</div>
+                                <div class="detail-v4-inline-rating-head">{{ t.rate_this_movie }}</div>
 
                                 <form method="post" action="{% url 'movie_rate' movie.slug %}" class="detail-v4-inline-rating-form" id="inlineRatingForm">
                                     {% csrf_token %}
@@ -103,7 +103,7 @@
                                     <div class="detail-v4-review-inline is-hidden" id="reviewEditorWrap">
                                         <div class="detail-v4-review-row">
                                             {{ rating_form.review }}
-                                            <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                                            <button type="submit" class="btn btn-primary-gradient btn-smish">{{ t.save }}</button>
                                         </div>
                                         <div class="text-danger small" id="ratingErrors"></div>
                                     </div>
@@ -113,17 +113,17 @@
                                         id="reviewDisplayWrap"
                                     >
                                         <span id="reviewDisplayText">{{ user_rating.review|default:"" }}</span>
-                                        <button type="button" class="detail-v4-edit-review-btn" id="editReviewBtn" aria-label="Tahrirlash">✎</button>
+                                        <button type="button" class="detail-v4-edit-review-btn" id="editReviewBtn" aria-label="{{ t.edit }}">✎</button>
                                     </div>
                                 </form>
                             {% else %}
                                 <div class="detail-v4-login-inline">
-                                    <span class="detail-v4-inline-rating-head">Reyting berish</span>
+                                    <span class="detail-v4-inline-rating-head">{{ t.rate_this_movie }}</span>
                                     <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-primary-gradient btn-smish">
-                                        Kirish
+                                        {{ t.login }}
                                     </a>
                                 </div>
-                                <p class="detail-v4-login-help">Reyting berish uchun tizimga kiring.</p>
+                                <p class="detail-v4-login-help">{{ t.rate_login_required }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -131,40 +131,40 @@
 
                 <div class="detail-v4-content-grid">
                     <div class="glass-card detail-v4-overview-card">
-                        <h4>Tavsif</h4>
-                        <p class="mb-0">{{ movie.overview|default:"Hozircha tavsif mavjud emas." }}</p>
+                        <h4>{{ t.overview }}</h4>
+                        <p class="mb-0">{{ movie.overview|default:t.no_overview }}</p>
                     </div>
 
                     <div class="detail-v4-info-cast-grid">
                         <div class="glass-card detail-v4-info-card detail-v4-equal-card">
-                            <h4>Film ma'lumotlari</h4>
+                            <h4>{{ t.movie_information }}</h4>
 
                             <div class="movie-info-grid compact mt-3">
                                 <div class="movie-info-item">
-                                    <span>Til</span>
-                                    <strong>{{ movie.language|default:"Mavjud emas" }}</strong>
+                                    <span>{{ t.language }}</span>
+                                    <strong>{{ movie.language|default:t.not_available }}</strong>
                                 </div>
 
                                 <div class="movie-info-item">
-                                    <span>Mamlakat</span>
-                                    <strong>{{ movie.country|default:"Mavjud emas" }}</strong>
+                                    <span>{{ t.country_label }}</span>
+                                    <strong>{{ movie.country|default:t.not_available }}</strong>
                                 </div>
 
                                 <div class="movie-info-item full">
-                                    <span>Rejissyor</span>
-                                    <strong>{{ movie.director|default:"Mavjud emas" }}</strong>
+                                    <span>{{ t.director_label }}</span>
+                                    <strong>{{ movie.director|default:t.not_available }}</strong>
                                 </div>
                             </div>
                         </div>
 
                         <div class="glass-card detail-v4-cast-card detail-v4-equal-card">
-                            <h4>Aktyorlar tarkibi</h4>
+                            <h4>{{ t.cast_label }}</h4>
 
                             <div class="genre-chip-wrap mt-3 detail-v4-cast-wrap">
                                 {% for actor in movie.cast_names %}
                                     <span class="genre-chip">{{ actor }}</span>
                                 {% empty %}
-                                    <span class="text-muted">Aktyorlar ma'lumoti mavjud emas.</span>
+                                    <span class="text-muted">{{ t.cast_not_available }}</span>
                                 {% endfor %}
                             </div>
                         </div>
@@ -175,7 +175,7 @@
 
         {% if show_recommendation_reason %}
         <div class="glass-card detail-v4-reason-card mt-4">
-            <div class="detail-v4-reason-head">Nega tavsiya qilindi?</div>
+            <div class="detail-v4-reason-head">{{ t.why_recommended }}</div>
 
             {% if recommendation_reason %}
                 <div class="detail-v4-reason-body">
@@ -198,7 +198,7 @@
 
                     {% if recommendation_reason.score_formula %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Score formulasi</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.score_formula }}</div>
                         <div class="detail-v4-reason-formula">
                             {{ recommendation_reason.score_formula }}
                         </div>
@@ -207,16 +207,16 @@
 
                     {% if recommendation_reason.score_breakdown %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Score breakdown</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.score_breakdown }}</div>
                         <div class="detail-v4-reason-breakdown">
                             {% for row in recommendation_reason.score_breakdown %}
                                 <div class="detail-v4-reason-break-card">
                                     <div class="detail-v4-reason-break-card__title">{{ row.label }}</div>
                                     <div class="detail-v4-reason-break-card__grid">
-                                        <span>Raw: <strong>{{ row.raw|floatformat:4 }}</strong></span>
-                                        <span>Normalized: <strong>{{ row.normalized|floatformat:4 }}</strong></span>
-                                        <span>Weight: <strong>{{ row.weight|floatformat:2 }}</strong></span>
-                                        <span>Contribution: <strong>{{ row.contribution|floatformat:4 }}</strong></span>
+                                        <span>{{ t.raw }} <strong>{{ row.raw|floatformat:4 }}</strong></span>
+                                        <span>{{ t.normalized }} <strong>{{ row.normalized|floatformat:4 }}</strong></span>
+                                        <span>{{ t.weight }} <strong>{{ row.weight|floatformat:2 }}</strong></span>
+                                        <span>{{ t.contribution }} <strong>{{ row.contribution|floatformat:4 }}</strong></span>
                                     </div>
                                     <div class="detail-v4-reason-break-card__formula">
                                         {{ row.formula }}
@@ -229,7 +229,7 @@
 
                     {% if recommendation_reason.evidence %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Asosiy dalillar</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.key_evidence }}</div>
                         <div class="detail-v4-reason-evidence">
                             {% for ev in recommendation_reason.evidence %}
                                 <div class="detail-v4-reason-evidence-item">
@@ -243,7 +243,7 @@
 
                     {% if recommendation_reason.matched_genres %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Mos janrlar</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.matched_genres }}</div>
                         <div class="genre-chip-wrap mt-2">
                             {% for genre_name in recommendation_reason.matched_genres %}
                                 <span class="genre-chip">{{ genre_name }}</span>
@@ -254,7 +254,7 @@
 
                     {% if recommendation_reason.reference_titles %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Tayanilgan filmlar</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.reference_movies }}</div>
                         <div class="genre-chip-wrap mt-2">
                             {% for title in recommendation_reason.reference_titles %}
                                 <span class="detail-v4-reason-weight">{{ title }}</span>
@@ -265,7 +265,7 @@
 
                     {% if recommendation_reason.weights %}
                     <div class="detail-v4-reason-subblock">
-                        <div class="detail-v4-reason-subtitle">Hybrid vaznlari</div>
+                        <div class="detail-v4-reason-subtitle">{{ t.hybrid_weights_detail }}</div>
                         <div class="detail-v4-reason-weights">
                             <span class="detail-v4-reason-weight">Content: {{ recommendation_reason.weights.content|default:0|floatformat:2 }}</span>
                             <span class="detail-v4-reason-weight">Item: {{ recommendation_reason.weights.item|default:0|floatformat:2 }}</span>
@@ -277,7 +277,7 @@
                 </div>
             {% else %}
                 <div class="detail-v4-reason-body">
-                    Bu film tavsiyalar oqimidan ochilgan, lekin explainability topilmadi.
+                    {{ t.explainability_not_found }}
                 </div>
             {% endif %}
         </div>
@@ -288,12 +288,12 @@
                 <ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="trailer-tab" data-bs-toggle="pill" data-bs-target="#trailer-pane" type="button" role="tab" aria-controls="trailer-pane" aria-selected="true">
-                            TREYLER
+                            {{ t.trailer }}
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="watch-tab" data-bs-toggle="pill" data-bs-target="#watch-pane" type="button" role="tab" aria-controls="watch-pane" aria-selected="false">
-                            ONLINE KO'RISH
+                            {{ t.watch_online }}
                         </button>
                     </li>
                 </ul>
@@ -305,7 +305,7 @@
                                 <div class="detail-v4-media-frame">
                                     <video controls preload="metadata" class="movie-video-player">
                                         <source src="{{ movie.full_video_file.url }}">
-                                        Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                        {{ t.browser_no_video }}
                                     </video>
                                 </div>
                             </div>
@@ -314,7 +314,7 @@
                                 <div class="detail-v4-media-frame">
                                     <video controls preload="metadata" class="movie-video-player">
                                         <source src="{{ movie.full_video_url }}">
-                                        Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi.
+                                        {{ t.browser_no_video }}
                                     </video>
                                 </div>
                             </div>
@@ -332,8 +332,8 @@
                         {% else %}
                             <div class="detail-v4-media-center">
                                 <div class="detail-v4-media-empty">
-                                    <h5>No Video</h5>
-                                    <p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
+                                    <h5>{{ t.no_video }}</h5>
+                                    <p>{{ t.full_movie_not_attached }}</p>
                                 </div>
                             </div>
                         {% endif %}
@@ -355,8 +355,8 @@
                         {% else %}
                             <div class="detail-v4-media-center">
                                 <div class="detail-v4-media-empty">
-                                    <h5>No Video</h5>
-                                    <p>Hozircha treyler topilmadi.</p>
+                                    <h5>{{ t.no_video }}</h5>
+                                    <p>{{ t.trailer_not_found }}</p>
                                 </div>
                             </div>
                         {% endif %}
@@ -366,8 +366,8 @@
 
             <div class="glass-card detail-v4-comments-card compact-comments-card" id="comments-section">
                 <div class="detail-v4-comments-head compact-head">
-                    <h4>Kommentariyalar</h4>
-                    <p>Film haqidagi fikringizni yozib qoldiring.</p>
+                    <h4>{{ t.comments }}</h4>
+                    <p>{{ t.comment_section_desc }}</p>
                 </div>
 
                 {% if user.is_authenticated %}
@@ -388,9 +388,9 @@
                 </form>
                 {% else %}
                     <div class="login-required-box compact-box mb-3">
-                        <p class="mb-2">Kommentariya yozish uchun tizimga kiring.</p>
+                        <p class="mb-2">{{ t.login_to_comment }}</p>
                         <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-soft btn-smish">
-                            Kirish
+                            {{ t.login }}
                         </a>
                     </div>
                 {% endif %}
@@ -413,8 +413,8 @@
                                         <button
                                             type="submit"
                                             class="comment-delete-btn"
-                                            title="O'chirish"
-                                            aria-label="Kommentariyani o'chirish"
+                                            title="{{ t.delete }}"
+                                            aria-label="{{ t.delete_comment }}"
                                         >
                                             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                 <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
@@ -449,14 +449,14 @@
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                 <textarea name="body" class="form-control" rows="3" maxlength="2000">{{ comment.body }}</textarea>
                                 <div class="comment-edit-form-actions">
-                                    <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                                    <button type="submit" class="btn btn-primary-gradient btn-smish">{{ t.save }}</button>
                                     <button
                                         type="button"
                                         class="btn btn-outline-soft btn-smish comment-edit-cancel-btn"
                                         data-edit-target="edit-form-{{ comment.id }}"
                                         data-display-target="display-body-{{ comment.id }}"
                                     >
-                                        Bekor qilish
+                                        {{ t.cancel }}
                                     </button>
                                 </div>
                             </form>
@@ -470,8 +470,8 @@
                                         class="comment-edit-btn bottom-edit-btn"
                                         data-edit-target="edit-form-{{ comment.id }}"
                                         data-display-target="display-body-{{ comment.id }}"
-                                        title="Tahrirlash"
-                                        aria-label="Kommentariyani tahrirlash"
+                                        title="{{ t.edit }}"
+                                        aria-label="{{ t.edit_comment }}"
                                     >
                                         ✎
                                     </button>
@@ -490,8 +490,8 @@
                     </article>
                     {% empty %}
                     <div class="media-empty-state compact" id="commentsEmptyState">
-                        <h5>Hozircha kommentariya yo‘q</h5>
-                        <p>Birinchi bo‘lib fikr qoldiring.</p>
+                        <h5>{{ t.no_comments_yet }}</h5>
+                        <p>{{ t.first_comment_hint }}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -504,7 +504,7 @@
 <div id="kc-snackbar" class="kc-snackbar" role="alert" aria-live="polite" aria-atomic="true">
     <span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
     <span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
-    <button class="kc-snackbar-close" id="kc-snackbar-close" aria-label="Yopish">×</button>
+    <button class="kc-snackbar-close" id="kc-snackbar-close" aria-label="{{ t.close }}">×</button>
 </div>
 
 <div id="commentDeleteModal" class="comment-delete-modal" aria-hidden="true">
@@ -516,19 +516,19 @@
         </div>
 
         <h3 class="comment-delete-modal__title" id="commentDeleteModalTitle">
-            Kommentariyani o‘chirmoqchimisiz?
+            {{ t.delete_comment_confirm }}
         </h3>
 
         <p class="comment-delete-modal__text">
-            Ushbu kommentariya butunlay o‘chib ketadi. Bu amalni ortga qaytarib bo‘lmaydi.
+            {{ t.delete_comment_warning }}
         </p>
 
         <div class="comment-delete-modal__actions">
             <button type="button" class="comment-delete-modal__btn comment-delete-modal__btn--cancel" id="commentDeleteCancelBtn">
-                Bekor qilish
+                {{ t.cancel }}
             </button>
             <button type="button" class="comment-delete-modal__btn comment-delete-modal__btn--confirm" id="commentDeleteConfirmBtn">
-                Ha, o‘chirish
+                {{ t.yes_delete }}
             </button>
         </div>
     </div>
@@ -619,7 +619,7 @@
         pendingDeleteForm = null;
 
         if (showCancelSnackbar) {
-            showSnackbar("Kommentariyani o‘chirish bekor qilindi.", "error");
+            showSnackbar("{{ t.comment_delete_cancelled|escapejs }}", "error");
         }
     }
 
@@ -652,7 +652,7 @@
                 const { response, data } = await postFormAjax(activeForm);
 
                 if (!response.ok || !data.ok) {
-                    showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
+                    showSnackbar("{{ t.comment_delete_error|escapejs }}", "error");
                     return;
                 }
 
@@ -665,10 +665,10 @@
 
                 ensureEmptyState();
                 closeDeleteModal(false);
-                showSnackbar(data.message || "Kommentariya o'chirildi.", "success");
+                showSnackbar(data.message || "{{ t.comment_deleted|escapejs }}", "success");
             } catch (error) {
                 console.error(error);
-                showSnackbar("Kommentariyani o'chirishda xatolik yuz berdi.", "error");
+                showSnackbar("{{ t.comment_delete_error|escapejs }}", "error");
             } finally {
                 deleteConfirmBtn.disabled = false;
             }
@@ -823,7 +823,7 @@
                         <form method="post" action="${deleteUrl}" class="comment-delete-form comment-delete-form--inline" data-comment-id="${comment.id}">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                             <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
-                            <button type="submit" class="comment-delete-btn" title="O'chirish" aria-label="Kommentariyani o'chirish">
+                            <button type="submit" class="comment-delete-btn" title="{{ t.delete|escapejs }}" aria-label="{{ t.delete_comment|escapejs }}">
                                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
                                 </svg>
@@ -849,14 +849,14 @@
                     <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
                     <textarea name="body" class="form-control" rows="3" maxlength="2000">${escapeHtml(comment.body)}</textarea>
                     <div class="comment-edit-form-actions">
-                        <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                        <button type="submit" class="btn btn-primary-gradient btn-smish">{{ t.save|escapejs }}</button>
                         <button
                             type="button"
                             class="btn btn-outline-soft btn-smish comment-edit-cancel-btn"
                             data-edit-target="edit-form-${comment.id}"
                             data-display-target="display-body-${comment.id}"
                         >
-                            Bekor qilish
+                            {{ t.cancel|escapejs }}
                         </button>
                     </div>
                 </form>
@@ -868,8 +868,8 @@
                             class="comment-edit-btn bottom-edit-btn"
                             data-edit-target="edit-form-${comment.id}"
                             data-display-target="display-body-${comment.id}"
-                            title="Tahrirlash"
-                            aria-label="Kommentariyani tahrirlash"
+                            title="{{ t.edit|escapejs }}"
+                            aria-label="{{ t.edit_comment|escapejs }}"
                         >
                             ✎
                         </button>
@@ -888,8 +888,8 @@
         if (cards.length === 0 && !emptyState) {
             commentsList.insertAdjacentHTML("beforeend", `
                 <div class="media-empty-state compact" id="commentsEmptyState">
-                    <h5>Hozircha kommentariya yo‘q</h5>
-                    <p>Birinchi bo‘lib fikr qoldiring.</p>
+                    <h5>{{ t.no_comments_yet|escapejs }}</h5>
+                    <p>{{ t.first_comment_hint|escapejs }}</p>
                 </div>
             `);
         } else if (cards.length > 0 && emptyState) {
@@ -1022,10 +1022,10 @@
                 }
 
                 commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment, csrfToken));
-                showSnackbar(data.message || "Kommentariya qo'shildi.", "success");
+                showSnackbar(data.message || "{{ t.comment_added|escapejs }}", "success");
             } catch (error) {
                 console.error(error);
-                showSnackbar("Kommentariyani yuborishda xatolik yuz berdi.", "error");
+                showSnackbar("{{ t.comment_send_error|escapejs }}", "error");
             }
         });
     }
@@ -1039,7 +1039,7 @@
         try {
             const { response, data } = await postFormAjax(likeForm);
             if (!response.ok || !data.ok) {
-                showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
+                showSnackbar("{{ t.comment_like_error|escapejs }}", "error");
                 return;
             }
 
@@ -1056,7 +1056,7 @@
             }
         } catch (error) {
             console.error(error);
-            showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
+            showSnackbar("{{ t.comment_like_error|escapejs }}", "error");
         }
     });
 
@@ -1086,7 +1086,7 @@
             if (editForm) editForm.classList.add("is-hidden");
             if (displayBody) displayBody.classList.remove("is-hidden");
 
-            showSnackbar("Kommentariya tahrirlash bekor qilindi.", "error");
+            showSnackbar("{{ t.comment_edit_cancelled|escapejs }}", "error");
             return;
         }
     });
@@ -1101,7 +1101,7 @@
             const { response, data } = await postFormAjax(editForm);
 
             if (!response.ok || !data.ok) {
-                showSnackbar(data.message || "Kommentariyani saqlashda xatolik yuz berdi.", "error");
+                showSnackbar(data.message || "{{ t.comment_save_error|escapejs }}", "error");
                 return;
             }
 
@@ -1128,10 +1128,10 @@
             }
 
             editForm.classList.add("is-hidden");
-            showSnackbar(data.message || "Kommentariya tahrirlandi.", "success");
+            showSnackbar(data.message || "{{ t.comment_updated|escapejs }}", "success");
         } catch (error) {
             console.error(error);
-            showSnackbar("Kommentariyani saqlashda xatolik yuz berdi.", "error");
+            showSnackbar("{{ t.comment_save_error|escapejs }}", "error");
         }
     });
 
@@ -1164,9 +1164,9 @@
                 favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
 
                 if (data.is_favorite) {
-                    showSnackbar("Film sevimlilarga qo'shildi ♥", "success");
+                    showSnackbar("{{ t.movie_added_to_favorites|escapejs }}", "success");
                 } else {
-                    showSnackbar("Film sevimlilardan olib tashlandi", "error");
+                    showSnackbar("{{ t.movie_removed_from_favorites|escapejs }}", "error");
                 }
             } catch (error) {
                 console.error(error);

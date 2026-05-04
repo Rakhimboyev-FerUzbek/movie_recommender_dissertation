@@ -20,9 +20,19 @@ from apps.interactions.forms import (
 )
 from apps.interactions.models import Comment, CommentLike, Favorite, Rating, WatchHistory
 from apps.movies.models import Movie
+from config.translations import get_translation
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+
+def _get_t(request):
+    lang = (
+        request.session.get("site_language")
+        or request.COOKIES.get("site_language")
+        or getattr(request, "LANGUAGE_CODE", "uz")
+    )
+    return get_translation(lang)
+
 
 def build_page_sequence(current_page: int, total_pages: int):
     if total_pages <= 11:
@@ -63,19 +73,21 @@ def _format_comment_timestamp(value):
     return timezone.localtime(value).strftime("%Y-%m-%d %H:%M:%S")
 
 
-def _comment_display_time(comment, *, force_updated: bool = False) -> str:
+def _comment_display_time(comment, *, force_updated: bool = False, t=None) -> str:
+    edited_prefix = (t or {}).get("edited_prefix", "Tahrirlandi")
+
     if force_updated:
-        return f"Tahrirlandi: {_format_comment_timestamp(comment.updated_at)}"
+        return f"{edited_prefix}: {_format_comment_timestamp(comment.updated_at)}"
 
     if comment.updated_at and comment.created_at:
         delta_seconds = abs((comment.updated_at - comment.created_at).total_seconds())
         if delta_seconds >= 1:
-            return f"Tahrirlandi: {_format_comment_timestamp(comment.updated_at)}"
+            return f"{edited_prefix}: {_format_comment_timestamp(comment.updated_at)}"
 
     return _format_comment_timestamp(comment.created_at)
 
 
-def _serialize_comment(comment, request_user=None, *, force_updated: bool = False):
+def _serialize_comment(comment, request_user=None, *, force_updated: bool = False, t=None):
     author = comment.user.get_full_name().strip() or comment.user.username
     like_count = getattr(comment, "like_count", None)
     if like_count is None:
@@ -93,7 +105,7 @@ def _serialize_comment(comment, request_user=None, *, force_updated: bool = Fals
         "author": author,
         "created_at": _format_comment_timestamp(comment.created_at),
         "updated_at": _format_comment_timestamp(comment.updated_at),
-        "display_time": _comment_display_time(comment, force_updated=force_updated),
+        "display_time": _comment_display_time(comment, force_updated=force_updated, t=t),
         "like_count": like_count,
         "is_own": is_own,
         "urls": {
@@ -179,6 +191,7 @@ def _history_ordering(sort_key: str):
 @login_required
 @require_POST
 def submit_rating_view(request, slug):
+    t = _get_t(request)
     movie = get_object_or_404(Movie, slug=slug, is_active=True)
     form = RatingForm(request.POST)
 
@@ -199,11 +212,11 @@ def submit_rating_view(request, slug):
                 "review": rating_obj.review or "",
             })
 
-        messages.success(request, "Reyting saqlandi.")
+        messages.success(request, t.get("rating_saved", "Reyting saqlandi."))
     else:
         if _is_ajax(request):
             return JsonResponse({"ok": False, "errors": form.errors}, status=400)
-        messages.error(request, "Reytingni saqlashda xatolik yuz berdi.")
+        messages.error(request, t.get("rating_save_error", "Reytingni saqlashda xatolik yuz berdi."))
 
     return _redirect_to_movie_detail(
         request,
@@ -216,6 +229,7 @@ def submit_rating_view(request, slug):
 @login_required
 @require_POST
 def submit_comment_view(request, slug):
+    t = _get_t(request)
     movie = get_object_or_404(Movie, slug=slug, is_active=True)
     form = CommentForm(request.POST)
 
@@ -229,15 +243,15 @@ def submit_comment_view(request, slug):
         if _is_ajax(request):
             return JsonResponse({
                 "ok": True,
-                "message": "Kommentariya qo'shildi.",
-                "comment": _serialize_comment(comment, request.user),
+                "message": t.get("comment_added", "Kommentariya qo‘shildi."),
+                "comment": _serialize_comment(comment, request.user, t=t),
             })
 
-        messages.success(request, "Kommentariya qo'shildi.")
+        messages.success(request, t.get("comment_added", "Kommentariya qo‘shildi."))
     else:
         if _is_ajax(request):
             return JsonResponse({"ok": False, "errors": form.errors}, status=400)
-        messages.error(request, "Kommentariya yuborilmadi.")
+        messages.error(request, t.get("comment_send_error", "Kommentariya yuborilmadi."))
 
     return _redirect_to_movie_detail(
         request,
@@ -250,12 +264,13 @@ def submit_comment_view(request, slug):
 @login_required
 @require_POST
 def edit_comment_view(request, comment_id):
+    t = _get_t(request)
     comment = get_object_or_404(Comment.objects.select_related("movie"), pk=comment_id)
 
     if comment.user_id != request.user.id:
         if _is_ajax(request):
             return JsonResponse({"ok": False, "error": "Forbidden"}, status=403)
-        messages.error(request, "Siz faqat o'zingizning kommentariyangizni tahrirlay olasiz.")
+        messages.error(request, t.get("comment_edit_forbidden", "Siz faqat o‘zingizning kommentariyangizni tahrirlay olasiz."))
         return _redirect_to_movie_detail(
             request,
             slug=comment.movie.slug,
@@ -267,10 +282,10 @@ def edit_comment_view(request, comment_id):
     if not body:
         if _is_ajax(request):
             return JsonResponse(
-                {"ok": False, "errors": {"body": ["Kommentariya bo'sh bo'lishi mumkin emas."]}},
+                {"ok": False, "errors": {"body": [t.get("comment_cannot_be_empty", "Kommentariya bo‘sh bo‘lishi mumkin emas.")]}},
                 status=400,
             )
-        messages.error(request, "Kommentariya bo'sh bo'lishi mumkin emas.")
+        messages.error(request, t.get("comment_cannot_be_empty", "Kommentariya bo‘sh bo‘lishi mumkin emas."))
         return _redirect_to_movie_detail(
             request,
             slug=comment.movie.slug,
@@ -284,11 +299,11 @@ def edit_comment_view(request, comment_id):
     if _is_ajax(request):
         return JsonResponse({
             "ok": True,
-            "message": "Kommentariya tahrirlandi.",
-            "comment": _serialize_comment(comment, request.user, force_updated=True),
+            "message": t.get("comment_updated", "Kommentariya tahrirlandi."),
+            "comment": _serialize_comment(comment, request.user, force_updated=True, t=t),
         })
 
-    messages.success(request, "Kommentariya tahrirlandi.")
+    messages.success(request, t.get("comment_updated", "Kommentariya tahrirlandi."))
     return _redirect_to_movie_detail(
         request,
         slug=comment.movie.slug,
@@ -300,12 +315,13 @@ def edit_comment_view(request, comment_id):
 @login_required
 @require_POST
 def delete_comment_view(request, comment_id):
+    t = _get_t(request)
     comment = get_object_or_404(Comment.objects.select_related("movie", "user"), pk=comment_id)
 
     if comment.user_id != request.user.id:
         if _is_ajax(request):
             return JsonResponse({"ok": False, "error": "Forbidden"}, status=403)
-        messages.error(request, "Siz faqat o'zingizning kommentariyangizni o'chira olasiz.")
+        messages.error(request, t.get("comment_delete_forbidden", "Siz faqat o‘zingizning kommentariyangizni o‘chira olasiz."))
         return _redirect_to_movie_detail(
             request,
             slug=comment.movie.slug,
@@ -320,11 +336,11 @@ def delete_comment_view(request, comment_id):
     if _is_ajax(request):
         return JsonResponse({
             "ok": True,
-            "message": "Kommentariya o'chirildi.",
+            "message": t.get("comment_deleted", "Kommentariya o‘chirildi."),
             "comment_id": comment_id_value,
         })
 
-    messages.success(request, "Kommentariya o'chirildi.")
+    messages.success(request, t.get("comment_deleted", "Kommentariya o‘chirildi."))
     return _redirect_to_movie_detail(
         request,
         slug=movie_slug,
@@ -365,6 +381,7 @@ def toggle_comment_like_view(request, comment_id):
 @login_required
 @require_POST
 def toggle_favorite_view(request, slug):
+    t = _get_t(request)
     movie = get_object_or_404(Movie, slug=slug, is_active=True)
     favorite, created = Favorite.objects.get_or_create(user=request.user, movie=movie)
 
@@ -382,9 +399,9 @@ def toggle_favorite_view(request, slug):
         })
 
     if action == "added":
-        messages.success(request, f'"{movie.title}" favorites ga qo‘shildi.')
+        messages.success(request, f'"{movie.title}" {t.get("movie_added_to_favorites", "sevimlilarga qo‘shildi")}.')
     else:
-        messages.success(request, f'"{movie.title}" favorites dan olib tashlandi.')
+        messages.success(request, f'"{movie.title}" {t.get("movie_removed_from_favorites", "sevimlilardan olib tashlandi")}.')
 
     safe_next = _safe_next_url(request, request.POST.get("next", ""))
     if safe_next:

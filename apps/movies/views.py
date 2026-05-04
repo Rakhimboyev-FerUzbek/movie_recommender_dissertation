@@ -20,6 +20,7 @@ from apps.movies.forms import MovieFilterForm
 from apps.movies.models import Movie
 from apps.movies.services.media import detect_full_video_mode, ensure_movie_trailer
 from apps.recommendations.services import RecommendationService
+from config.translations import get_translation
 
 
 def home_view(request):
@@ -260,6 +261,10 @@ def _build_recommendation_reason(
 
 
 def movie_detail_view(request, slug):
+    lang = request.session.get("site_language") or request.COOKIES.get("site_language") or getattr(request, "LANGUAGE_CODE", "uz")
+    t = get_translation(lang)
+    edited_prefix = t.get("edited_prefix", "Tahrirlandi")
+
     movie = get_object_or_404(
         Movie.objects.prefetch_related("genres"),
         slug=slug,
@@ -353,7 +358,7 @@ def movie_detail_view(request, slug):
         comment.is_own = request.user.is_authenticated and comment.user_id == request.user.id
         delta_seconds = abs((comment.updated_at - comment.created_at).total_seconds()) if comment.updated_at and comment.created_at else 0
         if delta_seconds >= 1:
-            comment.display_time = f"Tahrirlandi: {timezone.localtime(comment.updated_at).strftime('%Y-%m-%d %H:%M:%S')}"
+            comment.display_time = f"{edited_prefix}: {timezone.localtime(comment.updated_at).strftime('%Y-%m-%d %H:%M:%S')}"
         else:
             comment.display_time = timezone.localtime(comment.created_at).strftime('%Y-%m-%d %H:%M:%S')
 

@@ -20,20 +20,17 @@
                 </div>
 
                 <h1 class="hero-display-title">
-                    DUNYONING<br>
-                    ENG YAXSHI<br>
-                    <span class="title-accent">KINOLARI</span>
+                    {{ t.worlds }}<br>
+                    {{ t.best }}<br>
+                    <span class="title-accent">{{ t.movies_word }}</span>
                 </h1>
 
-                <p class="hero-lead">
-                    Milliondan ortiq filmlar ichidan siz sevadigan janrlarni toping.
-                    Reyting bering, ro'yxat tuzing — platforma qolganini o'zi bajaradi.
-                </p>
+                <p class="hero-lead">{{ t.hero_main_text }}</p>
 
                 <div class="hero-cta-row">
                     <a href="{% url 'movie_list' %}" class="btn-cinema-primary">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3a.5.5 0 0 1 .776-.416l7 4.5a.5.5 0 0 1 0 .832l-7 4.5A.5.5 0 0 1 6.5 12V3z"/></svg>
-                        Filmlarni ko'rish
+                        {{ t.browse_movies }}
                     </a>
 
                     {% if user.is_authenticated %}
@@ -44,7 +41,7 @@
                     {% else %}
                         <a href="{% url 'register' %}" class="btn-cinema-play-wrap">
                             <span class="btn-cinema-play" style="font-size:1.2rem; line-height:1;">→</span>
-                            <span class="hero-cta-label">Bepul ro'yxatdan o'tish</span>
+                            <span class="hero-cta-label">{{ t.sign_up_free }}</span>
                         </a>
                     {% endif %}
                 </div>
@@ -52,7 +49,7 @@
                 <!-- Live viewer badge -->
                 <div class="hero-live-badge">
                     <span class="live-dot"></span>
-                    <span class="live-text"><strong>2,847</strong> kishi hozir onlayn</span>
+                    <span class="live-text"><strong>2,847</strong> {{ t.people_online_now }}</span>
                 </div>
             </div>
 
@@ -60,7 +57,7 @@
             <div class="col-lg-6 col-xl-5 d-none d-lg-block">
                 <div class="hero-screen-preview">
                     <div class="screen-float-card sfc-users">
-                        <span class="sfc-label">📈 Bugungi ko'rishlar</span>
+                        <span class="sfc-label">📈 {{ t.views_today }}</span>
                         <span class="sfc-value">147,320</span>
                     </div>
 
@@ -103,20 +100,20 @@
                             </div>
                             <div class="preview-info">
                                 <div class="preview-genre-tag">Thriller • Crime</div>
-                                <div class="preview-title">Trending #1 Film</div>
+                                <div class="preview-title">{{ t.trending_top_film }}</div>
                                 <div class="preview-progress">
                                     <div class="preview-progress-fill"></div>
                                 </div>
                                 <div class="preview-meta">
                                     <span class="preview-time">1:38:14 / 2:22:00</span>
-                                    <span class="preview-rating">🔥 11,204 baho</span>
+                                    <span class="preview-rating">🔥 11,204 {{ t.ratings_count_suffix }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="screen-float-card sfc-rating">
-                        <span class="sfc-label">🏆 O'rtacha baho</span>
+                        <span class="sfc-label">🏆 {{ t.average_rating }}</span>
                         <span class="sfc-value">⭐ 7.9 / 10</span>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="{{ ui_lang|default:'uz' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>500 | Server xatoligi</title>
+    <title>500 | {{ t.server_error_title }}</title>
     <style>
         :root {
             --bg: #070b1a;
@@ -120,14 +120,11 @@
     <div class="error-shell">
         <div class="error-card">
             <div class="error-code">500</div>
-            <h1 class="error-title">Server xatoligi</h1>
-            <p class="error-text">
-                Ichki xatolik sababli sahifani yuklab bo‘lmadi.
-                Iltimos, keyinroq qayta urinib ko‘ring.
-            </p>
+            <h1 class="error-title">{{ t.server_error_title }}</h1>
+            <p class="error-text">{{ t.server_error_desc }}</p>
 
             <div class="error-actions">
-                <a href="/" class="error-btn error-btn--primary">Bosh sahifaga qaytish</a>
+                <a href="/" class="error-btn error-btn--primary">{{ t.back_home }}</a>
             </div>
         </div>
     </div>

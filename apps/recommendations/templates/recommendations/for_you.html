@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Shaxsiy tavsiyalar{% endblock %}
+{% block title %}{{ t.personal_recommendations }}{% endblock %}
 
 {% block content %}
 <section class="content-section auto-rec-page">
@@ -8,34 +8,32 @@
         <div class="glass-card auto-rec-hero mb-4">
             <div class="auto-rec-hero__layout">
                 <div class="auto-rec-hero__copy">
-                    <h1 class="mb-2">Shaxsiy tavsiyalar</h1>
-                    <p class="text-muted mb-0">
-                        Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.
-                    </p>
+                    <h1 class="mb-2">{{ t.personal_recommendations }}</h1>
+                    <p class="text-muted mb-0">{{ t.personal_recommendations_subtitle }}</p>
                 </div>
 
                 <div class="auto-rec-toolbar-shell">
                     <div class="auto-rec-toolbar">
                         <div class="auto-rec-toolbar__item">
-                            <label for="autoRecSearch" class="form-label">Qidiruv</label>
+                            <label for="autoRecSearch" class="form-label">{{ t.search }}</label>
                             <input
                                 type="text"
                                 id="autoRecSearch"
                                 class="form-control"
-                                placeholder="Film nomi bo‘yicha qidiring..."
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 autocomplete="off"
                             >
                         </div>
 
                         <div class="auto-rec-toolbar__item auto-rec-toolbar__item--sort">
-                            <label for="autoRecSortField" class="form-label">Saralash</label>
+                            <label for="autoRecSortField" class="form-label">{{ t.sort }}</label>
 
                             <div class="auto-rec-sort-row">
                                 <select id="autoRecSortField" class="form-select auto-rec-native-select">
-                                    <option value="rating">Reyting</option>
-                                    <option value="year">Yil</option>
-                                    <option value="count">Baho soni</option>
-                                    <option value="title">Nom</option>
+                                    <option value="rating">{{ t.rating }}</option>
+                                    <option value="year">{{ t.year }}</option>
+                                    <option value="count">{{ t.rating_count }}</option>
+                                    <option value="title">{{ t.title }}</option>
                                 </select>
 
                                 <button
@@ -43,11 +41,11 @@
                                     id="autoRecSortDirection"
                                     class="auto-rec-sort-direction"
                                     data-desc="true"
-                                    aria-label="Saralash yo‘nalishini almashtirish"
-                                    title="Saralash yo‘nalishini almashtirish"
+                                    aria-label="{{ t.sort_direction }}"
+                                    title="{{ t.sort_direction }}"
                                 >
                                     <span class="auto-rec-sort-direction__icon"></span>
-                                    <span class="auto-rec-sort-direction__text">Nom</span>
+                                    <span class="auto-rec-sort-direction__text"></span>
                                 </button>
                             </div>
                         </div>
@@ -104,9 +102,9 @@
                                     <button
                                         type="submit"
                                         class="auto-rec-fav-btn {% if item.movie.id in favorite_movie_ids %}is-active{% endif %}"
-                                        aria-label="Favorites"
+                                        aria-label="{{ t.favorite }}"
                                         aria-pressed="{% if item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
-                                        title="Favorites"
+                                        title="{{ t.favorite }}"
                                     >
                                         <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
                                     </button>
@@ -114,7 +112,7 @@
                             </div>
 
                             <div class="auto-rec-card__country">
-                                {{ item.movie.country|default:"Noma'lum davlat" }}
+                                {{ item.movie.country|default:t.unknown_country }}
                             </div>
 
                             <div class="auto-rec-card__stats">
@@ -127,7 +125,7 @@
                                 </span>
 
                                 <span class="auto-rec-pill">
-                                    {{ item.rating_count }} ta baho
+                                    {{ item.rating_count }} {{ t.ratings_count_suffix }}
                                 </span>
                             </div>
 
@@ -144,8 +142,8 @@
             <div id="autoRecSentinel" class="auto-rec-sentinel" aria-hidden="true"></div>
         {% else %}
             <div class="empty-state-card">
-                <h4 class="mb-2">Hozircha tavsiya shakllantirilmadi</h4>
-                <p class="mb-0">Bir nechta filmga baho bering yoki profil janrlarini belgilang.</p>
+                <h4 class="mb-2">{{ t.no_recommendations_yet }}</h4>
+                <p class="mb-0">{{ t.no_recommendations_hint }}</p>
             </div>
         {% endif %}
 
@@ -207,8 +205,8 @@
 
         const safeTitle = escapeHtml(movieTitle);
         const text = variant === "success"
-            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilarga qo'shildi.`
-            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilardan olib tashlandi.`;
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_added_to_favorites|escapejs }}`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_removed_from_favorites|escapejs }}`;
 
         item.innerHTML = `
             <div class="auto-rec-snackbar__icon" aria-hidden="true">
@@ -218,10 +216,10 @@
                 }
             </div>
             <div class="auto-rec-snackbar__content">
-                <div class="auto-rec-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="auto-rec-snackbar__title">${variant === "success" ? "{{ t.success|escapejs }}" : "{{ t.removed|escapejs }}"}</div>
                 <div class="auto-rec-snackbar__text">${text}</div>
             </div>
-            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="{{ t.close|escapejs }}">×</button>
         `;
 
         snackbarStack.appendChild(item);
@@ -351,7 +349,7 @@
 
         function syncValue() {
             const selected = selectEl.options[selectEl.selectedIndex];
-            value.textContent = selected ? selected.textContent : "Tanlang";
+            value.textContent = selected ? selected.textContent : "{{ t.sort|escapejs }}";
             menu.querySelectorAll(".auto-rec-select__option").forEach(btn => {
                 btn.classList.toggle("is-active", btn.dataset.value === selectEl.value);
             });

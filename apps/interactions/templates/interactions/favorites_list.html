@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Favorites{% endblock %}
+{% block title %}{{ t.favorites_page_title }}{% endblock %}
 
 {% block content %}
 <section class="interaction-page">
@@ -9,8 +9,8 @@
             <div class="interaction-page-top-main">
                 <div class="interaction-page-head interaction-page-head--compact">
                     <div>
-                        <h1>Favorites</h1>
-                        <p>Saqlab qo'yilgan filmlar ro'yxati.</p>
+                        <h1>{{ t.favorites_page_title }}</h1>
+                        <p>{{ t.favorites_page_description }}</p>
                     </div>
                 </div>
             </div>
@@ -19,35 +19,35 @@
                 <form method="get" class="interaction-filter-form" id="interactionFilterForm">
                     <div class="interaction-filter-grid">
                         <div>
-                            <label class="form-label">Qidiruv</label>
+                            <label class="form-label">{{ t.search }}</label>
                             <input
                                 type="text"
                                 name="q"
                                 id="interactionSearchInput"
                                 class="form-control"
                                 value="{{ selected_query }}"
-                                placeholder="Film nomi bo'yicha qidiring..."
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 autocomplete="off"
                             >
                         </div>
 
                         <div>
-                            <label class="form-label">Saralash</label>
+                            <label class="form-label">{{ t.sort }}</label>
                             <input type="hidden" name="sort" id="interactionSortValue" value="{{ selected_sort }}">
 
                             <div class="interaction-sort-row">
                                 <div class="interaction-sort-select" id="interactionSortSelect">
                                     <button type="button" class="interaction-sort-select__trigger" id="interactionSortTrigger">
-                                        <span id="interactionSortTriggerLabel">Qo'shilgan sana</span>
+                                        <span id="interactionSortTriggerLabel">{{ t.added_date }}</span>
                                         <span class="interaction-sort-select__chevron"></span>
                                     </button>
 
                                     <div class="interaction-sort-select__menu" id="interactionSortMenu">
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="date">Qo'shilgan sana</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="title">Nom</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="year">Yil</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="rating">Reyting</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="count">Baho soni</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="date">{{ t.added_date }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="title">{{ t.title }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="year">{{ t.year }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="rating">{{ t.rating }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="count">{{ t.rating_count }}</button>
                                     </div>
                                 </div>
 
@@ -56,18 +56,18 @@
                                     id="interactionSortDirection"
                                     class="interaction-sort-direction"
                                     data-desc="true"
-                                    title="Saralash yo'nalishi"
-                                    aria-label="Saralash yo'nalishi"
+                                    title="{{ t.sort_direction }}"
+                                    aria-label="{{ t.sort_direction }}"
                                 >
                                     <span class="interaction-sort-direction__icon">↓</span>
-                                    <span class="interaction-sort-direction__text">Kamayish</span>
+                                    <span class="interaction-sort-direction__text">{{ t.descending }}</span>
                                 </button>
                             </div>
                         </div>
 
                         <div class="interaction-filter-actions">
-                            <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
-                            <a href="{% url 'favorites_list' %}" class="btn btn-outline-soft">Tozalash</a>
+                            <button type="submit" class="btn btn-primary-gradient">{{ t.apply }}</button>
+                            <a href="{% url 'favorites_list' %}" class="btn btn-outline-soft">{{ t.clear }}</a>
                         </div>
                     </div>
                 </form>
@@ -108,7 +108,7 @@
                                   data-movie-title="{{ favorite.movie.title|escape }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" class="favorite-remove-btn" title="Remove from favorites">
+                                <button type="submit" class="favorite-remove-btn" title="{{ t.movie_removed_from_favorites }}">
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                                 </button>
                             </form>
@@ -121,11 +121,11 @@
                             </span>
                             <span class="frc-count-badge">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                {{ favorite.movie.rating_count }} ta baho
+                                {{ favorite.movie.rating_count }} {{ t.ratings_count_suffix }}
                             </span>
                         </div>
                         <p class="interaction-overview">
-                            {{ favorite.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}
+                            {{ favorite.movie.overview|default:t.no_overview|truncatechars:160 }}
                         </p>
                         <div class="frc-footer">
                             <span class="frc-chip">
@@ -140,8 +140,8 @@
                 </article>
                 {% empty %}
                 <div class="glass-card empty-state-card full-span-card" id="favoritesEmptyState">
-                    <h4>Favorites hozircha bo'sh</h4>
-                    <p>Movie detail sahifasidagi yurakcha tugma orqali filmlarni saqlashingiz mumkin.</p>
+                    <h4>{{ t.favorites_empty_title }}</h4>
+                    <p>{{ t.favorites_empty_text }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -182,11 +182,11 @@
     let isLoadingMore = false;
 
     const FIELD_LABELS = {
-        date: "Qo'shilgan sana",
-        title: "Nom",
-        year: "Yil",
-        rating: "Reyting",
-        count: "Baho soni",
+        date: "{{ t.added_date|escapejs }}",
+        title: "{{ t.title|escapejs }}",
+        year: "{{ t.year|escapejs }}",
+        rating: "{{ t.rating|escapejs }}",
+        count: "{{ t.rating_count|escapejs }}",
     };
 
     function encodeSort(field, desc) {
@@ -216,7 +216,7 @@
 
     function syncSortUi() {
         const decoded = decodeSort(sortHidden.value);
-        sortLabel.textContent = FIELD_LABELS[decoded.field] || "Qo'shilgan sana";
+        sortLabel.textContent = FIELD_LABELS[decoded.field] || "{{ t.added_date|escapejs }}";
 
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
@@ -391,8 +391,8 @@
 
         const safeTitle = escapeHtml(movieTitle);
         const message = variant === "success"
-            ? `<span class="favorites-snackbar__movie">"${safeTitle}"</span> favorites ga qo'shildi.`
-            : `<span class="favorites-snackbar__movie">"${safeTitle}"</span> favorites dan olib tashlandi.`;
+            ? `<span class="favorites-snackbar__movie">"${safeTitle}"</span> {{ t.movie_added_to_favorites|escapejs }}`
+            : `<span class="favorites-snackbar__movie">"${safeTitle}"</span> {{ t.movie_removed_from_favorites|escapejs }}`;
 
         item.innerHTML = `
             <div class="favorites-snackbar__icon" aria-hidden="true">
@@ -402,10 +402,10 @@
                 }
             </div>
             <div class="favorites-snackbar__content">
-                <div class="favorites-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="favorites-snackbar__title">${variant === "success" ? "{{ t.success|escapejs }}" : "{{ t.removed|escapejs }}"}</div>
                 <div class="favorites-snackbar__text">${message}</div>
             </div>
-            <button type="button" class="favorites-snackbar__close" aria-label="Yopish">×</button>
+            <button type="button" class="favorites-snackbar__close" aria-label="{{ t.close|escapejs }}">×</button>
         `;
 
         snackbarStack.appendChild(item);
@@ -448,8 +448,8 @@
             empty.className = "glass-card empty-state-card full-span-card";
             empty.id = "favoritesEmptyState";
             empty.innerHTML = `
-                <h4>Favorites hozircha bo'sh</h4>
-                <p>Movie detail sahifasidagi yurakcha tugma orqali filmlarni saqlashingiz mumkin.</p>
+                <h4>{{ t.favorites_empty_title|escapejs }}</h4>
+                <p>{{ t.favorites_empty_text|escapejs }}</p>
             `;
             grid.appendChild(empty);
         }
