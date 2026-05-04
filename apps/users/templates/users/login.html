@@ -1,20 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}{{ t.login }}{% endblock %}
+{% block title %}{{ t.login|default:"Login" }}{% endblock %}
 
 {% block content %}
 <section class="auth-page">
     <div class="container">
         <div class="auth-shell auth-shell-login">
             <div class="auth-brand-panel fade-up">
-                <span class="hero-kicker">{{ t.site_name }}</span>
-                <h1>Kino olamiga qayting</h1>
-                <p>Saqlangan filmlar, reytinglar va shaxsiy tavsiyalaringizga kirish uchun akkauntingizni oching.</p>
+                <span class="hero-kicker">{{ t.site_name|default:"Movie Recommender" }}</span>
+
+                <h1>{{ t.login_hero_title|default:"Kino olamiga qayting" }}</h1>
+
+                <p>
+                    {{ t.login_hero_subtitle|default:"Saqlangan filmlar, reytinglar va shaxsiy tavsiyalaringizga kirish uchun akkauntingizga kiring." }}
+                </p>
             </div>
 
             <div class="auth-form-panel fade-up">
                 <div class="auth-card auth-card--login-compact">
-                    <h2>{{ t.login }}</h2>
+                    <h2>{{ t.login|default:"Kirish" }}</h2>
 
                     <form method="post">
                         {% csrf_token %}
@@ -26,24 +30,31 @@
                         <div class="mb-3">
                             <label class="form-label">{{ form.username.label }}</label>
                             {{ form.username }}
-                            <div class="text-danger small">{{ form.username.errors }}</div>
+                            {% if form.username.errors %}
+                                <div class="text-danger small">{{ form.username.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">{{ form.password.label }}</label>
+
                             <div class="auth-password-shell">
                                 {{ form.password }}
+
                                 <button
                                     type="button"
                                     class="auth-password-toggle"
                                     data-toggle-password="id_password"
-                                    aria-label="Parolni ko'rsatish"
+                                    data-show-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
+                                    data-hide-label="{{ t.hide_password|default:'Parolni yashirish' }}"
+                                    aria-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
                                     aria-pressed="false"
                                 >
                                     <svg class="auth-password-icon auth-password-icon--show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                         <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
                                         <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
                                     </svg>
+
                                     <svg class="auth-password-icon auth-password-icon--hide" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                         <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                                         <path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -52,15 +63,23 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div class="text-danger small">{{ form.password.errors }}</div>
+
+                            {% if form.password.errors %}
+                                <div class="text-danger small">{{ form.password.errors }}</div>
+                            {% endif %}
                         </div>
 
                         {% if next %}
                             <input type="hidden" name="next" value="{{ next }}">
                         {% endif %}
 
-                        <button type="submit" class="btn btn-primary-gradient w-100 mb-3">{{ t.login }}</button>
-                        <a href="{% url 'register' %}" class="btn btn-outline-light w-100">{{ t.register }}</a>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mb-3">
+                            {{ t.login|default:"Kirish" }}
+                        </button>
+
+                        <a href="{% url 'register' %}" class="btn btn-outline-light w-100">
+                            {{ t.register|default:"Ro‘yxatdan o‘tish" }}
+                        </a>
                     </form>
                 </div>
             </div>
@@ -74,14 +93,18 @@
         btn.addEventListener("click", function () {
             const inputId = this.dataset.togglePassword;
             const input = document.getElementById(inputId);
+
             if (!input) return;
 
             const makeVisible = input.type === "password";
+            const showLabel = this.dataset.showLabel || "Parolni ko‘rsatish";
+            const hideLabel = this.dataset.hideLabel || "Parolni yashirish";
+
             input.type = makeVisible ? "text" : "password";
 
             this.classList.toggle("is-visible", makeVisible);
             this.setAttribute("aria-pressed", makeVisible ? "true" : "false");
-            this.setAttribute("aria-label", makeVisible ? "Parolni yashirish" : "Parolni ko'rsatish");
+            this.setAttribute("aria-label", makeVisible ? hideLabel : showLabel);
         });
     });
 })();

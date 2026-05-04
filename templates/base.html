@@ -33,8 +33,7 @@
         {% include "includes/footer.html" %}
     </div>
 
-    <!-- Scroll to top button -->
-    <button id="scrollTopBtn" aria-label="Tepaga qaytish" title="Tepaga qaytish">
+    <button id="scrollTopBtn" aria-label="{{ t.back_to_top }}" title="{{ t.back_to_top }}">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -128,8 +127,10 @@
     })();
     </script>
 
+    {{ js_i18n|json_script:"js-i18n-data" }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/i18n-runtime.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

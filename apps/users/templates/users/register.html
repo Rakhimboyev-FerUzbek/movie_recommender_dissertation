@@ -1,73 +1,118 @@
 {% extends "base.html" %}
 
-{% block title %}{{ t.register }}{% endblock %}
+{% block title %}{{ t.register|default:"Register" }}{% endblock %}
 
 {% block content %}
 <section class="auth-page">
     <div class="container">
         <div class="auth-shell auth-shell-wide auth-shell-register">
             <div class="auth-brand-panel fade-up">
-                <span class="hero-kicker">{{ t.site_name }}</span>
-                <h1>O'zingizga mos kino profili yarating</h1>
-                <p>Akkaunt oching, sevimli janrlaringizni tanlang va sizga mos tavsiyalarni darhol oling.</p>
+                <span class="hero-kicker">{{ t.site_name|default:"Movie Recommender" }}</span>
+
+                <h1>{{ t.register_hero_title|default:"O‘zingizga mos kino profili yarating" }}</h1>
+
+                <p>
+                    {{ t.register_hero_subtitle|default:"Akkaunt oching, sevimli janrlaringizni tanlang va sizga mos tavsiyalarni darhol oling." }}
+                </p>
             </div>
 
             <div class="auth-form-panel fade-up">
                 <div class="auth-card auth-card--register-compact">
-                    <h2>{{ t.create_account }}</h2>
+                    <h2>{{ t.create_account|default:"Yangi akkaunt yaratish" }}</h2>
 
                     <form method="post" id="registerForm">
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
-                            <div class="alert alert-danger auth-form-field--span-2">{{ form.non_field_errors }}</div>
+                            <div class="alert alert-danger auth-form-field--span-2">
+                                {{ form.non_field_errors }}
+                            </div>
                         {% endif %}
 
                         <div class="auth-form-grid">
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.username.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.username.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.username }}
-                                <div class="text-danger small">{{ form.username.errors }}</div>
+                                {% if form.username.errors %}
+                                    <div class="text-danger small">{{ form.username.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.email.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.email.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.email }}
-                                <div class="text-danger small">{{ form.email.errors }}</div>
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.first_name.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.first_name.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.first_name }}
-                                <div class="text-danger small">{{ form.first_name.errors }}</div>
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger small">{{ form.first_name.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.last_name.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.last_name.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.last_name }}
-                                <div class="text-danger small">{{ form.last_name.errors }}</div>
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger small">{{ form.last_name.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.birth_date.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.birth_date.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.birth_date }}
-                                <div class="text-danger small">{{ form.birth_date.errors }}</div>
+                                {% if form.birth_date.errors %}
+                                    <div class="text-danger small">{{ form.birth_date.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.phone_number.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.phone_number.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.phone_number }}
-                                <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                                {% if form.phone_number.errors %}
+                                    <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.gender.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.gender.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
                                 {{ form.gender }}
-                                <div class="text-danger small">{{ form.gender.errors }}</div>
+                                {% if form.gender.errors %}
+                                    <div class="text-danger small">{{ form.gender.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field auth-form-field--span-2">
-                                <label class="form-label">{{ form.preferred_genres.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.preferred_genres.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
+
                                 <div class="auth-genre-grid">
                                     {% for checkbox in form.preferred_genres %}
                                         <label class="profile-genre-option">
@@ -76,26 +121,35 @@
                                         </label>
                                     {% endfor %}
                                 </div>
+
                                 <div class="text-danger small auth-genre-error" id="registerGenreError">
                                     {{ form.preferred_genres.errors }}
                                 </div>
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.password1.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.password1.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
+
                                 <div class="auth-password-shell">
                                     {{ form.password1 }}
+
                                     <button
                                         type="button"
                                         class="auth-password-toggle"
                                         data-toggle-password="id_password1"
-                                        aria-label="Parolni ko'rsatish"
+                                        data-show-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
+                                        data-hide-label="{{ t.hide_password|default:'Parolni yashirish' }}"
+                                        aria-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
                                         aria-pressed="false"
                                     >
                                         <svg class="auth-password-icon auth-password-icon--show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
                                             <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
                                         </svg>
+
                                         <svg class="auth-password-icon auth-password-icon--hide" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                                             <path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -104,24 +158,35 @@
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="text-danger small">{{ form.password1.errors }}</div>
+
+                                {% if form.password1.errors %}
+                                    <div class="text-danger small">{{ form.password1.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-field">
-                                <label class="form-label">{{ form.password2.label }} <span class="auth-required-mark">*</span></label>
+                                <label class="form-label">
+                                    {{ form.password2.label }}
+                                    <span class="auth-required-mark">*</span>
+                                </label>
+
                                 <div class="auth-password-shell">
                                     {{ form.password2 }}
+
                                     <button
                                         type="button"
                                         class="auth-password-toggle"
                                         data-toggle-password="id_password2"
-                                        aria-label="Parolni ko'rsatish"
+                                        data-show-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
+                                        data-hide-label="{{ t.hide_password|default:'Parolni yashirish' }}"
+                                        aria-label="{{ t.show_password|default:'Parolni ko‘rsatish' }}"
                                         aria-pressed="false"
                                     >
                                         <svg class="auth-password-icon auth-password-icon--show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
                                             <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
                                         </svg>
+
                                         <svg class="auth-password-icon auth-password-icon--hide" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                                             <path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -130,12 +195,20 @@
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="text-danger small">{{ form.password2.errors }}</div>
+
+                                {% if form.password2.errors %}
+                                    <div class="text-danger small">{{ form.password2.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="auth-form-actions auth-form-field--span-2">
-                                <button type="submit" class="btn btn-primary-gradient w-100">{{ t.register }}</button>
-                                <a href="{% url 'login' %}" class="btn btn-outline-light w-100">{{ t.have_account }}</a>
+                                <button type="submit" class="btn btn-primary-gradient w-100">
+                                    {{ t.register|default:"Ro‘yxatdan o‘tish" }}
+                                </button>
+
+                                <a href="{% url 'login' %}" class="btn btn-outline-light w-100">
+                                    {{ t.have_account|default:"Akkauntingiz bormi? Kirish" }}
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -150,20 +223,25 @@
     const form = document.getElementById("registerForm");
     const genreError = document.getElementById("registerGenreError");
     const genreInputs = Array.from(document.querySelectorAll('.auth-genre-grid input[type="checkbox"]'));
+    const genreRequiredMessage = "{{ t.preferred_genres_required|default:'Kamida bitta sevimli janr tanlang.'|escapejs }}";
 
     function bindPasswordToggles() {
         document.querySelectorAll("[data-toggle-password]").forEach((btn) => {
             btn.addEventListener("click", function () {
                 const inputId = this.dataset.togglePassword;
                 const input = document.getElementById(inputId);
+
                 if (!input) return;
 
                 const makeVisible = input.type === "password";
+                const showLabel = this.dataset.showLabel || "Parolni ko‘rsatish";
+                const hideLabel = this.dataset.hideLabel || "Parolni yashirish";
+
                 input.type = makeVisible ? "text" : "password";
 
                 this.classList.toggle("is-visible", makeVisible);
                 this.setAttribute("aria-pressed", makeVisible ? "true" : "false");
-                this.setAttribute("aria-label", makeVisible ? "Parolni yashirish" : "Parolni ko'rsatish");
+                this.setAttribute("aria-label", makeVisible ? hideLabel : showLabel);
             });
         });
     }
@@ -174,9 +252,11 @@
 
             if (!hasCheckedGenre) {
                 event.preventDefault();
+
                 if (genreError) {
-                    genreError.textContent = "Kamida bitta sevimli janr tanlang.";
+                    genreError.textContent = genreRequiredMessage;
                 }
+
                 return;
             }
 

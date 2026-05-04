@@ -18,20 +18,20 @@
 
                     <form method="get" class="catalog-filter-form" id="catalogFilterForm">
                         <div class="mb-3">
-                            <label class="form-label" for="id_q">Qidiruv</label>
+                            <label class="form-label" for="id_q">{{ t.search|default:"Qidiruv" }}</label>
                             <input
                                 type="text"
                                 name="q"
                                 id="id_q"
                                 class="form-control"
-                                placeholder="Film nomi bo'yicha qidiring..."
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 value="{{ selected_query }}"
                                 autocomplete="off"
                             >
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Yil</label>
+                            <label class="form-label">{{ t.year|default:"Yil" }}</label>
 
                             <div class="catalog-ui-select" id="catalogYearSelect">
                                 <input type="hidden" name="year" id="id_year" value="{{ selected_year }}">
@@ -41,7 +41,7 @@
                                         {% if selected_year %}
                                             {{ selected_year }}
                                         {% else %}
-                                            Barcha yillar
+                                            {{ t.all_years|default:"Barcha yillar" }}
                                         {% endif %}
                                     </span>
                                     <span class="catalog-ui-select__chevron"></span>
@@ -53,9 +53,9 @@
                                             type="button"
                                             class="catalog-ui-select__option {% if selected_year == value %}is-active{% endif %}"
                                             data-year-value="{{ value }}"
-                                            data-year-text="{{ label }}"
+                                            data-year-text="{% if value %}{{ label }}{% else %}{{ t.all_years|default:'Barcha yillar' }}{% endif %}"
                                         >
-                                            {{ label }}
+                                            {% if value %}{{ label }}{% else %}{{ t.all_years|default:"Barcha yillar" }}{% endif %}
                                         </button>
                                     {% endfor %}
                                 </div>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Saralash</label>
+                            <label class="form-label">{{ t.sort|default:"Saralash" }}</label>
 
                             <input
                                 type="hidden"
@@ -75,15 +75,15 @@
                             <div class="catalog-sort-row">
                                 <div class="catalog-sort-select" id="catalogSortSelect">
                                     <button type="button" class="catalog-sort-select__trigger" id="catalogSortTrigger">
-                                        <span id="catalogSortTriggerLabel">Reyting</span>
+                                        <span id="catalogSortTriggerLabel">{{ t.rating|default:"Reyting" }}</span>
                                         <span class="catalog-sort-select__chevron"></span>
                                     </button>
 
                                     <div class="catalog-sort-select__menu" id="catalogSortMenu">
-                                        <button type="button" class="catalog-sort-select__option" data-sort-field="rating">Reyting</button>
-                                        <button type="button" class="catalog-sort-select__option" data-sort-field="year">Yil</button>
-                                        <button type="button" class="catalog-sort-select__option" data-sort-field="count">Baho soni</button>
-                                        <button type="button" class="catalog-sort-select__option" data-sort-field="title">Nom</button>
+                                        <button type="button" class="catalog-sort-select__option" data-sort-field="rating">{{ t.rating|default:"Reyting" }}</button>
+                                        <button type="button" class="catalog-sort-select__option" data-sort-field="year">{{ t.year|default:"Yil" }}</button>
+                                        <button type="button" class="catalog-sort-select__option" data-sort-field="count">{{ t.rating_count|default:"Baho soni" }}</button>
+                                        <button type="button" class="catalog-sort-select__option" data-sort-field="title">{{ t.title|default:"Nom" }}</button>
                                     </div>
                                 </div>
 
@@ -92,17 +92,16 @@
                                     id="catalogSortDirection"
                                     class="catalog-sort-direction"
                                     data-desc="true"
-                                    title="Saralash yo'nalishi"
-                                    aria-label="Saralash yo'nalishi"
+                                    title="{{ t.sort_direction|default:"Saralash yo'nalishi" }}"
+                                    aria-label="{{ t.sort_direction|default:"Saralash yo'nalishi" }}"
                                 >
                                     <span class="catalog-sort-direction__icon">↓</span>
-                                    <span class="catalog-sort-direction__text">Kamayish</span>
                                 </button>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Janrlar</label>
+                            <label class="form-label">{{ t.genres|default:"Janrlar" }}</label>
                             <div class="filter-check-grid">
                                 {% for genre in form.fields.genre.queryset %}
                                     <label class="filter-check-item">
@@ -119,8 +118,8 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
-                            <a href="{% url 'movie_list' %}" class="btn btn-outline-soft">Tozalash</a>
+                            <button type="submit" class="btn btn-primary-gradient">{{ t.apply|default:"Qo'llash" }}</button>
+                            <a href="{% url 'movie_list' %}" class="btn btn-outline-soft">{{ t.clear|default:"Tozalash" }}</a>
                         </div>
                     </form>
                 </div>
@@ -166,21 +165,35 @@
     const sortLabel = document.getElementById("catalogSortTriggerLabel");
     const sortHidden = document.getElementById("catalogSortValue");
     const sortDirectionBtn = document.getElementById("catalogSortDirection");
-    const sortDirectionIcon = sortDirectionBtn.querySelector(".catalog-sort-direction__icon");
-    const sortDirectionText = sortDirectionBtn.querySelector(".catalog-sort-direction__text");
+    const sortDirectionIcon = sortDirectionBtn ? sortDirectionBtn.querySelector(".catalog-sort-direction__icon") : null;
 
     const snackbarStack = document.getElementById("catalogSnackbarStack");
 
     if (!form || !searchInput || !resultsContainer) return;
 
+    const UI = {
+        rating: "{{ t.rating|escapejs }}",
+        year: "{{ t.year|escapejs }}",
+        count: "{{ t.rating_count|escapejs }}",
+        title: "{{ t.title|escapejs }}",
+        descending: "{{ t.descending|escapejs }}",
+        ascending: "{{ t.ascending|escapejs }}",
+        success: "{{ t.success|escapejs }}",
+        removed: "{{ t.removed|escapejs }}",
+        close: "{{ t.close|escapejs }}",
+        favoriteAdded: "{{ t.movie_added_to_favorites|escapejs }}",
+        favoriteRemoved: "{{ t.movie_removed_from_favorites|escapejs }}",
+    };
+
     let timer = null;
     let controller = null;
+    let requestSequence = 0;
 
     const SORT_FIELD_LABELS = {
-        rating: "Reyting",
-        year: "Yil",
-        count: "Baho soni",
-        title: "Nom",
+        rating: UI.rating,
+        year: UI.year,
+        count: UI.count,
+        title: UI.title,
     };
 
     function encodeSort(field, desc) {
@@ -220,8 +233,8 @@
 
         const safeTitle = escapeHtml(movieTitle);
         const message = variant === "success"
-            ? `<span class="catalog-snackbar__movie">"${safeTitle}"</span> favorites ga qo'shildi.`
-            : `<span class="catalog-snackbar__movie">"${safeTitle}"</span> favorites dan olib tashlandi.`;
+            ? `<span class="catalog-snackbar__movie">"${safeTitle}"</span> ${UI.favoriteAdded}`
+            : `<span class="catalog-snackbar__movie">"${safeTitle}"</span> ${UI.favoriteRemoved}`;
 
         item.innerHTML = `
             <div class="catalog-snackbar__icon" aria-hidden="true">
@@ -231,10 +244,10 @@
                 }
             </div>
             <div class="catalog-snackbar__content">
-                <div class="catalog-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="catalog-snackbar__title">${variant === "success" ? UI.success : UI.removed}</div>
                 <div class="catalog-snackbar__text">${message}</div>
             </div>
-            <button type="button" class="catalog-snackbar__close" aria-label="Yopish">×</button>
+            <button type="button" class="catalog-snackbar__close" aria-label="${UI.close}">×</button>
         `;
 
         snackbarStack.appendChild(item);
@@ -261,16 +274,25 @@
     }
 
     function syncSortUi() {
+        if (!sortHidden || !sortLabel || !sortMenu || !sortDirectionBtn) return;
+
         const decoded = decodeSort(sortHidden.value);
-        sortLabel.textContent = SORT_FIELD_LABELS[decoded.field] || "Reyting";
+        const directionLabel = decoded.desc ? UI.descending : UI.ascending;
+
+        sortLabel.textContent = SORT_FIELD_LABELS[decoded.field] || UI.rating;
 
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
         });
 
         sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
-        sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
-        sortDirectionText.textContent = decoded.desc ? "" : "";
+
+        if (sortDirectionIcon) {
+            sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
+        }
+
+        sortDirectionBtn.title = directionLabel;
+        sortDirectionBtn.setAttribute("aria-label", directionLabel);
     }
 
     function buildQueryString() {
@@ -288,8 +310,10 @@
     }
 
     async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
+        const requestId = ++requestSequence;
         const activeElement = document.activeElement;
         const isSearchFocused = preserveCaret && activeElement === searchInput;
+        const searchValueAtRequest = searchInput.value;
         const start = searchInput.selectionStart;
         const end = searchInput.selectionEnd;
 
@@ -313,6 +337,13 @@
             if (!response.ok) return;
 
             const html = await response.text();
+
+            if (requestId !== requestSequence) return;
+
+            if (!explicitUrl && searchInput.value !== searchValueAtRequest) {
+                return;
+            }
+
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
             const nextResults = doc.getElementById("catalogResultsContainer");
@@ -325,10 +356,12 @@
                 window.history.replaceState({}, "", targetUrl);
             }
 
-            if (isSearchFocused) {
-                searchInput.focus();
+            if (isSearchFocused && searchInput.value === searchValueAtRequest) {
+                searchInput.focus({ preventScroll: true });
                 if (typeof start === "number" && typeof end === "number") {
-                    searchInput.setSelectionRange(start, end);
+                    const safeStart = Math.min(start, searchInput.value.length);
+                    const safeEnd = Math.min(end, searchInput.value.length);
+                    searchInput.setSelectionRange(safeStart, safeEnd);
                 }
             }
         } catch (error) {
@@ -349,50 +382,55 @@
         return { response, data };
     }
 
-    yearTrigger.addEventListener("click", function () {
-        const willOpen = !yearRoot.classList.contains("is-open");
-        closeAll(yearRoot);
-        yearRoot.classList.toggle("is-open", willOpen);
-    });
-
-    yearMenu.querySelectorAll("[data-year-value]").forEach((option) => {
-        option.addEventListener("click", function () {
-            const value = this.dataset.yearValue ?? "";
-            const text = this.dataset.yearText ?? this.textContent.trim();
-
-            yearHidden.value = value;
-            yearLabel.textContent = text;
-
-            yearMenu.querySelectorAll("[data-year-value]").forEach((btn) => btn.classList.remove("is-active"));
-            this.classList.add("is-active");
-
-            yearRoot.classList.remove("is-open");
-            fetchAndReplaceResults(true, false);
+    if (yearTrigger && yearRoot && yearMenu && yearHidden && yearLabel) {
+        yearTrigger.addEventListener("click", function () {
+            const willOpen = !yearRoot.classList.contains("is-open");
+            closeAll(yearRoot);
+            yearRoot.classList.toggle("is-open", willOpen);
         });
-    });
 
-    sortTrigger.addEventListener("click", function () {
-        const willOpen = !sortRoot.classList.contains("is-open");
-        closeAll(sortRoot);
-        sortRoot.classList.toggle("is-open", willOpen);
-    });
+        yearMenu.querySelectorAll("[data-year-value]").forEach((option) => {
+            option.addEventListener("click", function () {
+                const value = this.dataset.yearValue ?? "";
+                const text = this.dataset.yearText ?? this.textContent.trim();
 
-    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
-        option.addEventListener("click", function () {
-            const field = this.dataset.sortField || "rating";
-            sortHidden.value = encodeSort(field, true);
-            sortRoot.classList.remove("is-open");
+                yearHidden.value = value;
+                yearLabel.textContent = text;
+
+                yearMenu.querySelectorAll("[data-year-value]").forEach((btn) => btn.classList.remove("is-active"));
+                this.classList.add("is-active");
+
+                yearRoot.classList.remove("is-open");
+                fetchAndReplaceResults(true, false);
+            });
+        });
+    }
+
+    if (sortTrigger && sortRoot && sortMenu && sortHidden && sortDirectionBtn) {
+        sortTrigger.addEventListener("click", function () {
+            const willOpen = !sortRoot.classList.contains("is-open");
+            closeAll(sortRoot);
+            sortRoot.classList.toggle("is-open", willOpen);
+        });
+
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+            option.addEventListener("click", function () {
+                const field = this.dataset.sortField || "rating";
+                const current = decodeSort(sortHidden.value);
+                sortHidden.value = encodeSort(field, current.desc);
+                sortRoot.classList.remove("is-open");
+                syncSortUi();
+                fetchAndReplaceResults(true, false);
+            });
+        });
+
+        sortDirectionBtn.addEventListener("click", function () {
+            const decoded = decodeSort(sortHidden.value);
+            sortHidden.value = encodeSort(decoded.field, !decoded.desc);
             syncSortUi();
             fetchAndReplaceResults(true, false);
         });
-    });
-
-    sortDirectionBtn.addEventListener("click", function () {
-        const decoded = decodeSort(sortHidden.value);
-        sortHidden.value = encodeSort(decoded.field, !decoded.desc);
-        syncSortUi();
-        fetchAndReplaceResults(true, false);
-    });
+    }
 
     document.addEventListener("click", function (event) {
         if (!event.target.closest(".catalog-ui-select") && !event.target.closest(".catalog-sort-select")) {
@@ -407,15 +445,19 @@
     });
 
     searchInput.addEventListener("input", function () {
+        if (controller) controller.abort();
         clearTimeout(timer);
+
         timer = setTimeout(() => {
             fetchAndReplaceResults(true, true);
-        }, 350);
+        }, 220);
     });
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        fetchAndReplaceResults(true, false);
+        if (controller) controller.abort();
+        clearTimeout(timer);
+        fetchAndReplaceResults(true, true);
     });
 
     form.addEventListener("change", function (event) {
@@ -423,6 +465,7 @@
         if (!target) return;
 
         if (target.name === "genre") {
+            if (controller) controller.abort();
             fetchAndReplaceResults(true, false);
         }
     });
@@ -436,6 +479,7 @@
         const href = link.getAttribute("href");
         if (!href) return;
 
+        if (controller) controller.abort();
         fetchAndReplaceResults(true, false, href);
     });
 

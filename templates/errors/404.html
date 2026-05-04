@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="{{ ui_lang|default:'uz' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 | Sahifa topilmadi</title>
+    <title>404 | {{ t.page_not_found_title }}</title>
     <style>
         :root {
             --bg: #070b1a;
@@ -126,15 +126,12 @@
     <div class="error-shell">
         <div class="error-card">
             <div class="error-code">404</div>
-            <h1 class="error-title">Sahifa topilmadi</h1>
-            <p class="error-text">
-                Siz kiritgan manzil mavjud emas yoki noto‘g‘ri yozilgan.
-                Iltimos, URL manzilni tekshirib ko‘ring yoki bosh sahifaga qayting.
-            </p>
+            <h1 class="error-title">{{ t.page_not_found_title }}</h1>
+            <p class="error-text">{{ t.page_not_found_desc }}</p>
 
             <div class="error-actions">
-                <a href="/" class="error-btn error-btn--primary">Bosh sahifaga qaytish</a>
-                <a href="/movies/" class="error-btn error-btn--ghost">Filmlar sahifasi</a>
+                <a href="/" class="error-btn error-btn--primary">{{ t.back_home }}</a>
+                <a href="/movies/" class="error-btn error-btn--ghost">{{ t.movies_page }}</a>
             </div>
         </div>
     </div>

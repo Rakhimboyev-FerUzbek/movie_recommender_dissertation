@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Ratings{% endblock %}
+{% block title %}{{ t.ratings_page_title }}{% endblock %}
 
 {% block content %}
 <section class="interaction-page">
@@ -9,8 +9,8 @@
             <div class="interaction-page-top-main">
                 <div class="interaction-page-head interaction-page-head--compact">
                     <div>
-                        <h1>Ratings</h1>
-                        <p>Berilgan reytinglar va qisqa tavsiflar ro'yxati.</p>
+                        <h1>{{ t.ratings_page_title }}</h1>
+                        <p>{{ t.ratings_page_description }}</p>
                     </div>
                 </div>
             </div>
@@ -19,35 +19,35 @@
                 <form method="get" class="interaction-filter-form" id="interactionFilterForm">
                     <div class="interaction-filter-grid">
                         <div>
-                            <label class="form-label">Qidiruv</label>
+                            <label class="form-label">{{ t.search }}</label>
                             <input
                                 type="text"
                                 name="q"
                                 id="interactionSearchInput"
                                 class="form-control"
                                 value="{{ selected_query }}"
-                                placeholder="Film nomi bo'yicha qidiring..."
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 autocomplete="off"
                             >
                         </div>
 
                         <div>
-                            <label class="form-label">Saralash</label>
+                            <label class="form-label">{{ t.sort }}</label>
                             <input type="hidden" name="sort" id="interactionSortValue" value="{{ selected_sort }}">
 
                             <div class="interaction-sort-row">
                                 <div class="interaction-sort-select" id="interactionSortSelect">
                                     <button type="button" class="interaction-sort-select__trigger" id="interactionSortTrigger">
-                                        <span id="interactionSortTriggerLabel">Yangilangan sana</span>
+                                        <span id="interactionSortTriggerLabel">{{ t.updated_date }}</span>
                                         <span class="interaction-sort-select__chevron"></span>
                                     </button>
 
                                     <div class="interaction-sort-select__menu" id="interactionSortMenu">
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="date">Yangilangan sana</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="rating">Sizning reytingingiz</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="title">Nom</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="year">Yil</button>
-                                        <button type="button" class="interaction-sort-select__option" data-sort-field="count">Baho soni</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="date">{{ t.updated_date }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="rating">{{ t.your_rating }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="title">{{ t.title }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="year">{{ t.year }}</button>
+                                        <button type="button" class="interaction-sort-select__option" data-sort-field="count">{{ t.rating_count }}</button>
                                     </div>
                                 </div>
 
@@ -56,18 +56,18 @@
                                     id="interactionSortDirection"
                                     class="interaction-sort-direction"
                                     data-desc="true"
-                                    title="Saralash yo'nalishi"
-                                    aria-label="Saralash yo'nalishi"
+                                    title="{{ t.sort_direction }}"
+                                    aria-label="{{ t.sort_direction }}"
                                 >
                                     <span class="interaction-sort-direction__icon">↓</span>
-                                    <span class="interaction-sort-direction__text">Kamayish</span>
+                                    <span class="interaction-sort-direction__text">{{ t.descending }}</span>
                                 </button>
                             </div>
                         </div>
 
                         <div class="interaction-filter-actions">
-                            <button type="submit" class="btn btn-primary-gradient">Qo'llash</button>
-                            <a href="{% url 'ratings_list' %}" class="btn btn-outline-soft">Tozalash</a>
+                            <button type="submit" class="btn btn-primary-gradient">{{ t.apply }}</button>
+                            <a href="{% url 'ratings_list' %}" class="btn btn-outline-soft">{{ t.clear }}</a>
                         </div>
                     </div>
                 </form>
@@ -105,10 +105,10 @@
                                 </a>
                                 <span class="frc-count-badge">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                    {{ item.movie.rating_count }} ta baho
+                                    {{ item.movie.rating_count }} {{ t.ratings_count_suffix }}
                                 </span>
                             </div>
-                            <p class="interaction-overview">{{ item.movie.overview|default:"Tavsif mavjud emas."|truncatechars:160 }}</p>
+                            <p class="interaction-overview">{{ item.movie.overview|default:t.no_overview|truncatechars:160 }}</p>
                             {% if item.review %}
                                 <div class="interaction-user-review">{{ item.review }}</div>
                             {% endif %}
@@ -122,8 +122,8 @@
                     </article>
                 {% empty %}
                     <div class="glass-card empty-state-card full-span-card">
-                        <h4>Ratings hozircha bo'sh</h4>
-                        <p>Movie detail sahifasida reyting berib bu ro'yxatni shakllantiring.</p>
+                        <h4>{{ t.ratings_empty_title }}</h4>
+                        <p>{{ t.ratings_empty_text }}</p>
                     </div>
                 {% endfor %}
             </div>
@@ -161,11 +161,11 @@
     let isLoadingMore = false;
 
     const FIELD_LABELS = {
-        date: "Yangilangan sana",
-        rating: "Sizning reytingingiz",
-        title: "Nom",
-        year: "Yil",
-        count: "Baho soni",
+        date: "{{ t.updated_date|escapejs }}",
+        rating: "{{ t.your_rating|escapejs }}",
+        title: "{{ t.title|escapejs }}",
+        year: "{{ t.year|escapejs }}",
+        count: "{{ t.rating_count|escapejs }}",
     };
 
     function encodeSort(field, desc) {
@@ -195,7 +195,7 @@
 
     function syncSortUi() {
         const decoded = decodeSort(sortHidden.value);
-        sortLabel.textContent = FIELD_LABELS[decoded.field] || "Yangilangan sana";
+        sortLabel.textContent = FIELD_LABELS[decoded.field] || "{{ t.updated_date|escapejs }}";
 
         sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
             btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);

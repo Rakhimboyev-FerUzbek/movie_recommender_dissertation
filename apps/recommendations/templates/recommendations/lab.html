@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Recommendation Lab{% endblock %}
+{% block title %}{{ t.recommendation_lab_title }}{% endblock %}
 
 {% block content %}
 <section class="content-section lab-page">
@@ -10,31 +10,31 @@
 
             {# Card 1: Parameters #}
             <div class="glass-card lab-top-card lab-param-card">
-                <div class="lab-card-label">⚙️ Parametrlar</div>
+                <div class="lab-card-label">⚙️ {{ t.parameters }}</div>
                 <form method="get" class="lab-param-form">
                     <div class="lab-param-grid">
                         <div class="lab-param-item">
-                            <label class="form-label">Username</label>
+                            <label class="form-label">{{ t.username }}</label>
                             {{ form.user_id }}
                             <div class="text-danger small mt-1">{{ form.user_id.errors }}</div>
                         </div>
                         <div class="lab-param-item">
-                            <label class="form-label">Top-K</label>
+                            <label class="form-label">{{ t.top_k }}</label>
                             {{ form.top_k }}
                             <div class="text-danger small mt-1">{{ form.top_k.errors }}</div>
                         </div>
                         <div class="lab-param-item">
-                            <label class="form-label">Model</label>
+                            <label class="form-label">{{ t.model }}</label>
                             {{ form.model }}
                         </div>
                         <div class="lab-param-item">
-                            <label class="form-label">Scenario</label>
+                            <label class="form-label">{{ t.scenario }}</label>
                             {{ form.scenario }}
                         </div>
                     </div>
                     <div class="lab-param-actions">
                         <button type="submit" class="btn btn-primary-gradient lab-run-btn">
-                            ▶ Run Lab
+                            ▶ {{ t.run_lab }}
                         </button>
                     </div>
                 </form>
@@ -46,7 +46,7 @@
                 id="labUserSummaryCard"
                 data-selected-user-id="{{ selected_user.id }}"
             >
-                <div class="lab-card-label">👤 Foydalanuvchi ma'lumoti</div>
+                <div class="lab-card-label">👤 {{ t.user_information }}</div>
                 <div class="lab-user-compact">
 
                     <div class="lab-user-header">
@@ -61,32 +61,32 @@
                     <div class="lab-user-stats-row">
                         <a href="{{ selected_user_summary.ratings_url|default:'#' }}" class="lab-stat-pill" id="labUserRatingsLink">
                             <span class="lab-stat-pill__icon">★</span>
-                            <span class="lab-stat-pill__label">Reytinglar</span>
+                            <span class="lab-stat-pill__label">{{ t.ratings }}</span>
                             <strong class="lab-stat-pill__val" id="labUserRatingsCount">{{ selected_user_summary.ratings_count|default:0 }}</strong>
                         </a>
                         <a href="{{ selected_user_summary.favorites_url|default:'#' }}" class="lab-stat-pill" id="labUserFavoritesLink">
                             <span class="lab-stat-pill__icon">♥</span>
-                            <span class="lab-stat-pill__label">Favorites</span>
+                            <span class="lab-stat-pill__label">{{ t.favorites }}</span>
                             <strong class="lab-stat-pill__val" id="labUserFavoritesCount">{{ selected_user_summary.favorites_count|default:0 }}</strong>
                         </a>
                         <a href="{{ selected_user_summary.watch_history_url|default:'#' }}" class="lab-stat-pill" id="labUserHistoryLink">
                             <span class="lab-stat-pill__icon">▶</span>
-                            <span class="lab-stat-pill__label">Tarix</span>
+                            <span class="lab-stat-pill__label">{{ t.history }}</span>
                             <strong class="lab-stat-pill__val" id="labUserHistoryCount">{{ selected_user_summary.watch_history_count|default:0 }}</strong>
                         </a>
                     </div>
 
                     <div class="lab-user-facts-grid">
                         <div class="lab-user-fact-item">
-                            <span class="lab-fact-label">Jinsi</span>
+                            <span class="lab-fact-label">{{ t.gender }}</span>
                             <span class="lab-fact-val" id="labUserGender">{{ selected_user_summary.gender|default:"—" }}</span>
                         </div>
                         <div class="lab-user-fact-item">
-                            <span class="lab-fact-label">Tug'ilgan kun</span>
+                            <span class="lab-fact-label">{{ t.date_of_birth }}</span>
                             <span class="lab-fact-val" id="labUserBirthDate">{{ selected_user_summary.birth_date|default:"—" }}</span>
                         </div>
                         <div class="lab-user-fact-item">
-                            <span class="lab-fact-label">Telefon</span>
+                            <span class="lab-fact-label">{{ t.phone }}</span>
                             <span class="lab-fact-val" id="labUserPhone">{{ selected_user_summary.phone_number|default:"—" }}</span>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                                 <span class="genre-chip">+{{ selected_user_summary.preferred_genres|length|add:"-5" }}</span>
                             {% endif %}
                         {% else %}
-                            <span class="lab-user-empty">Janrlar kiritilmagan</span>
+                            <span class="lab-user-empty">{{ t.no_genres_entered }}</span>
                         {% endif %}
                     </div>
 
@@ -110,27 +110,27 @@
             {# Card 3: Experiment summary #}
             {% if result %}
             <div class="glass-card lab-top-card lab-summary-top-card">
-                <div class="lab-card-label">🧪 Natija xulosasi</div>
+                <div class="lab-card-label">🧪 {{ t.result_summary }}</div>
                 <div class="lab-summary-grid">
                     <div class="lab-summary-row">
-                        <span class="lab-sum-label">Foydalanuvchi</span>
+                        <span class="lab-sum-label">{{ t.user }}</span>
                         <span class="lab-sum-val">{{ selected_user.username }}</span>
                     </div>
                     <div class="lab-summary-row">
-                        <span class="lab-sum-label">So'ralgan model</span>
+                        <span class="lab-sum-label">{{ t.requested_model }}</span>
                         <span class="lab-sum-val">{{ result.requested_model }}</span>
                     </div>
                     <div class="lab-summary-row">
-                        <span class="lab-sum-label">Ishlatilgan model</span>
+                        <span class="lab-sum-label">{{ t.used_model }}</span>
                         <span class="lab-sum-val">{{ result.resolved_model_label }}</span>
                     </div>
                     <div class="lab-summary-row">
-                        <span class="lab-sum-label">Stsenariy</span>
+                        <span class="lab-sum-label">{{ t.scenario }}</span>
                         <span class="lab-sum-val">{{ result.scenario_label }}</span>
                     </div>
                     {% if result.weights %}
                     <div class="lab-summary-row lab-summary-row--full">
-                        <span class="lab-sum-label">Hybrid weights</span>
+                        <span class="lab-sum-label">{{ t.hybrid_weights }}</span>
                         <span class="lab-sum-val lab-weights-val">
                             content={{ result.weights.content|floatformat:2 }},
                             item={{ result.weights.item|floatformat:2 }},
@@ -143,10 +143,10 @@
             </div>
             {% else %}
             <div class="glass-card lab-top-card lab-summary-top-card">
-                <div class="lab-card-label">🧪 Natija xulosasi</div>
+                <div class="lab-card-label">🧪 {{ t.result_summary }}</div>
                 <div class="lab-summary-empty">
                     <div class="lab-summary-empty-icon">⚗️</div>
-                    <p>User, model va scenario tanlab <strong>Run Lab</strong> tugmasini bosing.</p>
+                    <p>{{ t.lab_empty_instruction }}</p>
                 </div>
             </div>
             {% endif %}
@@ -156,41 +156,37 @@
         <div class="glass-card lab-hero-shell mb-4">
             <div class="lab-hero-layout">
                 <div class="lab-hero-copy">
-                    <h1 class="mb-2">Recommendation Lab</h1>
-                    <p class="text-muted mb-0">
-                        Bu sahifa dasturni test qilish va eksperimental tahlil uchun mo'ljallangan.
-                        Bu yerda tavsiya modelini qo'lda tanlab, turli foydalanuvchilar va turli
-                        stsenariylar bo'yicha natijalarni taqqoslash mumkin.
-                    </p>
+                    <h1 class="mb-2">{{ t.recommendation_lab_title }}</h1>
+                    <p class="text-muted mb-0">{{ t.recommendation_lab_description }}</p>
                 </div>
 
                 <div class="glass-card lab-filter-card">
                     <div class="lab-filter-grid">
                         <div class="lab-filter-item">
-                            <label class="form-label">Qidiruv</label>
+                            <label class="form-label">{{ t.search }}</label>
                             <input
                                 type="text"
                                 id="labResultSearch"
                                 class="form-control"
-                                placeholder="Film nomi bo'yicha qidiring..."
+                                placeholder="{{ t.movie_title_placeholder }}"
                                 autocomplete="off"
                             >
                         </div>
 
                         <div class="lab-filter-item">
-                            <label class="form-label">Saralash</label>
+                            <label class="form-label">{{ t.sort }}</label>
                             <div class="labx-sort-row">
                                 <div class="labx-sort-select" id="labSortSelect">
                                     <button type="button" class="labx-sort-trigger" id="labSortTrigger">
-                                        <span id="labSortTriggerLabel">Score</span>
+                                        <span id="labSortTriggerLabel">{{ t.score }}</span>
                                         <span class="labx-sort-chevron"></span>
                                     </button>
 
                                     <div class="labx-sort-menu" id="labSortMenu">
-                                        <button type="button" class="labx-sort-option is-active" data-sort-field="score">Score</button>
-                                        <button type="button" class="labx-sort-option" data-sort-field="rating">Reyting</button>
-                                        <button type="button" class="labx-sort-option" data-sort-field="year">Yil</button>
-                                        <button type="button" class="labx-sort-option" data-sort-field="title">Nom</button>
+                                        <button type="button" class="labx-sort-option is-active" data-sort-field="score">{{ t.score }}</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="rating">{{ t.rating }}</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="year">{{ t.year }}</button>
+                                        <button type="button" class="labx-sort-option" data-sort-field="title">{{ t.title }}</button>
                                     </div>
                                 </div>
 
@@ -199,8 +195,8 @@
                                     id="labSortDirection"
                                     class="labx-sort-direction"
                                     data-desc="true"
-                                    title="Saralash yo'nalishi"
-                                    aria-label="Saralash yo'nalishi"
+                                    title="{{ t.sort_direction }}"
+                                    aria-label="{{ t.sort_direction }}"
                                 >
                                     <span class="labx-sort-direction__icon">↓</span>
                                 </button>
@@ -254,9 +250,9 @@
                                         <button
                                             type="submit"
                                             class="auto-rec-fav-btn {% if item.movie.id in favorite_movie_ids %}is-active{% endif %}"
-                                            aria-label="Favorites"
+                                            aria-label="{{ t.favorite }}"
                                             aria-pressed="{% if item.movie.id in favorite_movie_ids %}true{% else %}false{% endif %}"
-                                            title="Favorites"
+                                            title="{{ t.favorite }}"
                                         >
                                             <span class="auto-rec-fav-btn__heart" aria-hidden="true">♥</span>
                                         </button>
@@ -264,7 +260,7 @@
                                 </div>
 
                                 <div class="auto-rec-card__country">
-                                    {{ item.movie.country|default:"Noma'lum davlat" }}
+                                    {{ item.movie.country|default:t.unknown_country }}
                                 </div>
 
                                 <div class="auto-rec-card__stats">
@@ -277,7 +273,7 @@
                                     </span>
 
                                     <span class="auto-rec-pill">
-                                        {{ item.rating_count }} ta baho
+                                        {{ item.rating_count }} {{ t.ratings_count_suffix }}
                                     </span>
                                 </div>
 
@@ -293,10 +289,10 @@
 
                 <div id="labResultsSentinel" class="lab-results-sentinel" aria-hidden="true"></div>
             {% else %}
-                <div class="empty-state-card">Tanlangan konfiguratsiya bo'yicha tavsiya qaytmadi.</div>
+                <div class="empty-state-card">{{ t.lab_no_recommendations }}</div>
             {% endif %}
         {% else %}
-            <div class="empty-state-card">User, model va scenario tanlab Run Lab tugmasini bosing.</div>
+            <div class="empty-state-card">{{ t.lab_empty_instruction }}</div>
         {% endif %}
 
         <div id="labSnackbarStack" class="auto-rec-snackbar-stack" aria-live="polite" aria-atomic="true"></div>
@@ -318,9 +314,6 @@
     const sentinel = document.getElementById("labResultsSentinel");
     const snackbarStack = document.getElementById("labSnackbarStack");
 
-    let currentField = "score";
-    let currentDesc = true;
-
     const INITIAL_BATCH = 12;
     const NEXT_BATCH = 8;
 
@@ -328,17 +321,210 @@
     let currentFiltered = [];
     let currentLimit = INITIAL_BATCH;
 
+    let currentField = "score";
+    let currentDesc = true;
+
     const FIELD_LABELS = {
-        score: "Score",
-        rating: "Reyting",
-        year: "Yil",
-        title: "Nom",
+        score: "{{ t.score|default:'Score'|escapejs }}",
+        rating: "{{ t.rating|default:'Rating'|escapejs }}",
+        year: "{{ t.year|default:'Year'|escapejs }}",
+        title: "{{ t.title|default:'Title'|escapejs }}"
     };
+
+    cards.forEach((card, index) => {
+        if (!card.dataset.index) {
+            card.dataset.index = String(index);
+        }
+    });
 
     function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text || "";
         return div.innerHTML;
+    }
+
+    function parseNumber(value) {
+        if (value === null || value === undefined || value === "") {
+            return 0;
+        }
+
+        const normalized = String(value)
+            .trim()
+            .replace(",", ".");
+
+        const parsed = Number.parseFloat(normalized);
+
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function getCardValue(card, field) {
+        if (field === "title") {
+            return (card.dataset.title || "").trim().toLowerCase();
+        }
+
+        if (field === "year") {
+            return parseNumber(card.dataset.year);
+        }
+
+        if (field === "rating") {
+            return parseNumber(card.dataset.rating);
+        }
+
+        if (field === "score") {
+            return parseNumber(card.dataset.score);
+        }
+
+        return 0;
+    }
+
+    function compareText(a, b) {
+        return String(a || "").localeCompare(String(b || ""), undefined, {
+            sensitivity: "base",
+            numeric: true
+        });
+    }
+
+    function compareByField(a, b, field) {
+        const valueA = getCardValue(a, field);
+        const valueB = getCardValue(b, field);
+
+        if (field === "title") {
+            return compareText(valueA, valueB);
+        }
+
+        return valueA - valueB;
+    }
+
+    function compareCards(a, b) {
+        const fields = [
+            currentField,
+            "score",
+            "rating",
+            "year",
+            "title"
+        ].filter((field, index, arr) => arr.indexOf(field) === index);
+
+        for (const field of fields) {
+            const result = compareByField(a, b, field);
+
+            if (result !== 0) {
+                return currentDesc ? -result : result;
+            }
+        }
+
+        const indexA = parseNumber(a.dataset.index);
+        const indexB = parseNumber(b.dataset.index);
+        const indexResult = indexA - indexB;
+
+        return currentDesc ? -indexResult : indexResult;
+    }
+
+    function sortCards(filteredCards) {
+        return [...filteredCards].sort(compareCards);
+    }
+
+    function renderVisibleCards() {
+        if (!grid) return;
+
+        const sortedAllCards = currentFiltered;
+        const visibleCards = sortedAllCards.slice(0, currentLimit);
+        const visibleSet = new Set(visibleCards);
+
+        sortedAllCards.forEach((card) => {
+            card.hidden = !visibleSet.has(card);
+            grid.appendChild(card);
+        });
+
+        if (sentinel) {
+            sentinel.hidden = currentLimit >= currentFiltered.length;
+        }
+    }
+
+    function applyLabFilters(resetLimit = true) {
+        if (!grid) return;
+
+        const query = (searchInput?.value || "").trim().toLowerCase();
+
+        const filtered = cards.filter((card) => {
+            const title = card.dataset.title || "";
+            return !query || title.includes(query);
+        });
+
+        currentFiltered = sortCards(filtered);
+
+        if (resetLimit) {
+            currentLimit = INITIAL_BATCH;
+        }
+
+        renderVisibleCards();
+    }
+
+    function loadMoreCards() {
+        if (!grid || currentLimit >= currentFiltered.length) return;
+
+        currentLimit += NEXT_BATCH;
+        renderVisibleCards();
+    }
+
+    function defaultDirectionFor(field) {
+        return field !== "title";
+    }
+
+    function closeAll() {
+        if (sortRoot) {
+            sortRoot.classList.remove("is-open");
+        }
+    }
+
+    function syncSortUi() {
+        if (sortLabel) {
+            sortLabel.textContent = FIELD_LABELS[currentField] || FIELD_LABELS.score || "Score";
+        }
+
+        if (sortMenu) {
+            sortMenu.querySelectorAll("[data-sort-field]").forEach((button) => {
+                button.classList.toggle("is-active", button.dataset.sortField === currentField);
+            });
+        }
+
+        if (sortDirectionBtn) {
+            sortDirectionBtn.dataset.desc = currentDesc ? "true" : "false";
+            sortDirectionBtn.setAttribute("aria-pressed", currentDesc ? "true" : "false");
+            sortDirectionBtn.setAttribute(
+                "title",
+                currentDesc
+                    ? "{{ t.descending|default:'Descending'|escapejs }}"
+                    : "{{ t.ascending|default:'Ascending'|escapejs }}"
+            );
+            sortDirectionBtn.setAttribute(
+                "aria-label",
+                currentDesc
+                    ? "{{ t.descending|default:'Descending'|escapejs }}"
+                    : "{{ t.ascending|default:'Ascending'|escapejs }}"
+            );
+        }
+
+        if (sortDirectionIcon) {
+            sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
+        }
+    }
+
+    function setSortField(field) {
+        if (!field) return;
+
+        currentField = field;
+        currentDesc = defaultDirectionFor(field);
+
+        closeAll();
+        syncSortUi();
+        applyLabFilters(true);
+    }
+
+    function toggleSortDirection() {
+        currentDesc = !currentDesc;
+
+        syncSortUi();
+        applyLabFilters(true);
     }
 
     function showSnackbar(movieTitle, variant) {
@@ -349,8 +535,8 @@
 
         const safeTitle = escapeHtml(movieTitle);
         const text = variant === "success"
-            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilarga qo'shildi.`
-            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilardan olib tashlandi.`;
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_added_to_favorites|default:'Movie added to favorites'|escapejs }}`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> {{ t.movie_removed_from_favorites|default:'Movie removed from favorites'|escapejs }}`;
 
         item.innerHTML = `
             <div class="auto-rec-snackbar__icon" aria-hidden="true">
@@ -360,15 +546,22 @@
                 }
             </div>
             <div class="auto-rec-snackbar__content">
-                <div class="auto-rec-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="auto-rec-snackbar__title">
+                    ${variant === "success"
+                        ? "{{ t.success|default:'Success'|escapejs }}"
+                        : "{{ t.removed|default:'Removed'|escapejs }}"
+                    }
+                </div>
                 <div class="auto-rec-snackbar__text">${text}</div>
             </div>
-            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="{{ t.close|default:'Close'|escapejs }}">×</button>
         `;
 
         snackbarStack.appendChild(item);
 
-        requestAnimationFrame(() => { item.classList.add("is-visible"); });
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
 
         const removeItem = () => {
             item.classList.remove("is-visible");
@@ -383,75 +576,18 @@
         });
     }
 
-    function defaultDirectionFor(field) { return field !== "title"; }
-    function closeAll() { if (sortRoot) sortRoot.classList.remove("is-open"); }
-
-    function syncSortUi() {
-        if (!sortLabel || !sortMenu || !sortDirectionIcon) return;
-        sortLabel.textContent = FIELD_LABELS[currentField] || "Score";
-        sortMenu.querySelectorAll("[data-sort-field]").forEach(btn => {
-            btn.classList.toggle("is-active", btn.dataset.sortField === currentField);
-        });
-        sortDirectionIcon.textContent = currentDesc ? "↓" : "↑";
-    }
-
-    function sortCards(filteredCards) {
-        return [...filteredCards].sort((a, b) => {
-            const titleA  = a.dataset.title  || "";
-            const titleB  = b.dataset.title  || "";
-            const yearA   = parseInt(a.dataset.year   || "0", 10);
-            const yearB   = parseInt(b.dataset.year   || "0", 10);
-            const ratingA = parseFloat(a.dataset.rating || "0");
-            const ratingB = parseFloat(b.dataset.rating || "0");
-            const scoreA  = parseFloat(a.dataset.score  || "0");
-            const scoreB  = parseFloat(b.dataset.score  || "0");
-
-            let result = 0;
-            if      (currentField === "title")  result = titleA.localeCompare(titleB);
-            else if (currentField === "year")   result = yearA - yearB;
-            else if (currentField === "rating") result = ratingA - ratingB;
-            else                                result = scoreA - scoreB;
-
-            return currentDesc ? -result : result;
-        });
-    }
-
-    function renderVisibleCards() {
-        if (!grid) return;
-        cards.forEach(card => { card.hidden = true; });
-        currentFiltered.slice(0, currentLimit).forEach(card => {
-            card.hidden = false;
-            grid.appendChild(card);
-        });
-        if (sentinel) sentinel.hidden = currentLimit >= currentFiltered.length;
-    }
-
-    function applyLabFilters(resetLimit = true) {
-        if (!grid) return;
-        const query = (searchInput?.value || "").trim().toLowerCase();
-        const filtered = cards.filter(card => {
-            const title = card.dataset.title || "";
-            return !query || title.includes(query);
-        });
-        currentFiltered = sortCards(filtered);
-        if (resetLimit) currentLimit = INITIAL_BATCH;
-        renderVisibleCards();
-    }
-
-    function loadMoreCards() {
-        if (!grid || currentLimit >= currentFiltered.length) return;
-        currentLimit += NEXT_BATCH;
-        renderVisibleCards();
-    }
-
     async function toggleFavorite(form, button) {
         const response = await fetch(form.action, {
             method: "POST",
             body: new FormData(form),
             headers: { "X-Requested-With": "XMLHttpRequest" }
         });
+
         const data = await response.json();
-        if (!response.ok || !data.ok) return;
+
+        if (!response.ok || !data.ok) {
+            return;
+        }
 
         button.classList.toggle("is-active", data.is_favorite);
         button.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
@@ -461,56 +597,96 @@
     }
 
     if (sortTrigger && sortRoot) {
-        sortTrigger.addEventListener("click", () => sortRoot.classList.toggle("is-open"));
+        sortTrigger.addEventListener("click", (event) => {
+            event.stopPropagation();
+            sortRoot.classList.toggle("is-open");
+        });
     }
 
     if (sortMenu) {
-        sortMenu.querySelectorAll("[data-sort-field]").forEach(option => {
-            option.addEventListener("click", function () {
-                currentField = this.dataset.sortField || "score";
-                currentDesc = defaultDirectionFor(currentField);
-                closeAll();
-                syncSortUi();
-                applyLabFilters(true);
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+            option.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                setSortField(this.dataset.sortField || "score");
             });
         });
     }
 
     if (sortDirectionBtn) {
-        sortDirectionBtn.addEventListener("click", () => {
-            currentDesc = !currentDesc;
-            syncSortUi();
+        sortDirectionBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleSortDirection();
+        });
+    }
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".labx-sort-select")) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeAll();
+        }
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener("input", () => {
             applyLabFilters(true);
         });
     }
 
-    document.addEventListener("click", e => {
-        if (!e.target.closest(".labx-sort-select")) closeAll();
-    });
-    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
-
-    if (searchInput) {
-        searchInput.addEventListener("input", () => applyLabFilters(true));
-    }
-
     document.addEventListener("submit", async function (event) {
         const form = event.target.closest(".auto-rec-fav-form");
+
         if (!form) return;
+
         event.preventDefault();
+
         const button = form.querySelector(".auto-rec-fav-btn");
+
         if (!button) return;
-        try { await toggleFavorite(form, button); } catch (err) { console.error(err); }
+
+        try {
+            await toggleFavorite(form, button);
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     if (sentinel && grid) {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) loadMoreCards(); });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreCards();
+                }
+            });
         }, { rootMargin: "220px 0px" });
+
         observer.observe(sentinel);
     }
 
     syncSortUi();
     applyLabFilters(true);
+
+    window.debugLabSortState = function () {
+        return {
+            currentField,
+            currentDesc,
+            totalCards: cards.length,
+            filteredCards: currentFiltered.length,
+            firstVisibleCards: currentFiltered.slice(0, Math.min(5, currentFiltered.length)).map((card) => ({
+                title: card.dataset.title,
+                score: card.dataset.score,
+                rating: card.dataset.rating,
+                year: card.dataset.year,
+                index: card.dataset.index
+            }))
+        };
+    };
 })();
 </script>
 
@@ -544,7 +720,7 @@
 
     function buildGenres(genres) {
         if (!genres || !genres.length) {
-            return '<span class="lab-user-empty">Janrlar kiritilmagan</span>';
+            return '<span class="lab-user-empty">{{ t.no_genres_entered|escapejs }}</span>';
         }
 
         const visible = genres.slice(0, 5)
@@ -653,7 +829,7 @@
 
     function getSelectedOptionText(value) {
         const match = options.find(opt => String(opt.value) === String(value));
-        return match ? match.textContent.trim() : "User tanlang";
+        return match ? match.textContent.trim() : "{{ t.user_select_placeholder|escapejs }}";
     }
 
     function updateTriggerLabel() {
