@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saqlanganlar</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../static/css/theme.css" rel="stylesheet"/>
+<link href="../../static/css/layout.css" rel="stylesheet"/>
+<link href="../../static/css/components.css" rel="stylesheet"/>
+<link href="../../static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="../../index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../movies/index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/for-you/index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/uz/index__next__interactions_favorites_user_id_952.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/ru/index__next__interactions_favorites_user_id_952.html">
+<img alt="Русский" class="lang-flag-img" src="../../static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/en/index__next__interactions_favorites_user_id_952.html">
+<img alt="English" class="lang-flag-img" src="../../static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="../../accounts/profile/index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<section class="interaction-page">
+<div class="container">
+<div class="interaction-page-top fade-up">
+<div class="interaction-page-top-main">
+<div class="interaction-page-head interaction-page-head--compact">
+<div>
+<h1>Saqlanganlar</h1>
+<p>Saqlab qo‘yilgan filmlar ro‘yxati.</p>
+</div>
+</div>
+</div>
+<div class="glass-card interaction-filter-card interaction-filter-card--top">
+<form class="interaction-filter-form" id="interactionFilterForm" method="get">
+<div class="interaction-filter-grid">
+<div>
+<label class="form-label">Qidiruv</label>
+<input autocomplete="off" class="form-control" id="interactionSearchInput" name="q" placeholder="Film nomi bo‘yicha qidiring..." type="text" value=""/>
+</div>
+<div>
+<label class="form-label">Saralash</label>
+<input id="interactionSortValue" name="sort" type="hidden" value="recent"/>
+<div class="interaction-sort-row">
+<div class="interaction-sort-select" id="interactionSortSelect">
+<button class="interaction-sort-select__trigger" id="interactionSortTrigger" type="button">
+<span id="interactionSortTriggerLabel">Qo‘shilgan sana</span>
+<span class="interaction-sort-select__chevron"></span>
+</button>
+<div class="interaction-sort-select__menu" id="interactionSortMenu">
+<button class="interaction-sort-select__option" data-sort-field="date" type="button">Qo‘shilgan sana</button>
+<button class="interaction-sort-select__option" data-sort-field="title" type="button">Nom</button>
+<button class="interaction-sort-select__option" data-sort-field="year" type="button">Yil</button>
+<button class="interaction-sort-select__option" data-sort-field="rating" type="button">Reyting</button>
+<button class="interaction-sort-select__option" data-sort-field="count" type="button">Baho soni</button>
+</div>
+</div>
+<button aria-label="Saralash yo‘nalishi" class="interaction-sort-direction" data-desc="true" id="interactionSortDirection" title="Saralash yo‘nalishi" type="button">
+<span class="interaction-sort-direction__icon">↓</span>
+<span class="interaction-sort-direction__text">Kamayish</span>
+</button>
+</div>
+</div>
+<div class="interaction-filter-actions">
+<button class="btn btn-primary-gradient" type="submit">Qo‘llash</button>
+<a class="btn btn-outline-soft" href="index.html">Tozalash</a>
+</div>
+</div>
+</form>
+</div>
+</div>
+<div id="interactionResults">
+<div class="interaction-two-col-grid fade-up" id="favoritesGrid">
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/further-gesture-a/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-further-gesture-a" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#1</span>
+<a class="favorite-poster-link" href="../../movies/further-gesture-a/index__next__interactions_favorites_user_id_952.html">
+<div class="favorite-poster-placeholder">F</div>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/further-gesture-a/index__next__interactions_favorites_user_id_952.html">Further Gesture, A</a>
+<form action="/interactions/movies/further-gesture-a/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="further-gesture-a" data-movie-title="Further Gesture, A" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1996</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                1 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Hozircha tavsif mavjud emas.
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-17 14:24
+                            </span>
+<span class="frc-genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/seven-years-in-tibet/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-seven-years-in-tibet" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#2</span>
+<a class="favorite-poster-link" href="../../movies/seven-years-in-tibet/index__next__interactions_favorites_user_id_952.html">
+<img alt="Seven Years in Tibet" class="favorite-poster-img" src="../../media/movies/posters/seven-years-in-tibet-690.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/seven-years-in-tibet/index__next__interactions_favorites_user_id_952.html">Seven Years in Tibet</a>
+<form action="/interactions/movies/seven-years-in-tibet/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="seven-years-in-tibet" data-movie-title="Seven Years in Tibet" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1997</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                3,5
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                155 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Austrian mountaineer Heinrich Harrer journeys to the Himalayas without his family to head an expedition in 1939. But when World War II breaks out, the arrogant…
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-17 13:36
+                            </span>
+<span class="frc-genre-chip">Drama</span>
+<span class="frc-genre-chip">War</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/bloody-child-the/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-bloody-child-the" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#3</span>
+<a class="favorite-poster-link" href="../../movies/bloody-child-the/index__next__interactions_favorites_user_id_952.html">
+<img alt="Bloody Child, The" class="favorite-poster-img" src="../../media/movies/posters/bloody-child-the-852.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/bloody-child-the/index__next__interactions_favorites_user_id_952.html">Bloody Child, The</a>
+<form action="/interactions/movies/bloody-child-the/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="bloody-child-the" data-movie-title="Bloody Child, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1996</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                1 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            This film was inspired by a real event—a young US Marine, recently back from the Gulf War, was found digging a grave for his murdered wife in the middle of the…
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:57
+                            </span>
+<span class="frc-genre-chip">Drama</span>
+<span class="frc-genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/boys-in-venice/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-boys-in-venice" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#4</span>
+<a class="favorite-poster-link" href="../../movies/boys-in-venice/index__next__interactions_favorites_user_id_952.html">
+<div class="favorite-poster-placeholder">B</div>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/boys-in-venice/index__next__interactions_favorites_user_id_952.html">Boys in Venice</a>
+<form action="/interactions/movies/boys-in-venice/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="boys-in-venice" data-movie-title="Boys in Venice" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1996</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                2 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Hozircha tavsif mavjud emas.
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:57
+                            </span>
+<span class="frc-genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/butterfly-kiss/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-butterfly-kiss" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#5</span>
+<a class="favorite-poster-link" href="../../movies/butterfly-kiss/index__next__interactions_favorites_user_id_952.html">
+<img alt="Butterfly Kiss" class="favorite-poster-img" src="../../media/movies/posters/butterfly-kiss-1621.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/butterfly-kiss/index__next__interactions_favorites_user_id_952.html">Butterfly Kiss</a>
+<form action="/interactions/movies/butterfly-kiss/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="butterfly-kiss" data-movie-title="Butterfly Kiss" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1995</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                1 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Deeply mentally unbalanced drifter Eunice roams grim northern Britain committing psychosexual serial murders of both men and women while ostensibly searching f…
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:57
+                            </span>
+<span class="frc-genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/bird-of-prey/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-bird-of-prey" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#6</span>
+<a class="favorite-poster-link" href="../../movies/bird-of-prey/index__next__interactions_favorites_user_id_952.html">
+<img alt="Bird of Prey" class="favorite-poster-img" src="../../media/movies/posters/bird-of-prey-1364.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/bird-of-prey/index__next__interactions_favorites_user_id_952.html">Bird of Prey</a>
+<form action="/interactions/movies/bird-of-prey/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="bird-of-prey" data-movie-title="Bird of Prey" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1996</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                1 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            As a boy, Dominik watched an American crime boss murder his father, a police officer fighting corruption in Sofia, Bulgaria. Years later, he attempts to avenge…
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:57
+                            </span>
+<span class="frc-genre-chip">Action</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/beyond-bedlam/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-beyond-bedlam" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#7</span>
+<a class="favorite-poster-link" href="../../movies/beyond-bedlam/index__next__interactions_favorites_user_id_952.html">
+<div class="favorite-poster-placeholder">B</div>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/beyond-bedlam/index__next__interactions_favorites_user_id_952.html">Beyond Bedlam</a>
+<form action="/interactions/movies/beyond-bedlam/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="beyond-bedlam" data-movie-title="Beyond Bedlam" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1993</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                2 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Hozircha tavsif mavjud emas.
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:56
+                            </span>
+<span class="frc-genre-chip">Drama</span>
+<span class="frc-genre-chip">Horror</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/3-ninjas-high-noon-at-mega-mountain/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-3-ninjas-high-noon-at-mega-mountain" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#8</span>
+<a class="favorite-poster-link" href="../../movies/3-ninjas-high-noon-at-mega-mountain/index__next__interactions_favorites_user_id_952.html">
+<img alt="3 Ninjas: High Noon At Mega Mountain" class="favorite-poster-img" src="../../media/movies/posters/3-ninjas-high-noon-at-mega-mountain-314.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/3-ninjas-high-noon-at-mega-mountain/index__next__interactions_favorites_user_id_952.html">3 Ninjas: High Noon At Mega Mountain</a>
+<form action="/interactions/movies/3-ninjas-high-noon-at-mega-mountain/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="3-ninjas-high-noon-at-mega-mountain" data-movie-title="3 Ninjas: High Noon At Mega Mountain" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1998</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                1,0
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                5 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Three young boys, Rocky, Colt and Tum Tum together with their neighbor girl, computer whiz Amanda are visiting Mega Mountain amusement park when it is invaded …
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 02:56
+                            </span>
+<span class="frc-genre-chip">Action</span>
+<span class="frc-genre-chip">Children's</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#9</span>
+<a class="favorite-poster-link" href="../../movies/old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la/index__next__interactions_favorites_user_id_952.html">
+<img alt="Old Lady Who Walked in the Sea, The (Vieille qui marchait dans la mer, La)" class="favorite-poster-img" src="../../media/movies/posters/old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la-1242.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la/index__next__interactions_favorites_user_id_952.html">Old Lady Who Walked in the Sea, The (Vieille qui marchait dans la mer, La)</a>
+<form action="/interactions/movies/old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="old-lady-who-walked-in-the-sea-the-vieille-qui-marchait-dans-la-mer-la" data-movie-title="Old Lady Who Walked in the Sea, The (Vieille qui marchait dans la mer, La)" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1991</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                2,6
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                5 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            A con artist couple takes a young, handsome petty thief under their wing, but jealousies flare when the woman develops an interest in him.
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-16 01:47
+                            </span>
+<span class="frc-genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/8-heads-in-a-duffel-bag/?next=/interactions/favorites/%3Fuser_id%3D952" id="favorite-card-8-heads-in-a-duffel-bag" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#10</span>
+<a class="favorite-poster-link" href="../../movies/8-heads-in-a-duffel-bag/index__next__interactions_favorites_user_id_952.html">
+<img alt="8 Heads in a Duffel Bag" class="favorite-poster-img" src="../../media/movies/posters/8-heads-in-a-duffel-bag-1664.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/8-heads-in-a-duffel-bag/index__next__interactions_favorites_user_id_952.html">8 Heads in a Duffel Bag</a>
+<form action="/interactions/movies/8-heads-in-a-duffel-bag/favorite/toggle/" class="favorite-toggle-form" data-movie-slug="8-heads-in-a-duffel-bag" data-movie-title="8 Heads in a Duffel Bag" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Dw3uUP4TyPuyq9BnUfxMWbOhPbgFvaCIafwxLFxl9KYrjQC4E5kV90IiPUDcgkIv"/>
+<input name="next" type="hidden" value="/interactions/favorites/?user_id=952"/>
+<button class="favorite-remove-btn" title="Film sevimlilardan olib tashlandi" type="submit">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</form>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1997</span>
+<span class="frc-rating-badge">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                3,3
+                            </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                4 ta baho
+                            </span>
+</div>
+<p class="interaction-overview">
+                            Mafia hitman Tommy Spinelli is flying to San Diego with a bag that holds eight severed heads, which he's bringing to his superiors to prove that some troubleso…
+                        </p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                2026-04-14 23:10
+                            </span>
+<span class="frc-genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+</div>
+<div class="interaction-hidden-pager" data-next-url="?page=2&amp;user_id=952" id="interactionPagerMeta">
+</div>
+<div aria-hidden="true" class="interaction-infinite-sentinel" id="interactionInfiniteSentinel"></div>
+</div>
+<div aria-atomic="true" aria-live="polite" class="favorites-snackbar-stack" id="favoritesSnackbarStack"></div>
+</div>
+</section>
+<script>
+(function () {
+    const form = document.getElementById("interactionFilterForm");
+    const searchInput = document.getElementById("interactionSearchInput");
+    const resultsContainer = document.getElementById("interactionResults");
+    const snackbarStack = document.getElementById("favoritesSnackbarStack");
+
+    const sortHidden = document.getElementById("interactionSortValue");
+    const sortRoot = document.getElementById("interactionSortSelect");
+    const sortTrigger = document.getElementById("interactionSortTrigger");
+    const sortMenu = document.getElementById("interactionSortMenu");
+    const sortLabel = document.getElementById("interactionSortTriggerLabel");
+    const sortDirectionBtn = document.getElementById("interactionSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".interaction-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".interaction-sort-direction__text");
+
+    if (!form || !searchInput || !resultsContainer || !snackbarStack) return;
+
+    let timer = null;
+    let controller = null;
+    let infiniteObserver = null;
+    let isLoadingMore = false;
+
+    const FIELD_LABELS = {
+        date: "Qo‘shilgan sana",
+        title: "Nom",
+        year: "Yil",
+        rating: "Reyting",
+        count: "Baho soni",
+    };
+
+    function encodeSort(field, desc) {
+        if (field === "date") return desc ? "recent" : "oldest";
+        if (field === "title") return desc ? "title_desc" : "title_asc";
+        if (field === "year") return desc ? "year_desc" : "year_asc";
+        if (field === "rating") return desc ? "rating_desc" : "rating_asc";
+        if (field === "count") return desc ? "count_desc" : "count_asc";
+        return "recent";
+    }
+
+    function decodeSort(value) {
+        const map = {
+            "recent": { field: "date", desc: true },
+            "oldest": { field: "date", desc: false },
+            "title_desc": { field: "title", desc: true },
+            "title_asc": { field: "title", desc: false },
+            "year_desc": { field: "year", desc: true },
+            "year_asc": { field: "year", desc: false },
+            "rating_desc": { field: "rating", desc: true },
+            "rating_asc": { field: "rating", desc: false },
+            "count_desc": { field: "count", desc: true },
+            "count_asc": { field: "count", desc: false },
+        };
+        return map[value || "recent"] || { field: "date", desc: true };
+    }
+
+    function syncSortUi() {
+        const decoded = decodeSort(sortHidden.value);
+        sortLabel.textContent = FIELD_LABELS[decoded.field] || "Qo‘shilgan sana";
+
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
+            btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
+        });
+
+        sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
+        sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
+        sortDirectionText.textContent = decoded.desc ? "" : "";
+    }
+
+    function closeAll() {
+        sortRoot.classList.remove("is-open");
+    }
+
+    function buildQueryString() {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            if (key === "page") continue;
+            if (value !== "") params.append(key, value);
+        }
+
+        return params.toString();
+    }
+
+    function getPagerMeta() {
+        return document.getElementById("interactionPagerMeta");
+    }
+
+    function getGrid() {
+        return document.getElementById("favoritesGrid");
+    }
+
+    function getSentinel() {
+        return document.getElementById("interactionInfiniteSentinel");
+    }
+
+    function getNextUrl() {
+        const pagerMeta = getPagerMeta();
+        return pagerMeta ? (pagerMeta.dataset.nextUrl || "") : "";
+    }
+
+    function updateNextUrl(value) {
+        const pagerMeta = getPagerMeta();
+        if (pagerMeta) {
+            pagerMeta.dataset.nextUrl = value || "";
+        }
+    }
+
+    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
+        const activeElement = document.activeElement;
+        const isSearchFocused = preserveCaret && activeElement === searchInput;
+        const start = searchInput.selectionStart;
+        const end = searchInput.selectionEnd;
+
+        const targetUrl = explicitUrl || (function () {
+            const query = buildQueryString();
+            return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+        })();
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                signal: controller.signal,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextResults = doc.getElementById("interactionResults");
+            if (!nextResults) return;
+
+            resultsContainer.innerHTML = nextResults.innerHTML;
+
+            if (pushUrl) {
+                window.history.replaceState({}, "", targetUrl);
+            }
+
+            if (isSearchFocused) {
+                searchInput.focus();
+                if (typeof start === "number" && typeof end === "number") {
+                    searchInput.setSelectionRange(start, end);
+                }
+            }
+
+            setupInfiniteScroll();
+        } catch (error) {
+            if (error.name !== "AbortError") console.error(error);
+        }
+    }
+
+    async function loadMoreResults() {
+        const nextUrl = getNextUrl();
+        const grid = getGrid();
+        if (!nextUrl || !grid || isLoadingMore) return;
+
+        isLoadingMore = true;
+
+        try {
+            const response = await fetch(nextUrl, {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextGrid = doc.getElementById("favoritesGrid");
+            const nextPagerMeta = doc.getElementById("interactionPagerMeta");
+
+            if (!nextGrid || !nextPagerMeta) return;
+
+            grid.insertAdjacentHTML("beforeend", nextGrid.innerHTML);
+            updateNextUrl(nextPagerMeta.dataset.nextUrl || "");
+            setupInfiniteScroll();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            isLoadingMore = false;
+        }
+    }
+
+    function setupInfiniteScroll() {
+        if (infiniteObserver) {
+            infiniteObserver.disconnect();
+            infiniteObserver = null;
+        }
+
+        const sentinel = getSentinel();
+        const nextUrl = getNextUrl();
+
+        if (!sentinel) return;
+
+        if (!nextUrl) {
+            sentinel.hidden = true;
+            return;
+        }
+
+        sentinel.hidden = false;
+
+        infiniteObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreResults();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        infiniteObserver.observe(sentinel);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function showFavoriteSnackbar(movieTitle, variant) {
+        const item = document.createElement("div");
+        item.className = `favorites-snackbar favorites-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const message = variant === "success"
+            ? `<span class="favorites-snackbar__movie">"${safeTitle}"</span> Film sevimlilarga qo‘shildi ♥`
+            : `<span class="favorites-snackbar__movie">"${safeTitle}"</span> Film sevimlilardan olib tashlandi`;
+
+        item.innerHTML = `
+            <div class="favorites-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="favorites-snackbar__content">
+                <div class="favorites-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="favorites-snackbar__text">${message}</div>
+            </div>
+            <button type="button" class="favorites-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => item.classList.add("is-visible"));
+
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timerId = setTimeout(removeItem, 3200);
+        item.querySelector(".favorites-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timerId);
+            removeItem();
+        });
+    }
+
+    async function postAjax(formEl) {
+        const response = await fetch(formEl.action, {
+            method: "POST",
+            body: new FormData(formEl),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+        return { ok: response.ok, data };
+    }
+
+    function ensureEmptyState() {
+        const grid = getGrid();
+        if (!grid) return;
+
+        const cards = grid.querySelectorAll(".favorite-row-card");
+        const emptyState = document.getElementById("favoritesEmptyState");
+
+        if (cards.length === 0 && !emptyState) {
+            const empty = document.createElement("div");
+            empty.className = "glass-card empty-state-card full-span-card";
+            empty.id = "favoritesEmptyState";
+            empty.innerHTML = `
+                <h4>Saqlangan filmlar hozircha yo‘q</h4>
+                <p>Movie detail sahifasidagi yurakcha tugma orqali filmlarni saqlashingiz mumkin.</p>
+            `;
+            grid.appendChild(empty);
+        }
+    }
+
+    sortTrigger.addEventListener("click", function () {
+        sortRoot.classList.toggle("is-open");
+    });
+
+    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+        option.addEventListener("click", function () {
+            const field = this.dataset.sortField || "date";
+            const desc = true;
+            sortHidden.value = encodeSort(field, desc);
+            sortRoot.classList.remove("is-open");
+            syncSortUi();
+            fetchAndReplaceResults(true, false);
+        });
+    });
+
+    sortDirectionBtn.addEventListener("click", function () {
+        const decoded = decodeSort(sortHidden.value);
+        sortHidden.value = encodeSort(decoded.field, !decoded.desc);
+        syncSortUi();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".interaction-sort-select")) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeAll();
+    });
+
+    searchInput.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fetchAndReplaceResults(true, true);
+        }, 350);
+    });
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("submit", async function (event) {
+        const formEl = event.target.closest(".favorite-toggle-form");
+        if (!formEl) return;
+
+        event.preventDefault();
+
+        try {
+            const result = await postAjax(formEl);
+            if (!result.ok || !result.data.ok) return;
+
+            const slug = formEl.dataset.movieSlug;
+            const movieTitle = result.data.movie_title || formEl.dataset.movieTitle || "Film";
+            const card = document.getElementById(`favorite-card-${slug}`);
+
+            if (result.data.action === "removed") {
+                if (card) card.remove();
+                ensureEmptyState();
+                showFavoriteSnackbar(movieTitle, "error");
+            } else {
+                showFavoriteSnackbar(movieTitle, "success");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    document.addEventListener("click", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (
+            event.target.closest("a, button, form, input, textarea, select, label")
+        ) {
+            return;
+        }
+
+        const href = card.dataset.href;
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (event.key === "Enter" || event.key === " ") {
+            if (
+                event.target.closest("a, button, form, input, textarea, select, label")
+            ) {
+                return;
+            }
+            event.preventDefault();
+            const href = card.dataset.href;
+            if (href) {
+                window.location.href = href;
+            }
+        }
+    });
+
+    syncSortUi();
+    setupInfiniteScroll();
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="../../index.html">Bosh sahifa</a>
+<a href="../../movies/index.html">Filmlar</a>
+<a href="../../accounts/profile/index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/theme.js"></script>
+<script src="../../static/js/i18n-runtime.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="../../static/js/demo-mode.js"></script>
+</body>
+</html>

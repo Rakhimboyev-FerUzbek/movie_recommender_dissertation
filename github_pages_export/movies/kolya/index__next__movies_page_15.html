@@ -1,0 +1,1051 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kolya</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../static/css/theme.css" rel="stylesheet"/>
+<link href="../../static/css/layout.css" rel="stylesheet"/>
+<link href="../../static/css/components.css" rel="stylesheet"/>
+<link href="../../static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="../../index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/for-you/index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/uz/index__next__movies_kolya_next_movies_3Fpage_3D.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/ru/index__next__movies_kolya_next_movies_3Fpage_3D.html">
+<img alt="Русский" class="lang-flag-img" src="../../static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/en/index__next__movies_kolya_next_movies_3Fpage_3D.html">
+<img alt="English" class="lang-flag-img" src="../../static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="../../accounts/profile/index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="4Gtvcy0Jgsan0C4RimxZdUwDxeQNyZPYBpWy3otbRnEgTj5y2ck8qJqExXdkj9VL"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<section class="movie-detail-page detail-v4-page">
+<div class="container">
+<a class="back-link mb-3 d-inline-block" href="../index__page_15.html">
+            ← Filmga qaytish
+        </a>
+<div class="detail-v4-top-area fade-up">
+<div class="detail-v4-poster-col">
+<div class="detail-v4-poster-card">
+<img alt="Kolya" class="detail-v4-poster-img" src="../../media/movies/posters/kolya-242.jpg"/>
+</div>
+</div>
+<div class="detail-v4-top-main">
+<div class="glass-card detail-v4-header-card">
+<div class="detail-v4-title-row">
+<h1 class="detail-v4-title">Kolya</h1>
+<form action="/interactions/movies/kolya/favorite/toggle/" class="detail-favorite-title-form" id="favoriteToggleForm" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="4Gtvcy0Jgsan0C4RimxZdUwDxeQNyZPYBpWy3otbRnEgTj5y2ck8qJqExXdkj9VL"/>
+<input name="next" type="hidden" value="/movies/kolya/?next=/movies/%3Fpage%3D15"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="detail-favorite-icon-btn detail-favorite-icon-btn--title" id="favoriteToggleButton" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="favorite-heart-icon">♥</span>
+</button>
+</form>
+</div>
+<div class="detail-v4-header-bar">
+<div class="detail-v4-meta-side">
+<div class="detail-v4-meta-row">
+<span class="detail-stat-pill">1996</span>
+<span class="detail-stat-pill">1 soat 45 min</span>
+<span class="detail-stat-pill rating-pill">★ 4,0</span>
+<span class="detail-stat-pill">117 ta baho</span>
+
+</div>
+<div class="genre-chip-wrap mt-3">
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+<div class="detail-v4-inline-rating" id="rating-section">
+<div class="detail-v4-inline-rating-head">Reyting berish</div>
+<form action="/interactions/movies/kolya/rate/" class="detail-v4-inline-rating-form" id="inlineRatingForm" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="4Gtvcy0Jgsan0C4RimxZdUwDxeQNyZPYBpWy3otbRnEgTj5y2ck8qJqExXdkj9VL"/>
+<input name="next" type="hidden" value="/movies/kolya/?next=/movies/%3Fpage%3D15"/>
+<input id="ratingValueInput" name="rating" type="hidden" value="0"/>
+<div class="detail-v4-stars-row">
+<div class="detail-v4-stars" id="starRatingWidget">
+<button aria-label="1 star" class="detail-v4-star-btn" data-star="1" type="button">★</button>
+<button aria-label="2 stars" class="detail-v4-star-btn" data-star="2" type="button">★</button>
+<button aria-label="3 stars" class="detail-v4-star-btn" data-star="3" type="button">★</button>
+<button aria-label="4 stars" class="detail-v4-star-btn" data-star="4" type="button">★</button>
+<button aria-label="5 stars" class="detail-v4-star-btn" data-star="5" type="button">★</button>
+</div>
+<span class="detail-v4-rating-value" id="selectedRatingValue">
+</span>
+</div>
+<div class="detail-v4-review-inline is-hidden" id="reviewEditorWrap">
+<div class="detail-v4-review-row">
+<textarea class="form-control form-textarea" cols="40" id="id_review" name="review" placeholder="Qisqa fikr qoldiring (ixtiyoriy)..." rows="4">
+</textarea>
+<button class="btn btn-primary-gradient btn-smish" type="submit">Saqlash</button>
+</div>
+<div class="text-danger small" id="ratingErrors"></div>
+</div>
+<div class="detail-v4-review-display is-hidden" id="reviewDisplayWrap">
+<span id="reviewDisplayText"></span>
+<button aria-label="Tahrirlash" class="detail-v4-edit-review-btn" id="editReviewBtn" type="button">✎</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<div class="detail-v4-content-grid">
+<div class="glass-card detail-v4-overview-card">
+<h4>Tavsif</h4>
+<p class="mb-0">After a fictitious marriage with a Russian emigrant, Cellisten Louka, a Czech man, must suddenly take responsibility for her son. However, it’s not long before the communication barrier is broken between the two new family members.</p>
+</div>
+<div class="detail-v4-info-cast-grid">
+<div class="glass-card detail-v4-info-card detail-v4-equal-card">
+<h4>Film ma’lumotlari</h4>
+<div class="movie-info-grid compact mt-3">
+<div class="movie-info-item">
+<span>Til</span>
+<strong>Slovak, Russian</strong>
+</div>
+<div class="movie-info-item">
+<span>Mamlakat</span>
+<strong>Czech Republic, United Kingdom</strong>
+</div>
+<div class="movie-info-item full">
+<span>Rejissyor</span>
+<strong>Jan Svěrák</strong>
+</div>
+</div>
+</div>
+<div class="glass-card detail-v4-cast-card detail-v4-equal-card">
+<h4>Aktyorlar tarkibi</h4>
+<div class="genre-chip-wrap mt-3 detail-v4-cast-wrap">
+<span class="genre-chip">Zdeněk Svěrák</span>
+<span class="genre-chip">Andrei Khalimon</span>
+<span class="genre-chip">Libuše Šafránková</span>
+<span class="genre-chip">Ondřej Vetchý</span>
+<span class="genre-chip">Stella Zázvorková</span>
+<span class="genre-chip">Ladislav Smoljak</span>
+<span class="genre-chip">Irina Bezrukova</span>
+<span class="genre-chip">Silvia Šuvadová</span>
+<span class="genre-chip">Liliyan Malkina</span>
+<span class="genre-chip">Karel Heřmánek</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="detail-v4-engagement-grid mt-4">
+<div class="glass-card detail-v4-media-card">
+<ul class="nav nav-pills detail-media-tabs" id="mediaTabs" role="tablist">
+<li class="nav-item" role="presentation">
+<button aria-controls="trailer-pane" aria-selected="true" class="nav-link active" data-bs-target="#trailer-pane" data-bs-toggle="pill" id="trailer-tab" role="tab" type="button">
+                            TREYLER
+                        </button>
+</li>
+<li class="nav-item" role="presentation">
+<button aria-controls="watch-pane" aria-selected="false" class="nav-link" data-bs-target="#watch-pane" data-bs-toggle="pill" id="watch-tab" role="tab" type="button">
+                            ONLINE KO‘RISH
+                        </button>
+</li>
+</ul>
+<div class="tab-content media-tab-content mt-3 detail-v4-media-content">
+<div aria-labelledby="watch-tab" class="tab-pane fade" id="watch-pane" role="tabpanel">
+<div class="detail-v4-media-center">
+<div class="detail-v4-media-empty">
+<h5>No video</h5>
+<p>Hozircha ushbu film uchun full movie manbasi biriktirilmagan.</p>
+</div>
+</div>
+</div>
+<div aria-labelledby="trailer-tab" class="tab-pane fade show active" id="trailer-pane" role="tabpanel">
+<div class="detail-v4-media-center">
+<div class="detail-v4-media-frame ratio ratio-16x9">
+<iframe allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/TJ7XTi9S_Ag" title="Kolya trailer">
+</iframe>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card detail-v4-comments-card compact-comments-card" id="comments-section">
+<div class="detail-v4-comments-head compact-head">
+<h4>Kommentariyalar</h4>
+<p>Film haqidagi fikringizni yozib qoldiring.</p>
+</div>
+<form action="/interactions/movies/kolya/comment/" class="detail-v4-comment-form compact-comment-form mb-3" id="commentCreateForm" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="4Gtvcy0Jgsan0C4RimxZdUwDxeQNyZPYBpWy3otbRnEgTj5y2ck8qJqExXdkj9VL"/>
+<input name="next" type="hidden" value="/movies/kolya/?next=/movies/%3Fpage%3D15"/>
+<div class="comment-composer">
+<textarea class="form-control form-textarea" cols="40" id="id_body" maxlength="2000" name="body" placeholder="Fikringizni yozing..." required="" rows="4">
+</textarea>
+<button aria-label="Yuborish" class="comment-send-btn" title="Yuborish" type="submit">
+<svg aria-hidden="true" fill="none" viewbox="0 0 24 24">
+<path d="M21.8 3.6L3.9 10.7c-.9.4-.9 1.7 0 2l6.7 2.4 2.4 6.7c.3.9 1.6.9 2 0l7.1-17.9c.3-.8-.5-1.6-1.3-1.3Z" fill="currentColor"></path>
+</svg>
+</button>
+</div>
+<div class="text-danger small mt-2" id="commentCreateErrors"></div>
+</form>
+<div class="detail-v4-comments-scroll compact-comments-scroll" id="commentsList">
+<div class="media-empty-state compact" id="commentsEmptyState">
+<h5>Hozircha kommentariya yo‘q</h5>
+<p>Birinchi bo‘lib fikr qoldiring.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Snackbar / Toast -->
+<div aria-atomic="true" aria-live="polite" class="kc-snackbar" id="kc-snackbar" role="alert">
+<span class="kc-snackbar-icon" id="kc-snackbar-icon"></span>
+<span class="kc-snackbar-msg" id="kc-snackbar-msg"></span>
+<button aria-label="Yopish" class="kc-snackbar-close" id="kc-snackbar-close">×</button>
+</div>
+<div aria-hidden="true" class="comment-delete-modal" id="commentDeleteModal">
+<div class="comment-delete-modal__backdrop"></div>
+<div aria-labelledby="commentDeleteModalTitle" aria-modal="true" class="comment-delete-modal__dialog" role="dialog">
+<div class="comment-delete-modal__icon-wrap">
+<div class="comment-delete-modal__icon">!</div>
+</div>
+<h3 class="comment-delete-modal__title" id="commentDeleteModalTitle">
+            Kommentariyani o‘chirmoqchimisiz?
+        </h3>
+<p class="comment-delete-modal__text">
+            Ushbu kommentariya butunlay o‘chib ketadi. Bu amalni ortga qaytarib bo‘lmaydi.
+        </p>
+<div class="comment-delete-modal__actions">
+<button class="comment-delete-modal__btn comment-delete-modal__btn--cancel" id="commentDeleteCancelBtn" type="button">
+                Bekor qilish
+            </button>
+<button class="comment-delete-modal__btn comment-delete-modal__btn--confirm" id="commentDeleteConfirmBtn" type="button">
+                Ha, o‘chirish
+            </button>
+</div>
+</div>
+</div>
+<script>
+(function () {
+    const ratingInput = document.getElementById("ratingValueInput");
+    const ratingValue = document.getElementById("selectedRatingValue");
+    const starButtons = Array.from(document.querySelectorAll(".detail-v4-star-btn"));
+    const reviewInput = document.getElementById("id_review");
+    const reviewEditorWrap = document.getElementById("reviewEditorWrap");
+    const reviewDisplayWrap = document.getElementById("reviewDisplayWrap");
+    const reviewDisplayText = document.getElementById("reviewDisplayText");
+    const editReviewBtn = document.getElementById("editReviewBtn");
+    const ratingForm = document.getElementById("inlineRatingForm");
+    const ratingErrors = document.getElementById("ratingErrors");
+
+    const commentForm = document.getElementById("commentCreateForm");
+    const commentsList = document.getElementById("commentsList");
+    const commentErrors = document.getElementById("commentCreateErrors");
+
+    const snackbar = document.getElementById("kc-snackbar");
+    const snackIcon = document.getElementById("kc-snackbar-icon");
+    const snackMsg = document.getElementById("kc-snackbar-msg");
+    const snackClose = document.getElementById("kc-snackbar-close");
+
+    const deleteModal = document.getElementById("commentDeleteModal");
+    const deleteModalBackdrop = deleteModal ? deleteModal.querySelector(".comment-delete-modal__backdrop") : null;
+    const deleteConfirmBtn = document.getElementById("commentDeleteConfirmBtn");
+    const deleteCancelBtn = document.getElementById("commentDeleteCancelBtn");
+
+    let snackTimer = null;
+    let pendingDeleteForm = null;
+
+    let committedRatingValue = normalizeRatingValue(ratingInput ? ratingInput.value : "0");
+    let committedReviewValue = reviewInput ? reviewInput.value : "";
+    let isRatingEditMode = committedRatingValue === "0";
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function showSnackbar(message, type = "success") {
+        if (!snackbar) return;
+        clearTimeout(snackTimer);
+
+        snackbar.className = `kc-snackbar kc-snackbar--${type} kc-snackbar--visible`;
+        snackIcon.textContent = type === "success" ? "✓" : "✕";
+        snackMsg.textContent = message;
+
+        snackTimer = setTimeout(hideSnackbar, 3500);
+    }
+
+    function hideSnackbar() {
+        if (!snackbar) return;
+        snackbar.classList.remove("kc-snackbar--visible");
+        snackbar.classList.add("kc-snackbar--hiding");
+        setTimeout(() => {
+            snackbar.classList.remove("kc-snackbar--hiding");
+        }, 350);
+    }
+
+    if (snackClose) {
+        snackClose.addEventListener("click", function () {
+            clearTimeout(snackTimer);
+            hideSnackbar();
+        });
+    }
+
+    function openDeleteModal(form) {
+        pendingDeleteForm = form;
+        if (!deleteModal) return;
+
+        deleteModal.classList.add("is-open");
+        deleteModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+    }
+
+    function closeDeleteModal(showCancelSnackbar = false) {
+        if (!deleteModal) return;
+
+        deleteModal.classList.remove("is-open");
+        deleteModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        pendingDeleteForm = null;
+
+        if (showCancelSnackbar) {
+            showSnackbar("Kommentariyani o‘chirish bekor qilindi.", "error");
+        }
+    }
+
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener("click", function () {
+            closeDeleteModal(true);
+        });
+    }
+
+    if (deleteModalBackdrop) {
+        deleteModalBackdrop.addEventListener("click", function () {
+            closeDeleteModal(true);
+        });
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && deleteModal && deleteModal.classList.contains("is-open")) {
+            closeDeleteModal(true);
+        }
+    });
+
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener("click", async function () {
+            if (!pendingDeleteForm) return;
+
+            const activeForm = pendingDeleteForm;
+            deleteConfirmBtn.disabled = true;
+
+            try {
+                const { response, data } = await postFormAjax(activeForm);
+
+                if (!response.ok || !data.ok) {
+                    showSnackbar("Kommentariyani o‘chirishda xatolik yuz berdi.", "error");
+                    return;
+                }
+
+                const commentId = activeForm.dataset.commentId || data.comment_id;
+                const card = document.getElementById(`comment-card-${commentId}`);
+
+                if (card) {
+                    card.remove();
+                }
+
+                ensureEmptyState();
+                closeDeleteModal(false);
+                showSnackbar(data.message || "Kommentariya o‘chirildi.", "success");
+            } catch (error) {
+                console.error(error);
+                showSnackbar("Kommentariyani o‘chirishda xatolik yuz berdi.", "error");
+            } finally {
+                deleteConfirmBtn.disabled = false;
+            }
+        });
+    }
+
+    async function postFormAjax(form) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+        return { response, data };
+    }
+
+    function normalizeRatingValue(value) {
+        const numeric = parseFloat(value || "0");
+
+        if (!Number.isFinite(numeric) || numeric <= 0) {
+            return "0";
+        }
+
+        return numeric.toFixed(1).replace(".0", "");
+    }
+
+    function renderStars(value) {
+        const current = parseFloat(value || "0");
+
+        starButtons.forEach((btn) => {
+            const starNumber = parseInt(btn.dataset.star, 10);
+            btn.classList.remove("full", "half", "empty");
+
+            if (current >= starNumber) {
+                btn.classList.add("full");
+            } else if (current >= (starNumber - 0.5)) {
+                btn.classList.add("half");
+            } else {
+                btn.classList.add("empty");
+            }
+        });
+
+        if (ratingValue) {
+            ratingValue.textContent = current > 0
+                ? current.toFixed(1).replace(".0", "")
+                : "";
+        }
+    }
+
+    function getHalfValue(button, event) {
+        const starNumber = parseInt(button.dataset.star, 10);
+        const rect = button.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+
+        return offsetX <= rect.width / 2 ? (starNumber - 0.5) : starNumber;
+    }
+
+    function hasCommittedRating() {
+        return parseFloat(committedRatingValue || "0") > 0;
+    }
+
+    function canChangeRating() {
+        return !hasCommittedRating() || isRatingEditMode;
+    }
+
+    function resetRatingDraft() {
+        if (ratingInput) {
+            ratingInput.value = committedRatingValue;
+        }
+
+        if (reviewInput) {
+            reviewInput.value = committedReviewValue;
+        }
+
+        if (reviewDisplayText) {
+            reviewDisplayText.textContent = committedReviewValue;
+        }
+
+        if (ratingErrors) {
+            ratingErrors.textContent = "";
+        }
+
+        renderStars(committedRatingValue);
+    }
+
+    function openReviewEditor(shouldFocus = true) {
+        isRatingEditMode = true;
+
+        if (reviewEditorWrap) {
+            reviewEditorWrap.classList.remove("is-hidden");
+        }
+
+        if (reviewDisplayWrap) {
+            reviewDisplayWrap.classList.add("is-hidden");
+        }
+
+        if (shouldFocus && reviewInput) {
+            reviewInput.focus();
+        }
+    }
+
+    function closeReviewEditor(resetDraft = true) {
+        if (resetDraft) {
+            resetRatingDraft();
+        }
+
+        isRatingEditMode = committedRatingValue === "0";
+
+        if (reviewEditorWrap) {
+            reviewEditorWrap.classList.add("is-hidden");
+        }
+
+        if (reviewDisplayWrap) {
+            if (hasCommittedRating()) {
+                reviewDisplayWrap.classList.remove("is-hidden");
+            } else {
+                reviewDisplayWrap.classList.add("is-hidden");
+            }
+        }
+
+        if (reviewInput && document.activeElement === reviewInput) {
+            reviewInput.blur();
+        }
+    }
+
+    function isRatingEditorOpen() {
+        return Boolean(reviewEditorWrap && !reviewEditorWrap.classList.contains("is-hidden"));
+    }
+
+    function isInsideRatingArea(target) {
+        const ratingSection = document.getElementById("rating-section");
+        return Boolean(ratingSection && ratingSection.contains(target));
+    }
+
+    function buildOwnCommentCard(comment, csrfToken) {
+        const safeBody = escapeHtml(comment.body).replace(/\n/g, "<br>");
+        const likeUrl = comment.urls?.like || "#";
+        const editUrl = comment.urls?.edit || "#";
+        const deleteUrl = comment.urls?.delete || "#";
+
+        return `
+            <article class="detail-v4-comment-card is-own" id="comment-card-${comment.id}">
+                <div class="detail-v4-comment-top">
+                    <div class="detail-v4-comment-user">
+                        <span class="detail-v4-comment-author">${escapeHtml(comment.author)}</span>
+                    </div>
+
+                    <div class="detail-v4-comment-actions">
+                        <form method="post" action="${deleteUrl}" class="comment-delete-form comment-delete-form--inline" data-comment-id="${comment.id}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                            <button type="submit" class="comment-delete-btn" title="O‘chirish" aria-label="Kommentariyani o‘chirish">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 7h2v8h-2v-8Zm4 0h2v8h-2v-8ZM7 10h2v8H7v-8Zm-1 10h12l1-13H5l1 13Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </form>
+
+                        <form method="post" action="${likeUrl}" class="comment-like-form" data-comment-id="${comment.id}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                            <button type="submit" class="comment-like-btn compact-like-btn" id="comment-like-btn-${comment.id}">
+                                ♥ <span class="comment-like-count" id="comment-like-count-${comment.id}">${comment.like_count ?? 0}</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="detail-v4-comment-body" id="display-body-${comment.id}">
+                    ${safeBody}
+                </div>
+
+                <form method="post" action="${editUrl}" class="comment-edit-form is-hidden" id="edit-form-${comment.id}" data-comment-id="${comment.id}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                    <input type="hidden" name="next" value="${window.location.pathname + window.location.search}">
+                    <textarea name="body" class="form-control" rows="3" maxlength="2000">${escapeHtml(comment.body)}</textarea>
+                    <div class="comment-edit-form-actions">
+                        <button type="submit" class="btn btn-primary-gradient btn-smish">Saqlash</button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-soft btn-smish comment-edit-cancel-btn"
+                            data-edit-target="edit-form-${comment.id}"
+                            data-display-target="display-body-${comment.id}"
+                        >
+                            Bekor qilish
+                        </button>
+                    </div>
+                </form>
+
+                <div class="detail-v4-comment-footer detail-v4-comment-footer--own">
+                    <div class="detail-v4-comment-own-meta">
+                        <button
+                            type="button"
+                            class="comment-edit-btn bottom-edit-btn"
+                            data-edit-target="edit-form-${comment.id}"
+                            data-display-target="display-body-${comment.id}"
+                            title="Tahrirlash"
+                            aria-label="Kommentariyani tahrirlash"
+                        >
+                            ✎
+                        </button>
+                        <div class="detail-v4-comment-time is-own" id="comment-time-${comment.id}">${escapeHtml(comment.display_time || comment.created_at || "")}</div>
+                    </div>
+                </div>
+            </article>
+        `;
+    }
+    
+    function ensureEmptyState() {
+        if (!commentsList) return;
+        const cards = commentsList.querySelectorAll(".detail-v4-comment-card");
+        let emptyState = document.getElementById("commentsEmptyState");
+
+        if (cards.length === 0 && !emptyState) {
+            commentsList.insertAdjacentHTML("beforeend", `
+                <div class="media-empty-state compact" id="commentsEmptyState">
+                    <h5>Hozircha kommentariya yo‘q</h5>
+                    <p>Birinchi bo‘lib fikr qoldiring.</p>
+                </div>
+            `);
+        } else if (cards.length > 0 && emptyState) {
+            emptyState.remove();
+        }
+    }
+
+    if (ratingInput && starButtons.length) {
+        starButtons.forEach((btn) => {
+            btn.addEventListener("mousemove", function (event) {
+                if (!canChangeRating()) return;
+
+                renderStars(getHalfValue(this, event));
+            });
+
+            btn.addEventListener("mouseleave", function () {
+                renderStars(ratingInput.value);
+            });
+
+            btn.addEventListener("click", function (event) {
+                if (!canChangeRating()) return;
+
+                const selected = getHalfValue(this, event);
+                ratingInput.value = normalizeRatingValue(selected);
+                renderStars(ratingInput.value);
+
+                openReviewEditor(false);
+            });
+        });
+
+        ratingInput.value = committedRatingValue;
+        renderStars(committedRatingValue);
+    }
+
+    if (reviewInput) {
+        reviewInput.setAttribute("maxlength", "50");
+    }
+
+    if (editReviewBtn) {
+        editReviewBtn.addEventListener("click", function () {
+            openReviewEditor(true);
+        });
+    }
+
+    document.addEventListener("pointerdown", function (event) {
+        if (!isRatingEditorOpen()) return;
+
+        const target = event.target;
+
+        if (isInsideRatingArea(target)) return;
+
+        closeReviewEditor(true);
+    }, true);
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape") return;
+        if (!isRatingEditorOpen()) return;
+
+        closeReviewEditor(true);
+    });
+
+    if (ratingForm) {
+        ratingForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            try {
+                const { response, data } = await postFormAjax(ratingForm);
+
+                if (!response.ok || !data.ok) {
+                    if (ratingErrors && data.errors) {
+                        ratingErrors.textContent = Object.values(data.errors).flat().join(" ");
+                    }
+                    return;
+                }
+
+                if (ratingErrors) {
+                    ratingErrors.textContent = "";
+                }
+
+                committedRatingValue = normalizeRatingValue(data.rating || ratingInput.value || "0");
+                committedReviewValue = data.review || "";
+                isRatingEditMode = committedRatingValue === "0";
+
+                if (ratingInput) {
+                    ratingInput.value = committedRatingValue;
+                }
+
+                renderStars(committedRatingValue);
+
+                if (reviewDisplayText) {
+                    reviewDisplayText.textContent = committedReviewValue;
+                }
+
+                closeReviewEditor(false);
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    if (commentForm && commentsList) {
+        commentForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            try {
+                const { response, data } = await postFormAjax(commentForm);
+
+                if (!response.ok || !data.ok) {
+                    if (commentErrors && data.errors && data.errors.body) {
+                        commentErrors.textContent = data.errors.body.join(" ");
+                    }
+                    return;
+                }
+
+                if (commentErrors) {
+                    commentErrors.textContent = "";
+                }
+
+                const textarea = commentForm.querySelector("textarea");
+                const csrfInput = commentForm.querySelector('input[name="csrfmiddlewaretoken"]');
+                const csrfToken = csrfInput ? csrfInput.value : "";
+
+                if (textarea) {
+                    textarea.value = "";
+                }
+
+                const emptyState = document.getElementById("commentsEmptyState");
+                if (emptyState) {
+                    emptyState.remove();
+                }
+
+                commentsList.insertAdjacentHTML("afterbegin", buildOwnCommentCard(data.comment, csrfToken));
+                showSnackbar(data.message || "Kommentariya qo‘shildi.", "success");
+            } catch (error) {
+                console.error(error);
+                showSnackbar("Kommentariyani yuborishda xatolik yuz berdi.", "error");
+            }
+        });
+    }
+
+    document.addEventListener("submit", async function (event) {
+        const likeForm = event.target.closest(".comment-like-form");
+        if (!likeForm) return;
+
+        event.preventDefault();
+
+        try {
+            const { response, data } = await postFormAjax(likeForm);
+            if (!response.ok || !data.ok) {
+                showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
+                return;
+            }
+
+            const commentId = data.comment_id;
+            const countEl = document.getElementById(`comment-like-count-${commentId}`);
+            const btnEl = document.getElementById(`comment-like-btn-${commentId}`);
+
+            if (countEl) {
+                countEl.textContent = data.like_count;
+            }
+
+            if (btnEl) {
+                btnEl.classList.toggle("is-active", data.is_liked);
+            }
+        } catch (error) {
+            console.error(error);
+            showSnackbar("Kommentariyaga like bosishda xatolik yuz berdi.", "error");
+        }
+    });
+
+    document.addEventListener("click", function (event) {
+        const editBtn = event.target.closest(".comment-edit-btn");
+        const cancelBtn = event.target.closest(".comment-edit-cancel-btn");
+
+        if (editBtn) {
+            const editId = editBtn.dataset.editTarget;
+            const displayId = editBtn.dataset.displayTarget;
+
+            const editForm = document.getElementById(editId);
+            const displayBody = document.getElementById(displayId);
+
+            if (editForm) editForm.classList.remove("is-hidden");
+            if (displayBody) displayBody.classList.add("is-hidden");
+            return;
+        }
+
+        if (cancelBtn) {
+            const editId = cancelBtn.dataset.editTarget;
+            const displayId = cancelBtn.dataset.displayTarget;
+
+            const editForm = document.getElementById(editId);
+            const displayBody = document.getElementById(displayId);
+
+            if (editForm) editForm.classList.add("is-hidden");
+            if (displayBody) displayBody.classList.remove("is-hidden");
+
+            showSnackbar("Kommentariya tahrirlash bekor qilindi.", "error");
+            return;
+        }
+    });
+
+    document.addEventListener("submit", async function (event) {
+        const editForm = event.target.closest(".comment-edit-form");
+        if (!editForm) return;
+
+        event.preventDefault();
+
+        try {
+            const { response, data } = await postFormAjax(editForm);
+
+            if (!response.ok || !data.ok) {
+                showSnackbar(data.message || "Kommentariyani saqlashda xatolik yuz berdi.", "error");
+                return;
+            }
+
+            const commentId = editForm.dataset.commentId;
+            const bodyEl = document.getElementById(`display-body-${commentId}`);
+            const timeEl = document.getElementById(`comment-time-${commentId}`);
+            const textarea = editForm.querySelector('textarea[name="body"]');
+
+            if (bodyEl) {
+                bodyEl.innerHTML = escapeHtml(data.comment.body).replace(/\n/g, "<br>");
+                bodyEl.classList.remove("is-hidden", "d-none");
+            }
+
+            if (textarea) {
+                textarea.value = data.comment.body;
+            }
+
+            if (timeEl) {
+                if (data.comment.display_time) {
+                    timeEl.textContent = data.comment.display_time;
+                } else if (data.comment.updated_at) {
+                    timeEl.textContent = `Tahrirlandi: ${data.comment.updated_at}`;
+                }
+            }
+
+            editForm.classList.add("is-hidden");
+            showSnackbar(data.message || "Kommentariya tahrirlandi.", "success");
+        } catch (error) {
+            console.error(error);
+            showSnackbar("Kommentariyani saqlashda xatolik yuz berdi.", "error");
+        }
+    });
+
+    document.addEventListener("submit", function (event) {
+        const deleteForm = event.target.closest(".comment-delete-form");
+        if (!deleteForm) return;
+
+        event.preventDefault();
+        openDeleteModal(deleteForm);
+    });
+
+    const favoriteForm = document.getElementById("favoriteToggleForm");
+    const favoriteButton = document.getElementById("favoriteToggleButton");
+
+    if (favoriteForm && favoriteButton) {
+        favoriteForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            try {
+                const response = await fetch(favoriteForm.action, {
+                    method: "POST",
+                    body: new FormData(favoriteForm),
+                    headers: {"X-Requested-With": "XMLHttpRequest"}
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.ok) return;
+
+                favoriteButton.classList.toggle("is-active", data.is_favorite);
+                favoriteButton.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+                if (data.is_favorite) {
+                    showSnackbar("Film sevimlilarga qo‘shildi ♥", "success");
+                } else {
+                    showSnackbar("Film sevimlilardan olib tashlandi", "error");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="../../index.html">Bosh sahifa</a>
+<a href="../index.html">Filmlar</a>
+<a href="../../accounts/profile/index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/theme.js"></script>
+<script src="../../static/js/i18n-runtime.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="../../static/js/demo-mode.js"></script>
+</body>
+</html>

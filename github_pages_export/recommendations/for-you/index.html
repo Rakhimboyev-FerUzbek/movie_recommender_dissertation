@@ -1,0 +1,3394 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shaxsiy tavsiyalar</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../static/css/theme.css" rel="stylesheet"/>
+<link href="../../static/css/layout.css" rel="stylesheet"/>
+<link href="../../static/css/components.css" rel="stylesheet"/>
+<link href="../../static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="../../index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../movies/index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/uz/index__next__recommendations_for-you_.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/ru/index__next__recommendations_for-you_.html">
+<img alt="Русский" class="lang-flag-img" src="../../static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/en/index__next__recommendations_for-you_.html">
+<img alt="English" class="lang-flag-img" src="../../static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="../../accounts/profile/index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<section class="content-section auto-rec-page">
+<div class="container">
+<div class="glass-card auto-rec-hero mb-4">
+<div class="auto-rec-hero__layout">
+<div class="auto-rec-hero__copy">
+<h1 class="mb-2">Shaxsiy tavsiyalar</h1>
+<p class="text-muted mb-0">Sizning baholaringiz va qiziqishlaringizga yaqin filmlar shu yerda jamlandi.</p>
+</div>
+<div class="auto-rec-toolbar-shell">
+<div class="auto-rec-toolbar">
+<div class="auto-rec-toolbar__item">
+<label class="form-label" for="autoRecSearch">Qidiruv</label>
+<input autocomplete="off" class="form-control" id="autoRecSearch" placeholder="Film nomi bo‘yicha qidiring..." type="text"/>
+</div>
+<div class="auto-rec-toolbar__item auto-rec-toolbar__item--sort">
+<label class="form-label" for="autoRecSortField">Saralash</label>
+<div class="auto-rec-sort-row">
+<select class="form-select auto-rec-native-select" id="autoRecSortField">
+<option value="rating">Reyting</option>
+<option value="year">Yil</option>
+<option value="count">Baho soni</option>
+<option value="title">Nom</option>
+</select>
+<button aria-label="Saralash yo‘nalishi" class="auto-rec-sort-direction" data-desc="true" id="autoRecSortDirection" title="Saralash yo‘nalishi" type="button">
+<span class="auto-rec-sort-direction__icon"></span>
+<span class="auto-rec-sort-direction__text"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- <div class="auto-rec-hero__foot">
+                        <div class="auto-rec-results-info">
+                            Jami tavsiyalar: <strong id="autoRecVisibleCount">72</strong>
+                        </div>
+                    </div> -->
+</div>
+</div>
+</div>
+<div class="auto-rec-grid" id="autoRecGrid">
+<article class="auto-rec-card" data-count="392" data-index="0" data-rating="3,8" data-title="twelve monkeys" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/twelve-monkeys/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Twelve Monkeys" class="auto-rec-card__poster" src="../../media/movies/posters/twelve-monkeys-7.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/twelve-monkeys/index__next__recommendations_for-you_.html">
+                                        Twelve Monkeys
+                                    </a>
+</h5>
+<form action="/interactions/movies/twelve-monkeys/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Twelve Monkeys" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    392 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="198" data-index="1" data-rating="4,26" data-title="good will hunting" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/good-will-hunting/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Good Will Hunting" class="auto-rec-card__poster" src="../../media/movies/posters/good-will-hunting-272.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/good-will-hunting/index__next__recommendations_for-you_.html">
+                                        Good Will Hunting
+                                    </a>
+</h5>
+<form action="/interactions/movies/good-will-hunting/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Good Will Hunting" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,3
+                                </span>
+<span class="auto-rec-pill">
+                                    198 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="297" data-index="2" data-rating="4,16" data-title="l.a. confidential" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/la-confidential/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="L.A. Confidential" class="auto-rec-card__poster" src="../../media/movies/posters/la-confidential-302.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/la-confidential/index__next__recommendations_for-you_.html">
+                                        L.A. Confidential
+                                    </a>
+</h5>
+<form action="/interactions/movies/la-confidential/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="L.A. Confidential" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    297 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Film-Noir</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="378" data-index="3" data-rating="3,69" data-title="rock, the" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/rock-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Rock, The" class="auto-rec-card__poster" src="../../media/movies/posters/rock-the-117.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/rock-the/index__next__recommendations_for-you_.html">
+                                        Rock, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/rock-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Rock, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    378 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="368" data-index="4" data-rating="4,21" data-title="empire strikes back, the" data-year="1980">
+<a class="auto-rec-card__poster-link" href="../../movies/empire-strikes-back-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Empire Strikes Back, The" class="auto-rec-card__poster" src="../../media/movies/posters/empire-strikes-back-the-172.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/empire-strikes-back-the/index__next__recommendations_for-you_.html">
+                                        Empire Strikes Back, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/empire-strikes-back-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Empire Strikes Back, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1980</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    368 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="429" data-index="5" data-rating="3,44" data-title="independence day (id4)" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/independence-day-id4/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Independence Day (ID4)" class="auto-rec-card__poster" src="../../media/movies/posters/independence-day-id4-121.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/independence-day-id4/index__next__recommendations_for-you_.html">
+                                        Independence Day (ID4)
+                                    </a>
+</h5>
+<form action="/interactions/movies/independence-day-id4/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Independence Day (ID4)" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,4
+                                </span>
+<span class="auto-rec-pill">
+                                    429 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="384" data-index="6" data-rating="3,71" data-title="jerry maguire" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/jerry-maguire/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Jerry Maguire" class="auto-rec-card__poster" src="../../media/movies/posters/jerry-maguire-237.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/jerry-maguire/index__next__recommendations_for-you_.html">
+                                        Jerry Maguire
+                                    </a>
+</h5>
+<form action="/interactions/movies/jerry-maguire/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Jerry Maguire" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    384 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="251" data-index="7" data-rating="3,59" data-title="game, the" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/game-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Game, The" class="auto-rec-card__poster" src="../../media/movies/posters/game-the-333.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/game-the/index__next__recommendations_for-you_.html">
+                                        Game, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/game-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Game, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    251 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Mystery</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="331" data-index="8" data-rating="3,93" data-title="indiana jones and the last crusade" data-year="1989">
+<a class="auto-rec-card__poster-link" href="../../movies/indiana-jones-and-the-last-crusade/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Indiana Jones and the Last Crusade" class="auto-rec-card__poster" src="../../media/movies/posters/indiana-jones-and-the-last-crusade-210.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/indiana-jones-and-the-last-crusade/index__next__recommendations_for-you_.html">
+                                        Indiana Jones and the Last Crusade
+                                    </a>
+</h5>
+<form action="/interactions/movies/indiana-jones-and-the-last-crusade/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Indiana Jones and the Last Crusade" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1989</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    331 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="297" data-index="9" data-rating="4,15" data-title="braveheart" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/braveheart/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Braveheart" class="auto-rec-card__poster" src="../../media/movies/posters/braveheart-22.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/braveheart/index__next__recommendations_for-you_.html">
+                                        Braveheart
+                                    </a>
+</h5>
+<form action="/interactions/movies/braveheart/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Braveheart" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    297 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="194" data-index="10" data-rating="3,77" data-title="face/off" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/faceoff/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Face/Off" class="auto-rec-card__poster" src="../../media/movies/posters/faceoff-298.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/faceoff/index__next__recommendations_for-you_.html">
+                                        Face/Off
+                                    </a>
+</h5>
+<form action="/interactions/movies/faceoff/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Face/Off" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    194 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="452" data-index="11" data-rating="3,88" data-title="toy story" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/toy-story/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Toy Story" class="auto-rec-card__poster" src="../../media/movies/posters/toy-story-1.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/toy-story/index__next__recommendations_for-you_.html">
+                                        Toy Story
+                                    </a>
+</h5>
+<form action="/interactions/movies/toy-story/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Toy Story" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    452 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Animation</span>
+<span class="genre-chip">Children's</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="293" data-index="12" data-rating="3,78" data-title="mr. holland's opus" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/mr-hollands-opus/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Mr. Holland's Opus" class="auto-rec-card__poster" src="../../media/movies/posters/mr-hollands-opus-15.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/mr-hollands-opus/index__next__recommendations_for-you_.html">
+                                        Mr. Holland's Opus
+                                    </a>
+</h5>
+<form action="/interactions/movies/mr-hollands-opus/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Mr. Holland's Opus" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    293 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="295" data-index="13" data-rating="3,42" data-title="conspiracy theory" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/conspiracy-theory/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Conspiracy Theory" class="auto-rec-card__poster" src="../../media/movies/posters/conspiracy-theory-328.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/conspiracy-theory/index__next__recommendations_for-you_.html">
+                                        Conspiracy Theory
+                                    </a>
+</h5>
+<form action="/interactions/movies/conspiracy-theory/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Conspiracy Theory" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,4
+                                </span>
+<span class="auto-rec-pill">
+                                    295 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Mystery</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="394" data-index="14" data-rating="4,06" data-title="pulp fiction" data-year="1994">
+<a class="auto-rec-card__poster-link" href="../../movies/pulp-fiction/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Pulp Fiction" class="auto-rec-card__poster" src="../../media/movies/posters/pulp-fiction-56.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/pulp-fiction/index__next__recommendations_for-you_.html">
+                                        Pulp Fiction
+                                    </a>
+</h5>
+<form action="/interactions/movies/pulp-fiction/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Pulp Fiction" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,1
+                                </span>
+<span class="auto-rec-pill">
+                                    394 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="365" data-index="15" data-rating="3,66" data-title="star trek: first contact" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/star-trek-first-contact/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Star Trek: First Contact" class="auto-rec-card__poster" src="../../media/movies/posters/star-trek-first-contact-222.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/star-trek-first-contact/index__next__recommendations_for-you_.html">
+                                        Star Trek: First Contact
+                                    </a>
+</h5>
+<form action="/interactions/movies/star-trek-first-contact/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Star Trek: First Contact" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    365 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="344" data-index="16" data-rating="3,31" data-title="mission: impossible" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/mission-impossible/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Mission: Impossible" class="auto-rec-card__poster" src="../../media/movies/posters/mission-impossible-405.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/mission-impossible/index__next__recommendations_for-you_.html">
+                                        Mission: Impossible
+                                    </a>
+</h5>
+<form action="/interactions/movies/mission-impossible/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Mission: Impossible" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,3
+                                </span>
+<span class="auto-rec-pill">
+                                    344 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="188" data-index="17" data-rating="3,52" data-title="devil's advocate, the" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/devils-advocate-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Devil's Advocate, The" class="auto-rec-card__poster" src="../../media/movies/posters/devils-advocate-the-307.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/devils-advocate-the/index__next__recommendations_for-you_.html">
+                                        Devil's Advocate, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/devils-advocate-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Devil's Advocate, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Germany, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    188 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Horror</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="222" data-index="18" data-rating="3,77" data-title="sound of music, the" data-year="1965">
+<a class="auto-rec-card__poster-link" href="../../movies/sound-of-music-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sound of Music, The" class="auto-rec-card__poster" src="../../media/movies/posters/sound-of-music-the-143.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sound-of-music-the/index__next__recommendations_for-you_.html">
+                                        Sound of Music, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/sound-of-music-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sound of Music, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1965</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    222 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Musical</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="145" data-index="19" data-rating="3,6" data-title="rainmaker, the" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/rainmaker-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Rainmaker, The" class="auto-rec-card__poster" src="../../media/movies/posters/rainmaker-the-310.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/rainmaker-the/index__next__recommendations_for-you_.html">
+                                        Rainmaker, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/rainmaker-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Rainmaker, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    145 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="175" data-index="20" data-rating="3,36" data-title="g.i. jane" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/gi-jane/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="G.I. Jane" class="auto-rec-card__poster" src="../../media/movies/posters/gi-jane-326.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/gi-jane/index__next__recommendations_for-you_.html">
+                                        G.I. Jane
+                                    </a>
+</h5>
+<form action="/interactions/movies/gi-jane/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="G.I. Jane" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,4
+                                </span>
+<span class="auto-rec-pill">
+                                    175 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="324" data-index="21" data-rating="4,17" data-title="princess bride, the" data-year="1987">
+<a class="auto-rec-card__poster-link" href="../../movies/princess-bride-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Princess Bride, The" class="auto-rec-card__poster" src="../../media/movies/posters/princess-bride-the-173.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/princess-bride-the/index__next__recommendations_for-you_.html">
+                                        Princess Bride, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/princess-bride-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Princess Bride, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1987</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    324 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="232" data-index="22" data-rating="3,69" data-title="time to kill, a" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/time-to-kill-a/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Time to Kill, A" class="auto-rec-card__poster" src="../../media/movies/posters/time-to-kill-a-282.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/time-to-kill-a/index__next__recommendations_for-you_.html">
+                                        Time to Kill, A
+                                    </a>
+</h5>
+<form action="/interactions/movies/time-to-kill-a/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Time to Kill, A" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    232 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="124" data-index="23" data-rating="3,85" data-title="amistad" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/amistad/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Amistad" class="auto-rec-card__poster" src="../../media/movies/posters/amistad-750.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/amistad/index__next__recommendations_for-you_.html">
+                                        Amistad
+                                    </a>
+</h5>
+<form action="/interactions/movies/amistad/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Amistad" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    124 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="219" data-index="24" data-rating="4,0" data-title="babe" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/babe/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Babe" class="auto-rec-card__poster" src="../../media/movies/posters/babe-8.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/babe/index__next__recommendations_for-you_.html">
+                                        Babe
+                                    </a>
+</h5>
+<form action="/interactions/movies/babe/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Babe" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Australia, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,0
+                                </span>
+<span class="auto-rec-pill">
+                                    219 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Children's</span>
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="175" data-index="25" data-rating="3,38" data-title="cop land" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/cop-land/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Cop Land" class="auto-rec-card__poster" src="../../media/movies/posters/cop-land-327.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/cop-land/index__next__recommendations_for-you_.html">
+                                        Cop Land
+                                    </a>
+</h5>
+<form action="/interactions/movies/cop-land/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Cop Land" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,4
+                                </span>
+<span class="auto-rec-pill">
+                                    175 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="155" data-index="26" data-rating="3,46" data-title="seven years in tibet" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/seven-years-in-tibet/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Seven Years in Tibet" class="auto-rec-card__poster" src="../../media/movies/posters/seven-years-in-tibet-690.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/seven-years-in-tibet/index__next__recommendations_for-you_.html">
+                                        Seven Years in Tibet
+                                    </a>
+</h5>
+<form action="/interactions/movies/seven-years-in-tibet/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Seven Years in Tibet" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="true" class="auto-rec-fav-btn is-active" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America, France
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    155 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">War</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="250" data-index="27" data-rating="3,88" data-title="trainspotting" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/trainspotting/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Trainspotting" class="auto-rec-card__poster" src="../../media/movies/posters/trainspotting-475.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/trainspotting/index__next__recommendations_for-you_.html">
+                                        Trainspotting
+                                    </a>
+</h5>
+<form action="/interactions/movies/trainspotting/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Trainspotting" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    250 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="485" data-index="28" data-rating="3,16" data-title="liar liar" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/liar-liar/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Liar Liar" class="auto-rec-card__poster" src="../../media/movies/posters/liar-liar-294.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/liar-liar/index__next__recommendations_for-you_.html">
+                                        Liar Liar
+                                    </a>
+</h5>
+<form action="/interactions/movies/liar-liar/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Liar Liar" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,2
+                                </span>
+<span class="auto-rec-pill">
+                                    485 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="268" data-index="29" data-rating="4,01" data-title="sense and sensibility" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/sense-and-sensibility/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sense and Sensibility" class="auto-rec-card__poster" src="../../media/movies/posters/sense-and-sensibility-275.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sense-and-sensibility/index__next__recommendations_for-you_.html">
+                                        Sense and Sensibility
+                                    </a>
+</h5>
+<form action="/interactions/movies/sense-and-sensibility/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sense and Sensibility" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America, United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,0
+                                </span>
+<span class="auto-rec-pill">
+                                    268 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="478" data-index="30" data-rating="3,44" data-title="scream" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/scream/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Scream" class="auto-rec-card__poster" src="../../media/movies/posters/scream-288.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/scream/index__next__recommendations_for-you_.html">
+                                        Scream
+                                    </a>
+</h5>
+<form action="/interactions/movies/scream/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Scream" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,4
+                                </span>
+<span class="auto-rec-pill">
+                                    478 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Horror</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="178" data-index="31" data-rating="3,6" data-title="primal fear" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/primal-fear/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Primal Fear" class="auto-rec-card__poster" src="../../media/movies/posters/primal-fear-591.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/primal-fear/index__next__recommendations_for-you_.html">
+                                        Primal Fear
+                                    </a>
+</h5>
+<form action="/interactions/movies/primal-fear/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Primal Fear" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    178 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="112" data-index="32" data-rating="4,49" data-title="close shave, a" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/close-shave-a/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Close Shave, A" class="auto-rec-card__poster" src="../../media/movies/posters/close-shave-a-408.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/close-shave-a/index__next__recommendations_for-you_.html">
+                                        Close Shave, A
+                                    </a>
+</h5>
+<form action="/interactions/movies/close-shave-a/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Close Shave, A" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,5
+                                </span>
+<span class="auto-rec-pill">
+                                    112 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Animation</span>
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="143" data-index="33" data-rating="3,46" data-title="kiss the girls" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/kiss-the-girls/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Kiss the Girls" class="auto-rec-card__poster" src="../../media/movies/posters/kiss-the-girls-332.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/kiss-the-girls/index__next__recommendations_for-you_.html">
+                                        Kiss the Girls
+                                    </a>
+</h5>
+<form action="/interactions/movies/kiss-the-girls/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Kiss the Girls" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    143 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="112" data-index="34" data-rating="4,2" data-title="as good as it gets" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/as-good-as-it-gets/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="As Good As It Gets" class="auto-rec-card__poster" src="../../media/movies/posters/as-good-as-it-gets-316.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/as-good-as-it-gets/index__next__recommendations_for-you_.html">
+                                        As Good As It Gets
+                                    </a>
+</h5>
+<form action="/interactions/movies/as-good-as-it-gets/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="As Good As It Gets" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    112 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="136" data-index="35" data-rating="4,2" data-title="sling blade" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/sling-blade/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sling Blade" class="auto-rec-card__poster" src="../../media/movies/posters/sling-blade-223.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sling-blade/index__next__recommendations_for-you_.html">
+                                        Sling Blade
+                                    </a>
+</h5>
+<form action="/interactions/movies/sling-blade/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sling Blade" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,2
+                                </span>
+<span class="auto-rec-pill">
+                                    136 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="236" data-index="36" data-rating="3,85" data-title="seven (se7en)" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/seven-se7en/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Seven (Se7en)" class="auto-rec-card__poster" src="../../media/movies/posters/seven-se7en-11.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/seven-se7en/index__next__recommendations_for-you_.html">
+                                        Seven (Se7en)
+                                    </a>
+</h5>
+<form action="/interactions/movies/seven-se7en/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Seven (Se7en)" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    236 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="276" data-index="37" data-rating="3,93" data-title="apollo 13" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/apollo-13/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Apollo 13" class="auto-rec-card__poster" src="../../media/movies/posters/apollo-13-28.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/apollo-13/index__next__recommendations_for-you_.html">
+                                        Apollo 13
+                                    </a>
+</h5>
+<form action="/interactions/movies/apollo-13/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Apollo 13" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    276 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="244" data-index="38" data-rating="3,56" data-title="phenomenon" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/phenomenon/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Phenomenon" class="auto-rec-card__poster" src="../../media/movies/posters/phenomenon-125.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/phenomenon/index__next__recommendations_for-you_.html">
+                                        Phenomenon
+                                    </a>
+</h5>
+<form action="/interactions/movies/phenomenon/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Phenomenon" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    244 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="1" data-index="39" data-rating="3,0" data-title="b. monkey" data-year="1998">
+<a class="auto-rec-card__poster-link" href="../../movies/b-monkey/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="B. Monkey" class="auto-rec-card__poster" src="../../media/movies/posters/b-monkey-1679.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/b-monkey/index__next__recommendations_for-you_.html">
+                                        B. Monkey
+                                    </a>
+</h5>
+<form action="/interactions/movies/b-monkey/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="B. Monkey" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,0
+                                </span>
+<span class="auto-rec-pill">
+                                    1 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Romance</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="256" data-index="40" data-rating="3,88" data-title="raising arizona" data-year="1987">
+<a class="auto-rec-card__poster-link" href="../../movies/raising-arizona/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Raising Arizona" class="auto-rec-card__poster" src="../../media/movies/posters/raising-arizona-238.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/raising-arizona/index__next__recommendations_for-you_.html">
+                                        Raising Arizona
+                                    </a>
+</h5>
+<form action="/interactions/movies/raising-arizona/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Raising Arizona" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1987</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    256 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="316" data-index="41" data-rating="3,12" data-title="saint, the" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/saint-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Saint, The" class="auto-rec-card__poster" src="../../media/movies/posters/saint-the-748.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/saint-the/index__next__recommendations_for-you_.html">
+                                        Saint, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/saint-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Saint, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America, Russia
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,1
+                                </span>
+<span class="auto-rec-pill">
+                                    316 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="1" data-index="42" data-rating="2,0" data-title="sliding doors" data-year="1998">
+<a class="auto-rec-card__poster-link" href="../../movies/sliding-doors-2/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sliding Doors" class="auto-rec-card__poster" src="../../media/movies/posters/sliding-doors-1680.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sliding-doors-2/index__next__recommendations_for-you_.html">
+                                        Sliding Doors
+                                    </a>
+</h5>
+<form action="/interactions/movies/sliding-doors-2/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sliding Doors" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 2,0
+                                </span>
+<span class="auto-rec-pill">
+                                    1 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="67" data-index="43" data-rating="4,45" data-title="wallace &amp; gromit: the best of aardman animation" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/wallace-gromit-the-best-of-aardman-animation/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Wallace &amp; Gromit: The Best of Aardman Animation" class="auto-rec-card__poster" src="../../media/movies/posters/wallace-gromit-the-best-of-aardman-animation-114.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/wallace-gromit-the-best-of-aardman-animation/index__next__recommendations_for-you_.html">
+                                        Wallace &amp; Gromit: The Best of Aardman Animation
+                                    </a>
+</h5>
+<form action="/interactions/movies/wallace-gromit-the-best-of-aardman-animation/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Wallace &amp; Gromit: The Best of Aardman Animation" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,5
+                                </span>
+<span class="auto-rec-pill">
+                                    67 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Animation</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="223" data-index="44" data-rating="3,57" data-title="heat" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/heat/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Heat" class="auto-rec-card__poster" src="../../media/movies/posters/heat-273.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/heat/index__next__recommendations_for-you_.html">
+                                        Heat
+                                    </a>
+</h5>
+<form action="/interactions/movies/heat/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Heat" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    223 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Crime</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="481" data-index="45" data-rating="3,66" data-title="english patient, the" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/english-patient-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="English Patient, The" class="auto-rec-card__poster" src="../../media/movies/posters/english-patient-the-286.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/english-patient-the/index__next__recommendations_for-you_.html">
+                                        English Patient, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/english-patient-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="English Patient, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    481 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="206" data-index="46" data-rating="3,15" data-title="eraser" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/eraser/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Eraser" class="auto-rec-card__poster" src="../../media/movies/posters/eraser-597.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/eraser/index__next__recommendations_for-you_.html">
+                                        Eraser
+                                    </a>
+</h5>
+<form action="/interactions/movies/eraser/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Eraser" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Canada, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,2
+                                </span>
+<span class="auto-rec-pill">
+                                    206 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="149" data-index="47" data-rating="3,54" data-title="fly away home" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/fly-away-home/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Fly Away Home" class="auto-rec-card__poster" src="../../media/movies/posters/fly-away-home-304.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/fly-away-home/index__next__recommendations_for-you_.html">
+                                        Fly Away Home
+                                    </a>
+</h5>
+<form action="/interactions/movies/fly-away-home/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Fly Away Home" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    149 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Adventure</span>
+<span class="genre-chip">Children's</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="221" data-index="48" data-rating="3,61" data-title="courage under fire" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/courage-under-fire/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Courage Under Fire" class="auto-rec-card__poster" src="../../media/movies/posters/courage-under-fire-471.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/courage-under-fire/index__next__recommendations_for-you_.html">
+                                        Courage Under Fire
+                                    </a>
+</h5>
+<form action="/interactions/movies/courage-under-fire/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Courage Under Fire" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    221 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">War</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="300" data-index="49" data-rating="3,83" data-title="e.t. the extra-terrestrial" data-year="1982">
+<a class="auto-rec-card__poster-link" href="../../movies/et-the-extra-terrestrial/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="E.T. the Extra-Terrestrial" class="auto-rec-card__poster" src="../../media/movies/posters/et-the-extra-terrestrial-423.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/et-the-extra-terrestrial/index__next__recommendations_for-you_.html">
+                                        E.T. the Extra-Terrestrial
+                                    </a>
+</h5>
+<form action="/interactions/movies/et-the-extra-terrestrial/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="E.T. the Extra-Terrestrial" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1982</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    300 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Children's</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="246" data-index="50" data-rating="4,08" data-title="wizard of oz, the" data-year="1939">
+<a class="auto-rec-card__poster-link" href="../../movies/wizard-of-oz-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Wizard of Oz, The" class="auto-rec-card__poster" src="../../media/movies/posters/wizard-of-oz-the-132.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/wizard-of-oz-the/index__next__recommendations_for-you_.html">
+                                        Wizard of Oz, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/wizard-of-oz-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Wizard of Oz, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1939</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,1
+                                </span>
+<span class="auto-rec-pill">
+                                    246 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Adventure</span>
+<span class="genre-chip">Children's</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="295" data-index="51" data-rating="4,01" data-title="terminator 2: judgment day" data-year="1991">
+<a class="auto-rec-card__poster-link" href="../../movies/terminator-2-judgment-day/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Terminator 2: Judgment Day" class="auto-rec-card__poster" src="../../media/movies/posters/terminator-2-judgment-day-96.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/terminator-2-judgment-day/index__next__recommendations_for-you_.html">
+                                        Terminator 2: Judgment Day
+                                    </a>
+</h5>
+<form action="/interactions/movies/terminator-2-judgment-day/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Terminator 2: Judgment Day" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                France, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1991</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,0
+                                </span>
+<span class="auto-rec-pill">
+                                    295 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="267" data-index="52" data-rating="3,64" data-title="ransom" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/ransom/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Ransom" class="auto-rec-card__poster" src="../../media/movies/posters/ransom-742.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/ransom/index__next__recommendations_for-you_.html">
+                                        Ransom
+                                    </a>
+</h5>
+<form action="/interactions/movies/ransom/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Ransom" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    267 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="170" data-index="53" data-rating="3,5" data-title="sleepers" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/sleepers/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sleepers" class="auto-rec-card__poster" src="../../media/movies/posters/sleepers-628.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sleepers/index__next__recommendations_for-you_.html">
+                                        Sleepers
+                                    </a>
+</h5>
+<form action="/interactions/movies/sleepers/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sleepers" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    170 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="150" data-index="54" data-rating="3,94" data-title="remains of the day, the" data-year="1993">
+<a class="auto-rec-card__poster-link" href="../../movies/remains-of-the-day-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Remains of the Day, The" class="auto-rec-card__poster" src="../../media/movies/posters/remains-of-the-day-the-86.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/remains-of-the-day-the/index__next__recommendations_for-you_.html">
+                                        Remains of the Day, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/remains-of-the-day-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Remains of the Day, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1993</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    150 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="299" data-index="55" data-rating="3,9" data-title="dead man walking" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/dead-man-walking/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Dead Man Walking" class="auto-rec-card__poster" src="../../media/movies/posters/dead-man-walking-9.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/dead-man-walking/index__next__recommendations_for-you_.html">
+                                        Dead Man Walking
+                                    </a>
+</h5>
+<form action="/interactions/movies/dead-man-walking/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Dead Man Walking" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America, United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    299 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="1" data-index="56" data-rating="4,0" data-title="nightwatch" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/nightwatch-2/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Nightwatch" class="auto-rec-card__poster" src="../../media/movies/posters/nightwatch-1625.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/nightwatch-2/index__next__recommendations_for-you_.html">
+                                        Nightwatch
+                                    </a>
+</h5>
+<form action="/interactions/movies/nightwatch-2/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Nightwatch" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,0
+                                </span>
+<span class="auto-rec-pill">
+                                    1 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Horror</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="133" data-index="57" data-rating="3,6" data-title="ed wood" data-year="1994">
+<a class="auto-rec-card__poster-link" href="../../movies/ed-wood/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Ed Wood" class="auto-rec-card__poster" src="../../media/movies/posters/ed-wood-47.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/ed-wood/index__next__recommendations_for-you_.html">
+                                        Ed Wood
+                                    </a>
+</h5>
+<form action="/interactions/movies/ed-wood/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Ed Wood" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    133 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="66" data-index="58" data-rating="4,11" data-title="grand day out, a" data-year="1992">
+<a class="auto-rec-card__poster-link" href="../../movies/grand-day-out-a/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
+<span>G</span>
+</div>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/grand-day-out-a/index__next__recommendations_for-you_.html">
+                                        Grand Day Out, A
+                                    </a>
+</h5>
+<form action="/interactions/movies/grand-day-out-a/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Grand Day Out, A" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Noma’lum davlat
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1992</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,1
+                                </span>
+<span class="auto-rec-pill">
+                                    66 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Animation</span>
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="102" data-index="59" data-rating="3,91" data-title="in the name of the father" data-year="1993">
+<a class="auto-rec-card__poster-link" href="../../movies/in-the-name-of-the-father/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="In the Name of the Father" class="auto-rec-card__poster" src="../../media/movies/posters/in-the-name-of-the-father-317.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/in-the-name-of-the-father/index__next__recommendations_for-you_.html">
+                                        In the Name of the Father
+                                    </a>
+</h5>
+<form action="/interactions/movies/in-the-name-of-the-father/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="In the Name of the Father" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Ireland
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1993</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    102 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="124" data-index="60" data-rating="4,14" data-title="henry v" data-year="1989">
+<a class="auto-rec-card__poster-link" href="../../movies/henry-v/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Henry V" class="auto-rec-card__poster" src="../../media/movies/posters/henry-v-190.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/henry-v/index__next__recommendations_for-you_.html">
+                                        Henry V
+                                    </a>
+</h5>
+<form action="/interactions/movies/henry-v/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Henry V" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1989</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 4,1
+                                </span>
+<span class="auto-rec-pill">
+                                    124 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">War</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="190" data-index="61" data-rating="3,5" data-title="sabrina" data-year="1995">
+<a class="auto-rec-card__poster-link" href="../../movies/sabrina/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sabrina" class="auto-rec-card__poster" src="../../media/movies/posters/sabrina-274.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/sabrina/index__next__recommendations_for-you_.html">
+                                        Sabrina
+                                    </a>
+</h5>
+<form action="/interactions/movies/sabrina/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Sabrina" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Germany, United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,5
+                                </span>
+<span class="auto-rec-pill">
+                                    190 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="136" data-index="62" data-rating="3,6" data-title="gattaca" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/gattaca/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Gattaca" class="auto-rec-card__poster" src="../../media/movies/posters/gattaca-270.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/gattaca/index__next__recommendations_for-you_.html">
+                                        Gattaca
+                                    </a>
+</h5>
+<form action="/interactions/movies/gattaca/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Gattaca" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,6
+                                </span>
+<span class="auto-rec-pill">
+                                    136 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="303" data-index="63" data-rating="3,75" data-title="men in black" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/men-in-black/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Men in Black" class="auto-rec-card__poster" src="../../media/movies/posters/men-in-black-257.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/men-in-black/index__next__recommendations_for-you_.html">
+                                        Men in Black
+                                    </a>
+</h5>
+<form action="/interactions/movies/men-in-black/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Men in Black" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    303 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="227" data-index="64" data-rating="3,86" data-title="hunt for red october, the" data-year="1990">
+<a class="auto-rec-card__poster-link" href="../../movies/hunt-for-red-october-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Hunt for Red October, The" class="auto-rec-card__poster" src="../../media/movies/posters/hunt-for-red-october-the-265.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/hunt-for-red-october-the/index__next__recommendations_for-you_.html">
+                                        Hunt for Red October, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/hunt-for-red-october-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Hunt for Red October, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1990</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    227 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="171" data-index="65" data-rating="3,87" data-title="gone with the wind" data-year="1939">
+<a class="auto-rec-card__poster-link" href="../../movies/gone-with-the-wind/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Gone with the Wind" class="auto-rec-card__poster" src="../../media/movies/posters/gone-with-the-wind-133.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/gone-with-the-wind/index__next__recommendations_for-you_.html">
+                                        Gone with the Wind
+                                    </a>
+</h5>
+<form action="/interactions/movies/gone-with-the-wind/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Gone with the Wind" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1939</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    171 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="97" data-index="66" data-rating="3,8" data-title="spitfire grill, the" data-year="1996">
+<a class="auto-rec-card__poster-link" href="../../movies/spitfire-grill-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Spitfire Grill, The" class="auto-rec-card__poster" src="../../media/movies/posters/spitfire-grill-the-126.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/spitfire-grill-the/index__next__recommendations_for-you_.html">
+                                        Spitfire Grill, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/spitfire-grill-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Spitfire Grill, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    97 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="315" data-index="67" data-rating="3,93" data-title="full monty, the" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/full-monty-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Full Monty, The" class="auto-rec-card__poster" src="../../media/movies/posters/full-monty-the-269.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/full-monty-the/index__next__recommendations_for-you_.html">
+                                        Full Monty, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/full-monty-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Full Monty, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United Kingdom
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,9
+                                </span>
+<span class="auto-rec-pill">
+                                    315 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="2" data-index="68" data-rating="2,0" data-title="men of means" data-year="1998">
+<a class="auto-rec-card__poster-link" href="../../movies/men-of-means/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
+<span>M</span>
+</div>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/men-of-means/index__next__recommendations_for-you_.html">
+                                        Men of Means
+                                    </a>
+</h5>
+<form action="/interactions/movies/men-of-means/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Men of Means" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                Noma’lum davlat
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 2,0
+                                </span>
+<span class="auto-rec-pill">
+                                    2 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="149" data-index="69" data-rating="3,7" data-title="professional, the" data-year="1994">
+<a class="auto-rec-card__poster-link" href="../../movies/professional-the/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Professional, The" class="auto-rec-card__poster" src="../../media/movies/posters/professional-the-55.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/professional-the/index__next__recommendations_for-you_.html">
+                                        Professional, The
+                                    </a>
+</h5>
+<form action="/interactions/movies/professional-the/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Professional, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                France
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,7
+                                </span>
+<span class="auto-rec-pill">
+                                    149 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="1" data-index="70" data-rating="2,0" data-title="hush" data-year="1998">
+<a class="auto-rec-card__poster-link" href="../../movies/hush/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Hush" class="auto-rec-card__poster" src="../../media/movies/posters/hush-1624.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/hush/index__next__recommendations_for-you_.html">
+                                        Hush
+                                    </a>
+</h5>
+<form action="/interactions/movies/hush/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Hush" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 2,0
+                                </span>
+<span class="auto-rec-pill">
+                                    1 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card" data-count="147" data-index="71" data-rating="3,8" data-title="donnie brasco" data-year="1997">
+<a class="auto-rec-card__poster-link" href="../../movies/donnie-brasco/index__next__recommendations_for-you_.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Donnie Brasco" class="auto-rec-card__poster" src="../../media/movies/posters/donnie-brasco-293.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="../../movies/donnie-brasco/index__next__recommendations_for-you_.html">
+                                        Donnie Brasco
+                                    </a>
+</h5>
+<form action="/interactions/movies/donnie-brasco/favorite/toggle/" class="auto-rec-fav-form" data-movie-title="Donnie Brasco" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="eqrLPoqEVeAtGaVy9nMif1pj7PWMM8OpL9UOGeT6w94mzRWfTdzrsQjk7yjjxiUc"/>
+<input name="next" type="hidden" value="/recommendations/for-you/"/>
+<button aria-label="Sevimlilar" aria-pressed="false" class="auto-rec-fav-btn" title="Sevimlilar" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+                                United States of America
+                            </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="rating-star auto-rec-pill auto-rec-pill--rating">
+                                    ★ 3,8
+                                </span>
+<span class="auto-rec-pill">
+                                    147 ta baho
+                                </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+</div>
+<div aria-hidden="true" class="auto-rec-sentinel" id="autoRecSentinel"></div>
+<div aria-atomic="true" aria-live="polite" class="auto-rec-snackbar-stack" id="autoRecSnackbarStack"></div>
+</div>
+</section>
+<script>
+(function () {
+    const grid = document.getElementById("autoRecGrid");
+    if (!grid) return;
+
+    const searchInput = document.getElementById("autoRecSearch");
+    const sortField = document.getElementById("autoRecSortField");
+    const sortDirectionBtn = document.getElementById("autoRecSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".auto-rec-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".auto-rec-sort-direction__text");
+    const visibleCount = document.getElementById("autoRecVisibleCount");
+    const snackbarStack = document.getElementById("autoRecSnackbarStack");
+    const sentinel = document.getElementById("autoRecSentinel");
+    const cards = Array.from(grid.querySelectorAll(".auto-rec-card"));
+
+    const INITIAL_BATCH = 12;
+    const NEXT_BATCH = 9;
+
+    let currentFiltered = [];
+    let currentLimit = INITIAL_BATCH;
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function defaultDirectionFor(field) {
+        if (field === "title") return false;
+        return true;
+    }
+
+    function isDescending() {
+        return sortDirectionBtn.dataset.desc === "true";
+    }
+
+    function syncDirectionButton() {
+        const field = sortField.value;
+        const desc = isDescending();
+        const isRelevance = field === "relevance";
+
+        sortDirectionBtn.disabled = isRelevance;
+        sortDirectionBtn.classList.toggle("is-disabled", isRelevance);
+
+        sortDirectionIcon.textContent = desc ? "↓" : "↑";
+        sortDirectionText.textContent = desc ? "" : "";
+    }
+
+    function showSnackbar(movieTitle, variant) {
+        const item = document.createElement("div");
+        item.className = `auto-rec-snackbar auto-rec-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const text = variant === "success"
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> Film sevimlilarga qo‘shildi ♥`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> Film sevimlilardan olib tashlandi`;
+
+        item.innerHTML = `
+            <div class="auto-rec-snackbar__icon" aria-hidden="true">
+                ${variant === "success"
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="auto-rec-snackbar__content">
+                <div class="auto-rec-snackbar__title">${variant === "success" ? "Muvaffaqiyatli" : "Olib tashlandi"}</div>
+                <div class="auto-rec-snackbar__text">${text}</div>
+            </div>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+
+        requestAnimationFrame(() => {
+            item.classList.add("is-visible");
+        });
+
+        const removeItem = () => {
+            item.classList.remove("is-visible");
+            item.classList.add("is-leaving");
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timer = setTimeout(removeItem, 3200);
+
+        item.querySelector(".auto-rec-snackbar__close").addEventListener("click", () => {
+            clearTimeout(timer);
+            removeItem();
+        });
+    }
+
+    function sortCards(filteredCards) {
+        const field = sortField.value;
+        const desc = isDescending();
+
+        if (field === "relevance") {
+            return [...filteredCards].sort((a, b) => {
+                return parseInt(a.dataset.index || "0", 10) - parseInt(b.dataset.index || "0", 10);
+            });
+        }
+
+        return [...filteredCards].sort((a, b) => {
+            const titleA = a.dataset.title || "";
+            const titleB = b.dataset.title || "";
+            const yearA = parseInt(a.dataset.year || "0", 10);
+            const yearB = parseInt(b.dataset.year || "0", 10);
+            const ratingA = parseFloat(a.dataset.rating || "0");
+            const ratingB = parseFloat(b.dataset.rating || "0");
+            const countA = parseInt(a.dataset.count || "0", 10);
+            const countB = parseInt(b.dataset.count || "0", 10);
+
+            let result = 0;
+
+            if (field === "title") {
+                result = titleA.localeCompare(titleB);
+            } else if (field === "year") {
+                result = yearA - yearB;
+            } else if (field === "rating") {
+                result = ratingA - ratingB;
+            } else if (field === "count") {
+                result = countA - countB;
+            }
+
+            return desc ? -result : result;
+        });
+    }
+
+    function renderVisibleCards() {
+        cards.forEach(card => {
+            card.hidden = true;
+        });
+
+        currentFiltered.slice(0, currentLimit).forEach(card => {
+            card.hidden = false;
+            grid.appendChild(card);
+        });
+
+        visibleCount.textContent = currentFiltered.length;
+
+        if (sentinel) {
+            sentinel.hidden = currentLimit >= currentFiltered.length;
+        }
+    }
+
+    function applyFilters(resetLimit = true) {
+        const query = (searchInput.value || "").trim().toLowerCase();
+
+        let filtered = cards.filter(card => {
+            const title = card.dataset.title || "";
+            return !query || title.includes(query);
+        });
+
+        currentFiltered = sortCards(filtered);
+
+        if (resetLimit) {
+            currentLimit = INITIAL_BATCH;
+        }
+
+        renderVisibleCards();
+    }
+
+    function loadMoreCards() {
+        if (currentLimit >= currentFiltered.length) return;
+        currentLimit += NEXT_BATCH;
+        renderVisibleCards();
+    }
+
+    function buildPortalSelect(selectEl) {
+        if (!selectEl || selectEl.dataset.enhanced === "1") return;
+
+        selectEl.dataset.enhanced = "1";
+        selectEl.classList.add("is-enhanced");
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "auto-rec-select";
+
+        const trigger = document.createElement("button");
+        trigger.type = "button";
+        trigger.className = "auto-rec-select__trigger";
+        trigger.setAttribute("aria-haspopup", "listbox");
+        trigger.setAttribute("aria-expanded", "false");
+
+        const value = document.createElement("span");
+        value.className = "auto-rec-select__value";
+
+        const chevron = document.createElement("span");
+        chevron.className = "auto-rec-select__chevron";
+
+        trigger.appendChild(value);
+        trigger.appendChild(chevron);
+
+        const menu = document.createElement("div");
+        menu.className = "auto-rec-select__menu";
+        menu.setAttribute("role", "listbox");
+        document.body.appendChild(menu);
+
+        function syncValue() {
+            const selected = selectEl.options[selectEl.selectedIndex];
+            value.textContent = selected ? selected.textContent : "Saralash";
+            menu.querySelectorAll(".auto-rec-select__option").forEach(btn => {
+                btn.classList.toggle("is-active", btn.dataset.value === selectEl.value);
+            });
+        }
+
+        function positionMenu() {
+            const rect = trigger.getBoundingClientRect();
+            menu.style.top = `${rect.bottom + 6}px`;
+            menu.style.left = `${rect.left}px`;
+            menu.style.width = `${rect.width}px`;
+        }
+
+        function openMenu() {
+            positionMenu();
+            menu.classList.add("is-open");
+            trigger.classList.add("is-open");
+            trigger.setAttribute("aria-expanded", "true");
+        }
+
+        function closeMenu() {
+            menu.classList.remove("is-open");
+            trigger.classList.remove("is-open");
+            trigger.setAttribute("aria-expanded", "false");
+        }
+
+        Array.from(selectEl.options).forEach(option => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "auto-rec-select__option";
+            btn.textContent = option.textContent;
+            btn.dataset.value = option.value;
+
+            btn.addEventListener("click", () => {
+                selectEl.value = option.value;
+                sortDirectionBtn.dataset.desc = String(defaultDirectionFor(option.value));
+                syncDirectionButton();
+                syncValue();
+                closeMenu();
+                applyFilters(true);
+            });
+
+            menu.appendChild(btn);
+        });
+
+        selectEl.parentNode.insertBefore(wrapper, selectEl);
+        wrapper.appendChild(selectEl);
+        wrapper.appendChild(trigger);
+
+        trigger.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (menu.classList.contains("is-open")) {
+                closeMenu();
+            } else {
+                document.querySelectorAll(".auto-rec-select__menu.is-open").forEach(node => node.classList.remove("is-open"));
+                document.querySelectorAll(".auto-rec-select__trigger.is-open").forEach(node => {
+                    node.classList.remove("is-open");
+                    node.setAttribute("aria-expanded", "false");
+                });
+                openMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (menu.classList.contains("is-open")) positionMenu();
+        });
+
+        window.addEventListener("scroll", () => {
+            if (menu.classList.contains("is-open")) positionMenu();
+        }, true);
+
+        document.addEventListener("click", (event) => {
+            if (!wrapper.contains(event.target) && !menu.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeMenu();
+        });
+
+        syncValue();
+    }
+
+    async function toggleFavorite(form, button) {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) return;
+
+        button.classList.toggle("is-active", data.is_favorite);
+        button.setAttribute("aria-pressed", data.is_favorite ? "true" : "false");
+
+        const movieTitle = data.movie_title || form.dataset.movieTitle || "Film";
+        showSnackbar(movieTitle, data.is_favorite ? "success" : "error");
+    }
+
+    document.addEventListener("submit", async function (event) {
+        const form = event.target.closest(".auto-rec-fav-form");
+        if (!form) return;
+
+        event.preventDefault();
+
+        const button = form.querySelector(".auto-rec-fav-btn");
+        if (!button) return;
+
+        try {
+            await toggleFavorite(form, button);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    if (sentinel) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreCards();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        observer.observe(sentinel);
+    }
+
+    searchInput.addEventListener("input", () => applyFilters(true));
+    sortDirectionBtn.addEventListener("click", () => {
+        if (sortField.value === "relevance") return;
+        sortDirectionBtn.dataset.desc = String(!isDescending());
+        syncDirectionButton();
+        applyFilters(true);
+    });
+
+    buildPortalSelect(sortField);
+    sortDirectionBtn.dataset.desc = String(defaultDirectionFor(sortField.value));
+    syncDirectionButton();
+    applyFilters(true);
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="../../index.html">Bosh sahifa</a>
+<a href="../../movies/index.html">Filmlar</a>
+<a href="../../accounts/profile/index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/theme.js"></script>
+<script src="../../static/js/i18n-runtime.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="../../static/js/demo-mode.js"></script>
+</body>
+</html>
