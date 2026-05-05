@@ -4,7 +4,7 @@
     <div class="container">
         <a class="navbar-brand brand-mark" href="{% url 'home' %}">
             <span class="brand-dot"></span>
-            {{ t.site_name }}
+            {{ t.site_name|default:"Movie Recommender" }}
         </a>
 
         <button
@@ -14,7 +14,7 @@
             data-bs-target="#mainNav"
             aria-controls="mainNav"
             aria-expanded="false"
-            aria-label="Toggle navigation"
+            aria-label="{{ t.toggle_navigation|default:'Toggle navigation' }}"
         >
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,18 +22,29 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto align-items-lg-center">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-clean" href="{% url 'home' %}">{{ t.home }}</a>
+                    <a class="nav-link nav-link-clean" href="{% url 'home' %}">
+                        {{ t.home|default:"Home" }}
+                    </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link nav-link-clean" href="{% url 'movie_list' %}">{{ t.movies }}</a>
+                    <a class="nav-link nav-link-clean" href="{% url 'movie_list' %}">
+                        {{ t.movies|default:"Movies" }}
+                    </a>
                 </li>
+
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">Shaxsiy tavsiyalar</a>
+                        <a class="nav-link nav-link-clean" href="{% url 'recommend_for_you' %}">
+                            {{ t.personal_recommendations|default:"Personal recommendations" }}
+                        </a>
                     </li>
+
                     {% if user.is_staff %}
                         <li class="nav-item">
-                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">Model Lab</a>
+                            <a class="nav-link nav-link-clean" href="{% url 'recommendation_lab' %}">
+                                {{ t.model_lab|default:"Model Lab" }}
+                            </a>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -78,24 +89,34 @@
                     id="themeToggle"
                     class="btn theme-icon-btn"
                     type="button"
-                    aria-label="{{ t.dark_mode }}"
-                    title="{{ t.dark_mode }}"
-                    data-label-dark="{{ t.dark_mode }}"
-                    data-label-light="{{ t.light_mode }}"
+                    aria-label="{{ t.dark_mode|default:'Dark mode' }}"
+                    title="{{ t.dark_mode|default:'Dark mode' }}"
+                    data-label-dark="{{ t.dark_mode|default:'Dark mode' }}"
+                    data-label-light="{{ t.light_mode|default:'Light mode' }}"
                 >
                     <span class="theme-icon theme-icon-moon">🌙</span>
                     <span class="theme-icon theme-icon-sun d-none">☀️</span>
                 </button>
 
                 {% if user.is_authenticated %}
-                    <a class="btn btn-profile-soft" href="{% url 'profile' %}">{{ t.profile }}</a>
+                    <a class="btn btn-profile-soft" href="{% url 'profile' %}">
+                        {{ t.profile|default:"Profile" }}
+                    </a>
+
                     <form method="post" action="{% url 'logout' %}" class="d-inline">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary-gradient">{{ t.logout }}</button>
+                        <button type="submit" class="btn btn-primary-gradient">
+                            {{ t.logout|default:"Logout" }}
+                        </button>
                     </form>
                 {% else %}
-                    <a class="btn btn-outline-soft" href="{% url 'login' %}">{{ t.login }}</a>
-                    <a class="btn btn-primary-gradient" href="{% url 'register' %}">{{ t.register }}</a>
+                    <a class="btn btn-outline-soft" href="{% url 'login' %}">
+                        {{ t.login|default:"Login" }}
+                    </a>
+
+                    <a class="btn btn-primary-gradient" href="{% url 'register' %}">
+                        {{ t.register|default:"Register" }}
+                    </a>
                 {% endif %}
             </div>
         </div>

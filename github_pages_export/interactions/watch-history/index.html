@@ -1,0 +1,872 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ko‘rish tarixi</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../static/css/theme.css" rel="stylesheet"/>
+<link href="../../static/css/layout.css" rel="stylesheet"/>
+<link href="../../static/css/components.css" rel="stylesheet"/>
+<link href="../../static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="../../index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../movies/index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/for-you/index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/uz/index__next__interactions_watch-history_.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/ru/index__next__interactions_watch-history_.html">
+<img alt="Русский" class="lang-flag-img" src="../../static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/en/index__next__interactions_watch-history_.html">
+<img alt="English" class="lang-flag-img" src="../../static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="../../accounts/profile/index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Ov8oX9U06YwLR3IehL2jlOsEg5bODYoLleBrOZnsHT0EKKJV1BPsyDmFgOylo8uy"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<section class="interaction-page">
+<div class="container">
+<div class="interaction-page-top fade-up">
+<div class="interaction-page-top-main">
+<div class="interaction-page-head interaction-page-head--compact">
+<div>
+<h1>Ko‘rish tarixi</h1>
+<p>Ko‘rilgan filmlar va ko‘rish chastotasi.</p>
+</div>
+</div>
+</div>
+<div class="glass-card interaction-filter-card interaction-filter-card--top">
+<form class="interaction-filter-form" id="interactionFilterForm" method="get">
+<div class="interaction-filter-grid">
+<div>
+<label class="form-label">Qidiruv</label>
+<input autocomplete="off" class="form-control" id="interactionSearchInput" name="q" placeholder="Film nomi bo‘yicha qidiring..." type="text" value=""/>
+</div>
+<div>
+<label class="form-label">Saralash</label>
+<input id="interactionSortValue" name="sort" type="hidden" value="recent"/>
+<div class="interaction-sort-row">
+<div class="interaction-sort-select" id="interactionSortSelect">
+<button class="interaction-sort-select__trigger" id="interactionSortTrigger" type="button">
+<span id="interactionSortTriggerLabel">Oxirgi ko‘rilgan</span>
+<span class="interaction-sort-select__chevron"></span>
+</button>
+<div class="interaction-sort-select__menu" id="interactionSortMenu">
+<button class="interaction-sort-select__option" data-sort-field="date" type="button">Oxirgi ko‘rilgan</button>
+<button class="interaction-sort-select__option" data-sort-field="watch_count" type="button">Ko‘rish soni</button>
+<button class="interaction-sort-select__option" data-sort-field="title" type="button">Nom</button>
+<button class="interaction-sort-select__option" data-sort-field="year" type="button">Yil</button>
+<button class="interaction-sort-select__option" data-sort-field="count" type="button">Baho soni</button>
+</div>
+</div>
+<button aria-label="Saralash yo‘nalishi" class="interaction-sort-direction" data-desc="true" id="interactionSortDirection" title="Saralash yo‘nalishi" type="button">
+<span class="interaction-sort-direction__icon">↓</span>
+<span class="interaction-sort-direction__text">Kamayish</span>
+</button>
+</div>
+</div>
+<div class="interaction-filter-actions">
+<button class="btn btn-primary-gradient" type="submit">Qo‘llash</button>
+<a class="btn btn-outline-soft" href="index.html">Tozalash</a>
+</div>
+</div>
+</form>
+</div>
+</div>
+<div id="interactionResults">
+<div class="interaction-two-col-grid fade-up" id="historyGrid">
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/zeus-and-roxanne/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#1</span>
+<a class="favorite-poster-link" href="../../movies/zeus-and-roxanne/index__next__interactions_watch-history_.html">
+<img alt="Zeus and Roxanne" class="favorite-poster-img" src="../../media/movies/posters/zeus-and-roxanne-1164.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/zeus-and-roxanne/index__next__interactions_watch-history_.html">Zeus and Roxanne</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1997</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    2x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    6 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Mary Beth is a marine biologist that gets annoyed when a dog called Zeus stows aboard her research boat. Nevertheless she is intrigued when the intrusive canin…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:11
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/young-frankenstein/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#2</span>
+<a class="favorite-poster-link" href="../../movies/young-frankenstein/index__next__interactions_watch-history_.html">
+<img alt="Young Frankenstein" class="favorite-poster-img" src="../../media/movies/posters/young-frankenstein-208.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/young-frankenstein/index__next__interactions_watch-history_.html">Young Frankenstein</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1974</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    2x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    200 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">A young neurosurgeon inherits the castle of his grandfather, the famous Dr. Victor von Frankenstein. In the castle he finds a funny hunchback, a pretty lab ass…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:11
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/you-so-crazy/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#3</span>
+<a class="favorite-poster-link" href="../../movies/you-so-crazy/index__next__interactions_watch-history_.html">
+<img alt="You So Crazy" class="favorite-poster-img" src="../../media/movies/posters/you-so-crazy-1681.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/you-so-crazy/index__next__interactions_watch-history_.html">You So Crazy</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1994</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    3x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    1 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Stand up comedy by Martin Lawrence, filmed in the Majestic Theater in New York City. Martin Lawrence talks about everything from racism, to relationships, to h…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:11
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/yankee-zulu/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#4</span>
+<a class="favorite-poster-link" href="../../movies/yankee-zulu/index__next__interactions_watch-history_.html">
+<img alt="Yankee Zulu" class="favorite-poster-img" src="../../media/movies/posters/yankee-zulu-1557.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/yankee-zulu/index__next__interactions_watch-history_.html">Yankee Zulu</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1994</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    34x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    1 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Two South African boys, one white, Rhino, and one black, Zulu, go their separate ways after an incident. Many years later, they meet up again as adults, when o…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:11
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/wrong-trousers-the/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#5</span>
+<a class="favorite-poster-link" href="../../movies/wrong-trousers-the/index__next__interactions_watch-history_.html">
+<img alt="Wrong Trousers, The" class="favorite-poster-img" src="../../media/movies/posters/wrong-trousers-the-169.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/wrong-trousers-the/index__next__interactions_watch-history_.html">Wrong Trousers, The</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1993</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    41x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    119 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Wallace rents out Gromit's former bedroom to a penguin, who takes up an interest in the techno trousers created by Wallace. However, Gromit later learns that t…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/world-of-apu-the-apur-sansar/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#6</span>
+<a class="favorite-poster-link" href="../../movies/world-of-apu-the-apur-sansar/index__next__interactions_watch-history_.html">
+<img alt="World of Apu, The (Apur Sansar)" class="favorite-poster-img" src="../../media/movies/posters/world-of-apu-the-apur-sansar-1512.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/world-of-apu-the-apur-sansar/index__next__interactions_watch-history_.html">World of Apu, The (Apur Sansar)</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1959</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    34x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    6 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Apu, now a jobless ex-student dreaming vaguely of a future as a writer, is invited to join an old college friend on a trip up-country to a village wedding.</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/wonderful-horrible-life-of-leni-riefenstahl-the/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#7</span>
+<a class="favorite-poster-link" href="../../movies/wonderful-horrible-life-of-leni-riefenstahl-the/index__next__interactions_watch-history_.html">
+<img alt="Wonderful, Horrible Life of Leni Riefenstahl, The" class="favorite-poster-img" src="../../media/movies/posters/wonderful-horrible-life-of-leni-riefenstahl-the-701.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/wonderful-horrible-life-of-leni-riefenstahl-the/index__next__interactions_watch-history_.html">Wonderful, Horrible Life of Leni Riefenstahl, The</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1993</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    34x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    10 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">This documentary recounts the life and work of one of most famous, and yet reviled, German film directors in history, Leni Riefenstahl. The film recounts the r…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/woman-in-question-the/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#8</span>
+<a class="favorite-poster-link" href="../../movies/woman-in-question-the/index__next__interactions_watch-history_.html">
+<img alt="Woman in Question, The" class="favorite-poster-img" src="../../media/movies/posters/woman-in-question-the-1581.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/woman-in-question-the/index__next__interactions_watch-history_.html">Woman in Question, The</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1950</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    34x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    1 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Agnes "Astra" Huston, a fortune teller at a run-down fair, is found strangled in her bedroom. As the police question five suspects, their interactions with her…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/wizard-of-oz-the/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#9</span>
+<a class="favorite-poster-link" href="../../movies/wizard-of-oz-the/index__next__interactions_watch-history_.html">
+<img alt="Wizard of Oz, The" class="favorite-poster-img" src="../../media/movies/posters/wizard-of-oz-the-132.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/wizard-of-oz-the/index__next__interactions_watch-history_.html">Wizard of Oz, The</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1939</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    39x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    246 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">Young Dorothy finds herself in a magical world where she makes friends with a lion, a scarecrow and a tin man as they make their way along the yellow brick roa…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+<article class="glass-card favorite-row-card interaction-click-card" data-href="/movies/witness/?next=/interactions/watch-history/" role="link" tabindex="0">
+<div class="favorite-card-media">
+<span class="favorite-rank-badge">#10</span>
+<a class="favorite-poster-link" href="../../movies/witness/index__next__interactions_watch-history_.html">
+<img alt="Witness" class="favorite-poster-img" src="../../media/movies/posters/witness-1526.jpg"/>
+</a>
+</div>
+<div class="favorite-card-content">
+<div class="frc-header">
+<a class="interaction-title-link" href="../../movies/witness/index__next__interactions_watch-history_.html">Witness</a>
+</div>
+<div class="frc-meta">
+<span class="frc-year">1985</span>
+<span class="frc-watch-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    34x
+                                </span>
+<span class="frc-count-badge">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    1 ta baho
+                                </span>
+</div>
+<p class="interaction-overview">While protecting an Amish boy—the sole witness to a brutal murder—and his mother, a detective is forced to seek refuge within their community when his own life…</p>
+<div class="frc-footer">
+<span class="frc-chip">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    2026-05-05 04:10
+                                </span>
+</div>
+</div>
+</article>
+</div>
+<div class="interaction-hidden-pager" data-next-url="?page=2" id="interactionPagerMeta">
+</div>
+<div aria-hidden="true" class="interaction-infinite-sentinel" id="interactionInfiniteSentinel"></div>
+</div>
+</div>
+</section>
+<script>
+(function () {
+    const form = document.getElementById("interactionFilterForm");
+    const searchInput = document.getElementById("interactionSearchInput");
+    const resultsContainer = document.getElementById("interactionResults");
+
+    const sortHidden = document.getElementById("interactionSortValue");
+    const sortRoot = document.getElementById("interactionSortSelect");
+    const sortTrigger = document.getElementById("interactionSortTrigger");
+    const sortMenu = document.getElementById("interactionSortMenu");
+    const sortLabel = document.getElementById("interactionSortTriggerLabel");
+    const sortDirectionBtn = document.getElementById("interactionSortDirection");
+    const sortDirectionIcon = sortDirectionBtn.querySelector(".interaction-sort-direction__icon");
+    const sortDirectionText = sortDirectionBtn.querySelector(".interaction-sort-direction__text");
+
+    if (!form || !searchInput || !resultsContainer) return;
+
+    let timer = null;
+    let controller = null;
+    let infiniteObserver = null;
+    let isLoadingMore = false;
+
+    const FIELD_LABELS = {
+        date: "Oxirgi ko‘rilgan",
+        watch_count: "Ko‘rish soni",
+        title: "Nom",
+        year: "Yil",
+        count: "Baho soni",
+    };
+
+    function encodeSort(field, desc) {
+        if (field === "date") return desc ? "recent" : "oldest";
+        if (field === "watch_count") return desc ? "watch_count_desc" : "watch_count_asc";
+        if (field === "title") return desc ? "title_desc" : "title_asc";
+        if (field === "year") return desc ? "year_desc" : "year_asc";
+        if (field === "count") return desc ? "count_desc" : "count_asc";
+        return "recent";
+    }
+
+    function decodeSort(value) {
+        const map = {
+            "recent": { field: "date", desc: true },
+            "oldest": { field: "date", desc: false },
+            "watch_count_desc": { field: "watch_count", desc: true },
+            "watch_count_asc": { field: "watch_count", desc: false },
+            "title_desc": { field: "title", desc: true },
+            "title_asc": { field: "title", desc: false },
+            "year_desc": { field: "year", desc: true },
+            "year_asc": { field: "year", desc: false },
+            "count_desc": { field: "count", desc: true },
+            "count_asc": { field: "count", desc: false },
+        };
+        return map[value || "recent"] || { field: "date", desc: true };
+    }
+
+    function syncSortUi() {
+        const decoded = decodeSort(sortHidden.value);
+        sortLabel.textContent = FIELD_LABELS[decoded.field] || "Oxirgi ko‘rilgan";
+
+        sortMenu.querySelectorAll("[data-sort-field]").forEach((btn) => {
+            btn.classList.toggle("is-active", btn.dataset.sortField === decoded.field);
+        });
+
+        sortDirectionBtn.dataset.desc = decoded.desc ? "true" : "false";
+        sortDirectionIcon.textContent = decoded.desc ? "↓" : "↑";
+        sortDirectionText.textContent = decoded.desc ? "" : "";
+    }
+
+    function closeAll() {
+        sortRoot.classList.remove("is-open");
+    }
+
+    function buildQueryString() {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            if (key === "page") continue;
+            if (value !== "") params.append(key, value);
+        }
+
+        return params.toString();
+    }
+
+    function getPagerMeta() {
+        return document.getElementById("interactionPagerMeta");
+    }
+
+    function getGrid() {
+        return document.getElementById("historyGrid");
+    }
+
+    function getSentinel() {
+        return document.getElementById("interactionInfiniteSentinel");
+    }
+
+    function getNextUrl() {
+        const pagerMeta = getPagerMeta();
+        return pagerMeta ? (pagerMeta.dataset.nextUrl || "") : "";
+    }
+
+    function updateNextUrl(value) {
+        const pagerMeta = getPagerMeta();
+        if (pagerMeta) {
+            pagerMeta.dataset.nextUrl = value || "";
+        }
+    }
+
+    async function fetchAndReplaceResults(pushUrl = true, preserveCaret = false, explicitUrl = null) {
+        const activeElement = document.activeElement;
+        const isSearchFocused = preserveCaret && activeElement === searchInput;
+        const start = searchInput.selectionStart;
+        const end = searchInput.selectionEnd;
+
+        const targetUrl = explicitUrl || (function () {
+            const query = buildQueryString();
+            return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+        })();
+
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                signal: controller.signal,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextResults = doc.getElementById("interactionResults");
+            if (!nextResults) return;
+
+            resultsContainer.innerHTML = nextResults.innerHTML;
+
+            if (pushUrl) {
+                window.history.replaceState({}, "", targetUrl);
+            }
+
+            if (isSearchFocused) {
+                searchInput.focus();
+                if (typeof start === "number" && typeof end === "number") {
+                    searchInput.setSelectionRange(start, end);
+                }
+            }
+
+            setupInfiniteScroll();
+        } catch (error) {
+            if (error.name !== "AbortError") console.error(error);
+        }
+    }
+
+    async function loadMoreResults() {
+        const nextUrl = getNextUrl();
+        const grid = getGrid();
+        if (!nextUrl || !grid || isLoadingMore) return;
+
+        isLoadingMore = true;
+
+        try {
+            const response = await fetch(nextUrl, {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (!response.ok) return;
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const nextGrid = doc.getElementById("historyGrid");
+            const nextPagerMeta = doc.getElementById("interactionPagerMeta");
+
+            if (!nextGrid || !nextPagerMeta) return;
+
+            grid.insertAdjacentHTML("beforeend", nextGrid.innerHTML);
+            updateNextUrl(nextPagerMeta.dataset.nextUrl || "");
+            setupInfiniteScroll();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            isLoadingMore = false;
+        }
+    }
+
+    function setupInfiniteScroll() {
+        if (infiniteObserver) {
+            infiniteObserver.disconnect();
+            infiniteObserver = null;
+        }
+
+        const sentinel = getSentinel();
+        const nextUrl = getNextUrl();
+
+        if (!sentinel) return;
+
+        if (!nextUrl) {
+            sentinel.hidden = true;
+            return;
+        }
+
+        sentinel.hidden = false;
+
+        infiniteObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    loadMoreResults();
+                }
+            });
+        }, {
+            rootMargin: "220px 0px"
+        });
+
+        infiniteObserver.observe(sentinel);
+    }
+
+    sortTrigger.addEventListener("click", function () {
+        sortRoot.classList.toggle("is-open");
+    });
+
+    sortMenu.querySelectorAll("[data-sort-field]").forEach((option) => {
+        option.addEventListener("click", function () {
+            const field = this.dataset.sortField || "date";
+            sortHidden.value = encodeSort(field, true);
+            sortRoot.classList.remove("is-open");
+            syncSortUi();
+            fetchAndReplaceResults(true, false);
+        });
+    });
+
+    sortDirectionBtn.addEventListener("click", function () {
+        const decoded = decodeSort(sortHidden.value);
+        sortHidden.value = encodeSort(decoded.field, !decoded.desc);
+        syncSortUi();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".interaction-sort-select")) closeAll();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeAll();
+    });
+
+    searchInput.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fetchAndReplaceResults(true, true);
+        }, 350);
+    });
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        fetchAndReplaceResults(true, false);
+    });
+
+    document.addEventListener("click", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (event.target.closest("a, button, form, input, textarea, select, label")) {
+            return;
+        }
+
+        const href = card.dataset.href;
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        const card = event.target.closest(".interaction-click-card");
+        if (!card) return;
+
+        if (event.key === "Enter" || event.key === " ") {
+            if (event.target.closest("a, button, form, input, textarea, select, label")) {
+                return;
+            }
+            event.preventDefault();
+            const href = card.dataset.href;
+            if (href) {
+                window.location.href = href;
+            }
+        }
+    });
+
+    syncSortUi();
+    setupInfiniteScroll();
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="../../index.html">Bosh sahifa</a>
+<a href="../../movies/index.html">Filmlar</a>
+<a href="../../accounts/profile/index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/theme.js"></script>
+<script src="../../static/js/i18n-runtime.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="../../static/js/demo-mode.js"></script>
+</body>
+</html>

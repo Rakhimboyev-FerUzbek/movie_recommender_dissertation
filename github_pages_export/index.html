@@ -1,0 +1,1897 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie Recommender — Onlayn Kino Platformasi</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="static/css/theme.css" rel="stylesheet"/>
+<link href="static/css/layout.css" rel="stylesheet"/>
+<link href="static/css/components.css" rel="stylesheet"/>
+<link href="static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="movies/index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="recommendations/for-you/index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="recommendations/lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="set-language/uz/index__next__.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="set-language/ru/index__next__.html">
+<img alt="Русский" class="lang-flag-img" src="static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="set-language/en/index__next__.html">
+<img alt="English" class="lang-flag-img" src="static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="accounts/profile/index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<link href="static/css/pages/home.css" rel="stylesheet"/>
+<section class="cinema-hero" id="cinemaHero">
+<canvas class="hero-canvas" id="heroCanvas"></canvas>
+<!-- Film strip edges -->
+<div class="film-strip film-strip-left" id="filmStripLeft"></div>
+<div class="film-strip film-strip-right" id="filmStripRight"></div>
+<!-- Film grain & vignette -->
+<div class="film-grain"></div>
+<div class="hero-vignette"></div>
+<div class="container hero-content-wrap">
+<div class="row align-items-center" style="min-height: 100vh; padding: 100px 0 70px;">
+<!-- Left: Copy -->
+<div class="col-lg-6 col-xl-7">
+<div class="hero-eyebrow">
+<span>🎬</span>
+<span>Kino uslubidagi interfeys va aqlli tavsiyalar</span>
+</div>
+<h1 class="hero-display-title">
+                    DUNYONING<br/>
+                    ENG YAXSHI<br/>
+<span class="title-accent">KINOLARI</span>
+</h1>
+<p class="hero-lead">Milliondan ortiq filmlar ichidan siz sevadigan janrlarni toping. Reyting bering, ro‘yxat tuzing — platforma qolganini o‘zi bajaradi.</p>
+<div class="hero-cta-row">
+<a class="btn-cinema-primary" href="movies/index.html">
+<svg fill="currentColor" height="16" viewbox="0 0 16 16" width="16"><path d="M6.5 3a.5.5 0 0 1 .776-.416l7 4.5a.5.5 0 0 1 0 .832l-7 4.5A.5.5 0 0 1 6.5 12V3z"></path></svg>
+                        Filmlarni ko‘rish
+                    </a>
+<a class="btn-cinema-play-wrap" href="accounts/profile/index.html">
+<span class="btn-cinema-play">👤</span>
+<span class="hero-cta-label">Profil</span>
+</a>
+</div>
+<!-- Live viewer badge -->
+<div class="hero-live-badge">
+<span class="live-dot"></span>
+<span class="live-text"><strong>2,847</strong> kishi hozir onlayn</span>
+</div>
+</div>
+<!-- Right: Cinema screen preview -->
+<div class="col-lg-6 col-xl-5 d-none d-lg-block">
+<div class="hero-screen-preview">
+<div class="screen-float-card sfc-users">
+<span class="sfc-label">📈 Bugungi ko‘rishlar</span>
+<span class="sfc-value">147,320</span>
+</div>
+<div class="preview-screen">
+<div class="preview-scanlines"></div>
+<div class="preview-poster-bg">
+<div class="poster-strip ps-1">
+<div class="poster-tile" style="background:linear-gradient(135deg,#1a0533,#3d1a6e);">🎭</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d1f3c,#1a3a6e);">🚀</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#1f0d0d,#6e1a1a);">🔥</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d1f0d,#1a6e2a);">🌍</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#1a1a0d,#5e6e1a);">⚡</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#1a0533,#3d1a6e);">🎭</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d1f3c,#1a3a6e);">🚀</div>
+</div>
+<div class="poster-strip ps-2">
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d1a2e,#1a3355);">🕵️</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e0d1a,#551a33);">❤️</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d2e2e,#1a5555);">👻</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e2e0d,#55551a);">😄</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#1a0d2e,#33155e);">🧙</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d1a2e,#1a3355);">🕵️</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e0d1a,#551a33);">❤️</div>
+</div>
+<div class="poster-strip ps-3">
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e1a0d,#6e3a1a);">🎸</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d2e1a,#1a6e3a);">🦁</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#1a2e0d,#3a6e1a);">🌲</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e0d2e,#6e1a6e);">🔮</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d0d2e,#1a1a6e);">🌊</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#2e1a0d,#6e3a1a);">🎸</div>
+<div class="poster-tile" style="background:linear-gradient(135deg,#0d2e1a,#1a6e3a);">🦁</div>
+</div>
+</div>
+<div class="preview-overlay-gradient"></div>
+<div class="preview-inner">
+<div class="preview-movie-badge">★ 8.9 / 10</div>
+<div class="preview-play-center">
+<div class="preview-play-btn">▶</div>
+</div>
+<div class="preview-info">
+<div class="preview-genre-tag">Thriller • Crime</div>
+<div class="preview-title">Trenddagi #1 film</div>
+<div class="preview-progress">
+<div class="preview-progress-fill"></div>
+</div>
+<div class="preview-meta">
+<span class="preview-time">1:38:14 / 2:22:00</span>
+<span class="preview-rating">🔥 11,204 ta baho</span>
+</div>
+</div>
+</div>
+</div>
+<div class="screen-float-card sfc-rating">
+<span class="sfc-label">🏆 O‘rtacha baho</span>
+<span class="sfc-value">⭐ 7.9 / 10</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<style>
+/* ── Live badge ──────────────────────────────────────────── */
+.hero-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    animation: heroReveal 0.7s ease 0.78s forwards;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #38d39f;
+    flex-shrink: 0;
+    animation: livePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56,211,159,0.55); }
+    50%       { box-shadow: 0 0 0 7px rgba(56,211,159,0); }
+}
+
+.live-text {
+    font-size: 0.83rem;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ── Poster strips ───────────────────────────────────────── */
+.preview-poster-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 3px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.poster-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+.ps-1 { animation: stripDown 20s linear infinite; }
+.ps-2 { animation: stripUp   24s linear infinite; }
+.ps-3 { animation: stripDown 28s linear infinite; animation-delay: -6s; }
+
+@keyframes stripDown { 0% { transform: translateY(0); }    100% { transform: translateY(40%); } }
+@keyframes stripUp   { 0% { transform: translateY(-40%); } 100% { transform: translateY(0); } }
+
+.poster-tile {
+    flex-shrink: 0;
+    height: 100px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    opacity: 0.7;
+}
+
+.preview-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(5,8,18,0.1) 0%,
+        rgba(5,8,18,0.05) 35%,
+        rgba(5,8,18,0.82) 68%,
+        rgba(5,8,18,0.97) 100%
+    );
+    z-index: 2;
+}
+</style>
+<script>
+/* ── Hero Canvas — AURORA BOREALIS ─────────────────────────── */
+(function () {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        // Re-init aurora points on resize
+        initAurora();
+    }
+
+    /* ── Aurora ribbons ───────────────────────────────────── */
+    const AURORA_BANDS = [
+        { baseY: 0.28, amp: 0.12, speed: 0.00022, phase: 0,      color: [[0,220,180], [50,160,255]], alpha: 0.14, width: 0.18 },
+        { baseY: 0.38, amp: 0.09, speed: 0.00028, phase: 1.2,     color: [[120,50,255],[0,200,255]],  alpha: 0.12, width: 0.14 },
+        { baseY: 0.22, amp: 0.14, speed: 0.00018, phase: 2.4,     color: [[0,255,140],[60,80,255]],   alpha: 0.10, width: 0.20 },
+        { baseY: 0.48, amp: 0.08, speed: 0.00032, phase: 0.7,     color: [[200,50,255],[0,180,220]],  alpha: 0.09, width: 0.12 },
+        { baseY: 0.15, amp: 0.10, speed: 0.00015, phase: 3.5,     color: [[50,255,200],[100,50,200]], alpha: 0.08, width: 0.16 },
+    ];
+
+    // Bezier control points for each ribbon
+    let auroraPoints = [];
+
+    function initAurora() {
+        auroraPoints = AURORA_BANDS.map(() =>
+            Array.from({ length: 7 }, (_, i) => ({
+                px: i / 6,
+                offsetY: (Math.random() - 0.5) * 0.08,
+                speed:   0.00010 + Math.random() * 0.00018,
+                phase:   Math.random() * Math.PI * 2,
+            }))
+        );
+    }
+
+    initAurora();
+
+    /* ── Stars ────────────────────────────────────────────── */
+    const stars = Array.from({ length: 180 }, () => ({
+        x:            Math.random(),
+        y:            Math.random(),
+        r:            Math.random() * 1.2 + 0.15,
+        twinkle:      Math.random() * Math.PI * 2,
+        twinkleSpeed: 0.008 + Math.random() * 0.018,
+        baseAlpha:    0.06 + Math.random() * 0.35,
+        color:        Math.random() > 0.8 ? '200,240,255' : '220,230,255',
+    }));
+
+    /* ── Shooting stars ───────────────────────────────────── */
+    const shoots = [];
+    function spawnShoot() {
+        shoots.push({
+            x:         Math.random() * 0.85,
+            y:         Math.random() * 0.4,
+            lenFactor: 60 + Math.random() * 90,
+            vx:        4 + Math.random() * 5,
+            vy:        1 + Math.random() * 2.5,
+            life:      1,
+        });
+        setTimeout(spawnShoot, 3000 + Math.random() * 6000);
+    }
+    spawnShoot();
+
+    /* ── Floating film frames ─────────────────────────────── */
+    const frames = Array.from({ length: 6 }, () => ({
+        x:      Math.random(),
+        y:      Math.random(),
+        w:      50 + Math.random() * 55,
+        h:      70 + Math.random() * 65,
+        vx:     (Math.random() - 0.5) * 0.00012,
+        vy:     -0.00010 - Math.random() * 0.00014,
+        rot:    (Math.random() - 0.5) * 0.28,
+        rotSpd: (Math.random() - 0.5) * 0.00040,
+        alpha:  0.012 + Math.random() * 0.032,
+    }));
+
+    let tick = 0;
+    let mx = 0.5, my = 0.5;
+    document.addEventListener('mousemove', e => {
+        const r = canvas.getBoundingClientRect();
+        mx = (e.clientX - r.left)  / (r.width  || 1);
+        my = (e.clientY - r.top)   / (r.height || 1);
+    });
+
+    /* Helper: lerp */
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function drawAuroraBand(band, pts) {
+        const W = canvas.width, H = canvas.height;
+
+        // Animate control points
+        pts.forEach(p => {
+            p.phase += p.speed;
+            p.currentY = band.baseY + p.offsetY + Math.sin(p.phase) * 0.04;
+        });
+
+        // Build path with smooth curves through all control points
+        const segments = pts.length - 1;
+        const bandHeightPx = band.width * H;
+
+        for (let pass = 0; pass < 3; pass++) {
+            const alphaPass = band.alpha * [1, 0.5, 0.22][pass];
+            const heightPass = bandHeightPx * [1, 1.6, 2.4][pass];
+
+            const grad = ctx.createLinearGradient(0, 0, W, 0);
+            const [c1, c2] = band.color;
+            for (let i = 0; i <= 8; i++) {
+                const t   = i / 8;
+                const mix = 0.5 + 0.5 * Math.sin(tick * 0.00018 + t * Math.PI * 2 + band.phase);
+                const r   = Math.round(lerp(c1[0], c2[0], mix));
+                const g   = Math.round(lerp(c1[1], c2[1], mix));
+                const b   = Math.round(lerp(c1[2], c2[2], mix));
+                grad.addColorStop(t, `rgba(${r},${g},${b},${alphaPass})`);
+            }
+
+            ctx.beginPath();
+            // Top edge of ribbon
+            for (let i = 0; i <= segments; i++) {
+                const x  = pts[i].px * W + (mx - 0.5) * W * 0.025;
+                const y  = (pts[i].currentY + Math.sin(tick * 0.00014 + i * 0.9) * 0.015) * H
+                           + (my - 0.5) * H * 0.02
+                           - heightPass / 2;
+                if (i === 0) ctx.moveTo(x, y);
+                else {
+                    const px = pts[i - 1].px * W + (mx - 0.5) * W * 0.025;
+                    const py = (pts[i-1].currentY + Math.sin(tick * 0.00014 + (i-1) * 0.9) * 0.015) * H
+                               + (my - 0.5) * H * 0.02
+                               - heightPass / 2;
+                    const cpx = (px + x) / 2;
+                    ctx.bezierCurveTo(cpx, py, cpx, y, x, y);
+                }
+            }
+            // Bottom edge (reverse)
+            for (let i = segments; i >= 0; i--) {
+                const x  = pts[i].px * W + (mx - 0.5) * W * 0.025;
+                const y  = (pts[i].currentY + Math.sin(tick * 0.00014 + i * 0.9) * 0.015) * H
+                           + (my - 0.5) * H * 0.02
+                           + heightPass / 2;
+                if (i === segments) ctx.lineTo(x, y);
+                else {
+                    const nx = pts[i + 1].px * W + (mx - 0.5) * W * 0.025;
+                    const ny = (pts[i+1].currentY + Math.sin(tick * 0.00014 + (i+1) * 0.9) * 0.015) * H
+                               + (my - 0.5) * H * 0.02
+                               + heightPass / 2;
+                    const cpx = (nx + x) / 2;
+                    ctx.bezierCurveTo(cpx, ny, cpx, y, x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.fillStyle = grad;
+            ctx.fill();
+        }
+    }
+
+    function draw() {
+        const W = canvas.width, H = canvas.height;
+        tick++;
+
+        ctx.clearRect(0, 0, W, H);
+
+        /* ── Background: deep dark with subtle warm tint ── */
+        const bg = ctx.createLinearGradient(0, 0, W * 0.6, H);
+        bg.addColorStop(0,   '#020509');
+        bg.addColorStop(0.5, '#030710');
+        bg.addColorStop(1,   '#02060c');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        /* ── Subtle horizon glow ─────────────────────────── */
+        const hg = ctx.createRadialGradient(W * 0.5, H * 0.6, 0, W * 0.5, H * 0.6, W * 0.7);
+        hg.addColorStop(0,   'rgba(0,180,160,0.06)');
+        hg.addColorStop(0.4, 'rgba(40,80,200,0.04)');
+        hg.addColorStop(1,   'rgba(0,0,0,0)');
+        ctx.fillStyle = hg;
+        ctx.fillRect(0, 0, W, H);
+
+        /* ── Mouse aurora ────────────────────────────────── */
+        const ag = ctx.createRadialGradient(mx*W, my*H, 0, mx*W, my*H, W*0.42);
+        ag.addColorStop(0, 'rgba(0,200,180,0.07)');
+        ag.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = ag;
+        ctx.fillRect(0, 0, W, H);
+
+        /* ── Stars ───────────────────────────────────────── */
+        stars.forEach(s => {
+            s.twinkle += s.twinkleSpeed;
+            const a  = s.baseAlpha * (0.4 + 0.6 * Math.sin(s.twinkle));
+            const sx = s.x * W + (mx - 0.5) * 10;
+            const sy = s.y * H + (my - 0.5) * 7;
+            ctx.beginPath();
+            ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${s.color},${a})`;
+            ctx.fill();
+        });
+
+        /* ── Aurora bands (bottom layer, behind most content) */
+        AURORA_BANDS.forEach((band, idx) => drawAuroraBand(band, auroraPoints[idx]));
+
+        /* ── Shooting stars ──────────────────────────────── */
+        for (let i = shoots.length - 1; i >= 0; i--) {
+            const s = shoots[i];
+            const sx = s.x * W, sy = s.y * H;
+            s.x    += s.vx / W;
+            s.y    += s.vy / H;
+            s.life -= 0.016;
+            if (s.life <= 0 || s.x > 1.2) { shoots.splice(i, 1); continue; }
+
+            const a    = s.life * 0.85;
+            const tail = ctx.createLinearGradient(sx, sy, sx - s.vx * s.lenFactor / 5, sy - s.vy * s.lenFactor / 5);
+            tail.addColorStop(0,   `rgba(200,255,240,${a})`);
+            tail.addColorStop(0.3, `rgba(100,220,210,${a * 0.6})`);
+            tail.addColorStop(1,   'rgba(50,200,200,0)');
+            ctx.save();
+            ctx.strokeStyle = tail;
+            ctx.lineWidth   = 1.6;
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx - s.vx * s.lenFactor / 5, sy - s.vy * s.lenFactor / 5);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        /* ── Film frames ─────────────────────────────────── */
+        frames.forEach(f => {
+            f.x   += f.vx;
+            f.y   += f.vy;
+            f.rot += f.rotSpd;
+            if (f.y < -0.25) { f.y = 1.1; f.x = Math.random(); }
+            if (f.x >  1.15) f.x = -0.1;
+            if (f.x < -0.15) f.x =  1.1;
+            ctx.save();
+            ctx.translate(f.x * W + f.w / 2, f.y * H + f.h / 2);
+            ctx.rotate(f.rot);
+            ctx.globalAlpha = f.alpha;
+            ctx.strokeStyle = 'rgba(0,220,180,0.7)';
+            ctx.lineWidth   = 1;
+            ctx.strokeRect(-f.w / 2, -f.h / 2, f.w, f.h);
+            for (let i = 0; i < 3; i++) {
+                const hy = -f.h / 2 + (f.h / 3) * i + f.h / 6;
+                ctx.strokeRect(-f.w / 2 - 10, hy - 5, 6, 9);
+                ctx.strokeRect( f.w / 2 +  4, hy - 5, 6, 9);
+            }
+            ctx.restore();
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    draw();
+
+    /* Film strip holes */
+    ['filmStripLeft', 'filmStripRight'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = '<div class="film-hole"></div>'.repeat(Math.ceil(window.innerHeight / 36) + 8);
+    });
+})();
+</script>
+<section class="stats-section">
+<div class="container">
+<div class="stats-grid reveal">
+<div class="stat-cell">
+<span class="stat-icon">👥</span>
+<span class="stat-number" data-count="152000" data-suffix="+">0</span>
+<span class="stat-label">Foydalanuvchilar</span>
+</div>
+<div class="stat-cell">
+<span class="stat-icon">🎬</span>
+<span class="stat-number" data-count="58400" data-suffix="+">0</span>
+<span class="stat-label">Film bazasi</span>
+</div>
+<div class="stat-cell">
+<span class="stat-icon">⭐</span>
+<span class="stat-number" data-count="2700000" data-suffix="+">0</span>
+<span class="stat-label">Berilgan baholar</span>
+</div>
+<div class="stat-cell">
+<span class="stat-icon">🤖</span>
+<span class="stat-number" data-count="98" data-suffix="%">0</span>
+<span class="stat-label">Qoniqish darajasi</span>
+</div>
+</div>
+</div>
+</section>
+<div class="genre-ticker-section">
+<div class="genre-ticker-inner">
+<div class="genre-ticker-track" id="genreTicker">
+<a class="genre-chip-ticker" href="movies/index__genre_action.html">🔥 Action</a>
+<a class="genre-chip-ticker" href="movies/index__genre_drama.html">🎭 Drama</a>
+<a class="genre-chip-ticker" href="movies/index__genre_comedy.html">😄 Comedy</a>
+<a class="genre-chip-ticker" href="movies/index__genre_thriller.html">😱 Triller</a>
+<a class="genre-chip-ticker" href="movies/index__genre_horror.html">👻 Qo‘rqinchli</a>
+<a class="genre-chip-ticker" href="movies/index__genre_romance.html">💕 Romantika</a>
+<a class="genre-chip-ticker" href="movies/index__genre_sci-fi.html">🚀 Sci-Fi</a>
+<a class="genre-chip-ticker" href="movies/index__genre_animation.html">✨ Animatsiya</a>
+<a class="genre-chip-ticker" href="movies/index__genre_fantasy.html">🧙 Fantastika</a>
+<a class="genre-chip-ticker" href="movies/index__genre_crime.html">🕵️ Jinoyat</a>
+<a class="genre-chip-ticker" href="movies/index__genre_adventure.html">🌍 Sarguzasht</a>
+<a class="genre-chip-ticker" href="movies/index__genre_documentary.html">📹 Hujjatli</a>
+<a class="genre-chip-ticker" href="movies/index__genre_history.html">🏛️ Tarixiy</a>
+<a class="genre-chip-ticker" href="movies/index__genre_music.html">🎵 Musiqa</a>
+<a class="genre-chip-ticker" href="movies/index__genre_biography.html">📖 Biografiya</a>
+<a class="genre-chip-ticker" href="movies/index__genre_action.html">🔥 Action</a>
+<a class="genre-chip-ticker" href="movies/index__genre_drama.html">🎭 Drama</a>
+<a class="genre-chip-ticker" href="movies/index__genre_comedy.html">😄 Comedy</a>
+<a class="genre-chip-ticker" href="movies/index__genre_thriller.html">😱 Triller</a>
+<a class="genre-chip-ticker" href="movies/index__genre_horror.html">👻 Qo‘rqinchli</a>
+<a class="genre-chip-ticker" href="movies/index__genre_romance.html">💕 Romantika</a>
+<a class="genre-chip-ticker" href="movies/index__genre_sci-fi.html">🚀 Sci-Fi</a>
+<a class="genre-chip-ticker" href="movies/index__genre_animation.html">✨ Animatsiya</a>
+<a class="genre-chip-ticker" href="movies/index__genre_fantasy.html">🧙 Fantastika</a>
+<a class="genre-chip-ticker" href="movies/index__genre_crime.html">🕵️ Jinoyat</a>
+<a class="genre-chip-ticker" href="movies/index__genre_adventure.html">🌍 Sarguzasht</a>
+<a class="genre-chip-ticker" href="movies/index__genre_documentary.html">📹 Hujjatli</a>
+<a class="genre-chip-ticker" href="movies/index__genre_history.html">🏛️ Tarixiy</a>
+<a class="genre-chip-ticker" href="movies/index__genre_music.html">🎵 Musiqa</a>
+<a class="genre-chip-ticker" href="movies/index__genre_biography.html">📖 Biografiya</a>
+</div>
+</div>
+</div>
+<section class="why-section">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-5 mb-5 mb-lg-0 reveal">
+<div class="section-eyebrow">Nima uchun biz?</div>
+<h2 class="section-headline">BOSHQA SAYTLARDAN<br/><span class="title-accent">FARQIMIZ</span></h2>
+<p class="section-subtext">
+                    Oddiy kino ro‘yxatidan farqli o‘laroq, Movie Recommender AI tavsiya tizimi orqali har bir foydalanuvchiga shaxsiylashtirilgan kino tajribasi taklif etadi.
+                </p>
+</div>
+<div class="col-lg-7">
+<div class="features-grid">
+<div class="feature-card reveal reveal-delay-1">
+<div class="feature-card-glow" style="background: rgba(124,92,255,0.4);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(124,92,255,0.12); --icon-border: rgba(124,92,255,0.25);">🤖</div>
+<div class="feature-title">Gibrid AI tavsiya</div>
+<div class="feature-desc">
+                            Content-based (60%) + Collaborative Filtering (40%) kombinatsiyasi — oddiy kino saytlarida uchramaydigan aralash strategiya.
+                        </div>
+<span class="feature-badge">Exclusive</span>
+</div>
+<div class="feature-card reveal reveal-delay-2">
+<div class="feature-card-glow" style="background: rgba(76,201,240,0.35);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(76,201,240,0.1); --icon-border: rgba(76,201,240,0.22);">🌐</div>
+<div class="feature-title">3 tilda ishlaydi</div>
+<div class="feature-desc">
+                            O‘zbek, rus va ingliz tillarida to‘liq qo‘llab-quvvatlash. Har bir foydalanuvchi platformadan o‘z tilida foydalanadi.
+                        </div>
+<span class="feature-badge">UZ · RU · EN</span>
+</div>
+<div class="feature-card reveal reveal-delay-3">
+<div class="feature-card-glow" style="background: rgba(56,211,159,0.3);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(56,211,159,0.1); --icon-border: rgba(56,211,159,0.22);">⚡</div>
+<div class="feature-title">Real vaqt tahlili</div>
+<div class="feature-desc">
+                            Har bir baho va ko‘rishdan so‘ng tavsiyalar avtomatik yangilanadi. Qanchalik ko‘p ishlatsangiz, natija shunchalik aniq bo‘ladi.
+                        </div>
+<span class="feature-badge">Live Updates</span>
+</div>
+<div class="feature-card reveal reveal-delay-1">
+<div class="feature-card-glow" style="background: rgba(255,200,61,0.3);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(255,200,61,0.1); --icon-border: rgba(255,200,61,0.22);">⭐</div>
+<div class="feature-title">Batafsil reyting</div>
+<div class="feature-desc">
+                            Faqat umumiy baho emas — janr, davlat va yil bo‘yicha reytinglar alohida ko‘rsatiladi.
+                        </div>
+<span class="feature-badge">Deep Analytics</span>
+</div>
+<div class="feature-card reveal reveal-delay-2">
+<div class="feature-card-glow" style="background: rgba(255,93,115,0.3);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(255,93,115,0.1); --icon-border: rgba(255,93,115,0.22);">❤️</div>
+<div class="feature-title">Sevimlilar ro‘yxati</div>
+<div class="feature-desc">
+                            Ko‘rmoqchi bo‘lgan filmlaringizni saqlang, ko‘rganlaringizni belgilang va tarixingizni kuzating.
+                        </div>
+<span class="feature-badge">Personal</span>
+</div>
+<div class="feature-card reveal reveal-delay-3">
+<div class="feature-card-glow" style="background: rgba(124,92,255,0.35);"></div>
+<div class="feature-icon-wrap" style="--icon-bg: rgba(124,92,255,0.1); --icon-border: rgba(124,92,255,0.22);">🔒</div>
+<div class="feature-title">Bepul &amp; Xavfsiz</div>
+<div class="feature-desc">
+                            Reklamasiz, maxfiylikka e’tibor qaratilgan platforma. Ro‘yxatdan o‘ting va barcha imkoniyatlardan foydalaning.
+                        </div>
+<span class="feature-badge">Free Forever</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="home-section">
+<div class="container">
+<div class="home-section-header reveal">
+<div>
+<h2 class="home-section-title">Siz uchun tavsiyalar</h2>
+<p class="home-section-sub">Tizim sizning baholaringiz va qiziqishlaringiz asosida tanlagan filmlar</p>
+</div>
+<a class="home-section-link home-section-link--plain" href="recommendations/for-you/index.html">Barchasini ko‘rish</a>
+</div>
+<div class="home-rec-grid reveal">
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/twelve-monkeys/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Twelve Monkeys" class="auto-rec-card__poster" src="media/movies/posters/twelve-monkeys-7.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/twelve-monkeys/index__next__.html">
+                    Twelve Monkeys
+                </a>
+</h5>
+<form action="/interactions/movies/twelve-monkeys/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Twelve Monkeys" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,8
+            </span>
+<span class="auto-rec-pill">
+                392 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/good-will-hunting/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Good Will Hunting" class="auto-rec-card__poster" src="media/movies/posters/good-will-hunting-272.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/good-will-hunting/index__next__.html">
+                    Good Will Hunting
+                </a>
+</h5>
+<form action="/interactions/movies/good-will-hunting/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Good Will Hunting" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,3
+            </span>
+<span class="auto-rec-pill">
+                198 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/la-confidential/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="L.A. Confidential" class="auto-rec-card__poster" src="media/movies/posters/la-confidential-302.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/la-confidential/index__next__.html">
+                    L.A. Confidential
+                </a>
+</h5>
+<form action="/interactions/movies/la-confidential/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="L.A. Confidential" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,2
+            </span>
+<span class="auto-rec-pill">
+                297 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Crime</span>
+<span class="genre-chip">Film-Noir</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/rock-the/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Rock, The" class="auto-rec-card__poster" src="media/movies/posters/rock-the-117.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/rock-the/index__next__.html">
+                    Rock, The
+                </a>
+</h5>
+<form action="/interactions/movies/rock-the/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Rock, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,7
+            </span>
+<span class="auto-rec-pill">
+                378 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/empire-strikes-back-the/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Empire Strikes Back, The" class="auto-rec-card__poster" src="media/movies/posters/empire-strikes-back-the-172.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/empire-strikes-back-the/index__next__.html">
+                    Empire Strikes Back, The
+                </a>
+</h5>
+<form action="/interactions/movies/empire-strikes-back-the/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Empire Strikes Back, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1980</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,2
+            </span>
+<span class="auto-rec-pill">
+                368 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Adventure</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/independence-day-id4/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Independence Day (ID4)" class="auto-rec-card__poster" src="media/movies/posters/independence-day-id4-121.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/independence-day-id4/index__next__.html">
+                    Independence Day (ID4)
+                </a>
+</h5>
+<form action="/interactions/movies/independence-day-id4/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Independence Day (ID4)" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,4
+            </span>
+<span class="auto-rec-pill">
+                429 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Sci-Fi</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/jerry-maguire/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Jerry Maguire" class="auto-rec-card__poster" src="media/movies/posters/jerry-maguire-237.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/jerry-maguire/index__next__.html">
+                    Jerry Maguire
+                </a>
+</h5>
+<form action="/interactions/movies/jerry-maguire/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Jerry Maguire" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,7
+            </span>
+<span class="auto-rec-pill">
+                384 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/game-the/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Game, The" class="auto-rec-card__poster" src="media/movies/posters/game-the-333.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/game-the/index__next__.html">
+                    Game, The
+                </a>
+</h5>
+<form action="/interactions/movies/game-the/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Game, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,6
+            </span>
+<span class="auto-rec-pill">
+                251 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Mystery</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="home-section">
+<div class="container">
+<div class="home-section-header reveal">
+<div>
+<span class="home-section-kicker">Katalog</span>
+<h2 class="home-section-title">Mavjud kinolar</h2>
+<p class="home-section-sub">Platformadagi mavjud filmlar katalogidan tanlangan namunalar</p>
+</div>
+<a class="home-section-link home-section-link--plain" href="movies/index.html">
+                Barchasini ko‘rish
+            </a>
+</div>
+<div class="home-rec-grid reveal">
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/b-monkey/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="B. Monkey" class="auto-rec-card__poster" src="media/movies/posters/b-monkey-1679.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/b-monkey/index__next__.html">
+                    B. Monkey
+                </a>
+</h5>
+<form action="/interactions/movies/b-monkey/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="B. Monkey" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United Kingdom, United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Romance</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/scream-of-stone-schrei-aus-stein/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Scream of Stone (Schrei aus Stein)" class="auto-rec-card__poster" src="media/movies/posters/scream-of-stone-schrei-aus-stein-1682.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/scream-of-stone-schrei-aus-stein/index__next__.html">
+                    Scream of Stone (Schrei aus Stein)
+                </a>
+</h5>
+<form action="/interactions/movies/scream-of-stone-schrei-aus-stein/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Scream of Stone (Schrei aus Stein)" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            Germany, France
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1991</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/sliding-doors-2/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sliding Doors" class="auto-rec-card__poster" src="media/movies/posters/sliding-doors-1680.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/sliding-doors-2/index__next__.html">
+                    Sliding Doors
+                </a>
+</h5>
+<form action="/interactions/movies/sliding-doors-2/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Sliding Doors" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United Kingdom, United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 2,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+<span class="genre-chip">Romance</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/you-so-crazy/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="You So Crazy" class="auto-rec-card__poster" src="media/movies/posters/you-so-crazy-1681.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/you-so-crazy/index__next__.html">
+                    You So Crazy
+                </a>
+</h5>
+<form action="/interactions/movies/you-so-crazy/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="You So Crazy" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Comedy</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/mamma-roma/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Mamma Roma" class="auto-rec-card__poster" src="media/movies/posters/mamma-roma-1674.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/mamma-roma/index__next__.html">
+                    Mamma Roma
+                </a>
+</h5>
+<form action="/interactions/movies/mamma-roma/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Mamma Roma" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            Italy
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1962</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/mat-i-syn/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Mat' i syn" class="auto-rec-card__poster" src="media/movies/posters/mat-i-syn-1678.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/mat-i-syn/index__next__.html">
+                    Mat' i syn
+                </a>
+</h5>
+<form action="/interactions/movies/mat-i-syn/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Mat' i syn" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            Germany, Russia
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 1,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/mirage/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Mirage" class="auto-rec-card__poster" src="media/movies/posters/mirage-1673.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/mirage/index__next__.html">
+                    Mirage
+                </a>
+</h5>
+<form action="/interactions/movies/mirage/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Mirage" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1995</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Action</span>
+<span class="genre-chip">Thriller</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/sunchaser-the/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Sunchaser, The" class="auto-rec-card__poster" src="media/movies/posters/sunchaser-the-1675.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/sunchaser-the/index__next__.html">
+                    Sunchaser, The
+                </a>
+</h5>
+<form action="/interactions/movies/sunchaser-the/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Sunchaser, The" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 3,0
+            </span>
+<span class="auto-rec-pill">
+                1 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="home-section">
+<div class="container">
+<div class="home-section-header reveal">
+<div>
+<span class="home-section-kicker">Reyting</span>
+<h2 class="home-section-title">Eng yaxshi baholanganlar</h2>
+<p class="home-section-sub">Foydalanuvchilar tomonidan yuqori baholangan filmlar</p>
+</div>
+<a class="home-section-link home-section-link--plain" href="movies/index__sort_rating_desc.html">
+                To‘liq reyting
+            </a>
+</div>
+<div class="home-rec-grid reveal">
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/prefontaine/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Prefontaine" class="auto-rec-card__poster" src="media/movies/posters/prefontaine-1189.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/prefontaine/index__next__.html">
+                    Prefontaine
+                </a>
+</h5>
+<form action="/interactions/movies/prefontaine/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Prefontaine" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,8
+            </span>
+<span class="auto-rec-pill">
+                4 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/star-kid/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Star Kid" class="auto-rec-card__poster" src="media/movies/posters/star-kid-1293.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/star-kid/index__next__.html">
+                    Star Kid
+                </a>
+</h5>
+<form action="/interactions/movies/star-kid/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Star Kid" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1997</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,8
+            </span>
+<span class="auto-rec-pill">
+                4 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Adventure</span>
+<span class="genre-chip">Children's</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/pather-panchali/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Pather Panchali" class="auto-rec-card__poster" src="media/movies/posters/pather-panchali-1449.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/pather-panchali/index__next__.html">
+                    Pather Panchali
+                </a>
+</h5>
+<form action="/interactions/movies/pather-panchali/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Pather Panchali" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            India
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1955</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,6
+            </span>
+<span class="auto-rec-pill">
+                8 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/maya-lin-a-strong-clear-vision/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Maya Lin: A Strong Clear Vision" class="auto-rec-card__poster" src="media/movies/posters/maya-lin-a-strong-clear-vision-119.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/maya-lin-a-strong-clear-vision/index__next__.html">
+                    Maya Lin: A Strong Clear Vision
+                </a>
+</h5>
+<form action="/interactions/movies/maya-lin-a-strong-clear-vision/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Maya Lin: A Strong Clear Vision" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,5
+            </span>
+<span class="auto-rec-pill">
+                4 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Documentary</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/entertaining-angels-the-dorothy-day-story/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Entertaining Angels: The Dorothy Day Story" class="auto-rec-card__poster" src="media/movies/posters/entertaining-angels-the-dorothy-day-story-1653.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/entertaining-angels-the-dorothy-day-story/index__next__.html">
+                    Entertaining Angels: The Dorothy Day Story
+                </a>
+</h5>
+<form action="/interactions/movies/entertaining-angels-the-dorothy-day-story/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Entertaining Angels: The Dorothy Day Story" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,5
+            </span>
+<span class="auto-rec-pill">
+                3 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/aiqing-wansui/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<div class="auto-rec-card__poster auto-rec-card__poster--placeholder">
+<span>A</span>
+</div>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/aiqing-wansui/index__next__.html">
+                    Aiqing wansui
+                </a>
+</h5>
+<form action="/interactions/movies/aiqing-wansui/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Aiqing wansui" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            Noma'lum davlat
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1994</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,5
+            </span>
+<span class="auto-rec-pill">
+                2 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/anna/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Anna" class="auto-rec-card__poster" src="media/movies/posters/anna-1398.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/anna/index__next__.html">
+                    Anna
+                </a>
+</h5>
+<form action="/interactions/movies/anna/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Anna" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            Norway
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1996</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,5
+            </span>
+<span class="auto-rec-pill">
+                2 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Drama</span>
+</div>
+</div>
+</article>
+<article class="auto-rec-card home-reco-card">
+<a class="auto-rec-card__poster-link" href="movies/everest/index__next__.html">
+<div class="auto-rec-card__poster-wrap">
+<img alt="Everest" class="auto-rec-card__poster" src="media/movies/posters/everest-1594.jpg"/>
+</div>
+</a>
+<div class="auto-rec-card__body">
+<div class="auto-rec-card__title-row">
+<h5 class="auto-rec-card__title">
+<a href="movies/everest/index__next__.html">
+                    Everest
+                </a>
+</h5>
+<form action="/interactions/movies/everest/favorite/toggle/" class="auto-rec-fav-form home-fav-form" data-movie-title="Everest" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="Vihi2KY1XysrYZUUU4Lwucd79fPMxdO1s1KlTArtytWkRGVBEUyFH1789YcjinUO"/>
+<input name="next" type="hidden" value="/"/>
+<button aria-label="Favorites" aria-pressed="false" class="auto-rec-fav-btn" title="Favorites" type="submit">
+<span aria-hidden="true" class="auto-rec-fav-btn__heart">♥</span>
+</button>
+</form>
+</div>
+<div class="auto-rec-card__country">
+            United States of America
+        </div>
+<div class="auto-rec-card__stats">
+<span class="auto-rec-pill">1998</span>
+<span class="auto-rec-pill auto-rec-pill--rating">
+                ★ 4,5
+            </span>
+<span class="auto-rec-pill">
+                2 ta baho
+            </span>
+</div>
+<div class="auto-rec-card__genres">
+<span class="genre-chip">Documentary</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<div aria-atomic="true" aria-live="polite" class="auto-rec-snackbar-stack" id="homeSnackbarStack"></div>
+<script>
+function animateCounter(el) {
+    const target  = parseInt(el.dataset.count, 10);
+    const suffix  = el.dataset.suffix || '';
+    const dur     = 1800;
+    const start   = performance.now();
+
+    function fmt(n) {
+        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (n >= 1000)    return (n / 1000).toFixed(0) + 'K';
+        return n.toString();
+    }
+
+    function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 4);
+        const cur  = Math.round(ease * target);
+        el.textContent = fmt(cur) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add('visible');
+        el.querySelectorAll('[data-count]').forEach(animateCounter);
+        io.unobserve(el);
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal, .stats-grid').forEach(el => io.observe(el));
+document.querySelectorAll('.stat-cell').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+    io.observe(el);
+});
+
+(function () {
+    function getSnackbarStack() {
+        return document.getElementById('homeSnackbarStack');
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+    }
+
+    function showHomeSnackbar(movieTitle, variant) {
+        const snackbarStack = getSnackbarStack();
+        if (!snackbarStack) return;
+
+        const item = document.createElement('div');
+        item.className = `auto-rec-snackbar auto-rec-snackbar--${variant}`;
+
+        const safeTitle = escapeHtml(movieTitle);
+        const text = variant === 'success'
+            ? `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilarga qo'shildi.`
+            : `<span class="auto-rec-snackbar__movie">"${safeTitle}"</span> sevimlilardan olib tashlandi.`;
+
+        item.innerHTML = `
+            <div class="auto-rec-snackbar__icon" aria-hidden="true">
+                ${variant === 'success'
+                    ? `<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/><path d="M10.3 3.84 2.82 17a2 2 0 0 0 1.74 3h14.88a2 2 0 0 0 1.74-3L13.7 3.84a2 2 0 0 0-3.48 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+                }
+            </div>
+            <div class="auto-rec-snackbar__content">
+                <div class="auto-rec-snackbar__title">${variant === 'success' ? 'Muvaffaqiyatli' : 'Olib tashlandi'}</div>
+                <div class="auto-rec-snackbar__text">${text}</div>
+            </div>
+            <button type="button" class="auto-rec-snackbar__close" aria-label="Yopish">×</button>
+        `;
+
+        snackbarStack.appendChild(item);
+        requestAnimationFrame(() => item.classList.add('is-visible'));
+
+        const removeItem = () => {
+            item.classList.remove('is-visible');
+            item.classList.add('is-leaving');
+            setTimeout(() => item.remove(), 220);
+        };
+
+        const timerId = setTimeout(removeItem, 3200);
+        item.querySelector('.auto-rec-snackbar__close').addEventListener('click', () => {
+            clearTimeout(timerId);
+            removeItem();
+        });
+    }
+
+    document.addEventListener('submit', async function (event) {
+        const form = event.target.closest('.home-fav-form');
+        if (!form) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const button = form.querySelector('.auto-rec-fav-btn');
+        if (!button) return;
+
+        if (button.disabled) return;
+        button.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.ok) {
+                button.disabled = false;
+                return;
+            }
+
+            button.classList.toggle('is-active', data.is_favorite);
+            button.setAttribute('aria-pressed', data.is_favorite ? 'true' : 'false');
+
+            const movieTitle = data.movie_title || form.dataset.movieTitle || 'Film';
+            showHomeSnackbar(movieTitle, data.is_favorite ? 'success' : 'error');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            button.disabled = false;
+        }
+    }, true);
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="index.html">Bosh sahifa</a>
+<a href="movies/index.html">Filmlar</a>
+<a href="accounts/profile/index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="static/js/theme.js"></script>
+<script src="static/js/i18n-runtime.js"></script>
+<script src="static/js/main.js"></script>
+<script src="static/js/demo-mode.js"></script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
+from config.translations import get_translation
+
 
 User = get_user_model()
 
@@ -28,13 +30,26 @@ class RecommendationLabForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop("current_user", None)
+        lang = kwargs.pop("lang", "uz")
+        self.t = get_translation(lang)
+
         super().__init__(*args, **kwargs)
 
         user_choices = []
         for user in User.objects.order_by("date_joined", "id").only("id", "username", "date_joined"):
             user_choices.append((str(user.id), user.username))
 
+        self.fields["user_id"].label = self.t.get("username", "Username")
+        self.fields["model"].label = self.t.get("model", "Model")
+        self.fields["scenario"].label = self.t.get("scenario", "Scenario")
+        self.fields["top_k"].label = self.t.get("top_k", "Top-K")
+
         self.fields["user_id"].choices = user_choices
+        self.fields["scenario"].choices = [
+            ("normal", self.t.get("normal_scenario", "Normal scenario")),
+            ("new_user", self.t.get("new_user_cold_start", "New user cold start")),
+        ]
+
         self.fields["user_id"].widget.attrs.update({"class": "form-select"})
         self.fields["model"].widget.attrs.update({"class": "form-select"})
         self.fields["scenario"].widget.attrs.update({"class": "form-select"})
@@ -42,7 +57,7 @@ class RecommendationLabForm(forms.Form):
             {
                 "class": "form-control",
                 "min": 1,
-                "placeholder": "Masalan: 10 yoki 100",
+                "placeholder": "10",
             }
         )
 
@@ -54,7 +69,7 @@ class RecommendationLabForm(forms.Form):
         if user_id in (None, ""):
             return None
         if not User.objects.filter(pk=user_id).exists():
-            raise forms.ValidationError("Bunday user topilmadi.")
+            raise forms.ValidationError(self.t.get("user_not_found", "User not found."))
         return int(user_id)
 
     def clean_top_k(self):

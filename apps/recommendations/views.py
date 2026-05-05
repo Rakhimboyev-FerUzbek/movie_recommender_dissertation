@@ -8,6 +8,7 @@ from django.urls import reverse
 from apps.interactions.models import Favorite
 from apps.recommendations.forms import RecommendationLabForm
 from apps.recommendations.services import RecommendationService
+from config.translations import get_translation
 
 
 User = get_user_model()
@@ -54,7 +55,10 @@ def recommendation_lab_view(request):
         .order_by("date_joined", "id")
     )
 
-    form = RecommendationLabForm(request.GET or None, current_user=request.user)
+    lang = request.session.get("site_language", "uz")
+    t = get_translation(lang)
+
+    form = RecommendationLabForm(request.GET or None, current_user=request.user, lang=lang)
 
     default_user_id = int(form.initial.get("user_id") or request.user.id)
     default_model = form.initial.get("model") or form.fields["model"].initial or "hybrid"
@@ -81,6 +85,12 @@ def recommendation_lab_view(request):
         top_k=top_k,
         scenario=scenario,
     )
+    result = dict(result)
+    result["scenario_label"] = (
+        t.get("new_user_cold_start", "New user cold start")
+        if scenario == "new_user"
+        else t.get("normal_scenario", "Normal scenario")
+    )
 
     favorite_movie_ids = set(
         Favorite.objects.filter(user=request.user, movie__is_active=True)
@@ -106,9 +116,13 @@ def recommendation_lab_view(request):
             "display_name": display_name,
             "photo_url": photo_url,
             "initial": (display_name[:1] or user.username[:1] or "U").upper(),
-            "gender": profile.get_gender_display() if profile and profile.gender else "Kiritilmagan",
-            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and profile.birth_date else "Kiritilmagan",
-            "phone_number": profile.phone_number if profile and profile.phone_number else "Kiritilmagan",
+            "gender": (
+                t.get("male", "Male") if profile and profile.gender == "male"
+                else t.get("female", "Female") if profile and profile.gender == "female"
+                else t.get("unknown", "Unknown")
+            ),
+            "birth_date": profile.birth_date.strftime("%Y-%m-%d") if profile and profile.birth_date else t.get("unknown", "Unknown"),
+            "phone_number": profile.phone_number if profile and profile.phone_number else t.get("unknown", "Unknown"),
             "preferred_genres": preferred_genres,
             "ratings_count": getattr(user, "ratings_count", 0),
             "favorites_count": getattr(user, "favorites_count", 0),
