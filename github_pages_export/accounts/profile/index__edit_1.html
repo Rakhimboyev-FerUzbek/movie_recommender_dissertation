@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profil — Feruzbek Rakhimboyev</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../static/css/theme.css" rel="stylesheet"/>
+<link href="../../static/css/layout.css" rel="stylesheet"/>
+<link href="../../static/css/components.css" rel="stylesheet"/>
+<link href="../../static/css/pages.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<div class="app-shell">
+<nav class="navbar navbar-expand-lg app-navbar">
+<div class="container">
+<a class="navbar-brand brand-mark" href="../../index.html">
+<span class="brand-dot"></span>
+            Movie Recommender
+        </a>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Menyuni ochish/yopish" class="navbar-toggler nav-toggler-clean" data-bs-target="#mainNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav me-auto align-items-lg-center">
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../index.html">
+                        Bosh sahifa
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../movies/index.html">
+                        Filmlar
+                    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/for-you/index.html">
+                            Shaxsiy tavsiyalar
+                        </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-link-clean" href="../../recommendations/lab/index.html">
+                                Model laboratoriyasi
+                            </a>
+</li>
+</ul>
+<div class="d-flex align-items-center gap-2 nav-actions flex-wrap">
+<div class="dropdown">
+<button aria-expanded="false" class="btn lang-pill-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-pill-text">Oʻzbekcha</span>
+</button>
+<ul class="dropdown-menu lang-menu shadow-sm border-0">
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/uz/index__next__accounts_profile_edit_1.html">
+<img alt="Oʻzbekcha" class="lang-flag-img" src="../../static/images/flags/uzbekiston_flag_icon.svg"/>
+<span class="lang-item-label">Oʻzbekcha</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/ru/index__next__accounts_profile_edit_1.html">
+<img alt="Русский" class="lang-flag-img" src="../../static/images/flags/russia_flag_icon.svg"/>
+<span class="lang-item-label">Русский</span>
+</a>
+</li>
+<li>
+<a class="dropdown-item lang-menu-item" href="../../set-language/en/index__next__accounts_profile_edit_1.html">
+<img alt="English" class="lang-flag-img" src="../../static/images/flags/uk_flag_icon.svg"/>
+<span class="lang-item-label">English</span>
+</a>
+</li>
+</ul>
+</div>
+<button aria-label="Tungi rejim" class="btn theme-icon-btn" data-label-dark="Tungi rejim" data-label-light="Yorug‘ rejim" id="themeToggle" title="Tungi rejim" type="button">
+<span class="theme-icon theme-icon-moon">🌙</span>
+<span class="theme-icon theme-icon-sun d-none">☀️</span>
+</button>
+<a class="btn btn-profile-soft" href="index.html">
+                        Profil
+                    </a>
+<form action="/accounts/logout/" class="d-inline" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="EgEZHWFjMgrCdJ1BAGNW1RBOj038Zi5rbZ72yM8LnbVv6q2ikwA5eGvPjJqFKsbe"/>
+<button class="btn btn-primary-gradient" type="submit">
+                            Chiqish
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</nav>
+<main class="main-content">
+<section class="profile-page">
+<div class="container">
+<form action="/accounts/profile/" enctype="multipart/form-data" id="profileForm" method="post" novalidate="">
+<input name="csrfmiddlewaretoken" type="hidden" value="EgEZHWFjMgrCdJ1BAGNW1RBOj038Zi5rbZ72yM8LnbVv6q2ikwA5eGvPjJqFKsbe"/>
+<div class="glass-card prf3-card fade-up">
+<div class="prf-edit-topbar">
+<div class="prf-edit-topbar-title">
+<span class="prf-edit-dot"></span>
+            Profilni tahrirlash
+        </div>
+<div class="prf-edit-topbar-actions">
+<button class="btn btn-primary-gradient" type="submit">O‘zgarishlarni saqlash</button>
+<a class="btn btn-outline-soft" href="index__cancelled_1.html">Bekor qilish</a>
+</div>
+</div>
+<div class="prf3-body">
+<div class="prf3-col prf3-col--interactions">
+<p class="prf3-col-title">Foydalanuvchi faoliyati</p>
+<div class="prf3-act-list">
+<a class="prf3-act-card" href="../../interactions/favorites/index.html">
+<div class="prf3-act-top">
+<div class="prf3-act-icon">♥</div>
+<div class="prf3-act-meta">
+<div class="prf3-act-topline">
+<span class="prf3-act-label">Saqlanganlar</span>
+<strong class="prf3-act-count">20</strong>
+</div>
+<p class="prf3-act-desc">Saqlab qo‘yilgan sevimli filmlar.</p>
+<div class="prf3-act-tags">
+<span>Saqlanganlar</span><span>Tez kirish</span>
+</div>
+</div>
+</div>
+<div class="prf3-act-cta">Batafsil ko‘rish <span>→</span></div>
+</a>
+<a class="prf3-act-card" href="../../interactions/ratings/index.html">
+<div class="prf3-act-top">
+<div class="prf3-act-icon">★</div>
+<div class="prf3-act-meta">
+<div class="prf3-act-topline">
+<span class="prf3-act-label">Reytinglar</span>
+<strong class="prf3-act-count">28</strong>
+</div>
+<p class="prf3-act-desc">Berilgan baholarni ko‘rish va nazorat.</p>
+<div class="prf3-act-tags">
+<span>Reytinglar</span><span>Faoliyat</span>
+</div>
+</div>
+</div>
+<div class="prf3-act-cta">Batafsil ko‘rish <span>→</span></div>
+</a>
+<a class="prf3-act-card" href="../../interactions/watch-history/index.html">
+<div class="prf3-act-top">
+<div class="prf3-act-icon">▶</div>
+<div class="prf3-act-meta">
+<div class="prf3-act-topline">
+<span class="prf3-act-label">Ko‘rish tarixi</span>
+<strong class="prf3-act-count">502</strong>
+</div>
+<p class="prf3-act-desc">Ko‘rilgan filmlar va ko‘rish tarixi.</p>
+<div class="prf3-act-tags">
+<span>Tarix</span><span>Ko‘rilganlar</span>
+</div>
+</div>
+</div>
+<div class="prf3-act-cta">Batafsil ko‘rish <span>→</span></div>
+</a>
+</div>
+</div>
+<div class="prf3-col prf3-col--info">
+<p class="prf3-col-title">Akkaunt ma’lumotlari</p>
+<div class="profile-info-grid profile-info-grid--two">
+<div class="profile-info-item">
+<span>Ism</span>
+<input class="form-control" id="id_first_name" maxlength="150" name="first_name" placeholder="Ism" type="text" value="Feruzbek"/>
+</div>
+<div class="profile-info-item">
+<span>Familiya</span>
+<input class="form-control" id="id_last_name" maxlength="150" name="last_name" placeholder="Familiya" type="text" value="Rakhimboyev"/>
+</div>
+</div>
+<div class="profile-info-grid profile-info-grid--two mt-2">
+<div class="profile-info-item">
+<span>Elektron pochta</span>
+<input class="form-control" id="id_email" maxlength="320" name="email" placeholder="Elektron pochta" required="" type="email" value="feruzbekraximboyev@gmail.com"/>
+</div>
+<div class="profile-info-item">
+<span>Tug‘ilgan kun</span>
+<input autocomplete="bday" class="form-control" id="id_birth_date" name="birth_date" type="date"/>
+</div>
+</div>
+<div class="profile-info-grid profile-info-grid--two mt-2">
+<div class="profile-info-item">
+<span>Telefon raqam</span>
+<input autocomplete="tel" class="form-control" id="id_phone_number" inputmode="tel" maxlength="20" name="phone_number" placeholder="Telefon raqam" type="text" value="+998888592700"/>
+</div>
+<div class="profile-info-item">
+<span>Jinsi</span>
+<select class="form-control" id="id_gender" name="gender" placeholder="Jinsi">
+<option value="">---------</option>
+<option selected="" value="male">Male</option>
+<option value="female">Female</option>
+</select>
+</div>
+</div>
+<p class="prf3-col-title mt-2">Sevimli janrlar</p>
+<div class="profile-info-item full">
+<div class="profile-genre-grid mt-1">
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Action"/>
+<span>Action</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Adventure"/>
+<span>Adventure</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="Animation"/>
+<span>Animation</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="Children's"/>
+<span>Children's</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Comedy"/>
+<span>Comedy</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Crime"/>
+<span>Crime</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Documentary"/>
+<span>Documentary</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Drama"/>
+<span>Drama</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Fantasy"/>
+<span>Fantasy</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Film-Noir"/>
+<span>Film-Noir</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Horror"/>
+<span>Horror</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="Musical"/>
+<span>Musical</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Mystery"/>
+<span>Mystery</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Romance"/>
+<span>Romance</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Sci-Fi"/>
+<span>Sci-Fi</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="Thriller"/>
+<span>Thriller</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="unknown"/>
+<span>unknown</span>
+</label>
+<label class="profile-genre-option">
+<input checked="" name="preferred_genres" type="checkbox" value="War"/>
+<span>War</span>
+</label>
+<label class="profile-genre-option">
+<input name="preferred_genres" type="checkbox" value="Western"/>
+<span>Western</span>
+</label>
+</div>
+</div>
+<p class="prf3-col-title mt-2">Bio</p>
+<div class="profile-info-item full profile-bio-item">
+<div class="profile-bio-edit-wrap"><textarea class="form-control form-textarea" cols="40" id="id_bio" name="bio" placeholder="Bio" rows="10">
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem IpsumLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</textarea></div>
+</div>
+</div>
+<div class="prf3-col prf3-col--user">
+<div class="prf-photo-upload-zone" id="photoUploadZone">
+<div class="prf-photo-upload-circle" id="photoUploadCircle" onclick="document.getElementById('id_profile_photo').click()" title="Rasm yuklash">
+<img alt="admin1" class="prf-photo-upload-img" id="photoPreviewImg" src="../../media/profiles/photos/Screenshot_2025-01-23_011504.png"/>
+<div class="prf-photo-upload-overlay"><span>📷</span><small>Rasm yuklash</small></div>
+</div>
+<div style="display:none;"><input accept="image/*" class="form-control" id="id_profile_photo" name="profile_photo" type="file"/></div>
+<div class="prf-photo-upload-actions">
+<button class="prf-photo-pick-btn" onclick="document.getElementById('id_profile_photo').click()" type="button">📷 Rasm tanlash</button>
+<label class="prf-photo-remove-label">
+<input class="form-check-input" id="id_remove_profile_photo" name="remove_profile_photo" type="checkbox"/><span>Profil rasmini olib tashlash</span>
+</label>
+</div>
+<div class="prf-photo-upload-hint">JPG, PNG, WEBP · max 10 MB</div>
+</div>
+<h3 class="prf3-name">Feruzbek Rakhimboyev</h3>
+<div class="prf3-stats">
+<div class="prf3-stat"><span>A’zo bo‘lgan sana</span><strong>09.04.2026</strong></div>
+<div class="prf3-stat"><span>Foydalanuvchi nomi</span><strong class="prf-username-val">admin1</strong></div>
+<div class="prf3-stat"><span>Oxirgi kirish</span><strong>05.05.2026 03:20</strong></div>
+<div class="prf3-stat">
+<span>Faoliyat</span>
+<div class="prf-activity-mini">
+<span>♥ 20</span>
+<span>★ 28</span>
+<span>▶ 502</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
+<div class="glass-card prf-pw-card fade-up mt-2">
+<div class="prf-pw-header" id="pwToggleBtn" onclick="togglePasswordSection()" onkeydown="if(event.key==='Enter'||event.key===' ')togglePasswordSection()" role="button" tabindex="0">
+<div class="prf-pw-header-left">
+<div class="prf-pw-icon">🔐</div>
+<div>
+<h4>Parolni o‘zgartirish</h4>
+<p>Hisob xavfsizligini kuchaytirish uchun parolingizni yangilang</p>
+</div>
+</div>
+<div class="prf-pw-chevron" id="pwChevron">▼</div>
+</div>
+<div class="prf-pw-body" hidden="" id="pwBody">
+<form action="/accounts/profile/change-password/" id="pwChangeForm" method="post" novalidate="">
+<input name="csrfmiddlewaretoken" type="hidden" value="EgEZHWFjMgrCdJ1BAGNW1RBOj038Zi5rbZ72yM8LnbVv6q2ikwA5eGvPjJqFKsbe"/>
+<div class="prf-pw-fields">
+<div class="profile-info-item">
+<label class="form-label prf-field-label" for="id_old_password">Joriy parol</label>
+<div class="prf-pw-field-shell">
+<input autocomplete="current-password" class="form-control" id="id_old_password" name="old_password" placeholder="Joriy parolingizni kiriting" required="" type="password"/>
+<button aria-label="Parolni ko'rsatish" class="prf-pw-toggle" data-toggle-password="id_old_password" title="Ko'rsatish" type="button">
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--show">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8"></path>
+<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"></circle>
+</svg>
+</span>
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--hide">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M3 3l18 18" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M9.88 5.09A11.2 11.2 0 0 1 12 5c6.5 0 10 7 10 7a18.1 18.1 0 0 1-3.04 3.8" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M6.23 6.23C3.83 7.88 2 12 2 12a18.7 18.7 0 0 0 5.17 5.53A10.76 10.76 0 0 0 12 19c1.52 0 2.91-.3 4.17-.84" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</span>
+</button>
+</div>
+<div class="prf-pw-error" id="pwOldPasswordError"></div>
+</div>
+<div class="profile-info-item">
+<label class="form-label prf-field-label" for="id_new_password1">Yangi parol</label>
+<div class="prf-pw-field-shell">
+<input autocomplete="new-password" class="form-control" id="id_new_password1" name="new_password1" placeholder="Yangi parolni kiriting" required="" type="password"/>
+<button aria-label="Parolni ko'rsatish" class="prf-pw-toggle" data-toggle-password="id_new_password1" title="Ko'rsatish" type="button">
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--show">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8"></path>
+<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"></circle>
+</svg>
+</span>
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--hide">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M3 3l18 18" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M9.88 5.09A11.2 11.2 0 0 1 12 5c6.5 0 10 7 10 7a18.1 18.1 0 0 1-3.04 3.8" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M6.23 6.23C3.83 7.88 2 12 2 12a18.7 18.7 0 0 0 5.17 5.53A10.76 10.76 0 0 0 12 19c1.52 0 2.91-.3 4.17-.84" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</span>
+</button>
+</div>
+<div class="prf-pw-error" id="pwNewPassword1Error"></div>
+</div>
+<div class="profile-info-item">
+<label class="form-label prf-field-label" for="id_new_password2">Yangi parolni tasdiqlang</label>
+<div class="prf-pw-field-shell">
+<input autocomplete="new-password" class="form-control" id="id_new_password2" name="new_password2" placeholder="Yangi parolni qayta kiriting" required="" type="password"/>
+<button aria-label="Parolni ko'rsatish" class="prf-pw-toggle" data-toggle-password="id_new_password2" title="Ko'rsatish" type="button">
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--show">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.8"></path>
+<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"></circle>
+</svg>
+</span>
+<span aria-hidden="true" class="prf-pw-toggle__icon prf-pw-toggle__icon--hide">
+<svg fill="none" viewbox="0 0 24 24">
+<path d="M3 3l18 18" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M10.58 10.58A2 2 0 0 0 10 12a2 2 0 0 0 3.42 1.42" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M9.88 5.09A11.2 11.2 0 0 1 12 5c6.5 0 10 7 10 7a18.1 18.1 0 0 1-3.04 3.8" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M6.23 6.23C3.83 7.88 2 12 2 12a18.7 18.7 0 0 0 5.17 5.53A10.76 10.76 0 0 0 12 19c1.52 0 2.91-.3 4.17-.84" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</span>
+</button>
+</div>
+<div class="prf-pw-error" id="pwNewPassword2Error"></div>
+</div>
+</div>
+<div class="prf-pw-actions">
+<button class="btn btn-primary-gradient" type="submit">🔒 Parolni yangilash</button>
+</div>
+</form>
+</div>
+</div>
+<div aria-atomic="true" aria-live="polite" class="prf-snackbar" id="profilePwSnackbar">
+<span class="prf-snackbar__icon" id="profilePwSnackbarIcon">✓</span>
+<span class="prf-snackbar__msg" id="profilePwSnackbarMsg"></span>
+<button aria-label="Yopish" class="prf-snackbar__close" id="profilePwSnackbarClose" type="button">×</button>
+</div>
+<form action="/accounts/profile/delete/" id="deleteAccountForm" method="post" style="display:none;"><input name="csrfmiddlewaretoken" type="hidden" value="EgEZHWFjMgrCdJ1BAGNW1RBOj038Zi5rbZ72yM8LnbVv6q2ikwA5eGvPjJqFKsbe"/></form>
+<div aria-hidden="true" class="delete-account-modal-overlay" data-delete-modal-backdrop="" hidden=""></div>
+<div aria-hidden="true" aria-labelledby="deleteModalTitle" aria-modal="true" class="delete-account-modal" data-delete-modal="" hidden="" role="dialog">
+<div class="delete-account-modal-card">
+<div class="delete-account-modal-icon">⚠️</div>
+<h3 id="deleteModalTitle">Profilni o‘chirmoqchimisiz?</h3>
+<p>Barcha ma’lumotlaringiz, reytinglar va sevimlilar ro‘yxati butunlay o‘chib ketadi. Bu amalni ortga qaytarib bo‘lmaydi.</p>
+<div class="delete-account-modal-actions">
+<button class="delete-account-cancel-btn" data-delete-modal-close="" type="button">Bekor qilish</button>
+<button class="btn btn-primary-gradient delete-account-confirm-btn prf-danger-confirm" onclick="document.getElementById('deleteAccountForm').submit()" type="button">Ha, o‘chirish</button>
+</div>
+</div>
+</div>
+</div>
+<div aria-atomic="true" aria-live="polite" class="prf-edit-snackbar" id="profileEditSnackbar">
+<span class="prf-edit-snackbar__icon" id="profileEditSnackbarIcon">✓</span>
+<span class="prf-edit-snackbar__msg" id="profileEditSnackbarMsg"></span>
+<button aria-label="Yopish" class="prf-edit-snackbar__close" id="profileEditSnackbarClose" type="button">×</button>
+</div>
+</section>
+<script>
+(function () {
+    var t = document.getElementById('profilePhotoThumb'),
+        b = document.getElementById('lightboxBackdrop'),
+        m = document.getElementById('lightboxModal'),
+        c = document.getElementById('lightboxClose');
+
+    if (!t || !m) return;
+
+    function o() {
+        m.hidden = false;
+        requestAnimationFrame(function () {
+            if (b) b.classList.add('is-open');
+            m.classList.add('is-open');
+        });
+        document.body.classList.add('modal-open');
+    }
+
+    function cl() {
+        if (b) b.classList.remove('is-open');
+        m.classList.remove('is-open');
+
+        setTimeout(function () {
+            m.hidden = true;
+            document.body.classList.remove('modal-open');
+        }, 250);
+    }
+
+    t.addEventListener('click', o);
+
+    if (c) c.addEventListener('click', cl);
+    if (b) b.addEventListener('click', cl);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') cl();
+    });
+})();
+
+(function () {
+    var inp = document.getElementById('id_profile_photo'),
+        pi = document.getElementById('photoPreviewImg'),
+        pa = document.getElementById('photoPreviewAvatar'),
+        z = document.getElementById('photoUploadZone');
+
+    if (!inp) return;
+
+    inp.addEventListener('change', function () {
+        var f = this.files[0];
+        if (!f) return;
+
+        var r = new FileReader();
+        r.onload = function (e) {
+            if (pi) {
+                pi.src = e.target.result;
+            } else if (pa) {
+                var i = document.createElement('img');
+                i.src = e.target.result;
+                i.className = 'prf-photo-upload-img';
+                i.id = 'photoPreviewImg';
+
+                pa.parentNode.insertBefore(i, pa);
+                pa.style.display = 'none';
+            }
+        };
+
+        r.readAsDataURL(f);
+    });
+
+    if (z) {
+        z.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            z.classList.add('drag-over');
+        });
+
+        z.addEventListener('dragleave', function () {
+            z.classList.remove('drag-over');
+        });
+
+        z.addEventListener('drop', function (e) {
+            e.preventDefault();
+            z.classList.remove('drag-over');
+
+            var f = e.dataTransfer.files[0];
+            if (f && f.type.startsWith('image/')) {
+                var d = new DataTransfer();
+                d.items.add(f);
+                inp.files = d.files;
+                inp.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    var rc = document.querySelector('input[name="remove_profile_photo"]');
+    if (rc) {
+        rc.addEventListener('change', function () {
+            if (pi) pi.style.opacity = this.checked ? '0.35' : '1';
+        });
+    }
+})();
+
+/* Password section toggle */
+function togglePasswordSection() {
+    var body = document.getElementById('pwBody');
+    var chevron = document.getElementById('pwChevron');
+    if (!body) return;
+    body.hidden = !body.hidden;
+    if (chevron) chevron.textContent = body.hidden ? '▼' : '▲';
+}
+
+(function () {
+    var form = document.getElementById('pwChangeForm');
+    var body = document.getElementById('pwBody');
+    var chevron = document.getElementById('pwChevron');
+    var snackbar = document.getElementById('profilePwSnackbar');
+    var snackbarMsg = document.getElementById('profilePwSnackbarMsg');
+    var snackbarIcon = document.getElementById('profilePwSnackbarIcon');
+    var snackbarClose = document.getElementById('profilePwSnackbarClose');
+    var timer = null;
+
+    function showSnackbar(message, variant) {
+        if (!snackbar) return;
+        clearTimeout(timer);
+        snackbar.className = 'prf-snackbar prf-snackbar--' + variant + ' is-visible';
+        if (snackbarMsg) snackbarMsg.textContent = message || '';
+        if (snackbarIcon) snackbarIcon.textContent = variant === 'success' ? '✓' : '✕';
+        timer = setTimeout(hideSnackbar, 3200);
+    }
+
+    function hideSnackbar() {
+        if (!snackbar) return;
+        snackbar.classList.remove('is-visible');
+    }
+
+    if (snackbarClose) {
+        snackbarClose.addEventListener('click', function () {
+            clearTimeout(timer);
+            hideSnackbar();
+        });
+    }
+
+    function openPasswordSection() {
+        if (body) body.hidden = false;
+        if (chevron) chevron.textContent = '▲';
+    }
+
+    function clearPasswordErrors() {
+        ['pwOldPasswordError', 'pwNewPassword1Error', 'pwNewPassword2Error'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = '';
+        });
+    }
+
+    function setPasswordError(fieldName, message) {
+        var map = {
+            old_password: 'pwOldPasswordError',
+            new_password1: 'pwNewPassword1Error',
+            new_password2: 'pwNewPassword2Error',
+            __all__: 'pwNewPassword2Error'
+        };
+        var el = document.getElementById(map[fieldName] || 'pwNewPassword2Error');
+        if (el) el.textContent = message || '';
+    }
+
+    function validatePasswordMatch() {
+        var pw1 = document.getElementById('id_new_password1');
+        var pw2 = document.getElementById('id_new_password2');
+        var err = document.getElementById('pwNewPassword2Error');
+        if (!pw1 || !pw2 || !err) return true;
+
+        if (pw2.value && pw1.value !== pw2.value) {
+            err.textContent = "Yangi parollar bir\u002Dbiriga mos kelmadi.";
+            return false;
+        }
+
+        if (err.textContent === "Yangi parollar bir\u002Dbiriga mos kelmadi.") {
+            err.textContent = '';
+        }
+        return true;
+    }
+
+    document.querySelectorAll('[data-toggle-password]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var inputId = this.getAttribute('data-toggle-password');
+            var input = document.getElementById(inputId);
+            if (!input) return;
+
+            var makeVisible = input.type === 'password';
+            input.type = makeVisible ? 'text' : 'password';
+
+            this.classList.toggle('is-visible', makeVisible);
+            this.setAttribute('aria-label', makeVisible ? 'Parolni yashirish' : 'Parolni ko‘rsatish');
+            this.setAttribute('title', makeVisible ? 'Parolni yashirish' : 'Parolni ko‘rsatish');
+        });
+    });
+    var pw1 = document.getElementById('id_new_password1');
+    var pw2 = document.getElementById('id_new_password2');
+    if (pw1) pw1.addEventListener('input', validatePasswordMatch);
+    if (pw2) pw2.addEventListener('input', validatePasswordMatch);
+
+    if (form) {
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            clearPasswordErrors();
+            openPasswordSection();
+
+            if (!validatePasswordMatch()) {
+                showSnackbar("Yangi parollar bir\u002Dbiriga mos kelmadi.", 'error');
+                return;
+            }
+
+            try {
+                var response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                var data = await response.json();
+
+                if (!response.ok || !data.ok) {
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(function (field) {
+                            var errors = data.errors[field] || [];
+                            if (errors.length) setPasswordError(field, errors[0]);
+                        });
+                    }
+                    showSnackbar(data.message || "Parolni yangilashda xatolik yuz berdi.", 'error');
+                    return;
+                }
+
+                form.reset();
+                clearPasswordErrors();
+                showSnackbar(data.message || "Parol muvaffaqiyatli o‘zgartirildi.", 'success');
+            } catch (error) {
+                console.error(error);
+                showSnackbar("Parolni yangilashda xatolik yuz berdi.", 'error');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var alerts = document.querySelectorAll('.alert-pill.alert-error, .alert-pill.alert-danger');
+        for (var i = 0; i < alerts.length; i++) {
+            var txt = alerts[i].textContent.toLowerCase();
+            if (txt.indexOf('parol') !== -1 || txt.indexOf('password') !== -1) {
+                openPasswordSection();
+                break;
+            }
+        }
+    });
+})();
+</script>
+<script>
+(function () {
+    const snackbar = document.getElementById("profileEditSnackbar");
+    const msg = document.getElementById("profileEditSnackbarMsg");
+    const icon = document.getElementById("profileEditSnackbarIcon");
+    const closeBtn = document.getElementById("profileEditSnackbarClose");
+
+    if (!snackbar || !msg || !icon || !closeBtn) return;
+
+    let timer = null;
+
+    function showEditSnackbar(message, variant) {
+        clearTimeout(timer);
+        snackbar.className = "prf-edit-snackbar prf-edit-snackbar--" + variant + " is-visible";
+        msg.textContent = message || "";
+        icon.textContent = variant === "success" ? "✓" : "✕";
+        timer = setTimeout(hideEditSnackbar, 3200);
+    }
+
+    function hideEditSnackbar() {
+        snackbar.classList.remove("is-visible");
+    }
+
+    closeBtn.addEventListener("click", function () {
+        clearTimeout(timer);
+        hideEditSnackbar();
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const isUpdated = params.get("updated") === "1";
+    const isCancelled = params.get("cancelled") === "1";
+
+    if (isUpdated) {
+        showEditSnackbar("Profil ma’lumotlari muvaffaqiyatli yangilandi.", "success");
+        params.delete("updated");
+    } else if (isCancelled) {
+        showEditSnackbar("Tahrirlash bekor qilindi.", "error");
+        params.delete("cancelled");
+    }
+
+    if (isUpdated || isCancelled) {
+        const newQuery = params.toString();
+        const newUrl = window.location.pathname + (newQuery ? "?" + newQuery : "") + window.location.hash;
+        window.history.replaceState({}, document.title, newUrl);
+    }
+})();
+</script>
+</main>
+<footer class="app-footer mt-5">
+<div class="container py-4">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+<div>
+<h6 class="mb-1">Movie Recommender</h6>
+<small class="text-muted">Kino uslubidagi interfeys va aqlli tavsiyalar</small>
+</div>
+<div class="footer-links d-flex gap-3">
+<a href="../../index.html">Bosh sahifa</a>
+<a href="../../movies/index.html">Filmlar</a>
+<a href="index.html">Profil</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<button aria-label="Tepaga qaytish" id="scrollTopBtn" title="Tepaga qaytish">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: rgba(11, 16, 32, 0.82);
+        color: #a58fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(124, 92, 255, 0.12);
+        opacity: 0;
+        transform: translateY(14px) scale(0.85);
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1),
+                    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        pointer-events: none;
+    }
+
+    body[data-theme="light"] #scrollTopBtn {
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(124, 92, 255, 0.28);
+        color: #5b4bff;
+    }
+
+    #scrollTopBtn.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+    }
+
+    #scrollTopBtn:hover {
+        border-color: rgba(124, 92, 255, 0.65);
+        background: rgba(124, 92, 255, 0.18);
+        color: #d0c2ff;
+        box-shadow: 0 12px 36px rgba(124, 92, 255, 0.28), 0 0 0 1px rgba(124, 92, 255, 0.22);
+        transform: translateY(-3px) scale(1.08);
+    }
+
+    body[data-theme="light"] #scrollTopBtn:hover {
+        background: rgba(124, 92, 255, 0.1);
+        color: #4b35d4;
+    }
+
+    #scrollTopBtn:active {
+        transform: translateY(0) scale(0.96);
+    }
+
+    @media (max-width: 767px) {
+        #scrollTopBtn {
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+    }
+    </style>
+<script>
+    (function () {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        const SHOW_AFTER = 320;
+
+        function onScroll() {
+            if (window.scrollY > SHOW_AFTER) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+<script id="js-i18n-data" type="application/json">{"success": "Muvaffaqiyatli", "removed": "Olib tashlandi", "close": "Yopish", "comment_added": "Kommentariya qo\u2018shildi.", "comment_updated": "Kommentariya tahrirlandi.", "comment_deleted": "Kommentariya o\u2018chirildi.", "comment_edit_cancelled": "Kommentariya tahrirlash bekor qilindi.", "comment_delete_cancelled": "Kommentariyani o\u2018chirish bekor qilindi.", "comment_cannot_be_empty": "Kommentariya bo\u2018sh bo\u2018lishi mumkin emas.", "comment_save_error": "Kommentariyani saqlashda xatolik yuz berdi.", "comment_send_error": "Kommentariyani yuborishda xatolik yuz berdi.", "comment_like_error": "Kommentariyaga like bosishda xatolik yuz berdi.", "comment_delete_error": "Kommentariyani o\u2018chirishda xatolik yuz berdi.", "movie_added_to_favorites": "Film sevimlilarga qo\u2018shildi \u2665", "movie_removed_from_favorites": "Film sevimlilardan olib tashlandi", "rating_saved": "Reyting saqlandi."}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/theme.js"></script>
+<script src="../../static/js/i18n-runtime.js"></script>
+<script src="../../static/js/main.js"></script>
+<script src="../../static/js/demo-mode.js"></script>
+</body>
+</html>

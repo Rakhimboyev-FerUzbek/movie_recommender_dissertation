@@ -236,3 +236,38 @@ py manage.py fill_random_profile_data --dry-run
 py manage.py fill_random_profile_data --dry-run --limit 10
 --------------------------------------------------------------------------------------------------------------------------------
 
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+# 1-task
+cd /d D:\Learn\IT\Apps\Backent\UniversityApps\BMI\movie_recommender_dissertation
+
+venv\Scripts\activate
+
+python manage.py runserver
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+# 2-task
+cd /d D:\Learn\IT\Apps\Backent\UniversityApps\BMI\movie_recommender_dissertation
+
+venv\Scripts\activate
+
+python -m pip install requests beautifulsoup4
+
+set EXPORT_BASE_URL=http://127.0.0.1:8000
+set EXPORT_LOGIN_URL=/accounts/login/
+set EXPORT_LOGIN_USERNAME=admin1
+set EXPORT_LOGIN_PASSWORD=test12345
+set EXPORT_LOGIN_USERNAME_FIELD=username
+set EXPORT_LOGIN_PASSWORD_FIELD=password
+set DJANGO_SETTINGS_MODULE=config.settings
+
+python scripts\generate_export_urls.py
+
+python scripts\export_github_pages_static.py
+
+cd github_pages_export
+
+python -m http.server 8080
+--------------------------------------------------------------------------------------------------------------------------------
