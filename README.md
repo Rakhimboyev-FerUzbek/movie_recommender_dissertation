@@ -1,5 +1,14 @@
 # Online Cinema / Movie Recommender
 
+<!-- Demo Video -->
+<div align="center">
+  <a href="https://www.loom.com/share/32c1eeb0f9c5409684fe1b7cb4545461">
+    <p>Movie Recommender Platform Demo - Click to watch</p>
+    <img src="https://cdn.loom.com/sessions/thumbnails/32c1eeb0f9c5409684fe1b7cb4545461-with-play.gif" alt="Movie Recommender Demo" width="600">
+  </a>
+</div>
+<br>
+
 Django, PostgreSQL, TMDB API va MovieLens 100K dataset asosida qurilgan AI-assisted online cinema va movie recommendation tizimi.
 
 Ushbu repository web-ilova kodi, dataset bootstrap jarayoni, TMDB metadata enrichment, poster cache mexanizmi, recommendation engine va loyiha bo'yicha texnik dokumentatsiyani o'z ichiga oladi.
