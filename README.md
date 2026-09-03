@@ -1,9 +1,3 @@
-
-
-https://github.com/user-attachments/assets/70484cf4-463e-49b1-a547-0505e824d781
-
-
-
 # Online Cinema / Movie Recommender
 
 <!-- Demo Video -->
